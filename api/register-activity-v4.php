@@ -37,12 +37,28 @@ try {
     error_log("[reg-api] Session user ID: $userId");
     
     // ---- STEP 2: If no session, try Bearer token ----
-    if (!$userId && isset($_SERVER['HTTP_AUTHORIZATION'])) {
+    $token = null;
+    $headers = function_exists('apache_request_headers') ? apache_request_headers() : [];
+    $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? $headers['Authorization'] ?? $headers['authorization'] ?? '';
+    
+    if (!$userId && !empty($authHeader)) {
         error_log("[reg-api] HTTP_AUTHORIZATION found");
-        if (preg_match('/Bearer\s+(\S+)/', $_SERVER['HTTP_AUTHORIZATION'], $m)) {
+        if (preg_match('/Bearer\s+(\S+)/', $authHeader, $m)) {
             $token = $m[1];
             error_log("[reg-api] Bearer token extracted: " . substr($token, 0, 20) . "...");
-            // We'll validate it after DB connection
+        }
+    }
+
+    // Fallback: Check token in POST payload or GET
+    if (!$userId && empty($token)) {
+        $body = file_get_contents('php://input');
+        $input = json_decode($body, true);
+        if (isset($input['token'])) {
+            $token = $input['token'];
+            error_log("[reg-api] Token found in JSON payload: " . substr($token, 0, 20) . "...");
+        } else if (isset($_GET['token'])) {
+            $token = $_GET['token'];
+            error_log("[reg-api] Token found in GET params: " . substr($token, 0, 20) . "...");
         }
     }
     
