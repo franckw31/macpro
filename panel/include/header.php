@@ -1,4 +1,5 @@
 <?php error_reporting(0);?>
+
 <header class="navbar navbar-default navbar-static-top">
 <link rel="icon" type="image/png" href="/panel/assets/images/toulouse.jfif">
 					<!-- start: NAVBAR HEADER -->
