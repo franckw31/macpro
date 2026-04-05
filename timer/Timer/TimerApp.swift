@@ -1,5 +1,7 @@
 import SwiftUI
 import UserNotifications
+import AVFoundation
+
 #if canImport(UIKit)
 import UIKit
 
