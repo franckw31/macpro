@@ -1,3 +1,4 @@
+
 <?php error_reporting(0);?>
 <header class="navbar navbar-default navbar-static-top">
 <link rel="icon" type="image/png" href="/panel/assets/images/toulouse.jfif">
@@ -22,7 +23,7 @@
 					<!-- start: NAVBAR COLLAPSE -->
 	<div class="navbar-collapse collapse">
 		<div style="position: absolute; width: 100%; left: 0; text-align: left; pointer-events: none;">
-			<h1 style="display: inline-block; margin-top: 10px; margin-left: 20px; pointer-events: auto;"><span class="badge badge-success" style="font-size: 0.5em; vertical-align: middle;">Beta-0504</span> Gestion</h1>
+			<h1 style="display: inline-block; margin-top: 10px; margin-left: 20px; pointer-events: auto;"><span class="badge badge-success" style="font-size: 0.5em; vertical-align: middle;">Beta-0404</span> Gestion</h1>
 		</div>
 		<ul class="nav navbar-right" style="display: flex; align-items: center;">
 					<!-- start: MESSAGES DROPDOWN -->
