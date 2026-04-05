@@ -69,6 +69,7 @@ struct CardEventApp: App {
     #endif
     @StateObject private var viewModel  = PokerTimerViewModel()
     @StateObject private var auth       = AuthService.shared
+    private let speechSynthesizer = AVSpeechSynthesizer()
 
     var body: some Scene {
         WindowGroup {
@@ -86,6 +87,19 @@ struct CardEventApp: App {
             }
             .animation(.easeInOut(duration: 0.3), value: auth.isAuthenticated)
             .animation(.easeInOut(duration: 0.3), value: auth.isLoading)
+            .onAppear {
+                do {
+                    let audioSession = AVAudioSession.sharedInstance()
+                    try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers, .mixWithOthers])
+                    try audioSession.setActive(true)
+                } catch {
+                    print("Failed to setup audio session for welcome message: \(error)")
+                }
+                
+                let utterance = AVSpeechUtterance(string: "Bienvenue sur Card Event")
+                utterance.voice = AVSpeechSynthesisVoice(language: "fr-FR")
+                speechSynthesizer.speak(utterance)
+            }
             .task {
                 await auth.autoLogin()
             }
