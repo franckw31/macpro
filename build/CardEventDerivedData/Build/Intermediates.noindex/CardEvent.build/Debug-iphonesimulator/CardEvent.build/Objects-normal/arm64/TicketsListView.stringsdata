@@ -1,0 +1,72 @@
+{
+  "source": "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/TicketsListView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Tickets",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 89
+        }
+      },
+      {
+        "comment": "",
+        "key": "Tickets de %@",
+        "location": {
+          "startingColumn": 59,
+          "startingLine": 89
+        }
+      },
+      {
+        "comment": "",
+        "key": "Aucun ticket trouvé",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 30
+        }
+      },
+      {
+        "comment": "",
+        "key": "Réessayer",
+        "location": {
+          "startingColumn": 87,
+          "startingLine": 28
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 39
+        }
+      },
+      {
+        "comment": "",
+        "key": "/ %lld",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 46
+        }
+      },
+      {
+        "comment": "",
+        "key": " • %@",
+        "location": {
+          "startingColumn": 96,
+          "startingLine": 68
+        }
+      },
+      {
+        "comment": "",
+        "key": "Fermer",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 92
+        }
+      }
+    ]
+  },
+  "version": 1
+}

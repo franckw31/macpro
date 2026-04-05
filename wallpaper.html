@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fond d'écran - Motif Cartes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .controls {
+            background: #2a2a2a;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+        }
+
+        input[type="number"], input[type="range"] {
+            width: 150px;
+            padding: 8px;
+            background: #333;
+            border: 1px solid #555;
+            color: #fff;
+            border-radius: 4px;
+        }
+
+        input[type="range"] {
+            width: 200px;
+        }
+
+        .preset-buttons {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        button.secondary {
+            background: #2196F3;
+        }
+
+        button.secondary:hover {
+            background: #0b7dda;
+        }
+
+        .preview {
+            background: #000;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .preview img {
+            max-width: 100%;
+            border: 2px solid #555;
+            border-radius: 5px;
+        }
+
+        .download-buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .download-buttons button {
+            background: #ff9800;
+            font-size: 16px;
+            padding: 15px 30px;
+        }
+
+        .download-buttons button:hover {
+            background: #e68900;
+        }
+
+        .info {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            line-height: 1.6;
+        }
+
+        .info h3 {
+            margin-top: 0;
+            color: #4CAF50;
+        }
+
+        .info ol {
+            margin-left: 20px;
+        }
+
+        .value-display {
+            display: inline-block;
+            width: 50px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>🃏 Générateur de Fond d'écran - Motif Cartes</h1>
+    
+    <div class="controls">
+        <h3>Paramètres</h3>
+        
+        <div class="preset-buttons">
+            <button class="secondary" onclick="setPreset(1920, 1080)">Full HD (1920×1080)</button>
+            <button class="secondary" onclick="setPreset(2560, 1440)">2K (2560×1440)</button>
+            <button class="secondary" onclick="setPreset(3840, 2160)">4K (3840×2160)</button>
+        </div>
+
+        <div class="control-group">
+            <label>Largeur:</label>
+            <input type="number" id="width" value="1920" min="800" max="7680" onchange="updatePreview()">
+        </div>
+
+        <div class="control-group">
+            <label>Hauteur:</label>
+            <input type="number" id="height" value="1080" min="600" max="4320" onchange="updatePreview()">
+        </div>
+
+        <div class="control-group">
+            <label>Taille symboles:</label>
+            <input type="range" id="symbolSize" value="80" min="30" max="200" oninput="updateValues(); updatePreview()">
+            <span class="value-display" id="symbolSizeValue">80</span>
+        </div>
+
+        <div class="control-group">
+            <label>Espacement:</label>
+            <input type="range" id="spacing" value="120" min="50" max="300" oninput="updateValues(); updatePreview()">
+            <span class="value-display" id="spacingValue">120</span>
+        </div>
+
+        <div class="control-group">
+            <label>Opacité:</label>
+            <input type="range" id="opacity" value="0.15" min="0.05" max="1" step="0.05" oninput="updateValues(); updatePreview()">
+            <span class="value-display" id="opacityValue">0.15</span>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="updatePreview()">🔄 Actualiser l'aperçu</button>
+        </div>
+    </div>
+
+    <div class="preview">
+        <img id="preview" src="wallpaper_generator.php?w=800&h=450" alt="Aperçu du fond d'écran">
+    </div>
+
+    <div class="download-buttons">
+        <button onclick="downloadWallpaper()">📥 Télécharger le fond d'écran</button>
+    </div>
+
+    <div class="info">
+        <h3>📋 Instructions d'utilisation</h3>
+        <ol>
+            <li>Choisissez une résolution prédéfinie ou ajustez manuellement</li>
+            <li>Personnalisez les paramètres (taille, espacement, opacité)</li>
+            <li>Cliquez sur "Télécharger le fond d'écran"</li>
+            <li><strong>Windows:</strong> Faites clic-droit sur l'image téléchargée → "Définir comme arrière-plan du Bureau"</li>
+            <li>Ou allez dans Paramètres → Personnalisation → Arrière-plan</li>
+        </ol>
+        
+        <p><strong>💡 Astuce:</strong> L'aperçu est réduit pour un chargement rapide. L'image téléchargée sera en pleine résolution.</p>
+    </div>
+
+    <script>
+        function updateValues() {
+            document.getElementById('symbolSizeValue').textContent = document.getElementById('symbolSize').value;
+            document.getElementById('spacingValue').textContent = document.getElementById('spacing').value;
+            document.getElementById('opacityValue').textContent = document.getElementById('opacity').value;
+        }
+
+        function setPreset(width, height) {
+            document.getElementById('width').value = width;
+            document.getElementById('height').value = height;
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const width = document.getElementById('width').value;
+            const height = document.getElementById('height').value;
+            const symbolSize = document.getElementById('symbolSize').value;
+            const spacing = document.getElementById('spacing').value;
+            const opacity = document.getElementById('opacity').value;
+
+            // Aperçu en résolution réduite pour performance
+            const previewWidth = 800;
+            const previewHeight = Math.round((height / width) * previewWidth);
+
+            const url = `wallpaper_generator.php?w=${previewWidth}&h=${previewHeight}&size=${symbolSize}&spacing=${spacing}&opacity=${opacity}&t=${Date.now()}`;
+            document.getElementById('preview').src = url;
+        }
+
+        function downloadWallpaper() {
+            const width = document.getElementById('width').value;
+            const height = document.getElementById('height').value;
+            const symbolSize = document.getElementById('symbolSize').value;
+            const spacing = document.getElementById('spacing').value;
+            const opacity = document.getElementById('opacity').value;
+
+            const url = `wallpaper_generator.php?w=${width}&h=${height}&size=${symbolSize}&spacing=${spacing}&opacity=${opacity}&download=1`;
+            
+            // Ouvrir dans un nouvel onglet pour téléchargement
+            window.open(url, '_blank');
+        }
+
+        // Initialiser les valeurs affichées
+        updateValues();
+    </script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+{
+  "source": "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ParticipantsListView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Chargement...",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 38
+        }
+      },
+      {
+        "comment": "",
+        "key": "Aucun participant inscrit",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 47
+        }
+      },
+      {
+        "comment": "",
+        "key": "#",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 58
+        }
+      },
+      {
+        "comment": "",
+        "key": "Pseudo",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 60
+        }
+      },
+      {
+        "comment": "",
+        "key": "Chal.",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 62
+        }
+      },
+      {
+        "comment": "",
+        "key": "Recave",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 64
+        }
+      },
+      {
+        "comment": "",
+        "key": "Bounty",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 66
+        }
+      },
+      {
+        "comment": "",
+        "key": "Gains",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 68
+        }
+      },
+      {
+        "comment": "",
+        "key": "#%lld",
+        "location": {
+          "startingColumn": 65,
+          "startingLine": 80
+        }
+      },
+      {
+        "comment": "",
+        "key": "-",
+        "location": {
+          "startingColumn": 86,
+          "startingLine": 80
+        }
+      },
+      {
+        "comment": "",
+        "key": "#%lld",
+        "location": {
+          "startingColumn": 68,
+          "startingLine": 97
+        }
+      },
+      {
+        "comment": "",
+        "key": "-",
+        "location": {
+          "startingColumn": 92,
+          "startingLine": 97
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 61,
+          "startingLine": 101
+        }
+      },
+      {
+        "comment": "",
+        "key": "-",
+        "location": {
+          "startingColumn": 77,
+          "startingLine": 101
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 61,
+          "startingLine": 105
+        }
+      },
+      {
+        "comment": "",
+        "key": "-",
+        "location": {
+          "startingColumn": 77,
+          "startingLine": 105
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld€",
+        "location": {
+          "startingColumn": 60,
+          "startingLine": 109
+        }
+      },
+      {
+        "comment": "",
+        "key": "-",
+        "location": {
+          "startingColumn": 77,
+          "startingLine": 109
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 121
+        }
+      },
+      {
+        "comment": "",
+        "key": "+%lld",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 145
+        }
+      },
+      {
+        "comment": "",
+        "key": "R×%lld",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 150
+        }
+      },
+      {
+        "comment": "",
+        "key": "Participants (%lld)",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 180
+        }
+      },
+      {
+        "comment": "",
+        "key": "Fermer",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 197
+        }
+      },
+      {
+        "comment": "",
+        "key": "Fermer",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 212
+        }
+      }
+    ]
+  },
+  "version": 1
+}

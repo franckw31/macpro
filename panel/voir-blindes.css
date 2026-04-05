@@ -1,0 +1,708 @@
+            /* Masquer toutes les sections par défaut */
+            .rubrique {
+                display: none !important;
+            }
+
+            /* Afficher uniquement la section active */
+            .rubrique.montrer {
+                display: block !important;
+            }
+            
+            /* Style pour le bouton actif */
+            .btnnavA {
+                background-color: #667eea !important;
+                color: white !important;
+                font-weight: bold !important;
+            }
+            
+            /* Réduire la largeur du bandeau des onglets */
+            #bMenu {
+                max-width: 900px; /* Limiter la largeur totale */
+                margin: 0 auto; /* Centrer le bandeau */
+                display: flex;
+                justify-content: center;
+                gap: 5px; /* Réduire l'espacement entre les onglets */
+                padding: 10px;
+            }
+            
+            /* Réduire la taille des boutons d'onglets */
+            .btnnav {
+                padding: 8px 15px !important; /* Réduire le padding */
+                font-size: 16px !important; /* Réduire la taille de la police */
+                min-width: auto !important; /* Supprimer la largeur minimale */
+                white-space: nowrap; /* Empêcher le retour à la ligne */
+            }
+            .snapshot-item .btn-danger {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.snapshot-item .btn-danger i.fa-trash {
+    display: inline !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Supprimer les règles qui masquent les boutons au hover */
+.snapshot-item:hover .btn-danger {
+    display: inline-block !important;
+}
+
+/* Forcer la visibilité des boutons dans les snapshots */
+    .snapshot-item {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .snapshot-item .btn {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .snapshot-item .btn-danger,
+    .snapshot-item .btn-delete-snapshot {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+    }
+
+    .snapshot-item .btn-danger i.fa-trash,
+    .snapshot-item .btn i {
+        display: inline !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    /* Supprimer toutes les règles qui pourraient masquer les boutons */
+    .snapshot-item:hover .btn,
+    .snapshot-item:hover .btn-danger {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* S'assurer que les conteneurs des boutons sont visibles */
+    .snapshot-item > div {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    /* --- NOUVEAU CSS POUR REDUIRE LA HAUTEUR DU TABLEAU JOUEURS --- */
+    .players-table td, .players-table th {
+        padding: 2px 5px !important; /* Réduit fortement l'espace vertical */
+        vertical-align: middle !important;
+        height: 30px !important; /* Force une hauteur minimale plus petite */
+        font-size: 16px !important; /* AUGMENTÉ DE 13px A 15px */
+    }
+
+    /* Ajuster les inputs (recaves) et boutons pour qu'ils rentrent dans les petites cellules */
+    .players-table .input-group .form-control,
+    .players-table .input-group .btn {
+        height: 26px !important; /* Légèrement augmenté pour accommoder la police plus grande */
+        padding: 0px 5px !important;
+        font-size: 16px !important; /* AUGMENTÉ DE 12px A 14px */
+        line-height: 24px !important; /* Centrage vertical du texte */
+    }
+    
+    /* Ajuster la largeur de l'input recave pour que ça fasse propre */
+    .players-table .recave-input {
+        max-width: 50px !important;
+        text-align: center;
+    }
+
+    /* --- MODIFICATION : ESPACEMENT DES BOUTONS RECAVES --- */
+    /* On transforme le input-group en flexbox avec espacement */
+    .players-table .input-group {
+        display: flex !important;
+        gap: 10px !important; /* Espace de 10px entre chaque élément */
+        align-items: center !important;
+        justify-content: center !important; /* Centrer le tout dans la cellule */
+    }
+
+    /* On rétablit les bords arrondis pour chaque élément puisqu'ils sont séparés */
+    .players-table .input-group .form-control,
+    .players-table .input-group .btn {
+        border-radius: 4px !important;
+        margin-left: 0 !important; /* Annuler les marges négatives de Bootstrap */
+    }
+    /* --------------------------------------------------------------- */
+
+
+/* Réduire hauteur des lignes du tableau "Liste des Joueurs" */
+.ppanel-body .players-table th,
+.ppanel-body .players-table td {
+    padding: 4px 6px;
+    vertical-align: middle;
+    font-size: 14px;
+    line-height: 1.1;
+}
+.ppanel-body .players-table tbody tr {
+    height: 28px;
+}
+.ppanel-body .players-table .recave-input {
+    height: 24px;
+    padding: 4px;
+    font-size: 14px;
+    line-height: 1.1;
+}
+.ppanel-body .players-table tr.total-row td {
+    font-weight: bold;
+    background-color: #f0f0f0;
+}
+
+/* Nouveau style pour la colonne Pseudo */
+.pseudo-cell {
+    background-color: #f0f0f0;
+    color: white;
+    font-weight: bold;
+    padding: 8px;
+}
+
+/* Style pour le groupe input-recave */
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.input-group .form-control {
+    flex: 0 0 35px;
+    min-width: 35px;
+    max-width: 40px;
+    height: 22px;
+    padding: 2px 3px;
+    font-size: 11px;
+}
+
+.input-group .btn {
+    padding: 2px 4px;
+    height: 24px;
+    line-height: 1;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.players-table td:nth-child(2) {
+    max-width: 90px;
+    padding: 4px 2px;
+}
+
+.players-table td:nth-child(3) {
+    max-width: 60px;
+    padding: 4px 2px;
+}
+
+.players-table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.col-lg-6 .ppanel {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#countdown-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 40px 40px;
+        padding: 80px;
+        background: linear-gradient(135deg, #3a3b3dff 0%, #4b3263ff 100%);
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #countdown-timer {
+        font-size: 100px;
+        font-weight: bold;
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-family: 'Arial', sans-serif;
+        min-height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    #countdown-label {
+        font-size: 20px;
+        color: #fff;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .countdown-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .btn-countdown {
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-start {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .btn-start:hover:not(:disabled) {
+        background-color: #45a049;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-start:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
+
+    .btn-reset {
+        background-color: #f44336;
+        color: white;
+    }
+
+    .btn-reset:hover {
+        background-color: #da190b;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-stop {
+        background-color: #ff9800;
+        color: white;
+    }
+
+    .btn-stop:hover:not(:disabled) {
+        background-color: #e68900;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-stop:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
+
+    #countdown-timer.warning {
+        color: #ffeb3b;
+        animation: pulse 0.5s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+.blindes-table {
+                                                                                                    width: 100% !important;
+                                                                                                    font-size: 13px;
+                                                                                                    text-align: center;
+                                                                                                    color: #333;
+                                                                                                    border-collapse: collapse;
+                                                                                                    border-radius: 6px;
+                                                                                                    overflow: hidden;
+                                                                                                }
+                                                                                                .blindes-table thead {
+                                                                                                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                                                                                    color: white;
+                                                                                                    font-weight: 600;
+                                                                                                    text-transform: uppercase;
+                                                                                                    letter-spacing: 0.5px;
+                                                                                                }
+                                                                                                .blindes-table thead th {
+                                                                                                    padding: 14px 8px;
+                                                                                                    border: 1px solid rgba(255, 255, 255, 0.2);
+                                                                                                    font-size: 11px;
+                                                                                                    font-weight: 600;
+                                                                                                    letter-spacing: 0.5px;
+                                                                                                }
+                                                                                                .blindes-table tbody tr {
+                                                                                                    border-bottom: 1px solid #e8ecf1;
+                                                                                                    transition: all 0.3s ease;
+                                                                                                }
+                                                                                                .blindes-table tbody tr:nth-child(odd) {
+                                                                                                    background-color: #f8f9fc;
+                                                                                                }
+                                                                                                .blindes-table tbody tr:nth-child(even) {
+                                                                                                    background-color: #ffffff;
+                                                                                                }
+                                                                                                .blindes-table tbody tr:hover {
+                                                                                                    background-color: #f0e6ff !important;
+                                                                                                    transform: scaleY(1.02);
+                                                                                                    box-shadow: inset 0 2px 6px rgba(102, 126, 234, 0.1);
+                                                                                                }
+                                                                                                .blindes-table td {
+                                                                                                    padding: 12px 8px;
+                                                                                                    border: 1px solid #e8ecf1;
+                                                                                                }
+                                                                                                .blindes-table .ordre-cell {
+                                                                                                    font-weight: 700;
+                                                                                                    font-size: 15px;
+                                                                                                    color: #667eea;
+                                                                                                    background: linear-gradient(135deg, #f0f4ff 0%, #ede7ff 100%);
+                                                                                                    border-left: 4px solid #667eea;
+                                                                                                }
+                                                                                                .blindes-table .fin-cell {
+                                                                                                    font-weight: 700;
+                                                                                                    color: #764ba2;
+                                                                                                    background: linear-gradient(135deg, #fef0ff 0%, #fef5ff 100%);
+                                                                                                    border-right: 4px solid #764ba2;
+                                                                                                    font-size: 13px;
+                                                                                                }
+                                                                                                .blindes-table input {
+                                                                                                    border: 2px solid #e0e6ed !important;
+                                                                                                    border-radius: 6px;
+                                                                                                    padding: 6px 8px !important;
+                                                                                                    font-weight: 600;
+                                                                                                    transition: all 0.3s ease;
+                                                                                                    font-size: 13px;
+                                                                                                    background-color: #ffffff;
+                                                                                                    color: #333;
+                                                                                                }
+                                                                                                .blindes-table input:hover {
+                                                                                                    border-color: #667eea !important;
+                                                                                                    box-shadow: 0 2px 6px rgba(102, 126, 234, 0.15);
+                                                                                                }
+                                                                                                .blindes-table input:focus {
+                                                                                                    border-color: #667eea !important;
+                                                                                                    outline: none;
+                                                                                                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+                                                                                                    background-color: #fafbfc;
+                                                                                                }
+                                                                                                .blindes-table .action-btns {
+                                                                                                    display: flex;
+                                                                                                    gap: 6px;
+                                                                                                    justify-content: center;
+                                                                                                }
+                                                                                                .blindes-table .action-btns a {
+                                                                                                    display: inline-flex;
+                                                                                                    align-items: center;
+                                                                                                    justify-content: center;
+                                                                                                    width: 32px;
+                                                                                                    height: 32px;
+                                                                                                    border-radius: 6px;
+                                                                                                    transition: all 0.3s ease;
+                                                                                                    font-size: 13px;
+                                                                                                    text-decoration: none;
+                                                                                                }
+                                                                                                .blindes-table .edit-btn {
+                                                                                                    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+                                                                                                    color: #1565c0;
+                                                                                                    border: 1px solid #90caf9;
+                                                                                                }
+                                                                                                .blindes-table .edit-btn:hover {
+                                                                                                    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+                                                                                                    color: white;
+                                                                                                    transform: translateY(-2px);
+                                                                                                    box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
+                                                                                                }
+                                                                                                .blindes-table .add-btn {
+                                                                                                    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+                                                                                                    color: #2e7d32;
+                                                                                                    border: 1px solid #81c784;
+                                                                                                }
+                                                                                                .blindes-table .add-btn:hover {
+                                                                                                    background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+                                                                                                    color: white;
+                                                                                                    transform: translateY(-2px);
+                                                                                                    box-shadow: 0 4px 8px rgba(56, 142, 60, 0.3);
+                                                                                                }
+                                                                                                .blindes-table .delete-btn {
+                                                                                                    background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+                                                                                                    color: #c62828;
+                                                                                                    border: 1px solid #ef5350;
+                                                                                                }
+                                                                                                .blindes-table .delete-btn:hover {
+                                                                                                    background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);
+                                                                                                    color: white;
+                                                                                                    transform: translateY(-2px);
+                                                                                                    box-shadow: 0 4px 8px rgba(198, 40, 40, 0.3);
+                                                                                                }
+#bMenu { background: linear-gradient(135deg, #667eea, #764ba2); padding: 10px; display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; border-radius: 6px; }
+        #bMenu .btnnav { background: rgba(255,255,255,0.2); color: white; padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; transition: 0.3s; }
+        #bMenu .btnnav:hover { background: rgba(255,255,255,0.3); }
+        #bMenu .btnnavA { background: white; color: #667eea; font-weight: 600; }
+        .ppanel { border: 1px solid #e0e6ed; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+        .ppanel-heading { background: linear-gradient(to right, #667eea, #5568d3); color: white; padding: 12px 16px; border-radius: 6px 6px 0 0; }
+        .ppanel-heading h4 { margin: 0; color: white; font-size: 14px; }
+        .ppanel-body { background: linear-gradient(to bottom, #fafbfc, #f5f7fa); border-radius: 0 0 6px 6px; }
+        .container-fullw { background: linear-gradient(135deg, #f5f7fa, #eef2f7); border-radius: 6px; }
+        .players-table thead { background: linear-gradient(135deg, #667eea, #5568d3); color: white; }
+        .players-table tbody tr:nth-child(even) { background: #f8f9fc; }
+        .players-table tbody tr:hover { background: #f0e6ff; }
+        .btn-primary { background: linear-gradient(135deg, #667eea, #5568d3) !important; border: none !important; }
+        .btn-success { background: linear-gradient(135deg, #28a745, #20c997) !important; border: none !important; }
+        .btn-danger { background: linear-gradient(135deg, #dc3545, #c82333) !important; border: none !important; }
+        #countdown-container { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; text-align: center; border-radius: 6px; margin-bottom: 15px; }
+        #countdown-timer { font-size: 56px; font-weight: 700; margin: 10px 0; }
+        .btn-countdown { padding: 8px 16px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        .btn-countdown:hover:not(:disabled) { background: white; color: #667eea; }
+        .btn-countdown:disabled { opacity: 0.5; cursor: not-allowed; }
+
+
+                                                #BlindesE {
+                                                    display: grid !important;
+                                                    grid-template-columns: 2fr 1fr !important;
+                                                    gap: 20px !important;
+                                                    width: 100% !important;
+                                                }
+
+                                                #BlindesE .card {
+                                                    height: auto !important;
+                                                    min-height: auto !important;
+                                                }
+
+                                                #BlindesE .card-header {
+                                                    display: flex !important;
+                                                    align-items: center !important;
+                                                }
+
+                                                #BlindesE .card-body {
+                                                    display: block !important;
+                                                    overflow-y: auto !important;
+                                                }
+
+                                                @media (max-width: 768px) {
+                                                    #BlindesE .container-fullw {
+                                                        padding: 12px !important;
+                                                    }
+
+                                                    #BlindesE .card-header {
+                                                        padding: 14px 15px !important;
+                                                        font-size: 0.9em !important;
+                                                    }
+
+                                                    #BlindesE .card-body {
+                                                        padding: 15px !important;
+                                                    }
+
+                                                    #BlindesE .blindes-table thead th {
+                                                        font-size: 10px !important;
+                                                        padding: 10px 4px !important;
+                                                    }
+
+                                                    #BlindesE .blindes-table td {
+                                                        padding: 8px 4px !important;
+                                                        font-size: 11px !important;
+                                                    }
+
+                                                    #BlindesE .blindes-table input {
+                                                        font-size: 11px !important;
+                                                        padding: 4px 6px !important;
+                                                    }
+
+                                                    #BlindesE .blindes-table .action-btns a {
+                                                        width: 28px !important;
+                                                        height: 28px !important;
+                                                        font-size: 11px !important;
+                                                    }
+
+                                                    #BlindesE .input-group {
+                                                        flex-direction: column !important;
+                                                        gap: 8px !important;
+                                                    }
+
+                                                    #BlindesE .input-group input {
+                                                        width: 100% !important;
+                                                    }
+
+                                                    #BlindesE .input-group button {
+                                                        margin-left: 0 !important;
+                                                        width: 100% !important;
+                                                    }
+
+                                                    #BlindesE h6 {
+                                                        font-size: 12px !important;
+                                                    }
+                                                }
+
+                                                @media (max-width: 576px) {
+                                                    #BlindesE {
+                                                        display: block !important;
+                                                        overflow: visible !important;
+                                                        width: 100% !important;
+                                                    }
+
+                                                    #BlindesE .container-fullw {
+                                                        padding: 8px !important;
+                                                        overflow: visible !important;
+                                                        height: auto !important;
+                                                        width: 100% !important;
+                                                    }
+
+                                                    #BlindesE .row {
+                                                        margin: 0 !important;
+                                                        display: block !important;
+                                                        height: auto !important;
+                                                        width: 100% !important;
+                                                    }
+
+                                                    #BlindesE .col-md-12 {
+                                                        width: 100% !important;
+                                                        display: block !important;
+                                                        padding: 0 !important;
+                                                        margin-bottom: 0 !important;
+                                                    }
+
+                                                    #BlindesE .col-lg-6,
+                                                    #BlindesE .col-md-6 {
+                                                        width: 100% !important;
+                                                        display: block !important;
+                                                        padding: 0 !important;
+                                                        margin-bottom: 16px !important;
+                                                        flex: none !important;
+                                                        max-width: 100% !important;
+                                                    }
+
+                                                    #BlindesE .col-lg-6:last-child,
+                                                    #BlindesE .col-md-6:last-child {
+                                                        margin-bottom: 0 !important;
+                                                    }
+
+                                                    #BlindesE .card-header {
+                                                        padding: 10px 12px !important;
+                                                        font-size: 0.8em !important;
+                                                    }
+
+                                                    #BlindesE .card-body {
+                                                        padding: 10px !important;
+                                                        overflow: visible !important;
+                                                        height: auto !important;
+                                                        width: 100% !important;
+                                                        display: block !important;
+                                                    }
+
+                                                    #BlindesE .card {
+                                                        height: auto !important;
+                                                        min-height: auto !important;
+                                                        display: block !important;
+                                                        width: 100% !important;
+                                                        margin-bottom: 0 !important;
+                                                    }
+
+                                                    #BlindesE .panel-body {
+                                                        padding: 10px !important;
+                                                        overflow: visible !important;
+                                                        height: auto !important;
+                                                        width: 100% !important;
+                                                        display: block !important;
+                                                    }
+
+                                                    #BlindesE .blindes-table {
+                                                        font-size: 10px !important;
+                                                        width: 100% !important;
+                                                    }
+
+                                                    #BlindesE .blindes-table thead th {
+                                                        font-size: 8px !important;
+                                                        padding: 6px 2px !important;
+                                                        letter-spacing: 0 !important;
+                                                    }
+
+                                                    #BlindesE .blindes-table td {
+                                                        padding: 6px 2px !important;
+                                                        font-size: 9px !important;
+                                                    }
+
+                                                    #BlindesE .blindes-table input {
+                                                        font-size: 9px !important;
+                                                        padding: 3px 4px !important;
+                                                    }
+
+                                                    #BlindesE .blindes-table .action-btns {
+                                                        gap: 2px;
+                                                    }
+
+                                                    #BlindesE .blindes-table .action-btns a {
+                                                        width: 24px !important;
+                                                        height: 24px !important;
+                                                        font-size: 8px !important;
+                                                    }
+
+                                                    #BlindesE .breadcrumb {
+                                                        font-size: 0.8em !important;
+                                                        margin-bottom: 8px !important;
+                                                    }
+
+                                                    #BlindesE #snapshots-list {
+                                                        max-height: 300px !important;
+                                                        min-height: auto !important;
+                                                        height: auto !important;
+                                                        overflow-y: auto !important;
+                                                        font-size: 10px !important;
+                                                        width: 100% !important;
+                                                    }
+
+                                                    #BlindesE h6 {
+                                                        font-size: 11px !important;
+                                                        margin-bottom: 8px !important;
+                                                    }
+
+                                                    #BlindesE .input-group {
+                                                        flex-direction: column !important;
+                                                        width: 100% !important;
+                                                        gap: 8px !important;
+                                                    }
+
+                                                    #BlindesE .input-group input {
+                                                        margin-bottom: 0 !important;
+                                                        width: 100% !important;
+                                                    }
+
+                                                    #BlindesE .input-group button {
+                                                        font-size: 11px !important;
+                                                        width: 100% !important;
+                                                    }
+
+                                                    #BlindesE main {
+                                                        overflow: visible !important;
+                                                        height: auto !important;
+                                                        width: 100% !important;
+                                                    }
+
+                                                    #BlindesE .mb-4 {
+                                                        margin-bottom: 16px !important;
+                                                    }
+
+                                                    #BlindesE .panel {
+                                                        height: auto !important;
+                                                        min-height: auto !important;
+                                                        display: block !important;
+                                                        width: 100% !important;
+                                                    }
+                                                }
+/* Assurer que les boutons de suppression sont toujours visibles */
+.snapshot-item .btn-danger {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.snapshot-item .btn-danger i.fa-trash {
+    display: inline !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Supprimer les règles qui masquent les boutons au hover */
+.snapshot-item:hover .btn-danger {
+    display: inline-block !important;
+}
+    

@@ -1,0 +1,96 @@
+{
+  "source": "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ActivityInfoView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Chargement…",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 49
+        }
+      },
+      {
+        "comment": "",
+        "key": "Infos Partie",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 80
+        }
+      },
+      {
+        "comment": "",
+        "key": "Financier",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 102
+        }
+      },
+      {
+        "comment": "",
+        "key": "Aucun détail disponible",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 117
+        }
+      },
+      {
+        "comment": "",
+        "key": "Désinscrire %@",
+        "location": {
+          "startingColumn": 71,
+          "startingLine": 140
+        }
+      },
+      {
+        "comment": "",
+        "key": "Inscrire %@",
+        "location": {
+          "startingColumn": 103,
+          "startingLine": 140
+        }
+      },
+      {
+        "comment": "",
+        "key": "Informations indisponibles",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 160
+        }
+      },
+      {
+        "comment": "",
+        "key": "Info Partie",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 169
+        }
+      },
+      {
+        "comment": "",
+        "key": "Fermer",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 173
+        }
+      },
+      {
+        "comment": "",
+        "key": "Lieu",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 207
+        }
+      },
+      {
+        "comment": "",
+        "key": "—",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 212
+        }
+      }
+    ]
+  },
+  "version": 1
+}

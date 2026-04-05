@@ -1,0 +1,28 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -workspace CardEvent.xcworkspace -scheme CardEvent -destination "platform=iOS Simulator,name=iPhone 14" -configuration Debug clean build CODE_SIGNING_ALLOWED=NO -derivedDataPath build/CardEventDerivedData
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+2026-04-02 21:57:51.227 xcodebuild[9531:315465] warning:  The file reference for "CardEvent/Views/StructureLibraryView.swift" is a member of multiple groups ("Views" and "CardEvent"); this indicates a malformed project.  Only the membership in one of the groups will be preserved (but membership in targets will be unaffected).  If you want a reference to the same file in more than one group, please add another reference to the same path.
+2026-04-02 21:58:51.749 xcodebuild[9531:315465] Writing error result bundle to /var/folders/w7/z6pbjnss4szc0prr_ybctmsc0000gn/T/ResultBundle_2026-02-04_21-58-0051.xcresult
+xcodebuild: error: Unable to find a device matching the provided destination specifier:
+		{ platform:iOS Simulator, OS:latest, name:iPhone 14 }
+
+	The requested device could not be found because no available devices matched the request.
+
+	Available destinations for the "CardEvent" scheme:
+		{ platform:macOS, arch:arm64, variant:Designed for [iPad,iPhone], id:00006040-001249DE368A801C, name:My Mac }
+		{ platform:iOS, id:dvtdevice-DVTiPhonePlaceholder-iphoneos:placeholder, name:Any iOS Device }
+		{ platform:iOS Simulator, id:dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder, name:Any iOS Simulator Device }
+		{ platform:iOS Simulator, arch:arm64, id:4FAB460F-BD3D-4380-8763-B54627457679, OS:26.4, name:iPad (A16) }
+		{ platform:iOS Simulator, arch:arm64, id:9477031D-A918-4300-848A-1E89E64B73F6, OS:26.4, name:iPad Air 11-inch (M4) }
+		{ platform:iOS Simulator, arch:arm64, id:F9EE2AE9-C860-4A6C-8FA4-32729708A180, OS:26.4, name:iPad Air 13-inch (M4) }
+		{ platform:iOS Simulator, arch:arm64, id:A9ED6CE4-9097-4CA9-A304-824066C676FD, OS:26.4, name:iPad Pro 11-inch (M5) }
+		{ platform:iOS Simulator, arch:arm64, id:72A9FD31-009D-4889-8546-700C8D361B87, OS:26.4, name:iPad Pro 13-inch (M5) }
+		{ platform:iOS Simulator, arch:arm64, id:6571876A-EC1C-4008-BB69-CE087E42A8B9, OS:26.4, name:iPad mini (A17 Pro) }
+		{ platform:iOS Simulator, arch:arm64, id:0FEAE23C-F49A-4FA0-982D-302834635695, OS:26.4, name:iPhone 17 }
+		{ platform:iOS Simulator, arch:arm64, id:9828466E-7A07-43A4-ABA8-488ABDE05657, OS:26.4, name:iPhone 17 Pro }
+		{ platform:iOS Simulator, arch:arm64, id:1F05E59C-188E-4B71-873C-FE03290416DD, OS:26.4, name:iPhone 17 Pro Max }
+		{ platform:iOS Simulator, arch:arm64, id:40DD7D78-B2E1-4016-A300-477756FD4429, OS:26.4, name:iPhone 17e }
+		{ platform:iOS Simulator, arch:arm64, id:C0E6B906-29F2-4DC0-B68D-A50D446F5CD9, OS:26.4, name:iPhone Air }

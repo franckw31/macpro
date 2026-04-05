@@ -1,0 +1,3 @@
+apple_id("you@example.com") # replace with your Apple ID
+team_id("5L3569V4B3")
+app_identifier("com.franck.cardevent")

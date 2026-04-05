@@ -1,0 +1,642 @@
+Timestamp                       (process)[PID]    
+2026-04-02 21:44:10.615162+0200  localhost CoreSimulatorBridge[8306]: Request received for installation of file:///Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Products/Debug-iphonesimulator/CardEvent.app/ with options: {
+    PackageType = Developer;
+    SimulatorRootPath = "/Library/Developer/CoreSimulator/Volumes/iOS_23E244/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.4.simruntime/Contents/Resources/RuntimeRoot";
+    SimulatorUserPath = "/Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data";
+}
+2026-04-02 21:44:10.615722+0200  localhost CoreSimulatorBridge[8306]: (InstallCoordination) [com.apple.installcoordination:framework] +[IXAppInstallCoordinator(IXSimpleInstaller) _beginInstallForURL:forPersonaUniqueString:consumeSource:options:progressBlock:completionWithIdentity:]: Beginning install for /Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Products/Debug-iphonesimulator/CardEvent.app consuming source:N options:{
+    IsUserInitiated = 1;
+    PackageType = Developer;
+} installationRequestorAuditToken: NULL
+2026-04-02 21:44:10.620937+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSDataPromiseManager registerPromise:]: Registered promise <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]> for UUID 450F90EA-465B-4695-AFD2-C686CCD88B8E
+2026-04-02 21:44:10.623589+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSPlaceholder setAttributes:]: <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>: setting placeholder attributes to <IXPlaceholderAttributes<0x1020c4fa0> : {
+    CFBundleShortVersionString = "1.0";
+    CFBundleSupportedPlatforms =     (
+        iPhoneSimulator
+    );
+    CFBundleVersion = 1;
+    DTPlatformName = iphonesimulator;
+    LSRequiresIPhoneOS = 1;
+    MinimumOSVersion = "16.0";
+    UIDeviceFamily =     (
+        1,
+        2
+    );
+    UILaunchScreen =     {
+        UIColorName = AccentColor;
+        UIImageName = LaunchBackground;
+    };
+    UIRequiredDeviceCapabilities =     {
+        armv7 = 1;
+    };
+}>
+2026-04-02 21:44:10.624642+0200  localhost CoreSimulatorBridge[8306]: (InstallCoordination) [com.apple.installcoordination:framework] +[IXPlaceholder _setEntitlementsFromBundleExecutableURL:withBundleID:client:onPlaceholder:location:error:]: Executable for com.franck.cardevent at CardEvent -- file:///Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Products/Debug-iphonesimulator/CardEvent.app/ had no entitlements
+2026-04-02 21:44:10.624672+0200  localhost CoreSimulatorBridge[8306]: (InstallCoordination) [com.apple.installcoordination:framework] +[IXPlaceholder _placeholderForBundle:client:withParent:installType:metadata:placeholderType:mayBeDeltaPackage:isFromSerializedPlaceholder:location:error:]: Using full fidelity icons for com.franck.cardevent at /Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Products/Debug-iphonesimulator/CardEvent.app
+2026-04-02 21:44:10.631296+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSPlaceholder setIconResourcesPromise:]: <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>: setting icon resources promise to <IXSPromisedTransferToPath(0x102108a00) Name:Icon resources for com.franck.cardevent Creator:InstallCoordination Simple SPI UUID:CAD87EB6-7C6C-435E-86E4-31F1AF7DF6A1 Location:[system-defined]>
+2026-04-02 21:44:10.631611+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSPlaceholder setInfoPlistIconContentPromise:]: <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>: setting Info.plist icon content promise to <IXSPromisedInMemoryDictionary(0x102108c00) Name:Info.plist icon content for com.franck.cardevent Creator:InstallCoordination Simple SPI UUID:9B8D2476-6717-4B0A-B1E9-1EB5E94E9303 Location:[system-defined]>
+2026-04-02 21:44:10.632173+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSDataPromiseManager promiseDidBegin:]: Unowned promise began: <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>
+2026-04-02 21:44:10.632190+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSDataPromiseManager promise:didUpdateProgress:]: Unowned promise update progress to 0.000000 : <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>
+2026-04-02 21:44:10.632204+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSDataPromiseManager promise:didUpdateProgress:]: Unowned promise update progress to 0.000000 : <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>
+2026-04-02 21:44:10.633652+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSPlaceholder setLocalizationDictionaryPromise:]: <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>: setting localization dict promise to <IXSPromisedInMemoryDictionary(0x102108d80) Name:Localizations for com.franck.cardevent Creator:InstallCoordination Simple SPI UUID:E57D363E-63B8-4BAF-B481-C872D9D7841F Location:[system-defined]>
+2026-04-02 21:44:10.634255+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSDataPromiseManager promise:didUpdateProgress:]: Unowned promise update progress to 0.000000 : <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>
+2026-04-02 21:44:10.634379+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSPlaceholder setConfigurationComplete:]: <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>: setting configuration complete to Y
+2026-04-02 21:44:10.634727+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSPlaceholder _materialize]: <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>: Materializing placeholder at /Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Shared/SystemGroup/systemgroup.com.apple.installcoordinationd/Library/InstallCoordination/PromiseStaging/450F90EA-465B-4695-AFD2-C686CCD88B8E/CardEvent.app
+2026-04-02 21:44:10.634840+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSPlaceholder _materialize]: <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>: Using Info.plist icon content: {
+    CFBundleIcons =     {
+        CFBundlePrimaryIcon =         {
+            CFBundleIconName = AppIcon;
+        };
+    };
+    "CFBundleIcons~ipad" =     {
+        CFBundlePrimaryIcon =         {
+            CFBundleIconName = AppIcon;
+        };
+    };
+    ISIconPlatform = iPhoneOS;
+}
+2026-04-02 21:44:10.635148+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSPlaceholder _materialize]_block_invoke: <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>: Using icon resource Assets.car
+2026-04-02 21:44:10.635197+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSPlaceholder _materialize]: <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>: Including lproj localizations for (
+)
+2026-04-02 21:44:10.635557+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSDataPromiseManager promiseDidComplete:]: Unowned promise completed: <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>
+2026-04-02 21:44:10.645484+0200  localhost CoreSimulatorBridge[8306]: (InstallCoordination) [com.apple.installcoordination:framework] -[IXPromisedTransferToPath setComplete:]: <IXPromisedTransferToPath<0x105c8fb00> name:"App Asset: com.franck.cardevent" uuid:2F6B153A-02F2-4F14-830E-6A59364CC5BC creator:"InstallCoordination Simple SPI" location:[system-defined]> Copy operation from /Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Products/Debug-iphonesimulator/CardEvent.app to /Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Shared/SystemGroup/systemgroup.com.apple.installcoordinationd/Library/InstallCoordination/PromiseStaging/2F6B153A-02F2-4F14-830E-6A59364CC5BC/CardEvent.app took 0.001643 seconds
+2026-04-02 21:44:10.646341+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSCoordinatedAppInstall setPlaceholderPromise:]: <IXSCoordinatedAppInstall<0x102200000> [P=CoreSimulatorBridge (pid 8306)] identifier:[com.franck.cardevent/Invalid/[system-defined]] uuid:4B8888FD-A9EB-45F8-8220-2580902B3406 intent:IXCoordinatorIntentInitiating creator/appDRI:InstallCoordination Simple SPI importance:UserWaiting state:IXAppCoordinationStateReadyForPlaceholderInstall promise-state:PA2I4> : Placeholder Promise set: <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>
+2026-04-02 21:44:10.646390+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSCoordinatedAppInstall promiseDidComplete:]: <IXSCoordinatedAppInstall<0x102200000> [P=CoreSimulatorBridge (pid 8306)] identifier:[com.franck.cardevent/Invalid/[system-defined]] uuid:4B8888FD-A9EB-45F8-8220-2580902B3406 intent:IXCoordinatorIntentInitiating creator/appDRI:InstallCoordination Simple SPI importance:UserWaiting state:IXAppCoordinationStateReadyForPlaceholderInstall promise-state:PA2I4> : Promise completed: <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>
+2026-04-02 21:44:10.648236+0200  localhost CoreSimulatorBridge[8306]: (InstallCoordination) [com.apple.installcoordination:framework] -[IXAppInstallCoordinator _clientDelegate_placeholderDidInstallForApplicationRecord:]: <IXInitiatingAppInstallCoordinator<0x105c8fd80> identity:[com.franck.cardevent/Invalid/[system-defined]] uuid:4B8888FD-A9EB-45F8-8220-2580902B3406 creator:InstallCoordination Simple SPI>: Got placeholder did install delegate for app record { bundleID: com.franck.cardevent, URL: file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ }
+2026-04-02 21:44:10.653362+0200  localhost lsd[8458]: (CoreServices) [com.apple.launchservices:progress] Sending applicationInstallsDidStart: for (
+    "<LSApplicationProxy: 0x1016f0000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.654535+0200  localhost mobiletimerd[8291]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x1042606c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.654740+0200  localhost clipserviced[8358]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x105da8000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.654793+0200  localhost deviceaccessd[8377]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x1041a0000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.654804+0200  localhost dasd[8302]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x101f380c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.654831+0200  localhost nsurlsessiond[8330]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x10a4546c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.654908+0200  localhost runningboardd[8279]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x104188000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.654922+0200  localhost SpringBoard[8276]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x119e036c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.655530+0200  localhost locationd[8300]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x105744840> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.655543+0200  localhost activityawardsd[8475]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x103d3cc00> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.655824+0200  localhost usernotificationsd[8339]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x103fd0180> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.655842+0200  localhost profiled[8482]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x1058ac000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.656025+0200  localhost nanotimekitcompaniond[8451]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x103a3c000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.656219+0200  localhost liveactivitiesd[8341]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x101e85500> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.656318+0200  localhost passd[8305]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x108fdb600> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.656545+0200  localhost donotdisturbd[8329]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x103e098c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.656608+0200  localhost webbookmarksd[8364]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x1039b8000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.656753+0200  localhost appstored[8466]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x103b30480> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.656754+0200  localhost routined[8284]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x107c312c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.656895+0200  localhost pkd[8346]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x103da8000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.656931+0200  localhost homed[8351]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x105284780> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.657613+0200  localhost axassetsd[8285]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x105c44000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.657641+0200  localhost callservicesd[8345]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x10752cd80> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.657714+0200  localhost gamed[8461]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x102320480> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.660713+0200  localhost installd[8447]: (MobileSystemServices) 0x16af2f000 -[MIClientConnection _doInstallationForURL:identity:domain:options:operationType:completion:]: Install of "/Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Shared/SystemGroup/systemgroup.com.apple.installcoordinationd/Library/InstallCoordination/PromiseStaging/2F6B153A-02F2-4F14-830E-6A59364CC5BC/CardEvent.app" type Developer (LSInstallType = 0, Domain: MIInstallationDomainDefault) requested by installcoordinationd (pid 8456 (501/20))
+2026-04-02 21:44:10.664737+0200  localhost PosterBoard[8412]: (CoreServices) [com.apple.launchservices:appinstallation] LaunchServices observer: InstallsStarted (
+    "<LSApplicationProxy: 0x109d61800> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/96936DA1-B297-4574-9A52-AAEC10AACF0C/CardEvent.app/ <com.franck.cardevent <placeholder >:7>"
+)
+2026-04-02 21:44:10.719431+0200  localhost lsd[8458]: (CoreServices) [com.apple.launchservices:progress] Sending applicationsDidInstall: for (
+    "<LSApplicationProxy: 0x1016f0000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.720254+0200  localhost mobiletimerd[8291]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x1042606c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.720446+0200  localhost deviceaccessd[8377]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x1041a0000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.720540+0200  localhost clipserviced[8358]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x105da8000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.720647+0200  localhost dasd[8302]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x101f380c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.720782+0200  localhost nsurlsessiond[8330]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x10a4546c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.720993+0200  localhost SpringBoard[8276]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x119de55c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.721113+0200  localhost activityawardsd[8475]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x103d3cc00> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.721214+0200  localhost runningboardd[8279]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x104188000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.721499+0200  localhost usernotificationsd[8339]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x103fd0180> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.721581+0200  localhost profiled[8482]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x1058ac000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.721759+0200  localhost nanotimekitcompaniond[8451]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x103a3c000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.721828+0200  localhost webbookmarksd[8364]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x1039b8000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.721988+0200  localhost donotdisturbd[8329]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x103e098c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.722017+0200  localhost locationd[8300]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x105744840> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.722149+0200  localhost clipserviced[8358]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x105da80c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.722155+0200  localhost deviceaccessd[8377]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x1041a00c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.722196+0200  localhost passd[8305]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x108fdb600> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.722476+0200  localhost pkd[8346]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x103da8000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.722510+0200  localhost mobiletimerd[8291]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x104260780> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.722521+0200  localhost SpringBoard[8276]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x119de52c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.722591+0200  localhost dasd[8302]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x101f38480> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.722828+0200  localhost SpringBoard[8276]: (FrontBoardServices) [com.apple.frontboard.ApplicationLibrary:default] Removed placeholder: <SBApplicationPlaceholderProxy: 0x119018280; com.franck.cardevent (CardEvent); LSInstallType: StoreDownload>
+2026-04-02 21:44:10.722835+0200  localhost liveactivitiesd[8341]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x101e85500> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.722856+0200  localhost nsurlsessiond[8330]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x10a454cc0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.722901+0200  localhost homed[8351]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x105284780> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.723100+0200  localhost callservicesd[8345]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x10752cd80> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.723215+0200  localhost axassetsd[8285]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x105c44000> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.723294+0200  localhost routined[8284]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x107c312c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.723579+0200  localhost gamed[8461]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x102320480> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.724110+0200  localhost deviceaccessd[8377]: (CoreUtils) [com.apple.DeviceAccess:DADaemonServer] ### applicationsDidInstall [
+    <LSApplicationProxy: 0x1041a00c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+]
+2026-04-02 21:44:10.724529+0200  localhost runningboardd[8279]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x1041880c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.724595+0200  localhost profiled[8482]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x1058ac0c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.724995+0200  localhost locationd[8300]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x1057446c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.725147+0200  localhost locationd[8300]: [com.apple.locationd.Core:Core] {"msg":"AppMonitor - application (un)installation notification", "notification":Installation, "BundleId":com.franck.cardevent, "BundlePath":/Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app, "ExecutablePath":/Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/CardEvent}
+2026-04-02 21:44:10.725233+0200  localhost activityawardsd[8475]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x103d3c840> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.725354+0200  localhost passd[8305]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x108fdb540> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.725749+0200  localhost donotdisturbd[8329]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x103e09a40> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.726305+0200  localhost nanotimekitcompaniond[8451]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x103a3c0c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.726401+0200  localhost pkd[8346]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x103da80c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.726578+0200  localhost webbookmarksd[8364]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x1039b80c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.726623+0200  localhost liveactivitiesd[8341]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x101e855c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.726627+0200  localhost usernotificationsd[8339]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x103fd0240> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.726765+0200  localhost axassetsd[8285]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x105c440c0> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.727082+0200  localhost routined[8284]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x107c30900> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.727219+0200  localhost gamed[8461]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x102320600> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.728073+0200  localhost PosterBoard[8412]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x109d61800> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.729339+0200  localhost PosterBoard[8412]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x109d61a40> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.732284+0200  localhost appstored[8466]: (CoreServices) [com.apple.launchservices:appinstallation] Received applicationsDidInstall:(
+    "<LSApplicationProxy: 0x103b30480> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>"
+)
+2026-04-02 21:44:10.733113+0200  localhost appstored[8466]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x103b30540> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.734551+0200  localhost installcoordinationd[8456]: [com.apple.installcoordination:daemon] -[IXSDataPromise decommission]: Decommissioning <IXSPlaceholder(0x10216c000) Name:App Placeholder: CardEvent (com.franck.cardevent) Creator:InstallCoordination Simple SPI UUID:450F90EA-465B-4695-AFD2-C686CCD88B8E Location:[system-defined]>
+2026-04-02 21:44:10.735442+0200  localhost callservicesd[8345]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x10752cc00> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:10.735941+0200  localhost SpringBoard[8276]: (FrontBoardServices) [com.apple.frontboard.ApplicationLibrary:default] Added application: <SBApplicationInfo: 0x116e91200; com.franck.cardevent (CardEvent)>
+2026-04-02 21:44:10.736090+0200  localhost SpringBoard[8276]: (SpringBoard) [com.apple.frontboard.ApplicationLibrary:sb.placeholder] App placeholder proxies installed: (
+    "<SBApplicationPlaceholderProxy: 0x119018280; com.franck.cardevent (CardEvent); LSInstallType: StoreDownload>"
+)
+2026-04-02 21:44:10.736909+0200  localhost CoreSimulatorBridge[8306]: (InstallCoordination) [com.apple.installcoordination:framework] -[IXAppInstallCoordinator _clientDelegate_didCompleteForApplicationRecord:]: <IXInitiatingAppInstallCoordinator<0x105c8fd80> identity:[com.franck.cardevent/Invalid/[system-defined]] uuid:4B8888FD-A9EB-45F8-8220-2580902B3406 creator:InstallCoordination Simple SPI>: Got completion delegate for app record { bundleID: com.franck.cardevent, URL: file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ }
+2026-04-02 21:44:10.742243+0200  localhost SpringBoard[8276]: (SpringBoardHome) [com.apple.SpringBoard:Widgets] handleRemovedDataSource:<SBApplicationPlaceholder: 0x115eaf5a0; bundleIdentifier: com.franck.cardevent; displayName: CardEvent; canPromote?: YES; canCancel?: YES> ofIcon:<SBApplicationIcon: 0x1191af480; nodeID: com.franck.cardevent; bundleID: com.franck.cardevent>
+2026-04-02 21:44:10.743705+0200  localhost SpringBoard[8276]: (SpringBoard) [com.apple.frontboard.ApplicationLibrary:sb.placeholder] Placeholders added: (null), modified: (null), removed: (
+    "<SBApplicationPlaceholder: 0x115eaf5a0; bundleIdentifier: com.franck.cardevent; displayName: CardEvent; canPromote?: YES; canCancel?: YES>"
+)
+2026-04-02 21:44:10.900449+0200  localhost homed[8351]: (MobileInstallation) [com.apple.appinstallation:TransactionLog] com.franck.cardevent/Unknown Persona:5:8:3:1:applicationsDidInstall <LSApplicationProxy: 0x105285380> com.franck.cardevent file:///Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/ <com.franck.cardevent <installed >:0>
+2026-04-02 21:44:11.509014+0200  localhost runningboardd[8279]: (RunningBoard) [com.apple.runningboard:job_oversize] 'app<com.franck.cardevent((null))>' Constructed job description:
+<dictionary: 0x107d0b000> { count = 20, transaction: 0, voucher = 0x0, contents =
+	"ProcessType" => <string: 0x107ce9560> { string cache = 0x0, length = 3, contents = "App" }
+	"EnableTransactions" => <bool: 0x1e70b0550>: false
+	"_ManagedBy" => <string: 0x107cea7f0> { string cache = 0x0, length = 22, contents = "com.apple.runningboard" }
+	"RootedSimulatorPath" => <bool: 0x1e70b0530>: true
+	"CFBundleIdentifier" => <string: 0x107cea370> { string cache = 0x0, length = 20, contents = "com.franck.cardevent" }
+	"_ResourceCoalition" => <string: 0x107ce80f0> { string cache = 0x0, length = 33, contents = "app<com.franck.cardevent((null))>" }
+	"_POSIXSpawnTelemetryPageIn" => <bool: 0x1e70b0530>: true
+	"ThrottleInterval" => <int64: 0xb2d778173b231f27>: 2147483647
+	"MachServices" => <dictionary: 0x107d082a0> { count = 0, transaction: 0, voucher = 0x0, contents =
+	}
+	"EnablePressuredExit" => <bool: 0x1e70b0550>: false
+	"InitialTaskRole" => <int64: 0xb2d77814c4dce0d7>: 1
+	"UserName" => <string: 0x107ceb780> { string cache = 0x0, length = 6, contents = "mobile" }
+	"EnvironmentVariables" => <dictionary: 0x107d08900> { count = 4, transaction: 0, voucher = 0x0, contents =
+		"TMPDIR" => <string: 0x107ce8990> { string cache = 0x0, length = 164, contents = "/Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Data/Application/8B96B9BB-C6B4-4525-AF42-827520DBD7DA/tmp" }
+		"HOME" => <string: 0x107cea910> { string cache = 0x0, length = 160, contents = "/Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Data/Application/8B96B9BB-C6B4-4525-AF42-827520DBD7DA" }
+		"CFFIXED_USER_HOME" => <string: 0x107ceaf70> { string cache = 0x0, length = 160, contents = "/Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Data/Application/8B96B9BB-C6B4-4525-AF42-827520DBD7DA" }
+		"TERM" => <string: 0x107ce8450> { string cache = 0x0, length = 14, contents = "xterm-256color" }
+	}
+	"_AdditionalProperties" => <dictionary: 0x107d08de0> { count = 1, transaction: 0, voucher = 0x0, contents =
+		"RunningBoard" => <dictionary: 0x107d08ba0> { count = 3, transaction: 0, voucher = 0x0, contents =
+			"Managed" => <bool: 0x1e70b0530>: true
+			"RunningBoardLaunchedIdentity" => <dictionary: 0x107d0b600> { count = 2, transaction: 0, voucher = 0x0, contents =
+				"TYPE" => <int64: 0xb2d77814c4dce0cf>: 2
+				"EAI" => <string: 0x107cea310> { string cache = 0x0, length = 20, contents = "com.franck.cardevent" }
+			}
+			"RunningBoardLaunched" => <bool: 0x1e70b0530>: true
+		}
+	}
+	"ExitTimeOut" => <int64: 0xb2d77814c4dce0d7>: 1
+	"Label" => <string: 0x107ceb8a0> { string cache = 0x0, length = 54, contents = "UIKitApplication:com.franck.cardevent[989f][rb-legacy]" }
+	"MaterializeDatalessFiles" => <bool: 0x1e70b0530>: true
+	"_LaunchType" => <int64: 0xb2d77814c4dce0c7>: 3
+	"ProgramArguments" => <array: 0x107ceaf10> { count = 1, capacity = 8, contents =
+		0: <string: 0x107ceb930> { string cache = 0x0, length = 186, contents = "/Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/CardEvent" }
+	}
+	"Program" => <string: 0x107ceb4b0> { string cache = 0x0, length = 186, contents = "/Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Bundle/Application/BAF4729A-11DE-4633-8946-5AED188B4F57/CardEvent.app/CardEvent" }
+}
+2026-04-02 21:44:11.696836+0200  localhost launchd_sim[8269]: [user/501/UIKitApplication:com.franck.cardevent[989f][rb-legacy] [8941]:] Successfully spawned CardEvent[8941] because launch job demand
+2026-04-02 21:44:11.700027+0200  localhost CoreSimulatorBridge[8306]: (FrontBoardServices) [com.apple.FrontBoard:Common] [FBSSystemService][0xf8af] Request successful: <BSProcessHandle: 0x105ef9d70; CardEvent:8941; valid: YES>
+2026-04-02 21:44:11.921242+0200  localhost CardEvent[8941]: (libMobileGestalt.dylib) No persisted cache on this platform.
+2026-04-02 21:44:11.921627+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x1016bdaa0] activating connection: mach=true listener=false peer=false name=com.apple.cfprefsd.daemon
+2026-04-02 21:44:11.921990+0200  localhost CardEvent[8941]: (BoardServices) [com.apple.BoardServices:XPCErrors] [C:1] Alloc com.apple.frontboard.systemappservices
+2026-04-02 21:44:11.922324+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x1016c4580] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-04-02 21:44:11.922654+0200  localhost CardEvent[8941]: (CoreFoundation) Created Activity ID: 0x1b4f50, Description: Loading Preferences From User Session CFPrefsD
+2026-04-02 21:44:11.926357+0200  localhost backboardd[8297]: (IOKit) [com.apple.iohid:default] Connection added: IOHIDEventSystemConnection uuid:27EEFD06-BD34-4658-B55F-D6FC9CFE5149 pid:8941 process:CardEvent type:Passive entitlements:0x0 caller:BackBoardServices: ___getHIDEventSystemClient_block_invoke + 296 attributes:{
+    HighFrequency = 0;
+    bundleID = "com.franck.cardevent";
+    pid = 8941;
+} state:0x0 events:0 mask:0x0 dropped:0 dropStatus:0 droppedMask:0x0 lastDroppedTime:NONE
+2026-04-02 21:44:11.926421+0200  localhost backboardd[8297]: (BackBoardHIDEventFoundation) [com.apple.BackBoard:HID] Adding client connection: <BKHIDClientConnection: 0x10d711340; IOHIDEventSystemConnectionRef: 0x10c831000; vpid: 8941(v5E3C); taskPort: 0xC857; bundleID: com.franck.cardevent> for client: IOHIDEventSystemConnection uuid:27EEFD06-BD34-4658-B55F-D6FC9CFE5149 pid:8941 process:CardEvent type:Passive entitlements:0x0 caller:BackBoardServices: ___getHIDEventSystemClient_block_invoke + 296 attributes:{
+    HighFrequency = 0;
+    bundleID = "com.franck.cardevent";
+    pid = 8941;
+} state:0x0 events:0 mask:0x0 dropped:0 dropStatus:0 droppedMask:0x0 lastDroppedTime:NONE
+2026-04-02 21:44:11.926527+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Creating new assertion because there is no existing background assertion.
+2026-04-02 21:44:11.926552+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Creating new background assertion
+2026-04-02 21:44:11.926556+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:Application] Deactivation reason added: 10; deactivation reasons: 0 -> 1024; animating application lifecycle event: 0
+2026-04-02 21:44:11.926617+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Created new background assertion <BKSProcessAssertion: 0x1016c0ce0>
+2026-04-02 21:44:11.926657+0200  localhost CardEvent[8941]: (RunningBoardServices) [com.apple.runningboard:connection] Initializing connection
+2026-04-02 21:44:11.926690+0200  localhost CardEvent[8941]: (RunningBoardServices) [com.apple.runningboard:process] Removing all cached process handles
+2026-04-02 21:44:11.926734+0200  localhost CardEvent[8941]: (RunningBoardServices) [com.apple.runningboard:connection] Sending handshake request attempt #1 to server
+2026-04-02 21:44:11.926756+0200  localhost CardEvent[8941]: (BoardServices) [com.apple.BoardServices:Injection] activating monitor for service com.apple.frontboard.open
+2026-04-02 21:44:11.926762+0200  localhost CardEvent[8941]: (RunningBoardServices) [com.apple.runningboard:connection] Creating connection to com.apple.runningboard
+2026-04-02 21:44:11.926789+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101d40280] activating connection: mach=true listener=false peer=false name=com.apple.runningboard
+2026-04-02 21:44:11.926881+0200  localhost CardEvent[8941]: (BoardServices) [com.apple.BoardServices:Injection] activating monitor for service com.apple.frontboard.workspace-service
+2026-04-02 21:44:11.927083+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:Common] FBSWorkspace registering source: com.apple.frontboard.systemappservices
+2026-04-02 21:44:11.927169+0200  localhost CardEvent[8941]: (RunningBoardServices) Created Activity ID: 0x1b4f51, Parent ID: 0x80000000001b4f3c, Description: didChangeInheritances
+2026-04-02 21:44:11.927404+0200  localhost CardEvent[8941]: (RunningBoardServices) [com.apple.runningboard:connection] Handshake succeeded
+2026-04-02 21:44:11.927418+0200  localhost CardEvent[8941]: (RunningBoardServices) [com.apple.runningboard:connection] Identity resolved as app<com.franck.cardevent((null))>
+2026-04-02 21:44:11.927591+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Incrementing reference count for background assertion <BKSProcessAssertion: 0x1016c0ce0>
+2026-04-02 21:44:11.927648+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Created background task <_UIBackgroundTaskInfo: 0x101cacd40>: taskID = 1, taskName = Launch Background Task for Coalescing, creationTime = 17475 (elapsed = 0).
+2026-04-02 21:44:11.927681+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:Common] FBSWorkspace connected to endpoint : <BSServiceConnectionEndpoint: 0x101d0c8e0; target: com.apple.frontboard.systemappservices; service: com.apple.frontboard.workspace-service>
+2026-04-02 21:44:11.927721+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UIApplicationSceneKeyboardSettings on FBSSceneSettings
+2026-04-02 21:44:11.927742+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0x101cf8be0 com.apple.frontboard.systemappservices> attempting immediate handshake from activate
+2026-04-02 21:44:11.927965+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0x101cf8be0 com.apple.frontboard.systemappservices> sent handshake
+2026-04-02 21:44:11.928072+0200  localhost CardEvent[8941]: (RunningBoardServices) [com.apple.runningboard:general] Added observer for process assertions expiration warning: <_RBSExpirationWarningClient: 0x101d0cc80>
+2026-04-02 21:44:11.928318+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneOcclusionSettings> on FBSSceneSettings
+2026-04-02 21:44:11.928540+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneInterfaceProtectionSettings> on FBSSceneSettings
+2026-04-02 21:44:11.928696+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneLayoutPreferencesHostSettingsExtension on FBSSceneSettings
+2026-04-02 21:44:11.928865+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneSafeAreaSettingsExtension on FBSSceneSettings
+2026-04-02 21:44:11.929046+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneLayoutPreferenceClientSettingsExtension on FBSSceneClientSettings
+2026-04-02 21:44:11.929195+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UIHomeAffordanceHostSceneSettings> on FBSSceneSettings
+2026-04-02 21:44:11.929347+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISystemShellSceneHostingEnvironmentSettings on FBSSceneSettings
+2026-04-02 21:44:11.929463+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneRenderingEnvironmentSettings on FBSSceneSettings
+2026-04-02 21:44:11.929629+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneRenderingEnvironmentClientSettings> on FBSSceneClientSettings
+2026-04-02 21:44:11.929679+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneTransitioningHostSettings> on FBSSceneSettings
+2026-04-02 21:44:11.929807+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneFocusSystemSettings> on FBSSceneSettings
+2026-04-02 21:44:11.929924+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneOrientationSettingsExtension on FBSSceneSettings
+2026-04-02 21:44:11.929957+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:UIScreen] Evaluated capturing state as 0 on <UIScreen: 0x101d40500> for initial
+2026-04-02 21:44:11.929975+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneOrientationClientSettingsExtension on FBSSceneClientSettings
+2026-04-02 21:44:11.930064+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneWindowingControlClientSettings on FBSSceneClientSettings
+2026-04-02 21:44:11.930129+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:UIScreen] Evaluated capturing state as 0 on <UIScreen: 0x101d40500> for CADisplay KVO
+2026-04-02 21:44:11.930237+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneHostingContentSizePreferenceClientSettings> on FBSSceneClientSettings
+2026-04-02 21:44:11.930348+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneHostingTraitCollectionPropagationSettings on FBSSceneSettings
+2026-04-02 21:44:11.930517+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneHostingSheetPresentationSettings> on FBSSceneSettings
+2026-04-02 21:44:11.930655+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneHostingSheetPresentationClientSettings> on FBSSceneClientSettings
+2026-04-02 21:44:11.930728+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneHostingEventDeferringSettings> on FBSSceneSettings
+2026-04-02 21:44:11.930915+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <UIKit__UITypedKeyValueSceneSettings> on FBSSceneSettings
+2026-04-02 21:44:11.931002+0200  localhost CardEvent[8941]: (libAccessibility.dylib) [com.apple.Accessibility:AXSupportCommon] Read CategoryName: per-app = 1, category name = (null)
+2026-04-02 21:44:11.931014+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <UIKit__UITypedKeyValueSceneSettings> on FBSSceneClientSettings
+2026-04-02 21:44:11.931065+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneHostingViewControllerPreferencePropagationClientSettings> on FBSSceneClientSettings
+2026-04-02 21:44:11.931153+0200  localhost CardEvent[8941]: (libAccessibility.dylib) [com.apple.Accessibility:AXSupportCommon] Read CategoryName: per-app = 0, category name = (null)
+2026-04-02 21:44:11.931214+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneZoomTransitionSettings> on FBSSceneSettings
+2026-04-02 21:44:11.931377+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension FBSSceneSettingsCore on FBSSceneSettings
+2026-04-02 21:44:11.931756+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension FBSSceneClientSettingsCore on FBSSceneClientSettings
+2026-04-02 21:44:11.933306+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] UIMutableApplicationSceneSettings setting counterpart class: UIApplicationSceneSettings
+2026-04-02 21:44:11.933390+0200  localhost CardEvent[8941]: (XCTTargetBootstrap) [com.apple.dt.xctest:Default] Registering for test daemon availability notify post.
+2026-04-02 21:44:11.933452+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] UIMutableApplicationSceneClientSettings setting counterpart class: UIApplicationSceneClientSettings
+2026-04-02 21:44:11.933475+0200  localhost CardEvent[8941]: (XCTTargetBootstrap) [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-04-02 21:44:11.933524+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension FBSSceneTransitionContextCore on FBSSceneTransitionContext
+2026-04-02 21:44:11.933546+0200  localhost CardEvent[8941]: (XCTTargetBootstrap) [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-04-02 21:44:11.933605+0200  localhost CardEvent[8941]: (XCTTargetBootstrap) [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-04-02 21:44:11.934076+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:Application] Deactivation reason added: 11; deactivation reasons: 1024 -> 3072; animating application lifecycle event: 0
+2026-04-02 21:44:11.934752+0200  localhost CardEvent[8941]: (UserNotifications) [com.apple.UserNotifications:Connections] [com.franck.cardevent] Creating a user notification center
+2026-04-02 21:44:11.934818+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:Application] Deactivation reason removed: 10; deactivation reasons: 3072 -> 2048; animating application lifecycle event: 0
+2026-04-02 21:44:11.935755+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:EventBus] Event Timing Profile for Touch: not found, path="/System/Library/EventTimingProfiles/Sim.Touch.plist"
+2026-04-02 21:44:11.939243+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:EventBus] Event Timing Profile for Pencil: not found, path="/System/Library/EventTimingProfiles/Sim.Pencil.plist"
+2026-04-02 21:44:11.939308+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:UpdateScheduler] Selected display: name=LCD (PurpleMain), id=1
+2026-04-02 21:44:11.941174+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101d40a00] activating connection: mach=true listener=false peer=false name=com.apple.lsd.mapdb
+2026-04-02 21:44:11.968136+0200  localhost CardEvent[8941]: (BoardServices) [com.apple.BoardServices:XPCErrors] [C:2] Alloc com.apple.backboard.hid-services.xpc
+2026-04-02 21:44:11.968195+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101d40c80] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-04-02 21:44:11.969139+0200  localhost CardEvent[8941]: (libapp_launch_measurement.dylib) [com.apple.app_launch_measurement:ApplicationLaunch] alm_acquire_pageins_recording_assertion: acquired pageins recording assertion!
+2026-04-02 21:44:11.970628+0200  localhost CardEvent[8941]: (UserNotifications) [com.apple.UserNotifications:Connections] [com.franck.cardevent] Requesting authorization with options 7
+2026-04-02 21:44:11.971035+0200  localhost CardEvent[8941]: (BackBoardServices) [com.apple.BackBoard:EventDelivery] BKSHIDEventDeliveryManager - connection activation
+2026-04-02 21:44:11.972349+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101d408c0] activating connection: mach=true listener=false peer=false name=com.apple.usernotifications.listener
+2026-04-02 21:44:11.972856+0200  localhost CardEvent[8941]: (Network) [com.apple.network:] networkd_settings_read_from_file_locked initialized networkd settings by reading plist directly
+2026-04-02 21:44:11.972991+0200  localhost CardEvent[8941]: (Network) [com.apple.network:] networkd_settings_read_from_file_locked initialized networkd settings by reading plist directly
+2026-04-02 21:44:11.975127+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101d40f00] activating connection: mach=true listener=false peer=false name=com.apple.lsd.advertisingidentifiers
+2026-04-02 21:44:11.976874+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101d41040] activating connection: mach=true listener=false peer=false name=com.apple.bird.token
+2026-04-02 21:44:11.984198+0200  localhost SpringBoard[8276]: (SpringBoard) [com.apple.SpringBoard:AlertItems] Received request to activate alertItem: <SBUserNotificationAlert: 0x119120c80; title: Autorisez-vous « CardEvent » à vous envoyer des notifications ?; source: SpringBoard; pid: 8276>
+2026-04-02 21:44:11.984247+0200  localhost SpringBoard[8276]: (SpringBoard) [com.apple.SpringBoard:AlertItems] Activation - Pending activation of <SBUserNotificationAlert: 0x119120c80; title: Autorisez-vous « CardEvent » à vous envoyer des notifications ?; source: SpringBoard; pid: 8276> due to reason: (
+    "Forced to pend for reasons: {(\n    SBFluidSwitcherAnimationController,\n    SBUISwitcherAnimationController\n)}"
+)
+2026-04-02 21:44:11.984345+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101d41040] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-04-02 21:44:11.986261+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101d41040] activating connection: mach=true listener=false peer=false name=com.apple.bird
+2026-04-02 21:44:11.986708+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Will add backgroundTask with taskName: Persistent SceneSession Map Update, expirationHandler: <__NSGlobalBlock__: 0x1e7b10398>
+2026-04-02 21:44:11.986759+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Reusing background assertion <BKSProcessAssertion: 0x1016c0ce0>
+2026-04-02 21:44:11.986775+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Incrementing reference count for background assertion <BKSProcessAssertion: 0x1016c0ce0>
+2026-04-02 21:44:11.986799+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Created background task <_UIBackgroundTaskInfo: 0x101e3e580>: taskID = 2, taskName = Persistent SceneSession Map Update, creationTime = 17475 (elapsed = 0).
+2026-04-02 21:44:11.986947+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:Application] Deactivation reason added: 5; deactivation reasons: 2048 -> 2080; animating application lifecycle event: 1
+2026-04-02 21:44:11.987087+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:InterfaceStyle] Should send trait collection or coordinate space update, interface style 1 -> 1, <UIWindowScene: 0x1016bce60> (A3363870-7C5F-44A1-9138-1B0A319F764C)
+2026-04-02 21:44:11.987451+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1016bce60> (A3363870-7C5F-44A1-9138-1B0A319F764C)
+2026-04-02 21:44:11.987508+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:HomeAffordanceObservation] Initializing: <_UIHomeAffordanceSceneNotifier: 0x101e40fc0>; with scene: <UIWindowScene: 0x1016bce60>
+2026-04-02 21:44:11.987554+0200  localhost CardEvent[8941]: (BacklightServices) [com.apple.BacklightServices:scenes] 0x101f8cc60 setDelegate:<0x101f8ccc0 _UIBacklightEnvironment> hasDelegate:YES for environment:sceneID:com.franck.cardevent-default
+2026-04-02 21:44:11.987755+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1016bce60> (A3363870-7C5F-44A1-9138-1B0A319F764C)
+2026-04-02 21:44:11.987786+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:EventDeferring] [0x101e40f50] Initialized with scene: <UIWindowScene: 0x1016bce60>; behavior: <_UIEventDeferringBehavior_iOS: 0x101f80f80>; availableForProcess: 1, systemShellManagesKeyboardFocus: 1
+2026-04-02 21:44:11.988542+0200  localhost CardEvent[8941]: (BackBoardServices) [com.apple.BackBoard:EventDelivery] BKSHIDEventObserver - connection activation
+2026-04-02 21:44:11.988562+0200  localhost CardEvent[8941]: (BackBoardServices) [com.apple.BackBoard:EventDelivery] policyStatus:<BKSHIDEventDeliveryPolicyObserver: 0x101de13e0; process scope; status: target> was:none
+2026-04-02 21:44:11.988598+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyWindow] Setting default evaluation strategy for UIUserInterfaceIdiomPhone to LastOneWins
+2026-04-02 21:44:11.988619+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyWindow] Scene target of keyboard event deferring environment did change: 1; scene: UIWindowScene: 0x1016bce60; scene identity: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.franck.cardevent-default
+2026-04-02 21:44:11.988645+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:EventDeferring] [0x101e40f50] Scene target of event deferring environments did update: scene: 0x1016bce60; current systemShellManagesKeyboardFocus: 1; systemShellManagesKeyboardFocusForScene: 1; eligibleForRecordRemoval: 1;
+2026-04-02 21:44:11.988658+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyWindow] Scene became target of keyboard event deferring environment: UIWindowScene: 0x1016bce60; scene identity: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.franck.cardevent-default
+2026-04-02 21:44:11.988672+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyWindow] Stack[KeyWindow] 0x101f8ced0: Taking no further action for migration from LastOneWins -> SystemShellManaged as there are no scenes
+2026-04-02 21:44:11.988684+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyWindow] Setting default evaluation strategy for UIUserInterfaceIdiomPhone to SystemShellManaged
+2026-04-02 21:44:11.988707+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyWindow] Key window needs update: 0; currentKeyWindowScene: 0x0; evaluatedKeyWindowScene: 0x1016bce60; currentApplicationKeyWindow: 0x0; evaluatedApplicationKeyWindow: 0x0; reason: UIWindowScene: 0x1016bce60: Window scene became target of keyboard environment
+2026-04-02 21:44:11.988808+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1016bce60> (A3363870-7C5F-44A1-9138-1B0A319F764C)
+2026-04-02 21:44:11.988962+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1016bce60> (A3363870-7C5F-44A1-9138-1B0A319F764C)
+2026-04-02 21:44:11.989474+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1016bce60> (A3363870-7C5F-44A1-9138-1B0A319F764C)
+2026-04-02 21:44:12.007022+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:Orientation] <UIWindowScene: 0x1016bce60> (A3363870-7C5F-44A1-9138-1B0A319F764C) Scene updated orientation preferences: none -> ( Pu Ll Lr )
+2026-04-02 21:44:12.009150+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyWindow] Key window API is scene-level: YES
+2026-04-02 21:44:12.009199+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyWindow] UIWindowScene: 0x1016bce60: Window became key in scene: UIWindow: 0x101da0400; contextId: 0xE36EBA27: reason: UIWindowScene: 0x1016bce60: Window requested to become key in scene: 0x101da0400
+2026-04-02 21:44:12.009226+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyWindow] Key window needs update: 1; currentKeyWindowScene: 0x0; evaluatedKeyWindowScene: 0x1016bce60; currentApplicationKeyWindow: 0x0; evaluatedApplicationKeyWindow: 0x101da0400; reason: UIWindowScene: 0x1016bce60: Window requested to become key in scene: 0x101da0400
+2026-04-02 21:44:12.009271+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyWindow] Window did become application key: UIWindow: 0x101da0400; contextId: 0xE36EBA27; scene identity: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.franck.cardevent-default
+2026-04-02 21:44:12.009314+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:EventDeferring] [0x101e40f50] Begin local event deferring requested for token: 0x101de0ea0; environments: 1; reason: UIWindowScene: 0x1016bce60: Begin event deferring in keyboardFocus for window: 0x101da0400
+2026-04-02 21:44:12.010122+0200  localhost CardEvent[8941]: (BackBoardServices) [com.apple.BackBoard:EventDelivery] policyStatus:<BKSHIDEventDeliveryPolicyObserver: 0x101de13e0; token: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.franck.cardevent-default; status: ancestor> was:target
+2026-04-02 21:44:12.010207+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1016bce60> (A3363870-7C5F-44A1-9138-1B0A319F764C)
+2026-04-02 21:44:12.011507+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.franck.cardevent-default  persistentID: A3363870-7C5F-44A1-9138-1B0A319F764C
+2026-04-02 21:44:12.011640+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:Application] Ignoring already applied deactivation reason: 5; deactivation reasons: 2080
+2026-04-02 21:44:12.011670+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:Application] Deactivation reason added: 12; deactivation reasons: 2080 -> 6176; animating application lifecycle event: 1
+2026-04-02 21:44:12.011724+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:Application] Deactivation reason removed: 11; deactivation reasons: 6176 -> 4128; animating application lifecycle event: 1
+2026-04-02 21:44:12.011782+0200  localhost CardEvent[8941]: (FrontBoardServices) [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneIntelligenceSupportSettings> on FBSSceneSettings
+2026-04-02 21:44:12.012729+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1016bce60> (A3363870-7C5F-44A1-9138-1B0A319F764C)
+2026-04-02 21:44:12.012869+0200  localhost CardEvent[8941]: (UIIntelligenceSupport) [com.apple.UIIntelligenceSupport:xpc] establishing connection to agent
+2026-04-02 21:44:12.013055+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:session] [0x101da4be0] Session created.
+2026-04-02 21:44:12.013063+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:session] [0x101da4be0] Session created from connection [0x101fe0000]
+2026-04-02 21:44:12.013078+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101fe0000] activating connection: mach=true listener=false peer=false name=com.apple.uiintelligencesupport.agent
+2026-04-02 21:44:12.013145+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:session] [0x101da4be0] Session activated
+2026-04-02 21:44:12.014555+0200  localhost CardEvent[8941]: (CoreFoundation) Created Activity ID: 0x1b4f52, Description: Updating Key-Value Observers Of Preferences
+2026-04-02 21:44:12.052366+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101fe0a00] activating connection: mach=true listener=false peer=false name=com.apple.fontservicesd
+2026-04-02 21:44:12.119000+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b4f53, Description: SecItemCopyMatching_ios
+2026-04-02 21:44:12.119062+0200  localhost CardEvent[8941]: (Security) [com.apple.securityd:secitemratelimit] Not internal release, disabling SIRL
+2026-04-02 21:44:12.120299+0200  localhost CardEvent[8941]: (Security) [com.apple.securityd:thread-local-client-debug] SecSecurityClientGet new thread!
+2026-04-02 21:44:12.120619+0200  localhost CardEvent[8941]: (Security) [com.apple.securityd:keychain] System Keychain Always Supported set via feature flag to disabled
+2026-04-02 21:44:12.120634+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101d417c0] activating connection: mach=true listener=false peer=false name=com.apple.securityd
+2026-04-02 21:44:12.123836+0200  localhost securityd[8331]: [com.apple.securityd:SecError] CardEvent[8941]/1#-1 LF=0 copy_matching Error Domain=NSOSStatusErrorDomain Code=-34018 "Client has neither application-identifier nor keychain-access-groups entitlements" UserInfo={numberOfErrorsDeep=0, NSDescription=Client has neither application-identifier nor keychain-access-groups entitlements}
+2026-04-02 21:44:12.146553+0200  localhost CardEvent[8941]: (Network) [com.apple.network:activity] Create activity from XPC object <nw_activity 50:1 [FF78CA5C-A9DB-46DA-8E56-86D6A250A475] (reporting strategy default)>
+2026-04-02 21:44:12.146588+0200  localhost CardEvent[8941]: (Network) [com.apple.network:activity] Create activity from XPC object <nw_activity 50:2 [42232B2F-A279-428A-A6EC-B0EF1EF54C72] (reporting strategy default)>
+2026-04-02 21:44:12.146600+0200  localhost CardEvent[8941]: (Network) [com.apple.network:activity] Set activity <nw_activity 50:1 [FF78CA5C-A9DB-46DA-8E56-86D6A250A475] (reporting strategy default)> as the global parent
+2026-04-02 21:44:12.146625+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Ending background task with UIBackgroundTaskIdentifier: 1
+2026-04-02 21:44:12.146664+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Ending task with identifier 1 and description: <_UIBackgroundTaskInfo: 0x101cacd40>: taskID = 1, taskName = Launch Background Task for Coalescing, creationTime = 17475 (elapsed = 0), _expireHandler: (null)
+2026-04-02 21:44:12.146691+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Decrementing reference count for assertion <BKSProcessAssertion: 0x1016c0ce0> (used by background task with identifier 1: <_UIBackgroundTaskInfo: 0x101cacd40>: taskID = 1, taskName = Launch Background Task for Coalescing, creationTime = 17475 (elapsed = 0))
+2026-04-02 21:44:12.146738+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:UpdateScheduler] Target list changed: <CADisplay:LCD PurpleMain>
+2026-04-02 21:44:12.146963+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.franck.cardevent-default  persistentID: A3363870-7C5F-44A1-9138-1B0A319F764C
+2026-04-02 21:44:12.147087+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1016bce60> (A3363870-7C5F-44A1-9138-1B0A319F764C)
+2026-04-02 21:44:12.147632+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <F4392FC0-8EAA-4CC7-A316-30E889FF6809>.<2> resuming, timeouts(60.0, 604800.0) qos(0x19) voucher(<OS_voucher: 0x101da4370>) activity(00000000-0000-0000-0000-000000000000)
+2026-04-02 21:44:12.147641+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <FE8E4394-147C-42EB-A73C-5C1D1DB1AA25>.<3> resuming, timeouts(5.0, 604800.0) qos(0x19) voucher(<OS_voucher: 0x101da4370>) activity(00000000-0000-0000-0000-000000000000)
+2026-04-02 21:44:12.147643+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <6C7CF166-5376-451A-9F34-EEEF9D1172C2>.<1> resuming, timeouts(5.0, 604800.0) qos(0x19) voucher(<OS_voucher: 0x101da4370>) activity(00000000-0000-0000-0000-000000000000)
+2026-04-02 21:44:12.147775+0200  localhost CardEvent[8941]: (CoreFoundation) Created Activity ID: 0x1b4f54, Description: Loading Preferences From User Session CFPrefsD
+2026-04-02 21:44:12.147921+0200  localhost CardEvent[8941]: (RunningBoardServices) Created Activity ID: 0x1b4f55, Parent ID: 0x80000000001b4f8e, Description: didChangeInheritances
+2026-04-02 21:44:12.149497+0200  localhost CardEvent[8941]: (RunningBoardServices) Created Activity ID: 0x1b4f56, Parent ID: 0x80000000001b4fe1, Description: didChangeInheritances
+2026-04-02 21:44:12.150789+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:EventDeferring] [0x101e40f50] Scene target of event deferring environments did update: scene: 0x1016bce60; current systemShellManagesKeyboardFocus: 1; systemShellManagesKeyboardFocusForScene: 1; eligibleForRecordRemoval: 1;
+2026-04-02 21:44:12.150815+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyWindow] Scene became target of keyboard event deferring environment: UIWindowScene: 0x1016bce60; scene identity: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.franck.cardevent-default
+2026-04-02 21:44:12.151202+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1016bce60> (A3363870-7C5F-44A1-9138-1B0A319F764C)
+2026-04-02 21:44:12.151501+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.franck.cardevent-default  persistentID: A3363870-7C5F-44A1-9138-1B0A319F764C
+2026-04-02 21:44:12.151563+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:Application] Deactivation reason removed: 12; deactivation reasons: 4128 -> 32; animating application lifecycle event: 1
+2026-04-02 21:44:12.151599+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.KeyboardArbiter:Client] Send setDeactivating: N (-DeactivationReason:SuspendedEventsOnly)
+2026-04-02 21:44:12.151707+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:Application] Deactivation reason removed: 5; deactivation reasons: 32 -> 0; animating application lifecycle event: 0
+2026-04-02 21:44:12.152076+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.KeyboardArbiter:Client] startConnection
+2026-04-02 21:44:12.152215+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101fe0640] activating connection: mach=true listener=false peer=false name=com.apple.UIKit.KeyboardManagement.hosted
+2026-04-02 21:44:12.153338+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.KeyboardArbiter:Client] handleKeyboardChange: set currentKeyboard:N (wasKeyboard:N)
+2026-04-02 21:44:12.153791+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyboardSceneDelegate] forceReloadInputViews
+2026-04-02 21:44:12.153822+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyboardSceneDelegate] Reloading input views for key-window scene responder: <(null): 0x0; > force:Y
+2026-04-02 21:44:12.154144+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyboardArbiterClientLog] isWritingToolsHandlingKeyboardTracking:Y (WT ready:Y, Arbiter ready:Y)
+2026-04-02 21:44:12.157978+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Initializing NSHTTPCookieStorage singleton
+2026-04-02 21:44:12.158271+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Initializing CFHTTPCookieStorage singleton
+2026-04-02 21:44:12.158285+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Creating default cookie storage with process/bundle identifier
+2026-04-02 21:44:12.158392+0200  localhost CardEvent[8941]: (libsystem_containermanager.dylib) Created Activity ID: 0x1b4f57, Description: container_system_group_path_for_identifier
+2026-04-02 21:44:12.158439+0200  localhost CardEvent[8941]: (libsystem_containermanager.dylib) [com.apple.containermanager:xpc] Requesting container lookup; class = 13, identifier = com.apple.nsurlsessiond, group_identifier = systemgroup.com.apple.nsurlstoragedresources, create = 1, temp = 0, euid = 501, uid = 501
+2026-04-02 21:44:12.158450+0200  localhost CardEvent[8941]: (libsystem_containermanager.dylib) Created Activity ID: 0x1b4f58, Parent ID: 0x80000000001b4f57, Description: container_query_t
+2026-04-02 21:44:12.158459+0200  localhost CardEvent[8941]: (libsystem_containermanager.dylib) [com.apple.containermanager:xpc] Query; euid = 501, uid = 501, class = 13, identifier = [com.apple.nsurlsessiond](1), flags = 900000003
+2026-04-02 21:44:12.160757+0200  localhost CardEvent[8941]: (libsystem_containermanager.dylib) [com.apple.containermanager:unspecified] _container_query_get_result_at_index: success
+2026-04-02 21:44:12.160769+0200  localhost CardEvent[8941]: (libsystem_containermanager.dylib) Created Activity ID: 0x1b4f59, Parent ID: 0x80000000001b4f57, Description: container_copy_object
+2026-04-02 21:44:12.160780+0200  localhost CardEvent[8941]: (libsystem_containermanager.dylib) [com.apple.containermanager:unspecified] container_system_group_path_for_identifier: success
+2026-04-02 21:44:12.165524+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Initializing AlternativeServices Storage singleton
+2026-04-02 21:44:12.165807+0200  localhost CardEvent[8941]: (CoreServicesInternal) [com.apple.FileURL:default] kExcludedFromBackupXattrName set on path: /Users/franck/Library/Developer/CoreSimulator/Devices/0FEAE23C-F49A-4FA0-982D-302834635695/data/Containers/Data/Application/8B96B9BB-C6B4-4525-AF42-827520DBD7DA/Library/HTTPStorages/com.franck.cardevent
+2026-04-02 21:44:12.167722+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Garbage collection for alternative services
+2026-04-02 21:44:12.168010+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Connection 0: creating secure tcp or quic connection
+2026-04-02 21:44:12.171808+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <6C7CF166-5376-451A-9F34-EEEF9D1172C2>.<1> waiting for setup of Connection 1
+2026-04-02 21:44:12.171816+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <F4392FC0-8EAA-4CC7-A316-30E889FF6809>.<2> waiting for setup of Connection 1
+2026-04-02 21:44:12.171834+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Connection 1: enabling TLS
+2026-04-02 21:44:12.171842+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Connection 1: starting, TC(0x0)
+2026-04-02 21:44:12.172176+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1 C8C3F15B-890E-4B69-9595-93F522295524 Hostname#2a634645:443 quic-connection, url: https://viendez.com/api/log-usage.php, definite, attribution: developer, context: com.apple.CFNetwork.NSURLSession.{5EB70FBA-B7FA-45AF-99CA-7DF6511A79CF}{(null)}{Y}{2}{0x0} (private), proc: 1E63410E-2660-3E35-993B-E55C263E8E79, delegated upid: 0] start
+2026-04-02 21:44:12.172241+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1 Hostname#2a634645:443 initial parent-flow ((null))] event: path:start @0.000s
+2026-04-02 21:44:12.172896+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1 Hostname#2a634645:443 waiting parent-flow (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: path:satisfied @0.000s, uuid: DB4A089F-9C11-4EFF-A7DA-1F1F018F7E6E
+2026-04-02 21:44:12.173035+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1 Hostname#2a634645:443 in_progress parent-flow (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: flow:start_connect @0.000s
+2026-04-02 21:44:12.173048+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_connection_report_state_with_handler_on_nw_queue [C1] reporting state preparing
+2026-04-02 21:44:12.173334+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1 Hostname#2a634645:443 in_progress parent-flow (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: flow:start_child @0.001s
+2026-04-02 21:44:12.173365+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1 Hostname#2a634645:443 initial path ((null))] event: path:start @0.001s
+2026-04-02 21:44:12.173419+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1 Hostname#2a634645:443 waiting path (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: path:satisfied @0.001s, uuid: DB4A089F-9C11-4EFF-A7DA-1F1F018F7E6E
+2026-04-02 21:44:12.173442+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1 Hostname#2a634645:443 in_progress transform (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: transform:start @0.001s
+2026-04-02 21:44:12.173545+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1.1 Hostname#2a634645:443 initial path ((null))] event: path:start @0.001s
+2026-04-02 21:44:12.173633+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1.1 Hostname#2a634645:443 waiting path (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: path:satisfied @0.001s, uuid: F153A4D4-51D6-4D7B-95FB-CC8E50ED0F70
+2026-04-02 21:44:12.173734+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1.1 Hostname#2a634645:443 in_progress resolver (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: resolver:start_dns @0.001s
+2026-04-02 21:44:12.174021+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <FE8E4394-147C-42EB-A73C-5C1D1DB1AA25>.<3> setting up Connection 1
+2026-04-02 21:44:12.174316+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_endpoint_resolver_update [C1.1.1 Hostname#2a634645:443 in_progress resolver (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] Adding endpoint handler for IPv6#2c184fe7.443
+2026-04-02 21:44:12.174339+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_endpoint_resolver_update [C1.1.1 Hostname#2a634645:443 in_progress resolver (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] Adding endpoint handler for IPv6#2f2019bc.443
+2026-04-02 21:44:12.174355+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_endpoint_resolver_update [C1.1.1 Hostname#2a634645:443 in_progress resolver (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] Adding endpoint handler for IPv4#bc6b5825:443
+2026-04-02 21:44:12.174370+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_endpoint_resolver_update [C1.1.1 Hostname#2a634645:443 in_progress resolver (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] Adding endpoint handler for IPv4#f50d9f5a:443
+2026-04-02 21:44:12.174380+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1.1 Hostname#2a634645:443 in_progress resolver (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: resolver:receive_dns @0.002s
+2026-04-02 21:44:12.174413+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1.1.1 IPv6#2c184fe7.443 initial path ((null))] event: path:start @0.002s
+2026-04-02 21:44:12.174498+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1.1.1 IPv6#2c184fe7.443 waiting path (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: path:satisfied @0.002s, uuid: 2087F9F5-9777-4F6B-B786-817509DD9598
+2026-04-02 21:44:12.174732+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1.1.1 IPv6#2c184fe7.443 in_progress socket-flow (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: flow:start_connect @0.002s
+2026-04-02 21:44:12.190885+0200  localhost CardEvent[8941]: (Network) [com.apple.network:activity] <nw_activity 50:1 [FF78CA5C-A9DB-46DA-8E56-86D6A250A475] (global parent) (reporting strategy default) complete (reason success)> complete with reason 2 (success), duration 685ms
+2026-04-02 21:44:12.190919+0200  localhost CardEvent[8941]: (Network) [com.apple.network:activity] <nw_activity 50:2 [42232B2F-A279-428A-A6EC-B0EF1EF54C72] (reporting strategy default) complete (reason success)> complete with reason 2 (success), duration 685ms
+2026-04-02 21:44:12.190932+0200  localhost CardEvent[8941]: (Network) [com.apple.network:activity] Unsetting the global parent activity <nw_activity 50:1 [FF78CA5C-A9DB-46DA-8E56-86D6A250A475] (global parent) (reporting strategy default) complete (reason success)>
+2026-04-02 21:44:12.190941+0200  localhost CardEvent[8941]: (Network) [com.apple.network:activity] Unset the global parent activity
+2026-04-02 21:44:12.190957+0200  localhost CardEvent[8941]: (libapp_launch_measurement.dylib) [com.apple.app_launch_measurement:ApplicationLaunch] alm_release_pageins_recording_assertion: releasing pageins recording assertion
+2026-04-02 21:44:12.201584+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_socket_handle_socket_event [C1.1.1.1:3] Socket received CONNECTED event
+2026-04-02 21:44:12.201758+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_flow_connected [C1.1.1.1 IPv6#2c184fe7.443 in_progress socket-flow (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] Transport protocol connected (socket)
+2026-04-02 21:44:12.201781+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1.1.1 IPv6#2c184fe7.443 in_progress socket-flow (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: flow:finish_transport @0.029s
+2026-04-02 21:44:12.201976+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_session_apply_protocol_options_for_transport_block_invoke_2(2360) [C1.1.1.1:2][0x104a77260] TLS configured [server(0) min_version(0x0303) max_version(0x0304) name(redacted) tickets(false) false_start(false) enforce_ev(false) enforce_ats(false) ats_non_pfs_ciphersuite_allowed(false) cc_mode_enforced(false) ech(false) pqtls(true), pake(false)]
+2026-04-02 21:44:12.202031+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2769) [C1.1.1.1:2][0x104a77260] Client handshake started
+2026-04-02 21:44:12.202309+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS client enter_early_data
+2026-04-02 21:44:12.202405+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS client read_server_hello
+2026-04-02 21:44:12.206283+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_endpoint_resolver_update [C1.1.1 Hostname#2a634645:443 in_progress resolver (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] Adding endpoint handler for IPv6#2f2019bc.443
+2026-04-02 21:44:12.206306+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_endpoint_resolver_update [C1.1.1 Hostname#2a634645:443 in_progress resolver (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] Adding endpoint handler for IPv4#f50d9f5a:443
+2026-04-02 21:44:12.206322+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_endpoint_resolver_update [C1.1.1 Hostname#2a634645:443 in_progress resolver (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] Adding endpoint handler for IPv4#bc6b5825:443
+2026-04-02 21:44:12.206332+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1.1 Hostname#2a634645:443 in_progress resolver (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: resolver:receive_dns @0.034s
+2026-04-02 21:44:12.230387+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS 1.3 client read_hello_retry_request
+2026-04-02 21:44:12.230432+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS 1.3 client read_server_hello
+2026-04-02 21:44:12.230523+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS 1.3 client read_encrypted_extensions
+2026-04-02 21:44:12.230540+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS 1.3 client read_certificate_request
+2026-04-02 21:44:12.230547+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS 1.3 client read_server_certificate
+2026-04-02 21:44:12.230567+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS 1.3 client read_server_certificate_verify
+2026-04-02 21:44:12.230662+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_evaluate_trust_async(2212) [C1.1.1.1:2][0x104a77260] Performing external trust evaluation
+2026-04-02 21:44:12.230680+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b4f5a, Description: SecKeyCopyPublicBytes
+2026-04-02 21:44:12.230689+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b4f5b, Description: SecKeyCopyAttributes
+2026-04-02 21:44:12.230692+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b4f5c, Parent ID: 0x80000000001b4f5b, Description: SecKeyCopyPublicBytes
+2026-04-02 21:44:12.230709+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_evaluate_trust_async_external(2197) [C1.1.1.1:2][0x104a77260] Asyncing for external verify block
+2026-04-02 21:44:12.230740+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Connection 1: asked to evaluate TLS Trust
+2026-04-02 21:44:12.244131+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <FE8E4394-147C-42EB-A73C-5C1D1DB1AA25>.<3> auth completion disp=1 cred=0x0
+2026-04-02 21:44:12.244258+0200  localhost CardEvent[8941]: (Security) [com.apple.securityd:trust] (Trust 0x101cfed00) No pending evals, starting
+2026-04-02 21:44:12.244291+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b4f5d, Description: SecTrustEvaluateIfNecessaryFastAsync
+2026-04-02 21:44:12.244314+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101fe3840] activating connection: mach=true listener=false peer=false name=com.apple.trustd
+2026-04-02 21:44:12.244393+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101fe2440] activating connection: mach=true listener=false peer=false name=com.apple.trustd
+2026-04-02 21:44:12.244438+0200  localhost CardEvent[8941]: (Security) [com.apple.securityd:trust] (Trust 0x101cfed00) Completed async eval kickoff
+2026-04-02 21:44:12.249713+0200  localhost CardEvent[8941]: (Security) [com.apple.securityd:trust] (Trust 0x101cfed00) trustd returned 4
+2026-04-02 21:44:12.249736+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] System Trust Evaluation yielded status(0)
+2026-04-02 21:44:12.249743+0200  localhost CardEvent[8941]: (Security) [com.apple.securityd:trust] (Trust 0x101cfeb80) No pending evals, starting
+2026-04-02 21:44:12.249773+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b4f5e, Description: SecTrustEvaluateIfNecessaryFastAsync
+2026-04-02 21:44:12.249822+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101fe3d40] activating connection: mach=true listener=false peer=false name=com.apple.trustd
+2026-04-02 21:44:12.249884+0200  localhost CardEvent[8941]: (Security) [com.apple.securityd:trust] (Trust 0x101cfeb80) Completed async eval kickoff
+2026-04-02 21:44:12.249928+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101fe2440] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-04-02 21:44:12.251166+0200  localhost CardEvent[8941]: (Security) [com.apple.securityd:trust] (Trust 0x101cfeb80) trustd returned 4
+2026-04-02 21:44:12.251182+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Connection 1: TLS Trust result 0
+2026-04-02 21:44:12.251194+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_evaluate_trust_async_external_block_invoke_3(2112) [C1.1.1.1:2][0x104a77260] Returning from external verify block with result: true
+2026-04-02 21:44:12.251231+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_certificate_verify_callback(2393) [C1.1.1.1:2][0x104a77260] Certificate verification result: OK
+2026-04-02 21:44:12.251339+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS 1.3 client read_server_finished
+2026-04-02 21:44:12.251360+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS 1.3 client send_end_of_early_data
+2026-04-02 21:44:12.251368+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS 1.3 client send_client_encrypted_extensions
+2026-04-02 21:44:12.251376+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS 1.3 client send_client_certificate
+2026-04-02 21:44:12.251383+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS 1.3 client complete_second_flight
+2026-04-02 21:44:12.251404+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS 1.3 client done
+2026-04-02 21:44:12.251463+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS client finish_client_handshake
+2026-04-02 21:44:12.251474+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2786) [C1.1.1.1:2][0x104a77260] Client handshake state: TLS client done
+2026-04-02 21:44:12.251482+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] boringssl_context_info_handler(2775) [C1.1.1.1:2][0x104a77260] Client handshake done
+2026-04-02 21:44:12.251532+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b4f5f, Description: SecKeyCopyPublicBytes
+2026-04-02 21:44:12.251539+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b5030, Description: SecKeyCopyAttributes
+2026-04-02 21:44:12.251543+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b5031, Parent ID: 0x80000000001b5030, Description: SecKeyCopyPublicBytes
+2026-04-02 21:44:12.251578+0200  localhost CardEvent[8941]: (libboringssl.dylib) [com.apple.network:boringssl] nw_protocol_boringssl_signal_connected(895) [C1.1.1.1:2][0x104a77260] TLS connected [server(0) version(0x0304) ciphersuite(TLS_AES_256_GCM_SHA384) group(0x11ec) signature_alg(0x0403) alpn(h2) resumed(0) offered_ticket(0) in_early_data(0) early_data_accepted(0) false_started(0) ocsp_received(1) sct_received(0) connect_time(50ms) flight_time(28ms) rtt(28ms) write_stalls(0) read_stalls(2) pake(0x0000)]
+2026-04-02 21:44:12.251606+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_flow_connected [C1.1.1.1 IPv6#2c184fe7.443 in_progress socket-flow (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] Output protocol connected (CFNetworkConnection-464913651)
+2026-04-02 21:44:12.251662+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1.1.1 IPv6#2c184fe7.443 ready socket-flow (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: flow:child_finish_connect @0.079s
+2026-04-02 21:44:12.251681+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1.1 Hostname#2a634645:443 ready resolver (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: flow:child_finish_connect @0.079s
+2026-04-02 21:44:12.251691+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1.1 Hostname#2a634645:443 ready transform (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: flow:child_finish_connect @0.079s
+2026-04-02 21:44:12.251746+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_flow_connected [C1 IPv6#2c184fe7.443 in_progress parent-flow (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] Output protocol connected (endpoint_flow)
+2026-04-02 21:44:12.251766+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1 IPv6#2c184fe7.443 ready parent-flow (satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown)] event: flow:finish_connect @0.079s
+2026-04-02 21:44:12.251831+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_connection_report_state_with_handler_on_nw_queue [C1] reporting state ready
+2026-04-02 21:44:12.251860+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101fe3d40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-04-02 21:44:12.251878+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Connection 1: connected successfully
+2026-04-02 21:44:12.251890+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Connection 1: TLS handshake complete
+2026-04-02 21:44:12.251958+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Connection 1: ready C(N) E(N)
+2026-04-02 21:44:12.252037+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1] event: client:connection_reused @0.079s
+2026-04-02 21:44:12.252080+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_protocol_socket_notify [C1.1.1.1:3] nw_protocol_notification_type_connection_idle is false
+2026-04-02 21:44:12.252224+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <FE8E4394-147C-42EB-A73C-5C1D1DB1AA25>.<3> now using Connection 1
+2026-04-02 21:44:12.252269+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <6C7CF166-5376-451A-9F34-EEEF9D1172C2>.<1> now using Connection 1
+2026-04-02 21:44:12.252290+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <F4392FC0-8EAA-4CC7-A316-30E889FF6809>.<2> now using Connection 1
+2026-04-02 21:44:12.252433+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <6C7CF166-5376-451A-9F34-EEEF9D1172C2>.<1> sent request, body N 0
+2026-04-02 21:44:12.252442+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <F4392FC0-8EAA-4CC7-A316-30E889FF6809>.<2> sent request, body N 0
+2026-04-02 21:44:12.252508+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <FE8E4394-147C-42EB-A73C-5C1D1DB1AA25>.<3> sent request, body S 310
+2026-04-02 21:44:12.255471+0200  localhost CardEvent[8941]: (RunningBoardServices) Created Activity ID: 0x1b5032, Parent ID: 0x80000000001b4fe9, Description: didChangeInheritances
+2026-04-02 21:44:12.272745+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b5033, Description: SecKeyCopyPublicBytes
+2026-04-02 21:44:12.272761+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b5034, Description: SecKeyCopyAttributes
+2026-04-02 21:44:12.272766+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b5035, Parent ID: 0x80000000001b5034, Description: SecKeyCopyPublicBytes
+2026-04-02 21:44:12.272851+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b5036, Description: SecKeyCopyPublicBytes
+2026-04-02 21:44:12.272858+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b5037, Description: SecKeyCopyAttributes
+2026-04-02 21:44:12.272862+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b5038, Parent ID: 0x80000000001b5037, Description: SecKeyCopyPublicBytes
+2026-04-02 21:44:12.278035+0200  localhost SpringBoard[8276]: (SpringBoard) [com.apple.SpringBoard:AlertItems] Activation - Presenting <SBUserNotificationAlert: 0x119120c80; title: Autorisez-vous « CardEvent » à vous envoyer des notifications ?; source: SpringBoard; pid: 8276> with presenter: <SBUnlockedAlertItemPresenter: 0x113507b90>
+2026-04-02 21:44:12.280733+0200  localhost CardEvent[8941]: (BackBoardServices) [com.apple.BackBoard:EventDelivery] policyStatus:<BKSHIDEventDeliveryPolicyObserver: 0x101de13e0; token: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.franck.cardevent-default; status: none> was:ancestor
+2026-04-02 21:44:12.280775+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:KeyWindow] Scene target of keyboard event deferring environment did change: 0; scene: UIWindowScene: 0x1016bce60; scene identity: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.franck.cardevent-default
+2026-04-02 21:44:12.314724+0200  localhost CardEvent[8941]: (RunningBoardServices) [com.apple.runningboard:connection] Creating side-channel connection to com.apple.runningboard
+2026-04-02 21:44:12.314743+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x101fe3d40] activating connection: mach=true listener=false peer=false name=com.apple.runningboard
+2026-04-02 21:44:12.315092+0200  localhost CardEvent[8941]: (RunningBoardServices) [com.apple.runningboard:process] Hit the server for a process handle b54856b000022ed that resolved to: [app<com.franck.cardevent((null))>:8941]
+2026-04-02 21:44:12.315220+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.franck.cardevent-default  persistentID: A3363870-7C5F-44A1-9138-1B0A319F764C
+2026-04-02 21:44:12.315288+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:UIAlertControllerStackManager] canShowAlerts Updated: <FBSSceneSettingsDiff: 0x104a85840; UIApplicationSceneSettings> {
+    subclassSettings = <BSSettingsDiff: 0x104a31770> {
+        canShowAlerts = NO;
+    };
+}
+2026-04-02 21:44:12.315482+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1016bce60> (A3363870-7C5F-44A1-9138-1B0A319F764C)
+2026-04-02 21:44:12.315858+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.franck.cardevent-default  persistentID: A3363870-7C5F-44A1-9138-1B0A319F764C
+2026-04-02 21:44:12.315900+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:Application] Deactivation reason added: 13; deactivation reasons: 0 -> 8192; animating application lifecycle event: 0
+2026-04-02 21:44:12.316061+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:Application] Ignoring already applied deactivation reason: 13; deactivation reasons: 8192
+2026-04-02 21:44:12.316086+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:Application] Deactivation reason added: 12; deactivation reasons: 8192 -> 12288; animating application lifecycle event: 0
+2026-04-02 21:44:12.329586+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.franck.cardevent-default  persistentID: A3363870-7C5F-44A1-9138-1B0A319F764C
+2026-04-02 21:44:12.350303+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <6C7CF166-5376-451A-9F34-EEEF9D1172C2>.<1> received response, status 200 content U
+2026-04-02 21:44:12.350339+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <6C7CF166-5376-451A-9F34-EEEF9D1172C2>.<1> done using Connection 1
+2026-04-02 21:44:12.350375+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b5039, Description: SecTrustEvaluateIfNecessary
+2026-04-02 21:44:12.350436+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x104a73200] activating connection: mach=true listener=false peer=false name=com.apple.trustd
+2026-04-02 21:44:12.352125+0200  localhost CardEvent[8941]: (libxpc.dylib) [com.apple.xpc:connection] [0x104a73200] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-04-02 21:44:12.352273+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <6C7CF166-5376-451A-9F34-EEEF9D1172C2>.<1> response ended
+2026-04-02 21:44:12.352330+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Summary] Task <6C7CF166-5376-451A-9F34-EEEF9D1172C2>.<1> summary for task success {transaction_duration_ms=194, response_status=200, connection=1, reused=1, reused_after_ms=0, request_start_ms=94, request_duration_ms=0, response_start_ms=192, response_duration_ms=2, request_bytes=35, request_throughput_kbps=2314, response_bytes=667, response_throughput_kbps=2611, cache_hit=false}
+2026-04-02 21:44:12.352448+0200  localhost CardEvent[8941]: (CoreAnalytics) [com.apple.CoreAnalytics:client] No XPC connection in Simulator
+2026-04-02 21:44:12.352478+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <6C7CF166-5376-451A-9F34-EEEF9D1172C2>.<1> finished successfully
+2026-04-02 21:44:12.366845+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <F4392FC0-8EAA-4CC7-A316-30E889FF6809>.<2> received response, status 200 content U
+2026-04-02 21:44:12.366874+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <F4392FC0-8EAA-4CC7-A316-30E889FF6809>.<2> done using Connection 1
+2026-04-02 21:44:12.366949+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <F4392FC0-8EAA-4CC7-A316-30E889FF6809>.<2> response ended
+2026-04-02 21:44:12.366998+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Summary] Task <F4392FC0-8EAA-4CC7-A316-30E889FF6809>.<2> summary for task success {transaction_duration_ms=209, response_status=200, connection=1, reused=1, reused_after_ms=0, request_start_ms=94, request_duration_ms=0, response_start_ms=209, response_duration_ms=0, request_bytes=36, request_throughput_kbps=2232, response_bytes=1514, response_throughput_kbps=85885, cache_hit=false}
+2026-04-02 21:44:12.367028+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <F4392FC0-8EAA-4CC7-A316-30E889FF6809>.<2> finished successfully
+2026-04-02 21:44:12.370062+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <FE8E4394-147C-42EB-A73C-5C1D1DB1AA25>.<3> received response, status 200 content U
+2026-04-02 21:44:12.370090+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <FE8E4394-147C-42EB-A73C-5C1D1DB1AA25>.<3> done using Connection 1
+2026-04-02 21:44:12.370104+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] [C1] event: client:connection_idle @0.197s
+2026-04-02 21:44:12.370158+0200  localhost CardEvent[8941]: (Network) [com.apple.network:connection] nw_protocol_socket_notify [C1.1.1.1:3] nw_protocol_notification_type_connection_idle is true
+2026-04-02 21:44:12.370211+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <FE8E4394-147C-42EB-A73C-5C1D1DB1AA25>.<3> response ended
+2026-04-02 21:44:12.370263+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Summary] Task <FE8E4394-147C-42EB-A73C-5C1D1DB1AA25>.<3> summary for task success {transaction_duration_ms=219, response_status=200, connection=1, protocol="h2", domain_lookup_duration_ms=1, connect_duration_ms=77, secure_connection_duration_ms=50, private_relay=false, request_start_ms=102, request_duration_ms=0, response_start_ms=219, response_duration_ms=0, request_bytes=457, request_throughput_kbps=17913, response_bytes=345, response_throughput_kbps=14300, cache_hit=false}
+2026-04-02 21:44:12.370289+0200  localhost CardEvent[8941]: (CFNetwork) [com.apple.CFNetwork:Default] Task <FE8E4394-147C-42EB-A73C-5C1D1DB1AA25>.<3> finished successfully
+2026-04-02 21:44:12.373084+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b503a, Description: SecItemCopyMatching_ios
+2026-04-02 21:44:12.373457+0200  localhost securityd[8331]: [com.apple.securityd:SecError] CardEvent[8941]/1#-1 LF=0 copy_matching Error Domain=NSOSStatusErrorDomain Code=-34018 "Client has neither application-identifier nor keychain-access-groups entitlements" UserInfo={numberOfErrorsDeep=0, NSDescription=Client has neither application-identifier nor keychain-access-groups entitlements}
+2026-04-02 21:44:12.373642+0200  localhost CardEvent[8941]: (Security) Created Activity ID: 0x1b503b, Description: SecItemCopyMatching_ios
+2026-04-02 21:44:12.373748+0200  localhost securityd[8331]: [com.apple.securityd:SecError] CardEvent[8941]/1#-1 LF=0 copy_matching Error Domain=NSOSStatusErrorDomain Code=-34018 "Client has neither application-identifier nor keychain-access-groups entitlements" UserInfo={numberOfErrorsDeep=0, NSDescription=Client has neither application-identifier nor keychain-access-groups entitlements}
+2026-04-02 21:44:12.456105+0200  localhost CardEvent[8941]: (libAccessibility.dylib) [com.apple.Accessibility:AXCommon] Read Per-App on Init: Smart invert = (null)
+2026-04-02 21:44:12.509717+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Ending background task with UIBackgroundTaskIdentifier: 2
+2026-04-02 21:44:12.509795+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Ending task with identifier 2 and description: <_UIBackgroundTaskInfo: 0x101e3e580>: taskID = 2, taskName = Persistent SceneSession Map Update, creationTime = 17475 (elapsed = 0), _expireHandler: <__NSGlobalBlock__: 0x1e7b10398>
+2026-04-02 21:44:12.509827+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Decrementing reference count for assertion <BKSProcessAssertion: 0x1016c0ce0> (used by background task with identifier 2: <_UIBackgroundTaskInfo: 0x101e3e580>: taskID = 2, taskName = Persistent SceneSession Map Update, creationTime = 17475 (elapsed = 0))
+2026-04-02 21:44:12.509851+0200  localhost CardEvent[8941]: (UIKitCore) [com.apple.UIKit:BackgroundTask] Will invalidate assertion: <BKSProcessAssertion: 0x1016c0ce0> for task identifier: 2
+2026-04-02 21:44:13.080672+0200  localhost CardEvent[8941]: (RunningBoardServices) Created Activity ID: 0x1b503c, Parent ID: 0x80000000001b5049, Description: didChangeInheritances

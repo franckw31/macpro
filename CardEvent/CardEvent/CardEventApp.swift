@@ -1,0 +1,131 @@
+import SwiftUI
+import UserNotifications
+#if canImport(UIKit)
+import UIKit
+
+class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+        UNUserNotificationCenter.current().delegate = self
+        return true
+    }
+
+    // Token APNs reçu depuis Apple
+    func application(
+        _ application: UIApplication,
+        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+    ) {
+        let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+        print("APNs device token: \(token)")
+        UserDefaults.standard.set(token, forKey: "cardevent.deviceToken")
+        Self.registerTokenWithServer(token)
+    }
+
+    func application(
+        _ application: UIApplication,
+        didFailToRegisterForRemoteNotificationsWithError error: Error
+    ) {
+        print("APNs registration failed: \(error)")
+    }
+
+    // Afficher la notification même quand l'app est au premier plan
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .sound])
+    }
+
+    // Envoie le token à notre serveur
+    static func registerTokenWithServer(_ token: String) {
+        guard let url = URL(string: "https://viendez.com/api/register-device.php") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.timeoutInterval = 10
+        let payload = ["device_token": token]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            if let error = error {
+                print("Token registration error: \(error)")
+            } else {
+                print("Token registered with server")
+            }
+        }.resume()
+    }
+}
+#endif
+
+@main
+struct CardEventApp: App {
+    #if canImport(UIKit)
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    #endif
+    @StateObject private var viewModel  = PokerTimerViewModel()
+    @StateObject private var auth       = AuthService.shared
+
+    var body: some Scene {
+        WindowGroup {
+            Group {
+                if auth.isAuthenticated {
+                    MainTabView(viewModel: viewModel)
+                        .transition(.opacity)
+                } else if auth.isLoading {
+                    SplashView()
+                        .transition(.opacity)
+                } else {
+                    LoginView(auth: auth)
+                        .transition(.opacity)
+                }
+            }
+            .animation(.easeInOut(duration: 0.3), value: auth.isAuthenticated)
+            .animation(.easeInOut(duration: 0.3), value: auth.isLoading)
+            .task {
+                await auth.autoLogin()
+            }
+        }
+    }
+}
+
+// small shared MainTabView and SplashView kept as in original
+private struct MainTabView: View {
+    @ObservedObject var viewModel: PokerTimerViewModel
+    @State private var selection: Int = 0
+
+    var body: some View {
+        TabView(selection: $selection) {
+            HomeView(viewModel: viewModel, showPrizepool: false)
+                .tag(0)
+                .tabItem { Label("Accueil", systemImage: "house.fill") }
+
+            ContentView(viewModel: viewModel)
+                .tag(1)
+                .tabItem { Label("Local CardEvent", systemImage: "cardevent") }
+
+            HomeView(viewModel: viewModel, showPrizepool: true)
+                .tag(2)
+                .tabItem { Label("Répartition", systemImage: "eurosign.circle") }
+        }
+        .tint(Color(red: 0, green: 0.82, blue: 1))
+    }
+}
+
+private struct SplashView: View {
+    private let cyan = Color(red: 0, green: 0.82, blue: 1)
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+            VStack(spacing: 20) {
+                Image(systemName: "suit.spade.fill")
+                    .font(.system(size: 64))
+                    .foregroundColor(cyan)
+                    .shadow(color: cyan.opacity(0.6), radius: 16)
+                ProgressView().tint(cyan)
+            }
+        }
+    }
+}

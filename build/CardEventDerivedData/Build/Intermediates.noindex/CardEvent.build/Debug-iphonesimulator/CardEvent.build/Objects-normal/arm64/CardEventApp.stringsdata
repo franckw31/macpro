@@ -1,0 +1,32 @@
+{
+  "source": "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/CardEventApp.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Accueil",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 103
+        }
+      },
+      {
+        "comment": "",
+        "key": "Local CardEvent",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 107
+        }
+      },
+      {
+        "comment": "",
+        "key": "Répartition",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 111
+        }
+      }
+    ]
+  },
+  "version": 1
+}

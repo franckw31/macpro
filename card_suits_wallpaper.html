@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fond d'écran - Motif Cartes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pattern-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 100px);
+            grid-template-rows: repeat(auto-fill, 100px);
+            gap: 20px;
+            padding: 20px;
+            align-content: center;
+            justify-content: center;
+        }
+
+        .card-suit {
+            font-size: 60px;
+            text-align: center;
+            opacity: 0.15;
+            transition: opacity 0.3s;
+            user-select: none;
+        }
+
+        .card-suit:hover {
+            opacity: 0.4;
+        }
+
+        .spade {
+            color: #fff;
+        }
+
+        .club {
+            color: #fff;
+        }
+
+        .heart {
+            color: #ff0000;
+        }
+
+        .diamond {
+            color: #ff0000;
+        }
+
+        /* Alternative version with SVG symbols */
+        svg {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="pattern-container" id="pattern"></div>
+
+    <script>
+        const container = document.getElementById('pattern');
+        const suits = [
+            { symbol: '♠', class: 'spade' },   // Pique
+            { symbol: '♣', class: 'club' },    // Trèfle
+            { symbol: '♥', class: 'heart' },   // Cœur
+            { symbol: '♦', class: 'diamond' }  // Carreau
+        ];
+
+        // Calculate how many suits we need to fill the screen
+        const cols = Math.ceil(window.innerWidth / 120);
+        const rows = Math.ceil(window.innerHeight / 120);
+        const total = cols * rows;
+
+        // Create the pattern
+        for (let i = 0; i < total; i++) {
+            const suit = suits[i % 4];
+            const div = document.createElement('div');
+            div.className = `card-suit ${suit.class}`;
+            div.textContent = suit.symbol;
+            container.appendChild(div);
+        }
+
+        // Adjust pattern on window resize
+        window.addEventListener('resize', () => {
+            container.innerHTML = '';
+            const newCols = Math.ceil(window.innerWidth / 120);
+            const newRows = Math.ceil(window.innerHeight / 120);
+            const newTotal = newCols * newRows;
+
+            for (let i = 0; i < newTotal; i++) {
+                const suit = suits[i % 4];
+                const div = document.createElement('div');
+                div.className = `card-suit ${suit.class}`;
+                div.textContent = suit.symbol;
+                container.appendChild(div);
+            }
+        });
+    </script>
+</body>
+</html>

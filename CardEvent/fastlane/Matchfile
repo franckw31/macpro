@@ -1,0 +1,2 @@
+git_url("git@github.com:your/repo/certificates.git")
+# Set storage to a git repo accessible to you. Replace the URL above.

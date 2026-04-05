@@ -1,0 +1,209 @@
+{
+  "" : {
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/CardEvent-primary.dia",
+    "emit-module-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/CardEvent-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/CardEvent-primary-emit-module.dia",
+    "pch" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/CardEvent-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/CardEvent-primary.swiftdeps"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/CardEventApp.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/CardEventApp.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/CardEventApp.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/CardEventApp.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/CardEventApp.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/CardEventApp.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/CardEventApp.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/CardEventApp.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/CardEventApp~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Models/BlindLevel.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindLevel.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindLevel.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindLevel.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindLevel.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindLevel.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindLevel.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindLevel.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindLevel~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Models/BlindStructure.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindStructure.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindStructure.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindStructure.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindStructure.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindStructure.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindStructure.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindStructure.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/BlindStructure~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Services/AuthService.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/AuthService.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/AuthService.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/AuthService.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/AuthService.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/AuthService.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/AuthService.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/AuthService.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/AuthService~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/ViewModels/PokerTimerViewModel.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PokerTimerViewModel.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PokerTimerViewModel.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PokerTimerViewModel.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PokerTimerViewModel.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PokerTimerViewModel.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PokerTimerViewModel.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PokerTimerViewModel.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PokerTimerViewModel~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ActivityInfoView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ActivityInfoView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ActivityInfoView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ActivityInfoView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ActivityInfoView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ActivityInfoView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ActivityInfoView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ActivityInfoView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ActivityInfoView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ChallengeRankingView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ChallengeRankingView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ChallengeRankingView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ChallengeRankingView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ChallengeRankingView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ChallengeRankingView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ChallengeRankingView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ChallengeRankingView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ChallengeRankingView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ContentView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ContentView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ContentView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/EditStructureView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/EditStructureView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/EditStructureView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/EditStructureView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/EditStructureView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/EditStructureView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/EditStructureView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/EditStructureView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/EditStructureView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/HomeView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/HomeView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/HomeView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/HomeView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/HomeView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/HomeView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/HomeView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/HomeView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/HomeView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/LiveView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LiveView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LiveView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LiveView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LiveView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LiveView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LiveView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LiveView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LiveView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/LoginView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LoginView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LoginView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LoginView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LoginView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LoginView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LoginView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LoginView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/LoginView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ParticipantsListView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ParticipantsListView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ParticipantsListView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ParticipantsListView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ParticipantsListView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ParticipantsListView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ParticipantsListView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ParticipantsListView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/ParticipantsListView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayerProfileView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerProfileView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerProfileView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerProfileView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerProfileView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerProfileView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerProfileView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerProfileView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerProfileView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayerStatsDetailView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerStatsDetailView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerStatsDetailView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerStatsDetailView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerStatsDetailView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerStatsDetailView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerStatsDetailView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerStatsDetailView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerStatsDetailView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayerTrakView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerTrakView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerTrakView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerTrakView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerTrakView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerTrakView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerTrakView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerTrakView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayerTrakView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayersLiveView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayersLiveView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayersLiveView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayersLiveView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayersLiveView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayersLiveView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayersLiveView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayersLiveView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/PlayersLiveView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/StructureLibraryView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/StructureLibraryView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/StructureLibraryView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/StructureLibraryView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/StructureLibraryView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/StructureLibraryView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/StructureLibraryView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/StructureLibraryView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/StructureLibraryView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/TicketsListView.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/TicketsListView.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/TicketsListView.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/TicketsListView.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/TicketsListView.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/TicketsListView.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/TicketsListView.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/TicketsListView.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/TicketsListView~partial.swiftmodule"
+  },
+  "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/franck/Desktop/Viendez.com/xcode/build/CardEventDerivedData/Build/Intermediates.noindex/CardEvent.build/Debug-iphonesimulator/CardEvent.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}

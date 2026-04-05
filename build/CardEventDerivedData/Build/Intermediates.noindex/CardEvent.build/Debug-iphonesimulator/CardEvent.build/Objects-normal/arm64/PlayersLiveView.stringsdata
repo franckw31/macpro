@@ -1,0 +1,136 @@
+{
+  "source": "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayersLiveView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Joueurs",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 149
+        }
+      },
+      {
+        "comment": "",
+        "key": "Sync auto · 5s",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 179
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld actifs / %lld inscrits",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 183
+        }
+      },
+      {
+        "comment": "",
+        "key": "#",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 193
+        }
+      },
+      {
+        "comment": "",
+        "key": "Joueur",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 194
+        }
+      },
+      {
+        "comment": "",
+        "key": "Recave",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 195
+        }
+      },
+      {
+        "comment": "",
+        "key": "Bounty",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 196
+        }
+      },
+      {
+        "comment": "",
+        "key": "Gains",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 197
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 240
+        }
+      },
+      {
+        "comment": "",
+        "key": "–",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 240
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 246
+        }
+      },
+      {
+        "comment": "",
+        "key": "–",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 246
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld€",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 252
+        }
+      },
+      {
+        "comment": "",
+        "key": "–",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 252
+        }
+      },
+      {
+        "comment": "",
+        "key": "#%lld",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 223
+        }
+      },
+      {
+        "comment": "",
+        "key": "–",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 226
+        }
+      }
+    ]
+  },
+  "version": 1
+}

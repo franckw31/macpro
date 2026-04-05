@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Fond d'écran</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #222;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        label {
+            display: inline-block;
+            margin: 10px 15px;
+        }
+
+        input[type="number"] {
+            width: 80px;
+            padding: 5px;
+            margin-left: 10px;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        #preview {
+            border: 2px solid #555;
+            max-width: 90vw;
+            max-height: 60vh;
+        }
+
+        .info {
+            margin-top: 20px;
+            background: #444;
+            padding: 15px;
+            border-radius: 5px;
+            max-width: 600px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>🃏 Générateur de Fond d'écran - Motif Cartes</h1>
+    
+    <div class="controls">
+        <label>
+            Largeur:
+            <input type="number" id="width" value="1920" min="800" max="7680">
+        </label>
+        <label>
+            Hauteur:
+            <input type="number" id="height" value="1080" min="600" max="4320">
+        </label>
+        <br>
+        <label>
+            Taille des symboles:
+            <input type="number" id="symbolSize" value="80" min="30" max="200">
+        </label>
+        <label>
+            Espacement:
+            <input type="number" id="spacing" value="120" min="50" max="300">
+        </label>
+        <br>
+        <label>
+            Opacité:
+            <input type="number" id="opacity" value="0.15" min="0.05" max="1" step="0.05">
+        </label>
+        <br><br>
+        <button onclick="generateWallpaper()">Générer</button>
+        <button onclick="downloadWallpaper()">Télécharger PNG</button>
+    </div>
+
+    <canvas id="preview"></canvas>
+
+    <div class="info">
+        <p><strong>Instructions:</strong></p>
+        <p>1. Ajustez les paramètres selon votre écran<br>
+        2. Cliquez sur "Générer" pour voir l'aperçu<br>
+        3. Cliquez sur "Télécharger PNG" pour sauvegarder<br>
+        4. Faites clic-droit sur l'image téléchargée → "Définir comme fond d'écran"</p>
+        <p><small>Résolutions courantes: 1920×1080 (Full HD), 2560×1440 (2K), 3840×2160 (4K)</small></p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('preview');
+        const ctx = canvas.getContext('2d');
+
+        // Symboles de cartes avec leurs couleurs
+        const suits = [
+            { symbol: '♠', color: '#ffffff' },  // Pique (blanc)
+            { symbol: '♣', color: '#ffffff' },  // Trèfle (blanc)
+            { symbol: '♥', color: '#ff0000' },  // Cœur (rouge)
+            { symbol: '♦', color: '#ff0000' }   // Carreau (rouge)
+        ];
+
+        function generateWallpaper() {
+            const width = parseInt(document.getElementById('width').value);
+            const height = parseInt(document.getElementById('height').value);
+            const symbolSize = parseInt(document.getElementById('symbolSize').value);
+            const spacing = parseInt(document.getElementById('spacing').value);
+            const opacity = parseFloat(document.getElementById('opacity').value);
+
+            // Set canvas size
+            canvas.width = width;
+            canvas.height = height;
+
+            // Fill background with black
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, width, height);
+
+            // Set text properties
+            ctx.font = `${symbolSize}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.globalAlpha = opacity;
+
+            // Calculate grid
+            const cols = Math.ceil(width / spacing);
+            const rows = Math.ceil(height / spacing);
+
+            // Draw pattern
+            let suitIndex = 0;
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const x = col * spacing + spacing / 2;
+                    const y = row * spacing + spacing / 2;
+
+                    const suit = suits[suitIndex % 4];
+                    ctx.fillStyle = suit.color;
+                    ctx.fillText(suit.symbol, x, y);
+
+                    suitIndex++;
+                }
+            }
+
+            ctx.globalAlpha = 1.0;
+        }
+
+        function downloadWallpaper() {
+            // Convert canvas to blob and download
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'card_suits_wallpaper.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        // Generate on load with default values
+        window.onload = function() {
+            generateWallpaper();
+        };
+    </script>
+</body>
+</html>

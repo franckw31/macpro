@@ -1,0 +1,296 @@
+{
+  "source": "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ContentView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "-1 min",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 186
+        }
+      },
+      {
+        "comment": "",
+        "key": "+1 min",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 191
+        }
+      },
+      {
+        "comment": "",
+        "key": "◀︎ Niveau",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 198
+        }
+      },
+      {
+        "comment": "",
+        "key": "Niveau ▶︎",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 203
+        }
+      },
+      {
+        "comment": "",
+        "key": "Pause",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 213
+        }
+      },
+      {
+        "comment": "",
+        "key": "Start",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 213
+        }
+      },
+      {
+        "comment": "",
+        "key": "Re-Start",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 221
+        }
+      },
+      {
+        "comment": "",
+        "key": "Restart blind",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 232
+        }
+      },
+      {
+        "comment": "",
+        "key": "Structures",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 239
+        }
+      },
+      {
+        "comment": "",
+        "key": "Annuler",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 244
+        }
+      },
+      {
+        "comment": "",
+        "key": "30 sec",
+        "location": {
+          "startingColumn": 59,
+          "startingLine": 244
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 329
+        }
+      },
+      {
+        "comment": "",
+        "key": "⏱",
+        "location": {
+          "startingColumn": 67,
+          "startingLine": 329
+        }
+      },
+      {
+        "comment": "",
+        "key": "↑ + / ↓ −",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 324
+        }
+      },
+      {
+        "comment": "",
+        "key": "+%lld min",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 321
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld min",
+        "location": {
+          "startingColumn": 69,
+          "startingLine": 321
+        }
+      },
+      {
+        "comment": "",
+        "key": "Niveau %lld / %lld",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 408
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld / %lld",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 411
+        }
+      },
+      {
+        "comment": "",
+        "key": "Ante: %lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 422
+        }
+      },
+      {
+        "comment": "",
+        "key": "Prochain: %@",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 426
+        }
+      },
+      {
+        "comment": "",
+        "key": "-1 min",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 461
+        }
+      },
+      {
+        "comment": "",
+        "key": "+1 min",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 465
+        }
+      },
+      {
+        "comment": "",
+        "key": "◀︎ Niveau",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 489
+        }
+      },
+      {
+        "comment": "",
+        "key": "Niveau ▶︎",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 493
+        }
+      },
+      {
+        "comment": "",
+        "key": "Pause",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 517
+        }
+      },
+      {
+        "comment": "",
+        "key": "Start",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 517
+        }
+      },
+      {
+        "comment": "",
+        "key": "Restart blind",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 524
+        }
+      },
+      {
+        "comment": "",
+        "key": "Reset tournoi",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 540
+        }
+      },
+      {
+        "comment": "",
+        "key": "Éditer la structure",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 546
+        }
+      },
+      {
+        "comment": "",
+        "key": "30 secondes",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 554
+        }
+      },
+      {
+        "comment": "",
+        "key": "Confirmation",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 692
+        }
+      },
+      {
+        "comment": "",
+        "key": "Timer",
+        "location": {
+          "startingColumn": 67,
+          "startingLine": 681
+        }
+      },
+      {
+        "comment": "",
+        "key": "Timer : %@",
+        "location": {
+          "startingColumn": 77,
+          "startingLine": 681
+        }
+      },
+      {
+        "comment": "",
+        "key": "Annuler",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 693
+        }
+      },
+      {
+        "comment": "",
+        "key": "Reset",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 694
+        }
+      },
+      {
+        "comment": "",
+        "key": "Réinitialiser le cardevent au niveau 1 ?",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 696
+        }
+      }
+    ]
+  },
+  "version": 1
+}

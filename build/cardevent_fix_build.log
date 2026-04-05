@@ -1,0 +1,6 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -workspace CardEvent.xcworkspace -scheme CardEvent -destination "platform=iOS Simulator,name=iPhone 14" -configuration Debug clean build CODE_SIGNING_ALLOWED=NO -derivedDataPath build/CardEventDerivedData
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+

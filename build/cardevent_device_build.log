@@ -1,0 +1,589 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -workspace CardEvent.xcworkspace -scheme CardEvent -configuration Debug -destination generic/platform=iOS -allowProvisioningUpdates build DEVELOPMENT_TEAM=5L3569V4B3 CODE_SIGN_STYLE=Automatic
+
+Build settings from command line:
+    CODE_SIGN_STYLE = Automatic
+    DEVELOPMENT_TEAM = 5L3569V4B3
+
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (1 target)
+    Target 'CardEvent' in project 'CardEvent' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Assets.xcassets
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: 1c012a26a6b1c54f6aa0d0836ff007fa
+Build description path: /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/XCBuildData/1c012a26a6b1c54f6aa0d0836ff007fa.xcbuilddata
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk /Users/franck/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.4-23E237-68a138bb55de9ba35ce6c8c40d12849e.sdkstatcache
+    cd /Users/franck/Desktop/Viendez.com/xcode
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -o /Users/franck/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.4-23E237-68a138bb55de9ba35ce6c8c40d12849e.sdkstatcache
+
+CreateBuildDirectory /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphoneos
+    cd /Users/franck/Desktop/Viendez.com/xcode
+    builtin-create-build-directory /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphoneos
+
+CreateBuildDirectory /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos
+    cd /Users/franck/Desktop/Viendez.com/xcode
+    builtin-create-build-directory /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent-20d078156061c12a1e671d5d1e9000c0-VFS-iphoneos/all-product-headers.yaml
+    cd /Users/franck/Desktop/Viendez.com/xcode
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent-20d078156061c12a1e671d5d1e9000c0-VFS-iphoneos/all-product-headers.yaml
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.hmap (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.hmap
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-own-target-headers.hmap (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-own-target-headers.hmap
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-all-non-framework-target-headers.hmap (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-DebugDylibInstallName-normal-arm64.txt (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-DebugDylibInstallName-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-project-headers.hmap (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-project-headers.hmap
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-all-target-headers.hmap (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-all-target-headers.hmap
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-generated-files.hmap (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-generated-files.hmap
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-DebugDylibPath-normal-arm64.txt (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/Entitlements.plist (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/Entitlements.plist
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent_const_extract_protocols.json (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.SwiftFileList (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.SwiftFileList
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.SwiftConstValuesFileList (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.LinkFileList (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.LinkFileList
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent-OutputFileMap.json (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.DependencyStaticMetadataFileList (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.DependencyMetadataFileList (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    write-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.DependencyMetadataFileList
+
+MkDir /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    /bin/mkdir -p /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app
+
+ProcessProductPackaging /Users/franck/Library/Developer/Xcode/UserData/Provisioning\ Profiles/08a7987a-83c9-4019-ad83-8542450b8501.mobileprovision /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/embedded.mobileprovision (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-productPackagingUtility /Users/franck/Library/Developer/Xcode/UserData/Provisioning\ Profiles/08a7987a-83c9-4019-ad83-8542450b8501.mobileprovision -o /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/embedded.mobileprovision
+
+ProcessProductPackaging /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/CardEvent.entitlements /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.app.xcent (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+    Entitlements:
+    
+    {
+    "application-identifier" = "5L3569V4B3.com.franck.cardevent";
+    "aps-environment" = development;
+    "com.apple.developer.team-identifier" = 5L3569V4B3;
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "5L3569V4B3.com.franck.cardevent"
+    );
+}
+    
+    builtin-productPackagingUtility /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/CardEvent.entitlements -entitlements -format xml -o /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.app.xcent
+
+ProcessProductPackagingDER /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.app.xcent /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.app.xcent.der (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    /usr/bin/derq query -f xml -i /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.app.xcent -o /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.app.xcent.der --raw
+
+Ld /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/__preview.dylib normal (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios16.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -O0 -L/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos -F/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos -install_name @rpath/CardEvent.debug.dylib -Xlinker -dead_strip -rdynamic -Xlinker -no_deduplicate -Xlinker -dependency_info -Xlinker /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent_dependency_info.dat -Xlinker -no_adhoc_codesign -o /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/__preview.dylib
+
+GenerateAssetSymbols /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Assets.xcassets (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Assets.xcassets --compile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app --output-format human-readable-text --notices --warnings --export-dependency-info /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_dependencies --output-partial-info-plist /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_generated_info.plist --app-icon AppIcon --accent-color AccentColor --compress-pngs --enable-on-demand-resources YES --development-region en --target-device iphone --target-device ipad --minimum-deployment-target 16.0 --platform iphoneos --bundle-identifier com.franck.cardevent --generate-swift-asset-symbol-extensions NO --generate-swift-asset-symbols /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/GeneratedAssetSymbols.swift --generate-objc-asset-symbols /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/GeneratedAssetSymbols.h --generate-asset-symbol-index /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/* com.apple.actool.document.warnings */
+/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Assets.xcassets:./AppIcon.appiconset/(null)[2d][icon-29@1x.png]: warning: The app icon set "AppIcon" has an unassigned child.
+/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Assets.xcassets:./AppIcon.appiconset/(null)[2d][icon-29@1x.png]: warning: The app icon set "AppIcon" has an unassigned child.
+/* com.apple.actool.compilation-results */
+/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/GeneratedAssetSymbols.h
+/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/GeneratedAssetSymbols.swift
+
+
+MkDir /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_output/thinned (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    /bin/mkdir -p /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_output/thinned
+
+MkDir /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_output/unthinned (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    /bin/mkdir -p /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_output/unthinned
+
+CompileAssetCatalogVariant thinned /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Assets.xcassets (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Assets.xcassets --compile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_output/thinned --output-format human-readable-text --notices --warnings --export-dependency-info /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_dependencies_thinned --output-partial-info-plist /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_generated_info.plist_thinned --app-icon AppIcon --accent-color AccentColor --compress-pngs --enable-on-demand-resources YES --development-region en --target-device iphone --target-device ipad --minimum-deployment-target 16.0 --platform iphoneos
+/* com.apple.actool.document.warnings */
+/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Assets.xcassets:./AppIcon.appiconset/(null)[2d][icon-29@1x.png]: warning: The app icon set "AppIcon" has an unassigned child.
+/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Assets.xcassets:./AppIcon.appiconset/(null)[2d][icon-29@1x.png]: warning: The app icon set "AppIcon" has an unassigned child.
+/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Assets.xcassets:./AppIcon.appiconset/(null)[2d][icon-29@1x.png]: warning: The app icon set "AppIcon" has an unassigned child.
+/* com.apple.actool.document.notices */
+/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Assets.xcassets:./AppIcon.appiconset/[][ipad][76x76][][][1x][][][][]: notice: 76x76@1x app icons only apply to iPad apps targeting releases of iOS prior to 10.0.
+/* com.apple.actool.compilation-results */
+/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_generated_info.plist_thinned
+/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_output/thinned/AppIcon60x60@2x.png
+/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_output/thinned/AppIcon76x76@2x~ipad.png
+/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_output/thinned/Assets.car
+
+
+SwiftDriver CardEvent normal arm64 com.apple.xcode.tools.swift.compiler (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name CardEvent -Onone @/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -target arm64-apple-ios16.0 -g -module-cache-path /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos -F /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos -emit-localized-strings -emit-localized-strings-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64 -c -j14 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/franck/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.4-23E237-68a138bb55de9ba35ce6c8c40d12849e.sdkstatcache -output-file-map /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent_const_extract_protocols.json -Xcc -iquote -Xcc /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-generated-files.hmap -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-own-target-headers.hmap -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-all-target-headers.hmap -Xcc -iquote -Xcc /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-project-headers.hmap -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/include -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources-normal/arm64 -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/arm64 -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent-Swift.h -working-directory /Users/franck/Desktop/Viendez.com/xcode/CardEvent -experimental-emit-module-separately -disable-cmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/ptrcheck-D6PG83A5T4TB4JR7N4GB08W9U.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/SwiftShims-8WJVN3JLJ006E2OX4YICMWHDL.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_AvailabilityInternal-AIMOY5QK0AYLCJONMM88PY5XC.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/DeveloperToolsSupport-7ESI1R25HFLDNP8ZZYKJZKNQN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/ptrauth-A9TBIYKPRYNM6C1MUICEKR5PX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_stddef-6RB115PDGNX6U0VKGW4K00COT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_float-ES8VBD9VYB7FJRHL9DL8MAI4G.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_stdarg-2IF8681F94U4G91HWEFNIQSAW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_SwiftConcurrencyShims-44MYQMYGMK50D24596HUYZB95.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_stdbool-2O05FIRHKPLNLCYIL6E9BB28C.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_DarwinFoundation1-8OCZ4YYCYS73K40WBMFOUN3TH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_limits-CEADLF15R4LR9X2NZCX34NVBQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_DarwinFoundation2-CKGUDT386DA650XF0PBPXZ4OF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_tgmath-EW2NAPUBSHN2IQCW0RX9J7W8Q.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/sys_types-6CZXVXF05DIBNHT484LUN754J.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_stdint-6YEQQYZOSRKLZA4ZC0NT2M3M9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_stdatomic-3E1YF7PPRGW0HCGBWB1C7MXVG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_intrinsics-EY55B2LSE6CQQVRQUFSKSBFVX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_DarwinFoundation3-2U5OLHEN9WEZKQUQYC1EV8YR2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_inttypes-E2M3NMXMXDV64RETRD79C6QRP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Darwin-8ZAHVQIHBBHU4UCILJZ2501CW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/simd-351VNAPQUPQZB0SYFECMN4QOH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/MachO-4HMN2876LE5ZBRISVGR3N72TU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/ObjectiveC-G6KEO3HSCHY4XEF4CXXUTRMW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/os_object-5TMIXPXKXUSVJUG93VJWFTXBN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/os_workgroup-D69DRPOVV2U957KXEWPZ58SKU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Spatial-E0F5GFFWDIYYSDIIVP4JA27ZZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Dispatch-BE68ACQCFFKEQQN6IPU4FQJBO.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreFoundation-36JQUOLL729MS0FKNMSM9GNDS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/XPC-8TVO60ME7RRJO1JTRLUAHLU2B.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/dnssd-3RJH32SCPANRHUHV5O1T9XSKZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/os-PHU45K3XGOOMUXPCFGFBVL8.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CFNetwork-356YNRP8D9BIZ3BSUBIXGTIV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreAudioTypes-EH05M6AXOY4EKG16QM41U1VET.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreGraphics-3SW88ITBUZCX808KCAAF3VIAR.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Security-910I3Z9ERZSS8SFNFJBBYCJ0O.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreAudio-449V8NFQUZQQGE1NYJF0IEM68.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Foundation-AWI6AE35L4XLU7J06MMJY25ZA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreText-2KXZC0MKVEML1HXT0EL6RLIYZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/ImageIO-EKLJG171TY8NE7EOORNG88XXW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreData-EIFBBQRZW5L494PI5BMIX00OO.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreTransferable-DCKMAZVO287Z8QOPBPR30ZUF6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/UniformTypeIdentifiers-EC1SKZ5HWDI99KOJCDQZAVKTW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/UserNotifications-EPAXU1BD6VBTAZTS9Y0Z1564I.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreMIDI-N0CEKVS4TGS1NEMXK1PIG76J.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/DataDetection-C7VTPZQ2BE4R90JM2C4JMPPOF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/IOSurface-AE56KPC1CMUFE508LYY54HO3S.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/OSLog-58Q2SOO0ZQF8LBWA8UYEWKP1I.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Accessibility-5C30WFKSTC5A0B4EBTGH35YEJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Symbols-2ES6876PORIFT8HIADVC8PYCT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/FileProvider-9FJY2A77E6BVR9FLP4HHNVF3B.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Network-3ZR2T2GNUHDADLXXTXVE0AS9R.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/UIUtilities-AO42YUVJSV48KSQ5TW11YEA7Z.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Metal-5ZIB1VDTNSVOU9GLDUXQ1IHJA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/OpenGLES-7Q4NRN3NJGV34YAJAPD4K4BLX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/AVRouting-C5JEMPYAW63GRPZFY0VISW0JP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/AudioToolbox-AYKNJSMX6DJ7WMI855EXCWOKM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreVideo-1DH5VN80H587TNK7EJHXG7L2W.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreMedia-7DVK12CAX6BBE0YA7997502Y0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreImage-2DDP536HN2WHLZZCCQT41OBEW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/QuartzCore-CGINYQVZ9YKI6ABPOZITJ9A7G.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/SwiftUICore-1HVXHEANZR4UYXG7ZTJ2TCSTP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/AVFAudio-CSS6FMK74VIWXOREY6JD38LTU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/MediaToolbox-DEV9B134JIFC10W4PL1YYBSMB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/UIKit-BAE8BX04FTAKRLQ0CPNVYJGER.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/AVFoundation-D45LIJGMSN8OCBY223GLCA418.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/SwiftUI-9YHX6A0K9Y77J3IODG7YCDC4O.pcm
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ CardEvent (in target 'CardEvent' from project 'CardEvent')
+
+EmitSwiftModule normal arm64 (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 Compiling\ HomeView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/HomeView.swift (in target 'CardEvent' from project 'CardEvent')
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/HomeView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/HomeView.swift:454:13: warning: variable 'currentSum' was never mutated; consider changing to 'let' constant
+        var currentSum = gains.reduce(0, +)
+        ~~~ ^
+        let
+
+SwiftCompile normal arm64 Compiling\ TicketsListView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/TicketsListView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/TicketsListView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 Compiling\ GeneratedAssetSymbols.swift /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftCompile normal arm64 /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 Compiling\ PlayerTrakView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayerTrakView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayerTrakView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 Compiling\ PlayerStatsDetailView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayerStatsDetailView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayerStatsDetailView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 Compiling\ StructureLibraryView.swift,\ AuthService.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/StructureLibraryView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Services/AuthService.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/StructureLibraryView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Services/AuthService.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 Compiling\ ChallengeRankingView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ChallengeRankingView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ChallengeRankingView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ChallengeRankingView.swift:446:13: warning: variable 'urlStr' was never mutated; consider changing to 'let' constant
+        var urlStr = "\(baseURL)?activity_id=\(challengeToLoad)"
+        ~~~ ^
+        let
+
+SwiftCompile normal arm64 Compiling\ PlayersLiveView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayersLiveView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayersLiveView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 Compiling\ LoginView.swift,\ ParticipantsListView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/LoginView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ParticipantsListView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/LoginView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ParticipantsListView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 Compiling\ PlayerProfileView.swift,\ ActivityInfoView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayerProfileView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ActivityInfoView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayerProfileView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayerProfileView.swift:150:44: warning: value 'mid' was defined but never used; consider replacing with boolean test
+                                    if let mid = memberId {
+                                       ~~~~^~~~~~
+                                                          != nil
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ActivityInfoView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 Compiling\ CardEventApp.swift,\ BlindLevel.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/CardEventApp.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Models/BlindLevel.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/CardEventApp.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Models/BlindLevel.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 Compiling\ LiveView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/LiveView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/LiveView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 Compiling\ PokerTimerViewModel.swift,\ ContentView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/ViewModels/PokerTimerViewModel.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ContentView.swift (in target 'CardEvent' from project 'CardEvent')
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/ViewModels/PokerTimerViewModel.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ContentView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for CardEvent (in target 'CardEvent' from project 'CardEvent')
+
+SwiftDriver\ Compilation\ Requirements CardEvent normal arm64 com.apple.xcode.tools.swift.compiler (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name CardEvent -Onone @/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -target arm64-apple-ios16.0 -g -module-cache-path /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos -F /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos -emit-localized-strings -emit-localized-strings-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64 -c -j14 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/franck/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.4-23E237-68a138bb55de9ba35ce6c8c40d12849e.sdkstatcache -output-file-map /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent_const_extract_protocols.json -Xcc -iquote -Xcc /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-generated-files.hmap -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-own-target-headers.hmap -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-all-target-headers.hmap -Xcc -iquote -Xcc /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-project-headers.hmap -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/include -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources-normal/arm64 -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/arm64 -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent-Swift.h -working-directory /Users/franck/Desktop/Viendez.com/xcode/CardEvent -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling LoginView.swift, ParticipantsListView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftCompile normal arm64 Compiling\ EditStructureView.swift,\ BlindStructure.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/EditStructureView.swift /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Models/BlindStructure.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/EditStructureView.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftCompile normal arm64 /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Models/BlindStructure.swift (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+
+SwiftMergeGeneratedHeaders /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/CardEvent-Swift.h /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent-Swift.h (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-swiftHeaderTool -arch arm64 /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent-Swift.h -o /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/CardEvent-Swift.h
+
+SwiftDriverJobDiscovery normal arm64 Compiling StructureLibraryView.swift, AuthService.swift (in target 'CardEvent' from project 'CardEvent')
+
+Copy /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.swiftmodule/arm64-apple-ios.swiftmodule /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.swiftmodule (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.swiftmodule /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.swiftmodule/arm64-apple-ios.swiftmodule
+
+Copy /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.swiftmodule/arm64-apple-ios.swiftdoc /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.swiftdoc (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.swiftdoc /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.swiftmodule/arm64-apple-ios.swiftdoc
+
+SwiftDriverJobDiscovery normal arm64 Compiling PlayerProfileView.swift, ActivityInfoView.swift (in target 'CardEvent' from project 'CardEvent')
+
+Copy /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.swiftmodule/arm64-apple-ios.abi.json /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.abi.json (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.abi.json /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.swiftmodule/arm64-apple-ios.abi.json
+
+Copy /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.swiftsourceinfo (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.swiftsourceinfo /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo
+
+SwiftDriverJobDiscovery normal arm64 Compiling CardEventApp.swift, BlindLevel.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftDriverJobDiscovery normal arm64 Compiling PlayerStatsDetailView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftDriverJobDiscovery normal arm64 Compiling TicketsListView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftDriverJobDiscovery normal arm64 Compiling PlayersLiveView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftDriverJobDiscovery normal arm64 Compiling PlayerTrakView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftDriverJobDiscovery normal arm64 Compiling ChallengeRankingView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftDriverJobDiscovery normal arm64 Compiling GeneratedAssetSymbols.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftDriverJobDiscovery normal arm64 Compiling LiveView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftDriverJobDiscovery normal arm64 Compiling EditStructureView.swift, BlindStructure.swift (in target 'CardEvent' from project 'CardEvent')
+
+LinkAssetCatalog /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Assets.xcassets (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-linkAssetCatalog --thinned /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_output/thinned --thinned-dependencies /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_dependencies_thinned --thinned-info-plist-content /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_generated_info.plist_thinned --unthinned /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_output/unthinned --unthinned-dependencies /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_dependencies_unthinned --unthinned-info-plist-content /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_generated_info.plist_unthinned --output /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app --plist-output /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_generated_info.plist
+note: Emplaced /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/AppIcon60x60@2x.png (in target 'CardEvent' from project 'CardEvent')
+note: Emplaced /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/Assets.car (in target 'CardEvent' from project 'CardEvent')
+note: Emplaced /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/AppIcon76x76@2x~ipad.png (in target 'CardEvent' from project 'CardEvent')
+
+ProcessInfoPlistFile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/Info.plist /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Info.plist (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-infoPlistUtility /Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Info.plist -producttype com.apple.product-type.application -genpkginfo /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/PkgInfo -expandbuildsettings -format binary -platform iphoneos -additionalcontentfile /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/assetcatalog_generated_info.plist -requiredArchitecture arm64 -o /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/Info.plist
+
+SwiftDriverJobDiscovery normal arm64 Compiling HomeView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftDriverJobDiscovery normal arm64 Compiling PokerTimerViewModel.swift, ContentView.swift (in target 'CardEvent' from project 'CardEvent')
+
+SwiftDriver\ Compilation CardEvent normal arm64 com.apple.xcode.tools.swift.compiler (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name CardEvent -Onone @/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -target arm64-apple-ios16.0 -g -module-cache-path /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos -F /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos -emit-localized-strings -emit-localized-strings-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64 -c -j14 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/franck/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.4-23E237-68a138bb55de9ba35ce6c8c40d12849e.sdkstatcache -output-file-map /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/franck/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent_const_extract_protocols.json -Xcc -iquote -Xcc /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-generated-files.hmap -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-own-target-headers.hmap -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-all-target-headers.hmap -Xcc -iquote -Xcc /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-project-headers.hmap -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/include -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources-normal/arm64 -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources/arm64 -Xcc -I/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent-Swift.h -working-directory /Users/franck/Desktop/Viendez.com/xcode/CardEvent -experimental-emit-module-separately -disable-cmo
+
+Ld /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/CardEvent.debug.dylib normal (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios16.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -O0 -L/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphoneos -L/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos -F/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphoneos -F/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos -filelist /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.LinkFileList -install_name @rpath/CardEvent.debug.dylib -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @executable_path/Frameworks -Xlinker -dead_strip -Xlinker -object_path_lto -Xlinker /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -dependency_info -Xlinker /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.swiftmodule @/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent-linker-args.resp -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -Xlinker -no_adhoc_codesign -o /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/CardEvent.debug.dylib
+
+ConstructStubExecutorLinkFileList /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-ExecutorLinkFileList-normal-arm64.txt (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    construct-stub-executor-link-file-list /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/CardEvent.debug.dylib /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-ExecutorLinkFileList-normal-arm64.txt
+note: Using stub executor library with Swift entry point. (in target 'CardEvent' from project 'CardEvent')
+
+Ld /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/CardEvent normal (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios16.0 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -O0 -L/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos -F/Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @executable_path/Frameworks -rdynamic -Xlinker -no_deduplicate -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-DebugDylibPath-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-DebugDylibInstallName-normal-arm64.txt -Xlinker -filelist -Xlinker /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent-ExecutorLinkFileList-normal-arm64.txt /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/CardEvent.debug.dylib -Xlinker -no_adhoc_codesign -o /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/CardEvent
+
+ExtractAppIntentsMetadata (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name CardEvent --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk --xcode-version 17E192 --platform-family iOS --deployment-target 16.0 --bundle-identifier com.franck.cardevent --output /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app --target-triple arm64-apple-ios16.0 --binary-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/CardEvent --dependency-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent_dependency_info.dat --stringsdata-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.SwiftFileList --metadata-file-list /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.DependencyMetadataFileList --static-metadata-file-list /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.DependencyStaticMetadataFileList --swift-const-vals-list /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/Objects-normal/arm64/CardEvent.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --validate-assistant-intents --no-app-shortcuts-localization
+2026-04-02 22:02:20.280 appintentsmetadataprocessor[9826:320829] Starting appintentsmetadataprocessor export
+2026-04-02 22:02:20.282 appintentsmetadataprocessor[9826:320829] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
+
+CopySwiftLibs /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-swiftStdLibTool --copy --verbose --sign C3D5967301BF11CF0AB90D52137DD0528AAB47A6 --scan-executable /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/CardEvent.debug.dylib --scan-folder /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/Frameworks --scan-folder /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/PlugIns --scan-folder /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/SystemExtensions --scan-folder /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/Extensions --platform iphoneos --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+AppIntentsSSUTraining (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/Info.plist --temp-dir-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/ssu --bundle-id com.franck.cardevent --product-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app --extracted-metadata-path /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/Metadata.appintents --metadata-file-list /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.DependencyMetadataFileList --source-file /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/Info.plist --archive-ssu-assets
+2026-04-02 22:02:20.295 appintentsnltrainingprocessor[9827:320830] Parsing options for appintentsnltrainingprocessor
+2026-04-02 22:02:20.295 appintentsnltrainingprocessor[9827:320830] Starting AppIntents SSU YAML Generation
+2026-04-02 22:02:20.296 appintentsnltrainingprocessor[9827:320830] No AppShortcuts found - Skipping.
+
+CodeSign /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/CardEvent.debug.dylib (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+    Signing Identity:     "Apple Development: FRANCK JEAN- MARIE WENGER (WNF8U744Z9)"
+    Provisioning Profile: "iOS Team Provisioning Profile: com.franck.cardevent"
+                          (08a7987a-83c9-4019-ad83-8542450b8501)
+    
+    /usr/bin/codesign --force --sign C3D5967301BF11CF0AB90D52137DD0528AAB47A6 --timestamp\=none --generate-entitlement-der /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/CardEvent.debug.dylib
+
+CodeSign /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/__preview.dylib (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+    Signing Identity:     "Apple Development: FRANCK JEAN- MARIE WENGER (WNF8U744Z9)"
+    Provisioning Profile: "iOS Team Provisioning Profile: com.franck.cardevent"
+                          (08a7987a-83c9-4019-ad83-8542450b8501)
+    
+    /usr/bin/codesign --force --sign C3D5967301BF11CF0AB90D52137DD0528AAB47A6 --timestamp\=none --generate-entitlement-der /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app/__preview.dylib
+
+CodeSign /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    
+    Signing Identity:     "Apple Development: FRANCK JEAN- MARIE WENGER (WNF8U744Z9)"
+    Provisioning Profile: "iOS Team Provisioning Profile: com.franck.cardevent"
+                          (08a7987a-83c9-4019-ad83-8542450b8501)
+    
+    /usr/bin/codesign --force --sign C3D5967301BF11CF0AB90D52137DD0528AAB47A6 --entitlements /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Intermediates.noindex/CardEvent.build/Debug-iphoneos/CardEvent.build/CardEvent.app.xcent --timestamp\=none --generate-entitlement-der /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app
+
+RegisterExecutionPolicyException /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-RegisterExecutionPolicyException /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app
+
+Validate /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    builtin-validationUtility /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app -shallow-bundle -infoplist-subpath Info.plist
+
+Touch /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app (in target 'CardEvent' from project 'CardEvent')
+    cd /Users/franck/Desktop/Viendez.com/xcode/CardEvent
+    /usr/bin/touch -c /Users/franck/Library/Developer/Xcode/DerivedData/CardEvent-fdncqqbqziqbpqcztylottmpaqbl/Build/Products/Debug-iphoneos/CardEvent.app
+
+** BUILD SUCCEEDED **
+

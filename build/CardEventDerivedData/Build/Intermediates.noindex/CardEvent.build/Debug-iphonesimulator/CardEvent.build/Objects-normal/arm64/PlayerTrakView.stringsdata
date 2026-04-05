@@ -1,0 +1,112 @@
+{
+  "source": "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayerTrakView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Notes – %@",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 148
+        }
+      },
+      {
+        "comment": "",
+        "key": "Chargement…",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 107
+        }
+      },
+      {
+        "comment": "",
+        "key": "Réessayer",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 118
+        }
+      },
+      {
+        "comment": "",
+        "key": "Aucune note pour ce joueur.",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 133
+        }
+      },
+      {
+        "comment": "",
+        "key": "Aucun résultat pour ces filtres.",
+        "location": {
+          "startingColumn": 78,
+          "startingLine": 133
+        }
+      },
+      {
+        "comment": "",
+        "key": "auteur:%lld  cible:%lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 181
+        }
+      },
+      {
+        "comment": "",
+        "key": "Supprimer",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 209
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 220
+        }
+      },
+      {
+        "comment": "",
+        "key": "Écrites",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 221
+        }
+      },
+      {
+        "comment": "",
+        "key": "Reçues",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 222
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld/%lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 296
+        }
+      },
+      {
+        "comment": "",
+        "key": "Toutes les activités",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 260
+        }
+      },
+      {
+        "comment": "",
+        "key": "Ajouter une note…",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 312
+        }
+      }
+    ]
+  },
+  "version": 1
+}

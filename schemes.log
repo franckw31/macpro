@@ -1,0 +1,7 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -workspace CardEvent.xcworkspace -list
+
+Information about workspace "CardEvent":
+    Schemes:
+        CardEvent
+

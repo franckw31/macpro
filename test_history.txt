@@ -1,0 +1,308 @@
+    1  apt update
+    2  su -
+    3  ping 10.8.0.1
+    4  ip a
+    5  ssh root@10.8.0.1
+    6  ls
+    7  cd Téléchargements/
+    8  ls
+    9  cd DEBIAN/
+   10  ls
+   11  cd ..
+   12  cd usr/
+   13  ls
+   14  cd share/
+   15  ls
+   16  su -
+   17  ssh root@www.viendez.com
+   18  sftp 192.168.1.169
+   19  sftp -P2222 viendez.com
+   20  ssh -t root@viendez.com -p 2222
+   21  cd /etc/openvpn
+   22  cd client/
+   23  ls
+   24  openvpn proxmox.ovpn
+   25  sudo openvpn proxmox.ovpn
+   26  cd ..
+   27  openvpn
+   28  ./openvpn
+   29  ls
+   30  su -
+   31  ssh 192.168.1.73
+   32  ping 192.168.1.73
+   33  ping 192.168.1.254
+   34  ping 10.8.0.1
+   35  sftp 192.168.1.169
+   36  sftp viendez.com -P 2222
+   37  sftp viendez.com
+   38  sftp -P2222 viendez.com
+   39  htop
+   40  apt install htop
+   41  sudo apt install htop
+   42  su -
+   43  ping 10.8.0.1
+   44  ping google.com
+   45  ping viendez.com
+   46  su -
+   47  htop
+   48  pwd
+   49  apt udate
+   50  sudo apt update
+   51  sudo su -
+   52  su -
+   53  cd /var
+   54  cd www
+   55  ls
+   56  cd html
+   57  ls
+   58  nano index.html 
+   59  sudo nano index.html 
+   60  su -
+   61  sudo nano index.html 
+   62  sudo nano info.php
+   63  ip a
+   64  sudo apt install webmin
+   65  sudo apt install cockpit
+   66  apt install gnupg2 curl -y
+   67  sudo apt install gnupg2 curl -y
+   68  cd /tmp
+   69  curl -o setup-repos.sh https://raw.githubusercontent.com/webmin/webmin/master/setup-repos.sh
+   70  sh setup-repos.sh
+   71  sudo sh setup-repos.sh
+   72  sudo apt update -y
+   73  sudo apt install webmin --install-recommends -y
+   74  service webmin start
+   75  sudo service webmin start
+   76  ip a
+   77  sudo mysql -u root -p
+   78  su -
+   79  htop
+   80  reboot
+   81  sudo reboot
+   82  htop
+   83  sudo apt install btop
+   84  btop
+   85  cd /var/www/html*
+   86  cd /var/www/html
+   87  ls
+   88  su -
+   89  btop
+   90  sudo shtdown
+   91  sudo shutdown
+   92  sudo shutdown now
+   93  ip a
+   94  htop
+   95  sudo reboot now
+   96  htop
+   97  kill -9 236147
+   98  htop
+   99  sudo reboot -now 
+  100  sudo reboot -now
+  101  sudo reboot now
+  102  htop
+  103  htop
+  104  sudo apt update
+  105  sudo apt upgrade
+  106  htop
+  107  sudo reboot now
+  108  btop
+  109  sudo reboot now
+  110  sudo apt upgrade -y
+  111  btop
+  112  sudo reboot now
+  113  ip a
+  114  htop
+  115  history > frwhis.txt
+
+    1  apt update
+    2  apt install htop
+    3  htop
+    4  apt install filezilla
+    5  cd /etc
+    6  cd apt
+    7  nano sources.list
+    8  apt install filezilla
+    9  filezilla
+   10  apt install vscode
+   11  pwd
+   12  cd /home/franck/Téléchargements/
+   13  ls
+   14  ls -lha
+   15  mv code_1.91.1-1720564633_amd64.deb code.deb
+   16  apt install code
+   17  apt install code.deb
+   18  ls
+   19  apt install ./code.deb
+   20  cp code.deb /root
+   21  cd /root
+   22  apt install ./code.deb
+   23  code
+   24  su franck code
+   25  code --user-data-dir
+   26  code --no-sandbox --user-data-dir /home/franck
+   27  code --user-data-dir /home/franck
+   28  cd /home/franck
+   29  ls -lha
+   30  ls -lha
+   31  cd /etc/openvpn/client/
+   32  openvpn proxmox.ovpn
+   33  apt install htop
+   34  apt install mc
+   35  halt
+   36  pwd
+   37  wget -qO - https://keys.anydesk.com/repos/DEB-GPG-KEY | apt-key add -
+   38  echo "deb http://deb.anydesk.com/ all main" > /etc/apt/sources.list.d/anydesk-stable.list
+   39  apt update
+   40  apt install anydesk
+   41  cd /ec
+   42  tc
+   43  cd /etc/openvpn
+   44  ./openvpn
+   45  ls
+   46  openvpn proxmox.ovpn
+   47  screen
+   48  apt install screen
+   49  screen
+   50  ssh viendez.com
+   51  ping viendez.com
+   52  tracer
+   53  tracert
+   54  traceroute
+   55  traceroute viendez.com
+   56  reboot
+   57  pwd
+   58  openvpn proxmox.ovpn
+   59  cd client/
+   60  openvpn proxmox.ovpn
+   61  apt install anydesk
+   62  openvpn proxmox.ovpn
+   63  openvpn proxmox.ovpn
+   64  screen
+   65  screen
+   66  apt install screen
+   67  screen -a
+   68  screen -a
+   69  apt install mysql-server
+   70  apt install mysql-server
+   71  apt install mariadb
+   72  apt install mysql
+   73  apt install mysqld
+   74  apt install mysqld-server
+   75  apt install mysql-server
+   76  mysql
+   77  pwd
+   78  apt update
+   79  apt upgrade
+   80  apt install apache2
+   81  apt install phpmyadmin
+   82  apt install sql
+   83  apt install sql-server
+   84  apt install mariadb-server
+   85  apt install phpmyadmin
+   86  apt remove phpmyadmin
+   87  apt install phpmyadmin
+   88  reboot
+   89  visudo
+   90  exit
+   91  pwd
+   92  cd /home/franck/Documents/Viendez.com/
+   93  ls
+   94  cp * -R /var/www/html/.
+   95  cd /var/www/html
+   96  nano index.php
+   97  ls
+   98  nano config.php 
+   99  cd panel/include/
+  100  nano config.php 
+  101  cd ..
+  102  cd ..
+  103  nano index.php
+  104  nano index.php
+  105  nano out.php
+  106  nano sql2map.php 
+  107  nano config.php 
+  108  nano index.php 
+  109  cd ..
+  110  mv html html-poker31
+  111  mv
+  112  mv html html-poker31
+  113  cd /var/www
+  114  mv /home/franck/Bureau/html .
+  115  ls
+  116  ls -lah
+  117  chown -R root:root html
+  118  cd html
+  119  ls -lha
+  120  ls
+  121  nano config.php 
+  122  nano sql2map.php 
+  123  cd panel/include/
+  124  ls
+  125  nano config.php 
+  126  ls
+  127  nano config.php 
+  128  nano config.php 
+  129  cd /var/www
+  130  chmod 777 -R *
+  131  ls -lha
+  132  top
+  133  reboot
+  134  cd /var/www/html
+  135  mkdir login
+  136  cd login/
+  137  wget https://github.com/sabai6/loginusingsessioncookie.git
+  138  ls
+  139  wget https://github.com/sabai6/loginusingsessioncookie/archive/refs/heads/master.zip
+  140  unzip master.zip 
+  141  ls
+  142  cd loginusingsessioncookie-master/
+  143  ls
+  144  cd ..
+  145  ls -lha
+  146  rm loginusingsessioncookie.git 
+  147  cd loginusingsessioncookie-master/
+  148  cp * -R /var/www/html/.
+  149  cd ..
+  150  cd ..
+  151  ls
+  152  nano db.php
+  153  ls
+  154  ls -lha
+  155  mv -apoub-config.php db.php
+  156  ren -apoub-config.php db.php
+  157  rename -apoub-config.php db.php
+  158  mv '-apoub-config.php' db.php
+  159  nano '-apoub-config.php' 
+  160  nano "-apoub-config.php"
+  161  ls -lha
+  162  nano access.php 
+  163  nano register.php 
+  164  ls -lha
+  165  chmod 777 *
+  166  sudo chmod 777 * 
+  167  mv -apoub-config.php conf.php
+  168  chmod 777 *
+  169  ls -lha
+  170  cd vendors/
+  171  ls
+  172  ls -lha
+  173  cd ..
+  174  nano register.php 
+  175  nano db.php 
+  176  nano login.php 
+  177  nano register.php 
+  178  ls -lha
+  179  nano register.php 
+  180  nano db.php 
+  181  ipa
+  182  ip a
+  183  ipa
+  184  nano db.php 
+  185  nano db.php 
+  186  nano register.php 
+  187  nano login.php 
+  188  nano session.php 
+  189  nano register.php 
+  190  nano login.php 
+  191  nano login.php 
+  192  history > roothis.txt

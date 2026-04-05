@@ -1,0 +1,80 @@
+{
+  "source": "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/EditStructureView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Structure blinds",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 68
+        }
+      },
+      {
+        "comment": "",
+        "key": "Small blind: %lld",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 20
+        }
+      },
+      {
+        "comment": "",
+        "key": "Big blind: %lld",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 21
+        }
+      },
+      {
+        "comment": "",
+        "key": "Ante: %lld",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 22
+        }
+      },
+      {
+        "comment": "",
+        "key": "Durée: %lld min",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 24
+        }
+      },
+      {
+        "comment": "",
+        "key": "Niveau %lld",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 33
+        }
+      },
+      {
+        "comment": "",
+        "key": "Supprimer cette structure",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 63
+        }
+      },
+      {
+        "comment": "",
+        "key": "Annuler",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 71
+        }
+      },
+      {
+        "comment": "",
+        "key": "Sauver",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 74
+        }
+      }
+    ]
+  },
+  "version": 1
+}

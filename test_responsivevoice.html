@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemple ResponsiveVoice</title>
+    <!-- Script ResponsiveVoice avec votre clé API -->
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=RTEc1M0w"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test ResponsiveVoice</h1>
+    
+    <p>Entrez du texte ci-dessous et cliquez sur le bouton pour l'écouter.</p>
+
+    <textarea id="text-to-speak" rows="5">Bonjour ! Ceci est un exemple de lecture vocale avec ResponsiveVoice.</textarea>
+    <br>
+    
+    <!-- Bouton simple pour lire le texte en français -->
+    <button onclick="speakText()">Lire le texte</button>
+
+    <script>
+        function speakText() {
+            var text = document.getElementById('text-to-speak').value;
+            // Lecture du texte en utilisant la voix 'French Female'
+            responsiveVoice.speak(text, "French Female");
+        }
+    </script>
+</body>
+</html>

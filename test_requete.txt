@@ -1,0 +1,28 @@
+contexte : tu es un devellopeur informatique php, tu m aides a coder. 
+peux tu créer un code en php sans pdo, css, javascript et une base mysql en 1 seul fichier qui :
+utilise ce script :    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>,
+ces infos :   mapboxgl.accessToken = 'pk.eyJ1IjoiZnJhbmNrdzMxIiwiYSI6ImNsbmJqemU5cjA0MDYya3RkczNrMHdqb2wifQ.6NLEMz-lShL80j9QuGW9cA';
+            style: 'mapbox://styles/mapbox/streets-v11';
+            center: [1.43, 43.65];
+            zoom: 9.6.		
+ces infos  Connexion à la base de données
+$servername = "localhost";
+$username = "root"; //  nom d'utilisateur MySQL
+$password = "Kookies7*"; // mot de passe MySQL
+$dbname = "dbs9616600"; // nom de ta base de données
+
+le code affiche une carte, demande une adresse, affiche l adresse trouvée sur la carte, affiche la longitude et la latitude trouvée sur la carte,
+et stocke en mode ajout l adresse et la longitude et la latitude trouvée dans la table adresse de la base de donnée
+
+avec un test
+cree un seul fichier et ajoute la possibilite de deplacer le marqueur, afficher l historique des resultats et sauve le tout dans la base
+ajoute la possibilité de deplacer le marqueur
+met a jour l adresse si le marqueur et deplacé , affiche a lecran et met a jour la base
+affiche sur la carte l historique des adresses trouvés dans un tableau
+demande moi un identifiant en meme temps que l adresse, tu sauvera aussi cet identifiant dans la table
+le code ne me demande pas de renseigner un identifiant
+l historique des recherches avec les infos ne saffichent pas sur la carte
+l historique ne fonctionne pas
+affiche historique sur la carte dans un popup
+supprime le tableau sous la carte
+affiche et stock les resultats avec 6 chiffres derriere la virgule 

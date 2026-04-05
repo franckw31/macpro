@@ -1,0 +1,40 @@
+{
+  "source": "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/LoginView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Poker Timer",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 53
+        }
+      },
+      {
+        "comment": "",
+        "key": "Poker Timer",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 42
+        }
+      },
+      {
+        "comment": "",
+        "key": "Connectez-vous pour continuer",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 46
+        }
+      },
+      {
+        "comment": "",
+        "key": "Se connecter",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 103
+        }
+      }
+    ]
+  },
+  "version": 1
+}

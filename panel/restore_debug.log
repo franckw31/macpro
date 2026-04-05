@@ -1,0 +1,179 @@
+[2025-11-25 11:06:12] === DEBUT RESTAURATION ===
+[2025-11-25 11:06:12] snapshot_id: 12, id_activite: 598, id_membre: 265
+[2025-11-25 11:06:12] Snapshot trouvé. Nombre de lignes: 20
+[2025-11-25 11:06:12] AVANT RESTAURATION - ordre=1:
+[2025-11-25 11:06:12]   - Valeur brute: '2025-11-25 11:31:02'
+[2025-11-25 11:06:12]   - Longueur: 19
+[2025-11-25 11:06:12]   - Hexadécimal: 323032352d31312d32352031313a33313a3032
+[2025-11-25 11:06:12]   - Minutes: 25
+[2025-11-25 11:06:12] Après nettoyage: '2025-11-25 11:31:02' (longueur: 19)
+[2025-11-25 11:06:12] Format DATETIME détecté
+[2025-11-25 11:06:12] SNAPSHOT - ordre=1: minutes=20
+[2025-11-25 11:06:12] DateTime créé avec succès: 2025-11-25 11:31:02
+[2025-11-25 11:06:12] CALCUL: 2025-11-25 11:31:02 - 25 min + 20 min
+[2025-11-25 11:06:12]   Après soustraction de 25 min: 2025-11-25 11:06:02
+[2025-11-25 11:06:12]   Après addition de 20 min: 2025-11-25 11:26:02
+[2025-11-25 11:06:12] NOUVELLE FIN calculée pour ordre=1: 11:26:02
+[2025-11-25 11:06:12] Blindes supprimées (affected rows: 20)
+[2025-11-25 11:06:12] 
+--- Traitement ligne 1 / ordre=1 ---
+[2025-11-25 11:06:12] ORDRE 1 - Utilisation fin calculée: 11:26:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '1', '100', '200', '0', '20', '11:26:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=1:
+[2025-11-25 11:06:12]    Attendu: '11:26:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 2 / ordre=2 ---
+[2025-11-25 11:06:12] ORDRE 2 - Calcul: previous + 20 min = 11:46:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '2', '200', '400', '0', '20', '11:46:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=2:
+[2025-11-25 11:06:12]    Attendu: '11:46:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 3 / ordre=3 ---
+[2025-11-25 11:06:12] ORDRE 3 - Calcul: previous + 20 min = 12:06:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '3', '300', '600', '0', '20', '12:06:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=3:
+[2025-11-25 11:06:12]    Attendu: '12:06:02'
+[2025-11-25 11:06:12]    En base: '2012-06-02 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 4 / ordre=4 ---
+[2025-11-25 11:06:12] ORDRE 4 - Calcul: previous + 20 min = 12:26:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '4', '400', '800', '0', '20', '12:26:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=4:
+[2025-11-25 11:06:12]    Attendu: '12:26:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 5 / ordre=5 ---
+[2025-11-25 11:06:12] ORDRE 5 - Calcul: previous + 20 min = 12:46:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '5', '500', '1000', '0', '20', '12:46:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=5:
+[2025-11-25 11:06:12]    Attendu: '12:46:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 6 / ordre=6 ---
+[2025-11-25 11:06:12] ORDRE 6 - Calcul: previous + 20 min = 13:06:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '6', '600', '1200', '0', '20', '13:06:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=6:
+[2025-11-25 11:06:12]    Attendu: '13:06:02'
+[2025-11-25 11:06:12]    En base: '2013-06-02 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 7 / ordre=7 ---
+[2025-11-25 11:06:12] ORDRE 7 - Calcul: previous + 20 min = 13:26:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '7', '800', '1600', '0', '20', '13:26:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=7:
+[2025-11-25 11:06:12]    Attendu: '13:26:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 8 / ordre=8 ---
+[2025-11-25 11:06:12] ORDRE 8 - Calcul: previous + 30 min = 13:56:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '8', '0', '0', '0', '30', '13:56:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=8:
+[2025-11-25 11:06:12]    Attendu: '13:56:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 9 / ordre=9 ---
+[2025-11-25 11:06:12] ORDRE 9 - Calcul: previous + 20 min = 14:16:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '9', '1000', '2000', '0', '20', '14:16:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=9:
+[2025-11-25 11:06:12]    Attendu: '14:16:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 10 / ordre=10 ---
+[2025-11-25 11:06:12] ORDRE 10 - Calcul: previous + 20 min = 14:36:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '10', '1200', '2400', '0', '20', '14:36:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=10:
+[2025-11-25 11:06:12]    Attendu: '14:36:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 11 / ordre=11 ---
+[2025-11-25 11:06:12] ORDRE 11 - Calcul: previous + 20 min = 14:56:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '11', '1600', '3200', '0', '20', '14:56:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=11:
+[2025-11-25 11:06:12]    Attendu: '14:56:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 12 / ordre=12 ---
+[2025-11-25 11:06:12] ORDRE 12 - Calcul: previous + 20 min = 15:16:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '12', '2000', '4000', '0', '20', '15:16:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=12:
+[2025-11-25 11:06:12]    Attendu: '15:16:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 13 / ordre=13 ---
+[2025-11-25 11:06:12] ORDRE 13 - Calcul: previous + 20 min = 15:36:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '13', '3000', '6000', '0', '20', '15:36:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=13:
+[2025-11-25 11:06:12]    Attendu: '15:36:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 14 / ordre=14 ---
+[2025-11-25 11:06:12] ORDRE 14 - Calcul: previous + 20 min = 15:56:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '14', '4000', '8000', '0', '20', '15:56:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=14:
+[2025-11-25 11:06:12]    Attendu: '15:56:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 15 / ordre=15 ---
+[2025-11-25 11:06:12] ORDRE 15 - Calcul: previous + 20 min = 16:16:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '15', '5000', '10000', '0', '20', '16:16:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=15:
+[2025-11-25 11:06:12]    Attendu: '16:16:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 16 / ordre=16 ---
+[2025-11-25 11:06:12] ORDRE 16 - Calcul: previous + 20 min = 16:36:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '16', '6000', '12000', '0', '20', '16:36:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=16:
+[2025-11-25 11:06:12]    Attendu: '16:36:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 17 / ordre=17 ---
+[2025-11-25 11:06:12] ORDRE 17 - Calcul: previous + 20 min = 16:56:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '17', '8000', '16000', '0', '20', '16:56:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=17:
+[2025-11-25 11:06:12]    Attendu: '16:56:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 18 / ordre=18 ---
+[2025-11-25 11:06:12] ORDRE 18 - Calcul: previous + 20 min = 17:16:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '18', '10000', '20000', '0', '20', '17:16:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=18:
+[2025-11-25 11:06:12]    Attendu: '17:16:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 19 / ordre=19 ---
+[2025-11-25 11:06:12] ORDRE 19 - Calcul: previous + 20 min = 17:36:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '19', '15000', '30000', '0', '20', '17:36:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=19:
+[2025-11-25 11:06:12]    Attendu: '17:36:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+--- Traitement ligne 20 / ordre=20 ---
+[2025-11-25 11:06:12] ORDRE 20 - Calcul: previous + 20 min = 17:56:02
+[2025-11-25 11:06:12] SQL INSERT: INSERT INTO `blindes-live` (`id-activite`, `ordre`, `sb`, `bb`, `ante`, `minutes`, `fin`) VALUES ('598', '20', '20000', '40000', '0', '20', '17:56:02')
+[2025-11-25 11:06:12] ✅ VERIFIE EN BASE - ordre=20:
+[2025-11-25 11:06:12]    Attendu: '17:56:02'
+[2025-11-25 11:06:12]    En base: '0000-00-00 00:00:00'
+[2025-11-25 11:06:12]    Match: NON
+[2025-11-25 11:06:12] 
+=== FIN RESTAURATION REUSSIE ===

@@ -1,0 +1,216 @@
+{
+  "source": "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/ChallengeRankingView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Chargement…",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 44
+        }
+      },
+      {
+        "comment": "",
+        "key": "Réessayer",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 58
+        }
+      },
+      {
+        "comment": "",
+        "key": "Aucun classement disponible",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 68
+        }
+      },
+      {
+        "comment": "",
+        "key": "Choisir un challenge",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 152
+        }
+      },
+      {
+        "comment": "",
+        "key": "Chargement des challenges...",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 105
+        }
+      },
+      {
+        "comment": "",
+        "key": "Réessayer",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 118
+        }
+      },
+      {
+        "comment": "",
+        "key": "Fermer",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 120
+        }
+      },
+      {
+        "comment": "",
+        "key": "Aucun challenge disponible",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 129
+        }
+      },
+      {
+        "comment": "",
+        "key": "Réessayer",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 131
+        }
+      },
+      {
+        "comment": "",
+        "key": "Fermer",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 156
+        }
+      },
+      {
+        "comment": "",
+        "key": "#",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 341
+        }
+      },
+      {
+        "comment": "",
+        "key": "Pseudo",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 343
+        }
+      },
+      {
+        "comment": "",
+        "key": "Pts",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 345
+        }
+      },
+      {
+        "comment": "",
+        "key": "TF",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 347
+        }
+      },
+      {
+        "comment": "",
+        "key": "Vic.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 349
+        }
+      },
+      {
+        "comment": "",
+        "key": "Part.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 351
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 378
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 396
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 384
+        }
+      },
+      {
+        "comment": "",
+        "key": "-",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 384
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 390
+        }
+      },
+      {
+        "comment": "",
+        "key": "-",
+        "location": {
+          "startingColumn": 59,
+          "startingLine": 390
+        }
+      },
+      {
+        "comment": "",
+        "key": "🥇",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 412
+        }
+      },
+      {
+        "comment": "",
+        "key": "🥈",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 414
+        }
+      },
+      {
+        "comment": "",
+        "key": "🥉",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 416
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 418
+        }
+      }
+    ]
+  },
+  "version": 1
+}

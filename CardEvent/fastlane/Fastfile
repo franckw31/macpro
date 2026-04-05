@@ -1,0 +1,31 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Create App ID and provisioning profiles via produce + match"
+  lane :create_app_and_profiles do
+    app_identifier = "com.franck.cardevent"
+    app_name = "CardEvent"
+
+    produce(
+      username: ENV['FASTLANE_USER'],
+      app_identifier: app_identifier,
+      app_name: app_name,
+      skip_itc: true,
+      team_id: "5L3569V4B3"
+    )
+
+    match(
+      type: "development",
+      app_identifier: app_identifier,
+      readonly: false,
+      git_url: ENV['MATCH_GIT_URL']
+    )
+
+    match(
+      type: "appstore",
+      app_identifier: app_identifier,
+      readonly: false,
+      git_url: ENV['MATCH_GIT_URL']
+    )
+  end
+end

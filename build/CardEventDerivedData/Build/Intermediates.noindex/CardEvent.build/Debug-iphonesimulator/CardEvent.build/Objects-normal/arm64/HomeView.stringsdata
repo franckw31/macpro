@@ -1,0 +1,288 @@
+{
+  "source": "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/HomeView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 166
+        }
+      },
+      {
+        "comment": "",
+        "key": "Admin",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 213
+        }
+      },
+      {
+        "comment": "",
+        "key": "CardEvent",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 203
+        }
+      },
+      {
+        "comment": "",
+        "key": "v%@",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 204
+        }
+      },
+      {
+        "comment": "",
+        "key": "Bonjour, %@",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 208
+        }
+      },
+      {
+        "comment": "",
+        "key": "Aucune activité disponible",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 252
+        }
+      },
+      {
+        "comment": "",
+        "key": "Prochaine partie / En cours",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 231
+        }
+      },
+      {
+        "comment": "",
+        "key": "Vous êtes inscrit(e)",
+        "location": {
+          "startingColumn": 171,
+          "startingLine": 243
+        }
+      },
+      {
+        "comment": "",
+        "key": "Pas encore inscrit(e)",
+        "location": {
+          "startingColumn": 197,
+          "startingLine": 243
+        }
+      },
+      {
+        "comment": "",
+        "key": "Répartition du Prizepool",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 261
+        }
+      },
+      {
+        "comment": "",
+        "key": "Pricepool",
+        "location": {
+          "startingColumn": 62,
+          "startingLine": 264
+        }
+      },
+      {
+        "comment": "",
+        "key": "Ex: 200",
+        "location": {
+          "startingColumn": 126,
+          "startingLine": 264
+        }
+      },
+      {
+        "comment": "",
+        "key": "Nb Buy-Rebuy",
+        "location": {
+          "startingColumn": 62,
+          "startingLine": 265
+        }
+      },
+      {
+        "comment": "",
+        "key": "Ex: 20",
+        "location": {
+          "startingColumn": 129,
+          "startingLine": 265
+        }
+      },
+      {
+        "comment": "",
+        "key": "Calculer",
+        "location": {
+          "startingColumn": 65,
+          "startingLine": 267
+        }
+      },
+      {
+        "comment": "",
+        "key": "Répartition proposée :",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 271
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld%@ :",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 273
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld €",
+        "location": {
+          "startingColumn": 139,
+          "startingLine": 273
+        }
+      },
+      {
+        "comment": "",
+        "key": "Raccourcis",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 284
+        }
+      },
+      {
+        "comment": "",
+        "key": "Options",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 307
+        }
+      },
+      {
+        "comment": "",
+        "key": "Démarre dans",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 331
+        }
+      },
+      {
+        "comment": "",
+        "key": "Terminé",
+        "location": {
+          "startingColumn": 149,
+          "startingLine": 334
+        }
+      },
+      {
+        "comment": "",
+        "key": "Live Timer",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 341
+        }
+      },
+      {
+        "comment": "",
+        "key": "Action rapide",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 375
+        }
+      },
+      {
+        "comment": "",
+        "key": "Vous êtes inscrit(e)",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 378
+        }
+      },
+      {
+        "comment": "",
+        "key": "Rejoindre la partie ?",
+        "location": {
+          "startingColumn": 73,
+          "startingLine": 378
+        }
+      },
+      {
+        "comment": "",
+        "key": "Modifier Inscription",
+        "location": {
+          "startingColumn": 122,
+          "startingLine": 380
+        }
+      },
+      {
+        "comment": "",
+        "key": "S'inscrire",
+        "location": {
+          "startingColumn": 147,
+          "startingLine": 380
+        }
+      },
+      {
+        "comment": "",
+        "key": "Valider",
+        "location": {
+          "startingColumn": 62,
+          "startingLine": 388
+        }
+      },
+      {
+        "comment": "",
+        "key": "Confirmer",
+        "location": {
+          "startingColumn": 74,
+          "startingLine": 388
+        }
+      },
+      {
+        "comment": "",
+        "key": "Désinscrire",
+        "location": {
+          "startingColumn": 62,
+          "startingLine": 394
+        }
+      },
+      {
+        "comment": "",
+        "key": "Annuler",
+        "location": {
+          "startingColumn": 79,
+          "startingLine": 394
+        }
+      },
+      {
+        "comment": "",
+        "key": "Aucun joueur payé",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 409
+        }
+      },
+      {
+        "comment": "",
+        "key": "Podium payés",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 405
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 496
+        }
+      }
+    ]
+  },
+  "version": 1
+}

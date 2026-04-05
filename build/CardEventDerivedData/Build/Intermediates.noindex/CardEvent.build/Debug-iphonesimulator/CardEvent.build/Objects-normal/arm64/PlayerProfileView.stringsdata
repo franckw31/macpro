@@ -1,0 +1,128 @@
+{
+  "source": "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/PlayerProfileView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Pas encore inscrit à cette activité",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 103
+        }
+      },
+      {
+        "comment": "",
+        "key": "Rang Challenge",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 119
+        }
+      },
+      {
+        "comment": "",
+        "key": "#%lld",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 124
+        }
+      },
+      {
+        "comment": "",
+        "key": "Visualiser",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 128
+        }
+      },
+      {
+        "comment": "",
+        "key": "Vos Tickets de Tombola",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 142
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 61,
+          "startingLine": 146
+        }
+      },
+      {
+        "comment": "",
+        "key": "—",
+        "location": {
+          "startingColumn": 83,
+          "startingLine": 146
+        }
+      },
+      {
+        "comment": "",
+        "key": "Voir",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 149
+        }
+      },
+      {
+        "comment": "",
+        "key": "Notes (Traker) 📝",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 167
+        }
+      },
+      {
+        "comment": "",
+        "key": "Voir",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 171
+        }
+      },
+      {
+        "comment": "",
+        "key": "Fermer",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 195
+        }
+      },
+      {
+        "comment": "",
+        "key": "Meilleur gain",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 285
+        }
+      },
+      {
+        "comment": "",
+        "key": "Détail",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 292
+        }
+      },
+      {
+        "comment": "",
+        "key": "Statistiques",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 310
+        }
+      },
+      {
+        "comment": "",
+        "key": "Détail",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 352
+        }
+      }
+    ]
+  },
+  "version": 1
+}

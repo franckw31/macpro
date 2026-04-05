@@ -1,0 +1,152 @@
+{
+  "source": "/Users/franck/Desktop/Viendez.com/xcode/CardEvent/CardEvent/Views/StructureLibraryView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Structures",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 37
+        }
+      },
+      {
+        "comment": "",
+        "key": "Renommer",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 70
+        }
+      },
+      {
+        "comment": "",
+        "key": "Fermer",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 40
+        }
+      },
+      {
+        "comment": "",
+        "key": "Nouvelle",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 46
+        }
+      },
+      {
+        "comment": "",
+        "key": "Nom",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 74
+        }
+      },
+      {
+        "comment": "",
+        "key": "OK",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 75
+        }
+      },
+      {
+        "comment": "",
+        "key": "Annuler",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 82
+        }
+      },
+      {
+        "comment": "",
+        "key": "Charger",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 115
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld niveaux",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 109
+        }
+      },
+      {
+        "comment": "",
+        "key": "Éditer les niveaux",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 124
+        }
+      },
+      {
+        "comment": "",
+        "key": "Renommer",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 127
+        }
+      },
+      {
+        "comment": "",
+        "key": "Nouvelle structure",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 166
+        }
+      },
+      {
+        "comment": "",
+        "key": "Nom de la structure",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 158
+        }
+      },
+      {
+        "comment": "",
+        "key": "Basée sur",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 161
+        }
+      },
+      {
+        "comment": "",
+        "key": "Ex: Tournoi rapide",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 159
+        }
+      },
+      {
+        "comment": "",
+        "key": "Structure actuelle (%lld niveaux)",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 162
+        }
+      },
+      {
+        "comment": "",
+        "key": "Annuler",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 169
+        }
+      },
+      {
+        "comment": "",
+        "key": "Créer",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 172
+        }
+      }
+    ]
+  },
+  "version": 1
+}
