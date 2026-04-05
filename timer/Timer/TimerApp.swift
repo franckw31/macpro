@@ -96,9 +96,13 @@ struct TimerApp: App {
                     print("Failed to setup audio session for welcome message: \(error)")
                 }
                 
-                let utterance = AVSpeechUtterance(string: "Bienvenue sur Card Event")
-                utterance.voice = AVSpeechSynthesisVoice(language: "fr-FR")
-                speechSynthesizer.speak(utterance)
+                let utterance1 = AVSpeechUtterance(string: "Bienvenue sur ")
+                utterance1.voice = AVSpeechSynthesisVoice(language: "fr-FR")
+                let utterance2 = AVSpeechUtterance(string: "Card Event")
+                utterance2.voice = AVSpeechSynthesisVoice(language: "en-US")
+                
+                speechSynthesizer.speak(utterance1)
+                speechSynthesizer.speak(utterance2)
             }
             .task {
                 await auth.autoLogin()
