@@ -107,7 +107,7 @@ private struct MainTabView: View {
             ContentView(viewModel: viewModel)
                 .tag(1)
                 .tabItem {
-                    Label("Local CardEvent", systemImage: "cardevent")
+                    Label("Local Timer", systemImage: "timer")
                 }
 
             HomeView(viewModel: viewModel, showPrizepool: true)
