@@ -140,7 +140,7 @@ final class PokerTimerViewModel: ObservableObject {
     private let structureNameKey = "cardevent.structureName"
     private let apiBaseURL = "https://viendez.com/api/players-count.php"
     private let activityAPIURL = "https://viendez.com/api/next-activity.php"
-    private let registerAPIURL = "https://viendez.com/api/register-activity.php"
+    private let registerAPIURL = "https://viendez.com/api/register-activity-v4.php"
     private let participantsAPIURL = "https://viendez.com/api/participants-list.php"
     private let activitiesListURL  = "https://viendez.com/api/activities-list.php"
     private let activityInfoURL    = "https://viendez.com/api/activity-info.php"
