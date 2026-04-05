@@ -165,7 +165,10 @@ struct HomeView: View {
             }
             .navigationTitle("")
             .navigationBarHidden(true)
-            .task { await loadPhoto() }
+            .task { 
+                await loadPhoto() 
+                await viewModel.fetchRegistrationStatus()
+            }
             
             .sheet(isPresented: $showLiveTimer) {
                 if let act = currentActivity { NavigationStack { LiveView(activityId: act.id, activityTitle: act.title) } }
