@@ -52,13 +52,14 @@ try {
     $activities = [];
     foreach ($rows as $row) {
         $activities[] = [
-            'id'    => (int)$row['id'],
-            'date'  => $row['date'],
-            'title' => $row['title'],
-            'city'  => $row['city'],
-            'buyin' => (int)$row['buyin'],
-            'rake'  => (int)$row['rake'],
-            'count' => (int)$row['participants_count'],
+            'id'           => (int)$row['id'],
+            'date'         => $row['date'],
+            'title'        => $row['title'],
+            'city'         => $row['city'],
+            'buyin'        => (int)$row['buyin'],
+            'rake'         => (int)$row['rake'],
+            'count'        => (int)$row['participants_count'],
+            'organisateur' => $row['organisateur'],
         ];
     }
 
