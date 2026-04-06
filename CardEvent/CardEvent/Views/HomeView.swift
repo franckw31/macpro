@@ -288,6 +288,13 @@ struct HomeView: View {
                 VStack(alignment:.leading, spacing:4) { Text("Buy-Rebuy").font(.caption2).foregroundColor(.white); TextField("Ex: 20", text: $buyinsInput).keyboardType(.numberPad).frame(width:60).padding(8).background(Color.white.opacity(0.06)).cornerRadius(8).foregroundColor(.white) }
                 VStack(alignment:.leading, spacing:4) { Text("+1 Payé").font(.caption2).foregroundColor(.white); Toggle("", isOn: $payExtraPlayer).tint(cyan).labelsHidden().frame(height:36).onChange(of: payExtraPlayer) { _ in calculateRepartition() } }
                 Spacer()
+                if auth.isAdmin || (!auth.pseudo.isEmpty && currentActivity?.organisateur == auth.pseudo) {
+                    Button {
+                        affecterGains()
+                    } label: {
+                        Text("Affecter").font(.subheadline.bold()).foregroundColor(.white).padding(.horizontal,10).padding(.vertical,8).background(purple.opacity(0.8)).cornerRadius(8)
+                    }
+                }
                 Button { calculateRepartition() } label: { Text("Cal").font(.subheadline.bold()).foregroundColor(.white).padding(.horizontal,14).padding(.vertical,8).background(cyan.opacity(0.85)).cornerRadius(8) }.disabled(prizepoolInput.isEmpty || buyinsInput.isEmpty)
             }
             if showResult && !repartition.isEmpty {
