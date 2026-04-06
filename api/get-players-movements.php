@@ -20,7 +20,7 @@ try {
 
     if ($id <= 0) {
         http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'ID d\'activité invalide'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'message' => 'ID d\'activité invalide', 'received_id' => $_GET['uid'] ?? 'null'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
