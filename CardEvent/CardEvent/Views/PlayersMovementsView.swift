@@ -300,6 +300,21 @@ struct PlayersMovementsView: View {
                 }
             }
         }
+        .sheet(isPresented: .constant(selectedPlayerForBust != nil)) {
+            if let victim = selectedPlayerForBust {
+                EliminationModalView(
+                    victimName: victim.name,
+                    availablePlayers: movementsVM.players.filter { !$0.isEliminated && $0.id != victim.id },
+                    onEliminate: { eliminator, isDefinitive in
+                        Task { 
+                            await eliminatePlayer(victim: victim, eliminator: eliminator, isDefinitive: isDefinitive)
+                        }
+                        selectedPlayerForBust = nil
+                    },
+                    onCancel: { selectedPlayerForBust = nil }
+                )
+            }
+        }
         .task {
             await movementsVM.load(activityId: activityId, title: activityTitle)
         }
