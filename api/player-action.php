@@ -128,6 +128,27 @@ try {
                 WHERE `id-participation` = ?
             ");
             $stmt->execute([$classement, $victim_participation_id]);
+
+            // Vérifier s'il ne reste qu'un seul joueur actif (sans élimination définitive)
+            $stmt = $pdo->prepare("
+                SELECT p.`id-participation`
+                FROM `participation` p
+                LEFT JOIN `eliminations` e ON p.`id-participation` = e.`id_participation` AND e.`is_definitive` = 1
+                WHERE p.`id-activite` = ? AND e.`id` IS NULL
+            ");
+            $stmt->execute([$activity_id]);
+            $remaining_players = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // S'il ne reste qu'un joueur, le classer 1er (gagnant)
+            if (count($remaining_players) === 1) {
+                $winner_id = intval($remaining_players[0]['id-participation']);
+                $stmt = $pdo->prepare("
+                    UPDATE `participation` 
+                    SET `classement` = 1 
+                    WHERE `id-participation` = ?
+                ");
+                $stmt->execute([$winner_id]);
+            }
         }
 
         http_response_code(200);
