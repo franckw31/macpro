@@ -405,6 +405,107 @@ struct PlayersMovementsView: View {
                 .foregroundColor(cyan)
         }
     }
+    
+    private func eliminatePlayer(victim: PlayerMovement, eliminator: PlayerMovement, isDefinitive: Bool) async {
+        let urlString = "https://viendez.com/api/register-activity.php?action=eliminate_player"
+        guard let url = URL(string: urlString) else { return }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "activity_id": activityId,
+            "victim_participation_id": victim.id,
+            "eliminator_name": eliminator.name,
+            "eliminator_member_id": eliminator.memberId,
+            "is_definitive": isDefinitive
+        ]
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body)
+            let (_, response) = try await URLSession.shared.data(for: request)
+            
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                await movementsVM.refreshPlayers()
+            }
+        } catch {
+            print("Erreur élimination: \(error)")
+        }
+    }
+}
+
+// MARK: - EliminationModalView
+struct EliminationModalView: View {
+    let victimName: String
+    let availablePlayers: [PlayerMovement]
+    let onEliminate: (PlayerMovement, Bool) -> Void
+    let onCancel: () -> Void
+    
+    @State private var selectedEliminator: PlayerMovement?
+    @State private var isDefinitive = false
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Sortie de \(victimName)")
+                .font(.headline.bold())
+                .foregroundColor(.white)
+            
+            Text("Qui l'a éliminé ?")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+            
+            Picker("Joueur", selection: $selectedEliminator) {
+                Text("-- Sélectionner --").tag(Optional<PlayerMovement>.none)
+                ForEach(availablePlayers) { player in
+                    Text(player.name).tag(Optional(player))
+                }
+            }
+            .pickerStyle(.menu)
+            .foregroundColor(.cyan)
+            
+            VStack(spacing: 12) {
+                Toggle(isOn: $isDefinitive) {
+                    HStack(spacing: 8) {
+                        Text("Éliminé définitivement (OUT)")
+                            .font(.subheadline.bold())
+                            .foregroundColor(.red)
+                    }
+                }
+                .tint(.red)
+            }
+            .padding(12)
+            .background(Color.white.opacity(0.05))
+            .cornerRadius(8)
+            
+            HStack(spacing: 12) {
+                Button(action: onCancel) {
+                    Text("Annuler")
+                        .font(.subheadline.bold())
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .tint(.gray)
+                
+                Button(action: {
+                    if let eliminator = selectedEliminator {
+                        onEliminate(eliminator, isDefinitive)
+                    }
+                }) {
+                    Text("Confirmer")
+                        .font(.subheadline.bold())
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .tint(.red)
+                .disabled(selectedEliminator == nil)
+            }
+        }
+        .padding(20)
+        .background(Color.black)
+        .cornerRadius(16)
+        .padding(16)
+    }
 }
 
 #Preview {
