@@ -561,7 +561,7 @@ struct HomeView: View {
         
         let percents: [Int]
         switch places {
-        case 6: percents = [32, 22, 16, 12, 10, 7]
+        case 6: percents = [32, 22, 16, 1, 10, 7]
         case 5: percents = [35, 25, 18, 12, 10]
         case 4: percents = [40, 30, 20, 10]
         case 3: percents = [50, 30, 20]
