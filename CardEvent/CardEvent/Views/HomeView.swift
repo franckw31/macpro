@@ -299,7 +299,7 @@ struct HomeView: View {
                     let desc = advice.recaves > 0 ? "\(advice.inscrits) buy-ins + \(advice.recaves) recaves" : "\(advice.inscrits) buy-ins"
                     Button(action: {
                         prizepoolInput = String(advice.amount)
-                        buyinsInput = desc
+                        buyinsInput = String(advice.inscrits)
                     }) {
                         Text("\(advice.amount)€ / \(desc)")
                             .font(.caption2.bold())
