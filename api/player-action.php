@@ -94,16 +94,29 @@ try {
 
         // Si c'est une élimination définitive, mettre à jour le classement
         if ($is_definitive === 1) {
-            // Compter le nombre de joueurs encore actifs (non définitivement éliminés)
+            // Compter le nombre de joueurs ACTUELLEMENT ACTIFS (avant l'élimination)
+            // = nombre total - nombre déjà définitivement éliminés
             $stmt = $pdo->prepare("
-                SELECT COUNT(DISTINCT p.`id-participation`) as active_count
+                SELECT COUNT(DISTINCT p.`id-participation`) as total_count
                 FROM `participation` p
-                LEFT JOIN `eliminations` e ON p.`id-participation` = e.`id_participation` AND e.`is_definitive` = 1
-                WHERE p.`id-activite` = ? AND e.`id` IS NULL
+                WHERE p.`id-activite` = ?
             ");
             $stmt->execute([$activity_id]);
-            $rank_result = $stmt->fetch(PDO::FETCH_ASSOC);
-            $classement = intval($rank_result['active_count'] ?? 0);
+            $total_result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $total_count = intval($total_result['total_count'] ?? 0);
+
+            // Compter combien de joueurs sont DÉJÀ définitivement éliminés
+            $stmt = $pdo->prepare("
+                SELECT COUNT(DISTINCT `id_participation`) as eliminated_count
+                FROM `eliminations`
+                WHERE `id_activite` = ? AND `is_definitive` = 1
+            ");
+            $stmt->execute([$activity_id]);
+            $elim_result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $already_eliminated = intval($elim_result['eliminated_count'] ?? 0);
+
+            // Classement = nombre de joueurs restants AVANT cette élimination
+            $classement = $total_count - $already_eliminated;
 
             // Mettre à jour le classement du joueur éliminé
             $stmt = $pdo->prepare("
