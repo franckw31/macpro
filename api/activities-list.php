@@ -24,13 +24,15 @@ try {
                a.`ville` AS city,
                a.`buyin`,
                a.`rake`,
+               m.`pseudo` AS organisateur,
                COUNT(p.`id-participation`) AS participants_count
         FROM `activite` a
+        LEFT JOIN `membres` m ON m.`id-membre` = a.`id-membre`
         LEFT JOIN `participation` p
             ON p.`id-activite` = a.`id-activite`
             AND COALESCE(p.`option`, 'None') NOT IN ('None', 'Desinscrit')
         WHERE a.`date_depart` >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
-        GROUP BY a.`id-activite`, a.`date_depart`, a.`titre-activite`, a.`ville`, a.`buyin`, a.`rake`
+        GROUP BY a.`id-activite`, a.`date_depart`, a.`titre-activite`, a.`ville`, a.`buyin`, a.`rake`, m.`pseudo`
         ORDER BY a.`date_depart` ASC
     ");
 
