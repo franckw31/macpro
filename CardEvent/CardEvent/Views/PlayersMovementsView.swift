@@ -456,7 +456,7 @@ struct EliminationModalView: View {
     let onCancel: () -> Void
     
     @State private var selectedEliminator: PlayerMovement?
-    @State private var actionType: ActionType = .bust
+    @State private var actionType: ActionType = .recave
     @State private var isDefinitive = false
     
     enum ActionType {
@@ -473,11 +473,11 @@ struct EliminationModalView: View {
             // Sélection du type d'action
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 12) {
-                    Button(action: { actionType = .bust }) {
+                    Button(action: { actionType = .recave }) {
                         HStack(spacing: 8) {
-                            Image(systemName: actionType == .bust ? "checkmark.circle.fill" : "circle")
-                                .foregroundColor(actionType == .bust ? .red : .gray)
-                            Text("Bust (Éliminé)")
+                            Image(systemName: actionType == .recave ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(actionType == .recave ? .orange : .gray)
+                            Text("Recave")
                                 .foregroundColor(.white)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -486,11 +486,11 @@ struct EliminationModalView: View {
                 }
                 
                 HStack(spacing: 12) {
-                    Button(action: { actionType = .recave }) {
+                    Button(action: { actionType = .bust }) {
                         HStack(spacing: 8) {
-                            Image(systemName: actionType == .recave ? "checkmark.circle.fill" : "circle")
-                                .foregroundColor(actionType == .recave ? .orange : .gray)
-                            Text("Recave")
+                            Image(systemName: actionType == .bust ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(actionType == .bust ? .red : .gray)
+                            Text("Bust (Éliminé)")
                                 .foregroundColor(.white)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
