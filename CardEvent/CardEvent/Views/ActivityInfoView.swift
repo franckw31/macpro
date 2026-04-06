@@ -167,8 +167,22 @@ struct ActivityInfoView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Info Partie")
-                        .font(.headline)
+                    HStack(spacing: 8) {
+                        Text("Info Partie")
+                            .font(.headline)
+                        Spacer()
+                        if let info = viewModel.activityInfo {
+                            Button(action: { showMovements = true }) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "arrow.up.arrow.down")
+                                    Text("Mouvements")
+                                }
+                                .font(.subheadline.bold())
+                                .foregroundColor(.cyan)
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Fermer") { dismiss() }
@@ -177,6 +191,11 @@ struct ActivityInfoView: View {
         }
         .task {
             await viewModel.fetchActivityInfo()
+        }
+        .sheet(isPresented: $showMovements) {
+            if let info = viewModel.activityInfo {
+                PlayersMovementsView(activityId: info.id, activityTitle: info.title)
+            }
         }
     }
 
