@@ -744,6 +744,7 @@ final class PokerTimerViewModel: ObservableObject {
                         buyin: a["buyin"] as? Int ?? 0,
                         rake: a["rake"] as? Int ?? 0,
                         count: a["count"] as? Int ?? 0,
+                        organisateur: a["organisateur"] as? String ?? "",
                         startDate: date
                     )
                 }
