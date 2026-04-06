@@ -4,22 +4,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
-// Déterminer le bon chemin vers config.php
-$config_path = '../config.php';
-if (!file_exists($config_path)) {
-    $config_path = '../panel/include/config.php';
-}
-if (!file_exists($config_path)) {
-    $config_path = '../../config.php';
-}
-
-if (!file_exists($config_path)) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Configuration not found'], JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
-include($config_path);
+// Config path - api/ is a sibling of config.php
+require_once(__DIR__ . '/../config.php');
 
 // Force UTF-8 encoding
 if (!headers_sent()) {
