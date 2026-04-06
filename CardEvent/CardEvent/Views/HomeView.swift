@@ -530,9 +530,8 @@ struct HomeView: View {
                        let success = json["success"] as? Bool, success {
                         await MainActor.run {
                             viewModel.alertMessage = "✅ Gains affectés avec succès !"
-                            // Rafraîchir les participants pour voir les gains
-                            viewModel.fetchParticipants(for: act.id)
                         }
+                        await viewModel.fetchParticipants(activityId: act.id)
                     } else {
                         let msg = (try? JSONSerialization.jsonObject(with: data) as? [String: Any])?["error"] as? String ?? "Erreur inconnue"
                         await MainActor.run { viewModel.alertMessage = "Erreur: \(msg)" }
