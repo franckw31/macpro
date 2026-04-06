@@ -34,7 +34,7 @@ private final class PlayersMovementsVM: ObservableObject {
     func load(activityId: Int, title: String) async {
         self.activityId = activityId
         self.activityTitle = title
-        await fetchPlayers()
+        await fetchPlayersData()
         
         // Setup polling for updates
         pollingTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
@@ -46,8 +46,12 @@ private final class PlayersMovementsVM: ObservableObject {
         pollingTimer?.invalidate()
         pollingTimer = nil
     }
+    
+    func refreshPlayers() async {
+        await fetchPlayersData()
+    }
 
-    private func fetchPlayers() async {
+    private func fetchPlayersData() async {
         guard activityId > 0 else { return }
         
         guard let url = URL(string: "https://viendez.com/api/get-players-movements.php?uid=\(activityId)") else { return }
