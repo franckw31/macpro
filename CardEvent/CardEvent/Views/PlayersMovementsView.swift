@@ -125,7 +125,7 @@ private final class PlayersMovementsVM: ObservableObject {
             let resp = try JSONDecoder().decode(CheckResp.self, from: data)
             if resp.checksum != lastChecksum {
                 lastChecksum = resp.checksum
-                await fetchPlayers()
+                await fetchPlayersData()
             }
         } catch {}
     }
