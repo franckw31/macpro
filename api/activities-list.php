@@ -60,6 +60,7 @@ try {
             'buyin'        => (int)$row['buyin'],
             'rake'         => (int)$row['rake'],
             'count'        => (int)$row['participants_count'],
+            'recaves'      => (int)$row['recaves_count'],
             'organisateur' => $row['organisateur'],
         ];
     }
