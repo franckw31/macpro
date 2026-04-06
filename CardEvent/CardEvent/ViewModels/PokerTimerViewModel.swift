@@ -95,6 +95,7 @@ struct ActivitySummary: Identifiable {
     let title: String
     let buyin: Int
     let rake: Int
+    let recave_montant: Int
     let count: Int
     let recaves: Int
     let organisateur: String
