@@ -315,7 +315,7 @@ struct HomeView: View {
                         Text("Paye").font(.subheadline.bold()).foregroundColor(.white).padding(.horizontal,10).padding(.vertical,8).background(purple.opacity(0.8)).cornerRadius(8)
                     }
                 }
-                Button { calculateRepartition() } label: { Text("Cal").font(.subheadline.bold()).foregroundColor(.white).padding(.horizontal,14).padding(.vertical,8).background(cyan.opacity(0.85)).cornerRadius(8) }.disabled(prizepoolInput.isEmpty || buyinsInput.isEmpty)
+                Button { calculateRepartition() } label: { Text("Calc").font(.subheadline.bold()).foregroundColor(.white).padding(.horizontal,14).padding(.vertical,8).background(cyan.opacity(0.85)).cornerRadius(8) }.disabled(prizepoolInput.isEmpty || buyinsInput.isEmpty)
             }
             if showResult && !repartition.isEmpty {
                 VStack(alignment:.leading, spacing:6) {
