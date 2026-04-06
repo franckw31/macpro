@@ -160,6 +160,9 @@ struct PlayersMovementsView: View {
     
     @Environment(\.dismiss) private var dismiss
     @StateObject private var movementsVM = PlayersMovementsVM()
+    @State private var selectedPlayerForBust: PlayerMovement?
+    @State private var selectedEliminator: PlayerMovement?
+    @State private var isDefinitiveBust = false
     
     private let cyan = Color(red: 0, green: 0.82, blue: 1)
     private let gold = Color(red: 1, green: 0.84, blue: 0)
