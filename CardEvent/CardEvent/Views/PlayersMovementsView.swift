@@ -263,10 +263,6 @@ struct PlayersMovementsView: View {
                                             .font(.caption.bold())
                                             .foregroundColor(.gray)
                                             .frame(width: 50, alignment: .center)
-                                        Text("Tickets")
-                                            .font(.caption.bold())
-                                            .foregroundColor(.gray)
-                                            .frame(width: 50, alignment: .center)
                                         Text("Bust")
                                             .font(.caption.bold())
                                             .foregroundColor(.gray)
@@ -379,13 +375,6 @@ struct PlayersMovementsView: View {
                 .font(.caption.bold())
                 .foregroundColor(player.recaves > 0 ? .orange : .gray.opacity(0.5))
                 .frame(width: 50, alignment: .center)
-            
-            // Tickets
-            Text(player.tickets.isEmpty ? "-" : player.tickets)
-                .font(.caption2)
-                .foregroundColor(.gray)
-                .frame(width: 50, alignment: .center)
-                .lineLimit(1)
             
             // Bouton Bust
             if !player.isEliminated {
