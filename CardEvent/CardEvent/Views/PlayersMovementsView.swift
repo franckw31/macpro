@@ -87,6 +87,7 @@ private final class PlayersMovementsVM: ObservableObject {
                 let message: String?
             }
             struct PlayerData: Decodable {
+                let participation_id: Int
                 let rank: Int
                 let name: String
                 let member_id: Int
@@ -110,6 +111,7 @@ private final class PlayersMovementsVM: ObservableObject {
             if resp.success, let playerData = resp.players, let stats = resp.stats {
                 self.players = playerData.map { p in
                     PlayerMovement(
+                        id: p.participation_id,
                         rank: p.rank,
                         name: p.name,
                         memberId: p.member_id,
