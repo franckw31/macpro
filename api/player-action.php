@@ -108,10 +108,10 @@ try {
         // Enregistrer qui a éliminé le joueur (pour traçabilité)
         $stmt = $pdo->prepare("
             INSERT INTO `eliminations` 
-            (`id_participation`, `nom_membre`, `id_membre`, `is_definitive`, `created_at`)
-            VALUES (?, ?, ?, 0, NOW())
+            (`id_participation`, `nom_membre`, `id_membre`, `id_membre_victime`, `nom_membre_victime`, `id_activite`, `is_definitive`, `created_at`)
+            VALUES (?, ?, ?, ?, ?, ?, 0, NOW())
         ");
-        $stmt->execute([$victim_participation_id, $eliminator_name, $eliminator_member_id]);
+        $stmt->execute([$victim_participation_id, $eliminator_name, $eliminator_member_id, $victim_member_id, $victim_name, $activity_id]);
 
         http_response_code(200);
         echo json_encode(['success' => true, 'message' => 'Recave enregistré']);
