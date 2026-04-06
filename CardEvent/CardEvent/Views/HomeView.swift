@@ -279,7 +279,7 @@ struct HomeView: View {
     }
 
     // MARK: - Calculateur prizepool
-    private var prizepoolAdvice: (totalBuyins: Int, amount: Int)? {
+    private var prizepoolAdvice: (inscrits: Int, recaves: Int, amount: Int)? {
         guard let act = currentActivity else { return nil }
         let validStatuses: Set<String> = ["Inscrit", "Présent", "Present", "Confirmé", "Confirme", "Eliminé", "Elimine"]
         let validParticipants = viewModel.participants.filter { validStatuses.contains($0.statut) }
@@ -287,7 +287,7 @@ struct HomeView: View {
         let recaves = validParticipants.reduce(0) { $0 + $1.recave }
         let totalBuyins = inscrits + recaves
         if totalBuyins == 0 { return nil }
-        return (totalBuyins, totalBuyins * act.buyin)
+        return (inscrits, recaves, totalBuyins * act.buyin)
     }
 
     private var prizepoolCalculator: some View {
@@ -296,7 +296,8 @@ struct HomeView: View {
                 Label("Répartition du Prizepool", systemImage: "eurosign.circle").font(.caption.bold()).foregroundColor(cyan).textCase(.uppercase)
                 Spacer()
                 if let advice = prizepoolAdvice {
-                    Text("\(advice.amount)€ / \(advice.totalBuyins) buy-ins")
+                    let desc = advice.recaves > 0 ? "\(advice.inscrits) buy-ins + \(advice.recaves) recaves" : "\(advice.inscrits) buy-ins"
+                    Text("\(advice.amount)€ / \(desc)")
                         .font(.caption2.bold())
                         .foregroundColor(gold)
                 }
