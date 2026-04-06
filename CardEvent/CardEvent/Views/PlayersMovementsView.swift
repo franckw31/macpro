@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Model
 struct PlayerMovement: Identifiable, Hashable {
-    let id = UUID()
+    let id: Int // Participation ID from database
     let rank: Int
     let name: String
     let memberId: Int
