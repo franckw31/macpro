@@ -103,6 +103,7 @@ struct HomeView: View {
 
     @State private var prizepoolInput: String = ""
     @State private var buyinsInput: String = ""
+    @State private var payExtraPlayer: Bool = false
     @State private var repartition: [(place: Int, gain: Int)] = []
     @State private var showResult: Bool = false
 
