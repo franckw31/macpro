@@ -257,6 +257,10 @@ struct PlayersMovementsView: View {
                                             .font(.caption.bold())
                                             .foregroundColor(.gray)
                                             .frame(width: 50, alignment: .center)
+                                        Text("Bust")
+                                            .font(.caption.bold())
+                                            .foregroundColor(.gray)
+                                            .frame(width: 40, alignment: .center)
                                     }
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 8)
