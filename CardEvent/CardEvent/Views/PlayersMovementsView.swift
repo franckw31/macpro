@@ -315,9 +315,9 @@ struct PlayersMovementsView: View {
                 EliminationModalView(
                     victimName: victim.name,
                     availablePlayers: movementsVM.players.filter { !$0.isEliminated && $0.id != victim.id },
-                    onEliminate: { eliminator, isDefinitive in
+                    onEliminate: { eliminator, actionType, isDefinitive in
                         Task { 
-                            await eliminatePlayer(victim: victim, eliminator: eliminator, isDefinitive: isDefinitive)
+                            await eliminatePlayer(victim: victim, eliminator: eliminator, actionType: actionType, isDefinitive: isDefinitive)
                         }
                         selectedPlayerForBust = nil
                     },
@@ -416,8 +416,9 @@ struct PlayersMovementsView: View {
         }
     }
     
-    private func eliminatePlayer(victim: PlayerMovement, eliminator: PlayerMovement, isDefinitive: Bool) async {
-        let urlString = "https://viendez.com/api/register-activity.php?action=eliminate_player"
+    private func eliminatePlayer(victim: PlayerMovement, eliminator: PlayerMovement, actionType: EliminationModalView.ActionType, isDefinitive: Bool) async {
+        let action = actionType == .bust ? "eliminate_player" : "recave_player"
+        let urlString = "https://viendez.com/api/register-activity.php?action=\(action)"
         guard let url = URL(string: urlString) else { return }
         
         var request = URLRequest(url: url)
@@ -440,7 +441,7 @@ struct PlayersMovementsView: View {
                 await movementsVM.refreshPlayers()
             }
         } catch {
-            print("Erreur élimination: \(error)")
+            print("Erreur \(action): \(error)")
         }
     }
 }
@@ -449,7 +450,7 @@ struct PlayersMovementsView: View {
 struct EliminationModalView: View {
     let victimName: String
     let availablePlayers: [PlayerMovement]
-    let onEliminate: (PlayerMovement, Bool) -> Void
+    let onEliminate: (PlayerMovement, ActionType, Bool) -> Void
     let onCancel: () -> Void
     
     @State private var selectedEliminator: PlayerMovement?
@@ -543,7 +544,7 @@ struct EliminationModalView: View {
                 
                 Button(action: {
                     if let eliminator = selectedEliminator {
-                        onEliminate(eliminator, actionType == .bust && isDefinitive)
+                        onEliminate(eliminator, actionType, actionType == .bust && isDefinitive)
                     }
                 }) {
                     Text("Confirmer")
