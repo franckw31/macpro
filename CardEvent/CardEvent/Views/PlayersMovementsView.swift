@@ -332,7 +332,6 @@ struct PlayersMovementsView: View {
 
 #Preview {
     PlayersMovementsView(
-        viewModel: PokerTimerViewModel(),
         activityId: 1,
         activityTitle: "Texas Hold'em - Samedi"
     )
