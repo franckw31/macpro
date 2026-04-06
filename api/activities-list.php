@@ -25,7 +25,8 @@ try {
                a.`buyin`,
                a.`rake`,
                m.`pseudo` AS organisateur,
-               COUNT(p.`id-participation`) AS participants_count
+               COUNT(p.`id-participation`) AS participants_count,
+               COALESCE(SUM(p.`recave`), 0) AS recaves_count
         FROM `activite` a
         LEFT JOIN `membres` m ON m.`id-membre` = a.`id-membre`
         LEFT JOIN `participation` p
