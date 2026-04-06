@@ -489,8 +489,61 @@ struct HomeView: View {
     private func ordinalSuffix(_ n: Int) -> String { n == 1 ? "er" : "e" }
     
     private func affecterGains() {
-        // TODO: Implémenter le traitement des gains
-        print("Affectation des gains: \(repartition)")
+        guard let act = currentActivity else { return }
+        
+        let p2 = viewModel.participants.first { $0.classement == 2 }
+        if p2 == nil || p2?.gain != 0 {
+            viewModel.alertMessage = "La partie n'est pas terminée (classement 2 introuvable ou gain déjà affecté)."
+            return
+        }
+        
+        guard !repartition.isEmpty else {
+            viewModel.alertMessage = "Veuillez d'abord calculer la répartition."
+            return
+        }
+        
+        var gainsDict: [String: Int] = [:]
+        for r in repartition {
+            gainsDict["\(r.place)"] = r.gain
+        }
+        
+        let payload: [String: Any] = [
+            "activity_id": act.id,
+            "gains": gainsDict
+        ]
+        
+        guard let url = URL(string: "https://viendez.com/api/affect-gains.php") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token = AuthService.shared.token {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+        
+        Task {
+            do {
+                let (data, response) = try await URLSession.shared.data(for: request)
+                if let httpRes = response as? HTTPURLResponse, httpRes.statusCode == 200 {
+                    if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                       let success = json["success"] as? Bool, success {
+                        await MainActor.run {
+                            viewModel.alertMessage = "✅ Gains affectés avec succès !"
+                            // Rafraîchir les participants pour voir les gains
+                            viewModel.fetchParticipants(for: act.id)
+                        }
+                    } else {
+                        let msg = (try? JSONSerialization.jsonObject(with: data) as? [String: Any])?["error"] as? String ?? "Erreur inconnue"
+                        await MainActor.run { viewModel.alertMessage = "Erreur: \(msg)" }
+                    }
+                } else {
+                    await MainActor.run { viewModel.alertMessage = "Erreur serveur." }
+                }
+            } catch {
+                await MainActor.run { viewModel.alertMessage = "Erreur réseau: \(error.localizedDescription)" }
+            }
+        }
     }
 
     private func calculateRepartition() {
