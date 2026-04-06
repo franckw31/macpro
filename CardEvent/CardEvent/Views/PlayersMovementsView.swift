@@ -440,6 +440,30 @@ struct PlayersMovementsView: View {
             await movementsVM.refreshPlayers()
         }
     }
+
+    private func undoLastMovement() async {
+        let urlString = "https://viendez.com/api/undo-player-action.php"
+        guard let url = URL(string: urlString) else { return }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "activity_id": activityId
+        ]
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body)
+            _ = try await URLSession.shared.data(for: request)
+            
+            // Rafraîchir après annulation
+            await movementsVM.refreshPlayers()
+        } catch {
+            print("Erreur annulation: \(error)")
+            await movementsVM.refreshPlayers()
+        }
+    }
 }
 
 // MARK: - EliminationModalView
