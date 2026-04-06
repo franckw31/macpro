@@ -192,8 +192,13 @@ struct PlayersMovementsView: View {
                                 .foregroundColor(cyan)
                                 .lineLimit(2)
                             Spacer()
-                            Button(action: {
-                                Task { await movementsVM.refreshPlayers() }
+                            Button(action: {                                Task { await undoLastMovement() }
+                            }) {
+                                Image(systemName: "arrow.uturn.left")
+                                    .font(.title3)
+                                    .foregroundColor(.orange.opacity(0.7))
+                            }
+                            Button(action: {                                Task { await movementsVM.refreshPlayers() }
                             }) {
                                 Image(systemName: "arrow.clockwise")
                                     .font(.title3)
