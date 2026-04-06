@@ -68,7 +68,7 @@ try {
         // Insérer l'élimination
         $stmt = $pdo->prepare("
             INSERT INTO `eliminations` 
-            (`id_participation`, `nom_membre`, `id_member_eliminator`, `is_definitive`, `created_at`)
+            (`id_participation`, `nom_membre`, `id_membre`, `is_definitive`, `created_at`)
             VALUES (?, ?, ?, ?, NOW())
         ");
         $stmt->execute([$victim_participation_id, $eliminator_name, $eliminator_member_id, $is_definitive]);
