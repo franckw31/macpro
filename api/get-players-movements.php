@@ -3,7 +3,23 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
-include('../include/config.php');
+
+// Déterminer le bon chemin vers config.php
+$config_path = '../config.php';
+if (!file_exists($config_path)) {
+    $config_path = '../panel/include/config.php';
+}
+if (!file_exists($config_path)) {
+    $config_path = '../../config.php';
+}
+
+if (!file_exists($config_path)) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Configuration not found'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+include($config_path);
 
 // Force UTF-8 encoding
 if (!headers_sent()) {
