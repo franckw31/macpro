@@ -143,6 +143,7 @@ try {
         }
         
         $players[] = [
+            'participation_id' => (int)$row['id-participation'],
             'rank' => (int)$rankDisplay,
             'name' => (string)$row['nom-membre'],
             'member_id' => (int)$membre_id,
