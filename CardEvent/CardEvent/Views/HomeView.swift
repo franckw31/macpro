@@ -279,9 +279,28 @@ struct HomeView: View {
     }
 
     // MARK: - Calculateur prizepool
+    private var prizepoolAdvice: (totalBuyins: Int, amount: Int)? {
+        guard let act = currentActivity else { return nil }
+        let validStatuses: Set<String> = ["Inscrit", "Présent", "Present", "Confirmé", "Confirme", "Eliminé", "Elimine"]
+        let validParticipants = viewModel.participants.filter { validStatuses.contains($0.statut) }
+        let inscrits = validParticipants.isEmpty && act.count > 0 ? act.count : validParticipants.count
+        let recaves = validParticipants.reduce(0) { $0 + $1.recave }
+        let totalBuyins = inscrits + recaves
+        if totalBuyins == 0 { return nil }
+        return (totalBuyins, totalBuyins * act.buyin)
+    }
+
     private var prizepoolCalculator: some View {
         VStack(alignment:.leading, spacing:14) {
-            Label("Répartition du Prizepool", systemImage: "eurosign.circle").font(.caption.bold()).foregroundColor(cyan).textCase(.uppercase)
+            HStack {
+                Label("Répartition du Prizepool", systemImage: "eurosign.circle").font(.caption.bold()).foregroundColor(cyan).textCase(.uppercase)
+                Spacer()
+                if let advice = prizepoolAdvice {
+                    Text("\(advice.amount)€ / \(advice.totalBuyins) buy-ins")
+                        .font(.caption2.bold())
+                        .foregroundColor(gold)
+                }
+            }
             Divider().background(cyan.opacity(0.3))
             HStack(spacing:12) {
                 VStack(alignment:.leading, spacing:4) { Text("Pricepool").font(.caption2).foregroundColor(.white); TextField("Ex: 200", text: $prizepoolInput).keyboardType(.numberPad).frame(width:80).padding(8).background(Color.white.opacity(0.06)).cornerRadius(8).foregroundColor(.white) }
