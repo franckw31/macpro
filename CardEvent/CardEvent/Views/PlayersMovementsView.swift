@@ -357,6 +357,19 @@ struct PlayersMovementsView: View {
                 .foregroundColor(.gray)
                 .frame(width: 50, alignment: .center)
                 .lineLimit(1)
+            
+            // Bouton Bust
+            if !player.isEliminated {
+                Button(action: { selectedPlayerForBust = player }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title3)
+                        .foregroundColor(.red.opacity(0.7))
+                }
+                .frame(width: 40, alignment: .center)
+            } else {
+                Text("")
+                    .frame(width: 40, alignment: .center)
+            }
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
