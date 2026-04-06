@@ -250,7 +250,6 @@ struct PlayersMovementsView: View {
                     }
                 }
             }
-            .navigationBarHidden(true)
         }
         .task {
             await movementsVM.load(activityId: activityId, title: activityTitle)
