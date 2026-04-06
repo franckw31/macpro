@@ -438,11 +438,12 @@ struct PlayersMovementsView: View {
             request.httpBody = try JSONSerialization.data(withJSONObject: body)
             let (_, response) = try await URLSession.shared.data(for: request)
             
-            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-                await movementsVM.refreshPlayers()
-            }
+            // Rafraîchir immédiatement après l'action, quel que soit le statut HTTP
+            await movementsVM.refreshPlayers()
         } catch {
             print("Erreur \(action): \(error)")
+            // Rafraîchir même en cas d'erreur pour voir l'état actuel
+            await movementsVM.refreshPlayers()
         }
     }
 }

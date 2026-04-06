@@ -73,6 +73,7 @@ try {
         ");
         $stmt->execute([$victim_participation_id, $eliminator_name, $eliminator_member_id, $is_definitive]);
 
+        http_response_code(200);
         echo json_encode(['success' => true, 'message' => 'Joueur éliminé']);
 
     } elseif ($action === 'recave_player') {
@@ -93,6 +94,7 @@ try {
         ");
         $stmt->execute([$victim_participation_id, $eliminator_name, $eliminator_member_id]);
 
+        http_response_code(200);
         echo json_encode(['success' => true, 'message' => 'Recave enregistré']);
 
     } else {
