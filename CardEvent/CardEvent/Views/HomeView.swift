@@ -281,10 +281,20 @@ struct HomeView: View {
     // MARK: - Calculateur prizepool
     private var prizepoolAdvice: (inscrits: Int, recaves: Int, amount: Int)? {
         guard let act = currentActivity else { return nil }
-        let validStatuses: Set<String> = ["Inscrit", "Présent", "Present", "Confirmé", "Confirme", "Eliminé", "Elimine"]
-        let validParticipants = viewModel.participants.filter { validStatuses.contains($0.statut) }
-        let inscrits = validParticipants.isEmpty && act.count > 0 ? act.count : validParticipants.count
-        let recaves = validParticipants.reduce(0) { $0 + $1.recave }
+        
+        let inscrits: Int
+        let recaves: Int
+        
+        if viewModel.participants.isEmpty {
+            inscrits = act.count
+            recaves = act.recaves
+        } else {
+            let validStatuses: Set<String> = ["Inscrit", "Présent", "Present", "Confirmé", "Confirme", "Eliminé", "Elimine"]
+            let validParticipants = viewModel.participants.filter { validStatuses.contains($0.statut) }
+            inscrits = validParticipants.isEmpty && act.count > 0 ? act.count : validParticipants.count
+            recaves = validParticipants.isEmpty && act.recaves > 0 ? act.recaves : validParticipants.reduce(0) { $0 + $1.recave }
+        }
+        
         let totalBuyins = inscrits + recaves
         if totalBuyins == 0 { return nil }
         return (inscrits, recaves, totalBuyins * act.buyin)
