@@ -497,36 +497,37 @@ struct EliminationModalView: View {
             .background(Color.white.opacity(0.05))
             .cornerRadius(8)
             
-            // Si c'est un bust, afficher les options
+            // Qui l'a éliminé ? (toujours affiché)
+            VStack(spacing: 12) {
+                Text("Qui l'a éliminé ?")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                
+                Picker("Joueur", selection: $selectedEliminator) {
+                    Text("-- Sélectionner --").tag(Optional<PlayerMovement>.none)
+                    ForEach(availablePlayers) { player in
+                        Text(player.name).tag(Optional(player))
+                    }
+                }
+                .pickerStyle(.menu)
+                .foregroundColor(.cyan)
+            }
+            
+            // Options spécifiques au Bust
             if actionType == .bust {
                 VStack(spacing: 12) {
-                    Text("Qui l'a éliminé ?")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    
-                    Picker("Joueur", selection: $selectedEliminator) {
-                        Text("-- Sélectionner --").tag(Optional<PlayerMovement>.none)
-                        ForEach(availablePlayers) { player in
-                            Text(player.name).tag(Optional(player))
+                    Toggle(isOn: $isDefinitive) {
+                        HStack(spacing: 8) {
+                            Text("Élimination définitive (OUT)")
+                                .font(.subheadline.bold())
+                                .foregroundColor(.red)
                         }
                     }
-                    .pickerStyle(.menu)
-                    .foregroundColor(.cyan)
-                    
-                    VStack(spacing: 12) {
-                        Toggle(isOn: $isDefinitive) {
-                            HStack(spacing: 8) {
-                                Text("Élimination définitive (OUT)")
-                                    .font(.subheadline.bold())
-                                    .foregroundColor(.red)
-                            }
-                        }
-                        .tint(.red)
-                    }
-                    .padding(12)
-                    .background(Color.white.opacity(0.05))
-                    .cornerRadius(8)
+                    .tint(.red)
                 }
+                .padding(12)
+                .background(Color.white.opacity(0.05))
+                .cornerRadius(8)
             }
             
             HStack(spacing: 12) {
@@ -539,11 +540,8 @@ struct EliminationModalView: View {
                 .tint(.gray)
                 
                 Button(action: {
-                    if actionType == .recave {
-                        // Action recave - pas besoin de sélectionner un joueur
-                        onCancel() // Fermer la modale pour l'instant
-                    } else if let eliminator = selectedEliminator {
-                        onEliminate(eliminator, isDefinitive)
+                    if let eliminator = selectedEliminator {
+                        onEliminate(eliminator, actionType == .bust && isDefinitive)
                     }
                 }) {
                     Text("Confirmer")
@@ -552,7 +550,7 @@ struct EliminationModalView: View {
                 }
                 .buttonStyle(.bordered)
                 .tint(actionType == .bust ? .red : .orange)
-                .disabled(actionType == .bust && selectedEliminator == nil)
+                .disabled(selectedEliminator == nil)
             }
         }
         .padding(20)
