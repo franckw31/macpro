@@ -287,7 +287,7 @@ struct HomeView: View {
         let totalBuyins = inscrits + recaves
         
         if totalBuyins == 0 { return nil }
-        return (inscrits, recaves, totalBuyins * act.buyin)
+        return (inscrits, recaves, (inscrits * act.buyin) + (recaves * act.recave_montant))
     }
 
     private var prizepoolCalculator: some View {
