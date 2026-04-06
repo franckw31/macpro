@@ -126,6 +126,7 @@
 				A1B2C3D4E5F60718293B000C /* ParticipantsListView.swift */,
 				B2C3D4E5F6071829AA00001A /* PlayerProfileView.swift */,
 				C3D4E5F607182900BB00001A /* ActivityInfoView.swift */,
+				C3D4E5F607182900BB00001B /* PlayersMovementsView.swift */,
 				D4E5F607182900CC00001B /* LiveView.swift */,
 				E5F607182900DD00002C /* PlayersLiveView.swift */,
 				F607182900EE00003E /* ChallengeRankingView.swift */,
