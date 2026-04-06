@@ -84,15 +84,8 @@ try {
             exit;
         }
 
-        // Insérer l'élimination
-        $stmt = $pdo->prepare("
-            INSERT INTO `eliminations` 
-            (`id_participation`, `nom_membre`, `id_membre`, `id_membre_victime`, `nom_membre_victime`, `id_activite`, `is_definitive`, `created_at`)
-            VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-        ");
-        $stmt->execute([$victim_participation_id, $eliminator_name, $eliminator_member_id, $victim_member_id, $victim_name, $activity_id, $is_definitive]);
-
-        // Si c'est une élimination définitive, mettre à jour le classement
+        // Si c'est une élimination définitive, calculer le classement AVANT l'insertion
+        $classement = 0;
         if ($is_definitive === 1) {
             // Compter le nombre de joueurs ACTUELLEMENT ACTIFS (avant l'élimination)
             // = nombre total - nombre déjà définitivement éliminés
@@ -105,7 +98,7 @@ try {
             $total_result = $stmt->fetch(PDO::FETCH_ASSOC);
             $total_count = intval($total_result['total_count'] ?? 0);
 
-            // Compter combien de joueurs sont DÉJÀ définitivement éliminés
+            // Compter combien de joueurs sont DÉJÀ définitivement éliminés (AVANT cette nouvelle élimination)
             $stmt = $pdo->prepare("
                 SELECT COUNT(DISTINCT `id_participation`) as eliminated_count
                 FROM `eliminations`
@@ -117,8 +110,18 @@ try {
 
             // Classement = nombre de joueurs restants AVANT cette élimination
             $classement = $total_count - $already_eliminated;
+        }
 
-            // Mettre à jour le classement du joueur éliminé
+        // Insérer l'élimination
+        $stmt = $pdo->prepare("
+            INSERT INTO `eliminations` 
+            (`id_participation`, `nom_membre`, `id_membre`, `id_membre_victime`, `nom_membre_victime`, `id_activite`, `is_definitive`, `created_at`)
+            VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+        ");
+        $stmt->execute([$victim_participation_id, $eliminator_name, $eliminator_member_id, $victim_member_id, $victim_name, $activity_id, $is_definitive]);
+
+        // Mettre à jour le classement si c'est une élimination définitive
+        if ($is_definitive === 1) {
             $stmt = $pdo->prepare("
                 UPDATE `participation` 
                 SET `classement` = ? 
