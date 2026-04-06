@@ -436,7 +436,7 @@ struct PlayersMovementsView: View {
         
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: body)
-            let (_, response) = try await URLSession.shared.data(for: request)
+            _ = try await URLSession.shared.data(for: request)
             
             // Rafraîchir immédiatement après l'action, quel que soit le statut HTTP
             await movementsVM.refreshPlayers()
