@@ -54,10 +54,24 @@ private final class PlayersMovementsVM: ObservableObject {
     private func fetchPlayersData() async {
         guard activityId > 0 else { return }
         
-        guard let url = URL(string: "https://viendez.com/api/get-players-movements.php?uid=\(activityId)") else { return }
+        guard let url = URL(string: "https://viendez.com/api/get-players-movements.php?uid=\(activityId)") else { 
+            self.errorMessage = "URL invalide"
+            self.isLoading = false
+            return 
+        }
         
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            // Check HTTP response
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode != 200 {
+                    self.errorMessage = "Erreur serveur: \(httpResponse.statusCode)"
+                    self.isLoading = false
+                    return
+                }
+            }
+            
             struct Response: Decodable {
                 let success: Bool
                 let players: [PlayerData]?
@@ -83,7 +97,8 @@ private final class PlayersMovementsVM: ObservableObject {
                 let pricepool: Int
             }
             
-            let resp = try JSONDecoder().decode(Response.self, from: data)
+            let decoder = JSONDecoder()
+            let resp = try decoder.decode(Response.self, from: data)
             if resp.success, let playerData = resp.players, let stats = resp.stats {
                 self.players = playerData.map { p in
                     PlayerMovement(
@@ -103,9 +118,16 @@ private final class PlayersMovementsVM: ObservableObject {
                 self.activePlayers = stats.active_players
                 self.totalRecaves = stats.total_recaves
                 self.pricepool = stats.pricepool
+                self.errorMessage = nil
             } else {
                 self.errorMessage = resp.message ?? "Erreur de chargement"
             }
+        } catch DecodingError.dataCorrupted(let context) {
+            self.errorMessage = "Données corrompues: \(context.debugDescription)"
+        } catch DecodingError.keyNotFound(let key, let context) {
+            self.errorMessage = "Clé manquante: \(key) - \(context.debugDescription)"
+        } catch DecodingError.typeMismatch(let type, let context) {
+            self.errorMessage = "Type invalide: \(type) - \(context.debugDescription)"
         } catch {
             self.errorMessage = "Erreur: \(error.localizedDescription)"
         }
