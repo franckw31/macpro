@@ -297,9 +297,14 @@ struct HomeView: View {
                 Spacer()
                 if let advice = prizepoolAdvice {
                     let desc = advice.recaves > 0 ? "\(advice.inscrits) buy-ins + \(advice.recaves) recaves" : "\(advice.inscrits) buy-ins"
-                    Text("\(advice.amount)€ / \(desc)")
-                        .font(.caption2.bold())
-                        .foregroundColor(gold)
+                    Button(action: {
+                        prizepoolInput = String(advice.amount)
+                        buyinsInput = desc
+                    }) {
+                        Text("\(advice.amount)€ / \(desc)")
+                            .font(.caption2.bold())
+                            .foregroundColor(gold)
+                    }
                 }
             }
             Divider().background(cyan.opacity(0.3))
