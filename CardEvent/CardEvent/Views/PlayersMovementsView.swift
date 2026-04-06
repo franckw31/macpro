@@ -157,6 +157,13 @@ struct PlayersMovementsView: View {
                                 .foregroundColor(cyan)
                                 .lineLimit(2)
                             Spacer()
+                            Button(action: {
+                                Task { await movementsVM.refreshPlayers() }
+                            }) {
+                                Image(systemName: "arrow.clockwise")
+                                    .font(.title3)
+                                    .foregroundColor(cyan.opacity(0.6))
+                            }
                             Button(action: { dismiss() }) {
                                 Image(systemName: "xmark.circle.fill")
                                     .font(.title2)
