@@ -660,7 +660,7 @@ final class PokerTimerViewModel: ObservableObject {
                             let old = activityList[selectedActivityIndex]
                             activityList[selectedActivityIndex] = ActivitySummary(
                                 id: old.id, date: old.date, dateFull: old.dateFull, title: old.title,
-                                buyin: old.buyin, rake: old.rake, count: max(0, old.count + delta), organisateur: old.organisateur, startDate: old.startDate
+                                buyin: old.buyin, rake: old.rake, count: max(0, old.count + delta), recaves: old.recaves, organisateur: old.organisateur, startDate: old.startDate
                             )
                         }
                     }
