@@ -92,6 +92,28 @@ try {
         ");
         $stmt->execute([$victim_participation_id, $eliminator_name, $eliminator_member_id, $victim_member_id, $victim_name, $activity_id, $is_definitive]);
 
+        // Si c'est une élimination définitive, mettre à jour le classement
+        if ($is_definitive === 1) {
+            // Compter le nombre de joueurs encore actifs (non définitivement éliminés)
+            $stmt = $pdo->prepare("
+                SELECT COUNT(DISTINCT p.`id-participation`) as active_count
+                FROM `participation` p
+                LEFT JOIN `eliminations` e ON p.`id-participation` = e.`id_participation` AND e.`is_definitive` = 1
+                WHERE p.`id-activite` = ? AND e.`id` IS NULL
+            ");
+            $stmt->execute([$activity_id]);
+            $rank_result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $classement = intval($rank_result['active_count'] ?? 0);
+
+            // Mettre à jour le classement du joueur éliminé
+            $stmt = $pdo->prepare("
+                UPDATE `participation` 
+                SET `classement` = ? 
+                WHERE `id-participation` = ?
+            ");
+            $stmt->execute([$classement, $victim_participation_id]);
+        }
+
         http_response_code(200);
         echo json_encode(['success' => true, 'message' => 'Joueur éliminé']);
 
