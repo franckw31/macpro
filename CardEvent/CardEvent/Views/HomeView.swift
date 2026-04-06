@@ -285,7 +285,7 @@ struct HomeView: View {
             Divider().background(cyan.opacity(0.3))
             HStack(spacing:12) {
                 VStack(alignment:.leading, spacing:4) { Text("Pricepool").font(.caption2).foregroundColor(.white); TextField("Ex: 200", text: $prizepoolInput).keyboardType(.numberPad).frame(width:80).padding(8).background(Color.white.opacity(0.06)).cornerRadius(8).foregroundColor(.white) }
-                VStack(alignment:.leading, spacing:4) { Text("Nb Buy-Rebuy").font(.caption2).foregroundColor(.white); TextField("Ex: 20", text: $buyinsInput).keyboardType(.numberPad).frame(width:60).padding(8).background(Color.white.opacity(0.06)).cornerRadius(8).foregroundColor(.white) }
+                VStack(alignment:.leading, spacing:4) { Text("Nb --Buy-Rebuy").font(.caption2).foregroundColor(.white); TextField("Ex: 20", text: $buyinsInput).keyboardType(.numberPad).frame(width:60).padding(8).background(Color.white.opacity(0.06)).cornerRadius(8).foregroundColor(.white) }
                 VStack(alignment:.leading, spacing:4) { Text("+1 Payé").font(.caption2).foregroundColor(.white); Toggle("", isOn: $payExtraPlayer).tint(cyan).labelsHidden().frame(height:36) }
                 Spacer()
                 Button { calculateRepartition() } label: { Text("Calculer").font(.subheadline.bold()).foregroundColor(.white).padding(.horizontal,14).padding(.vertical,8).background(cyan.opacity(0.85)).cornerRadius(8) }.disabled(prizepoolInput.isEmpty || buyinsInput.isEmpty)
