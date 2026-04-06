@@ -550,7 +550,7 @@ struct HomeView: View {
         guard let prizepool = Int(prizepoolInput), let buyins = Int(buyinsInput), prizepool > 0, buyins > 0 else { repartition = []; showResult = false; return }
 
         var places: Int
-        if buyins > 24 { places = 5 }
+        if buyins > 20 { places = 5 }
         else if buyins >= 18 { places = 4 }
         else if buyins >= 10 { places = 3 }
         else { places = 2 }
