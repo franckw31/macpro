@@ -60,6 +60,7 @@ try {
             'city'         => $row['city'],
             'buyin'        => (int)$row['buyin'],
             'rake'         => (int)$row['rake'],
+            'recave_montant'=> (int)$row['recave_montant'],
             'count'        => (int)$row['participants_count'],
             'recaves'      => (int)$row['recaves_count'],
             'organisateur' => $row['organisateur'],
