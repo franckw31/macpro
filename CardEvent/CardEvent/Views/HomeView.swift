@@ -465,12 +465,25 @@ struct HomeView: View {
         hideKeyboard()
         guard let prizepool = Int(prizepoolInput), let buyins = Int(buyinsInput), prizepool > 0, buyins > 0 else { repartition = []; showResult = false; return }
 
-        let places: Int
+        var places: Int
         if buyins > 24 { places = 5 }
         else if buyins >= 18 { places = 4 }
         else if buyins >= 10 { places = 3 }
         else { places = 2 }
-        let percents: [Int] = (places == 5) ? [35,25,18,12,10] : (places == 4) ? [40,30,20,10] : (places==3 ? [50,30,20] : [65,35])
+        
+        if payExtraPlayer {
+            places += 1
+        }
+        
+        let percents: [Int]
+        switch places {
+        case 6: percents = [32, 22, 16, 12, 10, 8]
+        case 5: percents = [35, 25, 18, 12, 10]
+        case 4: percents = [40, 30, 20, 10]
+        case 3: percents = [50, 30, 20]
+        case 2: percents = [65, 35]
+        default: percents = [100]
+        }
 
         let targetTotal = (prizepool / 10) * 10
         let raw = percents.map { Double(prizepool) * Double($0) / 100.0 }
