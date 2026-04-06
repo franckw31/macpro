@@ -24,6 +24,7 @@ try {
                a.`ville` AS city,
                a.`buyin`,
                a.`rake`,
+               a.`recave_montant`,
                m.`pseudo` AS organisateur,
                COUNT(p.`id-participation`) AS participants_count,
                COALESCE(SUM(p.`recave`), 0) AS recaves_count
@@ -33,7 +34,7 @@ try {
             ON p.`id-activite` = a.`id-activite`
             AND COALESCE(p.`option`, 'None') NOT IN ('None', 'Desinscrit')
         WHERE a.`date_depart` >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
-        GROUP BY a.`id-activite`, a.`date_depart`, a.`titre-activite`, a.`ville`, a.`buyin`, a.`rake`, m.`pseudo`
+        GROUP BY a.`id-activite`, a.`date_depart`, a.`titre-activite`, a.`ville`, a.`buyin`, a.`rake`, a.`recave_montant`, m.`pseudo`
         ORDER BY a.`date_depart` ASC
     ");
 
