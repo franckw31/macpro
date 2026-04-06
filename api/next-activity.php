@@ -23,7 +23,8 @@ try {
     $stmt = $pdo->query("
         SELECT a.`id-activite`, a.`date_depart`, a.`titre-activite`, a.`ville`,
                a.`buyin`, a.`rake`,
-               COUNT(p.`id-participation`) AS participants_count
+               COUNT(p.`id-participation`) AS participants_count,
+               COALESCE(SUM(p.`recave`), 0) AS recaves_count
         FROM `activite` a
         LEFT JOIN `participation` p 
             ON p.`id-activite` = a.`id-activite`
@@ -44,6 +45,7 @@ try {
             'title' => $result['titre-activite'],
             'city' => $result['ville'],
             'participants_count' => (int)$result['participants_count'],
+            'recaves_count' => (int)$result['recaves_count'],
             'buyin' => (int)$result['buyin'],
             'rake' => (int)$result['rake'],
             'timestamp' => date('Y-m-d H:i:s')
