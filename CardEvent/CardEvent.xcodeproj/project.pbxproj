@@ -49,6 +49,7 @@
 		B2C3D4E5F6071829AA00001A /* PlayerProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerProfileView.swift; sourceTree = "<group>"; };
 		BB07182900CC00007B /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		C3D4E5F607182900BB00001A /* ActivityInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityInfoView.swift; sourceTree = "<group>"; };
+		C3D4E5F607182900BB00001B /* PlayersMovementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersMovementsView.swift; sourceTree = "<group>"; };
 		CC07182900EE00009C /* TicketsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketsListView.swift; sourceTree = "<group>"; };
 		D4E5F607182900CC00001B /* LiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveView.swift; sourceTree = "<group>"; };
 		E5F607182900DD00002C /* PlayersLiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersLiveView.swift; sourceTree = "<group>"; };
