@@ -467,6 +467,11 @@ struct HomeView: View {
 
     // MARK: - Helpers
     private func ordinalSuffix(_ n: Int) -> String { n == 1 ? "er" : "e" }
+    
+    private func affecterGains() {
+        // TODO: Implémenter le traitement des gains
+        print("Affectation des gains: \(repartition)")
+    }
 
     private func calculateRepartition() {
         hideKeyboard()
