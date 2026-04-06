@@ -418,7 +418,7 @@ struct PlayersMovementsView: View {
     
     private func eliminatePlayer(victim: PlayerMovement, eliminator: PlayerMovement, actionType: EliminationModalView.ActionType, isDefinitive: Bool) async {
         let action = actionType == .bust ? "eliminate_player" : "recave_player"
-        let urlString = "https://viendez.com/api/register-activity.php?action=\(action)"
+        let urlString = "https://viendez.com/api/player-action.php"
         guard let url = URL(string: urlString) else { return }
         
         var request = URLRequest(url: url)
@@ -430,7 +430,8 @@ struct PlayersMovementsView: View {
             "victim_participation_id": victim.id,
             "eliminator_name": eliminator.name,
             "eliminator_member_id": eliminator.memberId,
-            "is_definitive": isDefinitive
+            "is_definitive": isDefinitive,
+            "action": action
         ]
         
         do {
