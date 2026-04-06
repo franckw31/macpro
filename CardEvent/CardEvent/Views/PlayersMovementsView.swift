@@ -129,7 +129,6 @@ private final class PlayersMovementsVM: ObservableObject {
 
 // MARK: - View
 struct PlayersMovementsView: View {
-    @ObservedObject var viewModel: PokerTimerViewModel
     let activityId: Int
     let activityTitle: String
     
