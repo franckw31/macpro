@@ -89,7 +89,7 @@ try {
         // Enregistrer qui a éliminé le joueur (pour traçabilité)
         $stmt = $pdo->prepare("
             INSERT INTO `eliminations` 
-            (`id_participation`, `nom_membre`, `id_member_eliminator`, `is_definitive`, `created_at`)
+            (`id_participation`, `nom_membre`, `id_membre`, `is_definitive`, `created_at`)
             VALUES (?, ?, ?, 0, NOW())
         ");
         $stmt->execute([$victim_participation_id, $eliminator_name, $eliminator_member_id]);
