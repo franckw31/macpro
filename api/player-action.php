@@ -49,6 +49,25 @@ try {
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 
+    // Récupérer les infos de la victime (joueur à éliminer)
+    $stmt = $pdo->prepare("
+        SELECT m.`id-membre`, p.`nom-membre` 
+        FROM `participation` p 
+        LEFT JOIN `membres` m ON p.`nom-membre` = m.`pseudo`
+        WHERE p.`id-participation` = ?
+    ");
+    $stmt->execute([$victim_participation_id]);
+    $victim_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$victim_data) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Joueur victime non trouvé']);
+        exit;
+    }
+
+    $victim_member_id = intval($victim_data['id-membre'] ?? 0);
+    $victim_name = $victim_data['nom-membre'] ?? '';
+
     if ($action === 'eliminate_player') {
         // ===== ÉLIMINATION =====
         // Vérifier que le joueur n'est pas déjà éliminé définitivement
