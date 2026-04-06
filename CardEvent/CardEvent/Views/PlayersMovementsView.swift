@@ -451,40 +451,83 @@ struct EliminationModalView: View {
     let onCancel: () -> Void
     
     @State private var selectedEliminator: PlayerMovement?
+    @State private var actionType: ActionType = .bust
     @State private var isDefinitive = false
+    
+    enum ActionType {
+        case bust
+        case recave
+    }
     
     var body: some View {
         VStack(spacing: 20) {
-            Text("Sortie de \(victimName)")
+            Text("Action pour \(victimName)")
                 .font(.headline.bold())
                 .foregroundColor(.white)
             
-            Text("Qui l'a éliminé ?")
-                .font(.subheadline)
-                .foregroundColor(.gray)
-            
-            Picker("Joueur", selection: $selectedEliminator) {
-                Text("-- Sélectionner --").tag(Optional<PlayerMovement>.none)
-                ForEach(availablePlayers) { player in
-                    Text(player.name).tag(Optional(player))
-                }
-            }
-            .pickerStyle(.menu)
-            .foregroundColor(.cyan)
-            
-            VStack(spacing: 12) {
-                Toggle(isOn: $isDefinitive) {
-                    HStack(spacing: 8) {
-                        Text("Éliminé définitivement (OUT)")
-                            .font(.subheadline.bold())
-                            .foregroundColor(.red)
+            // Sélection du type d'action
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 12) {
+                    Button(action: { actionType = .bust }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: actionType == .bust ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(actionType == .bust ? .red : .gray)
+                            Text("Bust (Éliminé)")
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                    .buttonStyle(.plain)
                 }
-                .tint(.red)
+                
+                HStack(spacing: 12) {
+                    Button(action: { actionType = .recave }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: actionType == .recave ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(actionType == .recave ? .orange : .gray)
+                            Text("Recave")
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .buttonStyle(.plain)
+                }
             }
             .padding(12)
             .background(Color.white.opacity(0.05))
             .cornerRadius(8)
+            
+            // Si c'est un bust, afficher les options
+            if actionType == .bust {
+                VStack(spacing: 12) {
+                    Text("Qui l'a éliminé ?")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                    Picker("Joueur", selection: $selectedEliminator) {
+                        Text("-- Sélectionner --").tag(Optional<PlayerMovement>.none)
+                        ForEach(availablePlayers) { player in
+                            Text(player.name).tag(Optional(player))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .foregroundColor(.cyan)
+                    
+                    VStack(spacing: 12) {
+                        Toggle(isOn: $isDefinitive) {
+                            HStack(spacing: 8) {
+                                Text("Élimination définitive (OUT)")
+                                    .font(.subheadline.bold())
+                                    .foregroundColor(.red)
+                            }
+                        }
+                        .tint(.red)
+                    }
+                    .padding(12)
+                    .background(Color.white.opacity(0.05))
+                    .cornerRadius(8)
+                }
+            }
             
             HStack(spacing: 12) {
                 Button(action: onCancel) {
@@ -496,7 +539,10 @@ struct EliminationModalView: View {
                 .tint(.gray)
                 
                 Button(action: {
-                    if let eliminator = selectedEliminator {
+                    if actionType == .recave {
+                        // Action recave - pas besoin de sélectionner un joueur
+                        onCancel() // Fermer la modale pour l'instant
+                    } else if let eliminator = selectedEliminator {
                         onEliminate(eliminator, isDefinitive)
                     }
                 }) {
@@ -505,8 +551,8 @@ struct EliminationModalView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
-                .tint(.red)
-                .disabled(selectedEliminator == nil)
+                .tint(actionType == .bust ? .red : .orange)
+                .disabled(actionType == .bust && selectedEliminator == nil)
             }
         }
         .padding(20)
