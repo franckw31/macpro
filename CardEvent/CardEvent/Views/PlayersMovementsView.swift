@@ -193,6 +193,15 @@ struct PlayersMovementsView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
+                            
+                            Button(action: {
+                                Task { await movementsVM.refreshPlayers() }
+                            }) {
+                                Label("Réessayer", systemImage: "arrow.clockwise")
+                                    .font(.subheadline.bold())
+                                    .foregroundColor(.cyan)
+                            }
+                            .padding(.top, 12)
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding(32)
