@@ -551,7 +551,7 @@ struct HomeView: View {
 
         var places: Int
         if buyins > 20 { places = 5 }
-        else if buyins >= 1 { places = 4 }
+        else if buyins >= 16 { places = 4 }
         else if buyins >= 10 { places = 3 }
         else { places = 2 }
         
