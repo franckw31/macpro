@@ -1,7 +1,7 @@
 import SwiftUI
 
 // MARK: - Model
-struct PlayerMovement: Identifiable {
+struct PlayerMovement: Identifiable, Hashable {
     let id = UUID()
     let rank: Int
     let name: String
@@ -13,6 +13,14 @@ struct PlayerMovement: Identifiable {
     let isEliminated: Bool
     let phoneticName: String
     let classement: Int
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: PlayerMovement, rhs: PlayerMovement) -> Bool {
+        lhs.id == rhs.id
+    }
 }
 
 // MARK: - ViewModel
