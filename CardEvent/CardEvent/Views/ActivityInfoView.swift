@@ -39,6 +39,7 @@ struct ActivityInfoView: View {
     @ObservedObject var viewModel: PokerTimerViewModel
     @ObservedObject private var auth = AuthService.shared
     @Environment(\.dismiss) private var dismiss
+    @State private var showMovements = false
 
     var body: some View {
         NavigationView {
