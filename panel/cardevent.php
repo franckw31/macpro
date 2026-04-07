@@ -500,55 +500,6 @@ document.addEventListener('DOMContentLoaded', function(){
 	var t = setInterval(function(){ renderInscrits(); tries++; if(tries>8) clearInterval(t); }, 200);
 });
 </script>
-<script>
-// Open inscription modal instead of redirecting
-document.addEventListener('DOMContentLoaded', function() {
-	var regBtn = document.getElementById('reg-action');
-	if (!regBtn) return;
-
-	function getActivityId() {
-		if (window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id) return window.SERVER_ACTIVITY.id;
-		var urlParams = new URLSearchParams(window.location.search);
-		if (urlParams.has('uid')) return urlParams.get('uid');
-		return null;
-	}
-
-	regBtn.addEventListener('click', function(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		var actId = getActivityId();
-		var modal = document.getElementById('inscription-modal');
-		if(!modal) return;
-		
-		// Set uid in hidden form field
-		var uidInput = modal.querySelector('input[name="uid"]');
-		if(uidInput && actId) uidInput.value = actId;
-		
-		// Open modal
-		modal.style.display = 'block';
-		modal.setAttribute('aria-hidden', 'false');
-		if (typeof modal.scrollIntoView === 'function') {
-			modal.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-		}
-	});
-
-	// close modal on background click or close button
-	document.addEventListener('click', function(e){
-		var modal = document.getElementById('inscription-modal');
-		if(!modal) return;
-		// Close when clicking outside the modal sheet
-		if(e.target === modal) {
-			modal.style.display='none'; 
-			modal.setAttribute('aria-hidden','true');
-		}
-		// Close when clicking the close button
-		if(e.target.classList && e.target.classList.contains('inscription-modal-close')){
-			modal.style.display='none'; 
-			modal.setAttribute('aria-hidden','true');
-		}
-	});
-});
-</script>
 <?php endif; ?>
 	<script>
 	// If server knows the API base, set it here. Otherwise client will try to derive it from origin.
@@ -937,7 +888,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						 <div style="display:flex;align-items:center;justify-content:space-between">
 							 <div id="reg-text" style="font-weight:600;font-size:14px">Votre Inscription : </div>
 							 <div>
-								<button id="reg-action" type="button" class="button primary" style="margin-left:12px;padding:8px 12px;border-radius:10px;font-weight:700"><?php echo (!empty($serverParticipation) && isset($serverParticipation['status']) && !in_array($serverParticipation['status'], array('None','Desinscrit'))) ? 'Modifier' : 'S Inscrire'; ?></button>
+								<button id="reg-action" data-reg-action-bound="1" type="button" class="button primary" style="margin-left:12px;padding:8px 12px;border-radius:10px;font-weight:700"><?php echo (!empty($serverParticipation) && isset($serverParticipation['status']) && !in_array($serverParticipation['status'], array('None','Desinscrit'))) ? 'Modifier' : 'S Inscrire'; ?></button>
 							 </div>
 						 </div>
 
@@ -977,7 +928,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					<div class="modal-sheet" role="dialog" aria-modal="true" style="max-width:420px;padding:18px;">
 						<button class="modal-close inscription-modal-close" style="float:right">Fermer</button>
 						<div style="font-weight:700;color:var(--gold);margin-bottom:6px">Options</div>
-						<form id="ins-form" method="post" action="" style="margin-top:8px">
+						<form id="ins-form" method="post" action="/panel/cardevent.php<?php echo !empty($serverActivity['id']) ? '?uid=' . intval($serverActivity['id']) : ''; ?>" style="margin-top:8px">
 							<input type="hidden" name="quick_reg" value="1">
 							<input type="hidden" name="ajax" value="1">
 							<input type="hidden" name="uid" value="">
@@ -1093,6 +1044,21 @@ document.addEventListener('DOMContentLoaded', function() {
 						modal.setAttribute('aria-hidden', 'true');
 					}
 
+					function openModal(event){
+						if(event){
+							event.preventDefault();
+							event.stopPropagation();
+							if(typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
+						}
+						applyParticipationState();
+						updateRegistrationUI();
+						modal.style.display = 'block';
+						modal.setAttribute('aria-hidden', 'false');
+						if (typeof modal.scrollIntoView === 'function') {
+							modal.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+						}
+					}
+
 					function submitQuickRegistration(){
 						if(isSubmitting) return;
 						isSubmitting = true;
@@ -1160,10 +1126,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					modal.addEventListener('click', function(e){ if(e.target === modal) closeModal(); });
 
 					if(regBtn){
-						regBtn.addEventListener('click', function(){
-							applyParticipationState();
-							updateRegistrationUI();
-						});
+						regBtn.addEventListener('click', openModal, true);
 					}
 				});
 
