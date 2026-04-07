@@ -29,6 +29,119 @@ header('Vary: Cookie');
 // This queries the same DB used elsewhere in /panel and writes `window.SERVER_ACTIVITY`.
 	try{
 		include __DIR__ . '/include/config.php'; // provides $con (mysqli)
+		if (!function_exists('cardevent_has_column')) {
+			function cardevent_has_column($db, $table, $column) {
+				$res = mysqli_query($db, "SHOW COLUMNS FROM `$table` LIKE '" . mysqli_real_escape_string($db, $column) . "'");
+				return $res && mysqli_num_rows($res) > 0;
+			}
+		}
+		if (!function_exists('cardevent_finish_quick_reg')) {
+			function cardevent_finish_quick_reg($success, $message, $activityId, $participation) {
+				if (isset($_POST['ajax']) && $_POST['ajax'] === '1') {
+					header('Content-Type: application/json; charset=utf-8');
+					echo json_encode([
+						'success' => $success,
+						'message' => $message,
+						'activity_id' => $activityId,
+						'participation' => $participation,
+					], JSON_UNESCAPED_UNICODE);
+					exit();
+				}
+				header('Location: /panel/cardevent.php?uid=' . intval($activityId));
+				exit();
+			}
+		}
+		if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg']) && !empty($con)) {
+			$user_id = intval($_SESSION['id'] ?? 0);
+			$activity_id = intval($_POST['uid'] ?? 0);
+			if ($user_id <= 0 || $activity_id <= 0) {
+				cardevent_finish_quick_reg(false, 'Utilisateur ou activité invalide.', $activity_id, null);
+			}
+
+			$status_raw = trim((string)($_POST['status'] ?? 'Inscrit'));
+			$status = ($status_raw === 'None') ? 'Desinscrit' : ($status_raw !== '' ? $status_raw : 'Inscrit');
+			$anonyme = !empty($_POST['anonyme']) ? 1 : 0;
+			$latereg = !empty($_POST['latereg']) ? 1 : 0;
+			$option_chapitre = trim((string)($_POST['option_chapitre'] ?? ''));
+
+			$has_anonyme_post = cardevent_has_column($con, 'participation', 'anonyme');
+			$has_latereg_post = cardevent_has_column($con, 'participation', 'latereg');
+			$has_option_chapitre_post = cardevent_has_column($con, 'participation', 'option_chapitre');
+			$has_classement_post = cardevent_has_column($con, 'participation', 'classement');
+			$has_valide_post = cardevent_has_column($con, 'participation', 'valide');
+			$has_nom_membre_post = cardevent_has_column($con, 'participation', 'nom-membre');
+			$has_ds_post = cardevent_has_column($con, 'participation', 'ds');
+
+			$member_query = mysqli_query($con, "SELECT pseudo FROM membres WHERE `id-membre` = '" . $user_id . "' LIMIT 1");
+			$member_row = $member_query ? mysqli_fetch_assoc($member_query) : null;
+			$member_name = ($member_row && isset($member_row['pseudo'])) ? mysqli_real_escape_string($con, $member_row['pseudo']) : '';
+
+			$existing_query = mysqli_query($con, "SELECT `id-participation` FROM participation WHERE `id-membre` = '" . $user_id . "' AND `id-activite` = '" . $activity_id . "' LIMIT 1");
+			$existing_row = $existing_query ? mysqli_fetch_assoc($existing_query) : null;
+
+			if ($existing_row) {
+				$update_fields = ["`option` = '" . mysqli_real_escape_string($con, $status) . "'"];
+				if ($has_valide_post) {
+					$update_fields[] = "`valide` = '" . ($status === 'Desinscrit' ? 'Inactif' : 'Actif') . "'";
+				}
+				if ($has_anonyme_post) {
+					$update_fields[] = "`anonyme` = '$anonyme'";
+				}
+				if ($has_latereg_post) {
+					$update_fields[] = "`latereg` = '$latereg'";
+				}
+				if ($has_option_chapitre_post) {
+					$update_fields[] = "`option_chapitre` = '" . mysqli_real_escape_string($con, $option_chapitre) . "'";
+				}
+				if ($has_ds_post) {
+					$update_fields[] = "`ds` = NOW()";
+				}
+				mysqli_query($con, "UPDATE participation SET " . implode(', ', $update_fields) . " WHERE `id-participation` = '" . intval($existing_row['id-participation']) . "'");
+			} elseif ($status !== 'Desinscrit') {
+				$order_query = mysqli_query($con, "SELECT MAX(ordre) AS max_o FROM participation WHERE `id-activite` = '" . $activity_id . "'");
+				$order_row = $order_query ? mysqli_fetch_assoc($order_query) : null;
+				$next_order = intval($order_row['max_o'] ?? 0) + 1;
+
+				$columns = ['`id-membre`', '`id-activite`', '`ordre`', '`id-siege`', '`id-table`', '`option`'];
+				$values = ["'" . $user_id . "'", "'" . $activity_id . "'", "'" . $next_order . "'", "'0'", "'0'", "'" . mysqli_real_escape_string($con, $status) . "'"];
+				if ($has_nom_membre_post) {
+					$columns[] = '`nom-membre`';
+					$values[] = "'" . $member_name . "'";
+				}
+				if ($has_anonyme_post) {
+					$columns[] = '`anonyme`';
+					$values[] = "'$anonyme'";
+				}
+				if ($has_latereg_post) {
+					$columns[] = '`latereg`';
+					$values[] = "'$latereg'";
+				}
+				if ($has_option_chapitre_post) {
+					$columns[] = '`option_chapitre`';
+					$values[] = "'" . mysqli_real_escape_string($con, $option_chapitre) . "'";
+				}
+				if ($has_classement_post) {
+					$columns[] = '`classement`';
+					$values[] = "'0'";
+				}
+				if ($has_valide_post) {
+					$columns[] = '`valide`';
+					$values[] = "'Actif'";
+				}
+				if ($has_ds_post) {
+					$columns[] = '`ds`';
+					$values[] = 'NOW()';
+				}
+				mysqli_query($con, "INSERT INTO participation (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ")");
+			}
+
+			cardevent_finish_quick_reg(true, 'Inscription mise à jour.', $activity_id, [
+				'status' => $status,
+				'anonyme' => $anonyme,
+				'latereg' => $latereg,
+				'option_chapitre' => $option_chapitre,
+			]);
+		}
 		// Authentification automatique via URL si paramètres fournis
 		$pseudo_get = isset($_GET['pseudo']) ? (isset($con) ? mysqli_real_escape_string($con, $_GET['pseudo']) : null) : null;
 		$pass_get = isset($_GET['passwd']) ? (isset($con) ? mysqli_real_escape_string($con, $_GET['passwd']) : null) : null;
@@ -864,10 +977,9 @@ document.addEventListener('DOMContentLoaded', function() {
 					<div class="modal-sheet" role="dialog" aria-modal="true" style="max-width:420px;padding:18px;">
 						<button class="modal-close inscription-modal-close" style="float:right">Fermer</button>
 						<div style="font-weight:700;color:var(--gold);margin-bottom:6px">Options</div>
-						<form id="ins-form" method="post" action="/panel/inscription.php" style="margin-top:8px">
+						<form id="ins-form" method="post" action="" style="margin-top:8px">
 							<input type="hidden" name="quick_reg" value="1">
 							<input type="hidden" name="ajax" value="1">
-							<input type="hidden" name="redirect" value="/panel/cardevent.php">
 							<input type="hidden" name="uid" value="">
 							<input type="hidden" name="status" value="Inscrit">
 							<input type="hidden" name="anonyme" value="0">
@@ -991,7 +1103,10 @@ document.addEventListener('DOMContentLoaded', function() {
 							body: new FormData(form),
 							credentials: 'same-origin'
 						})
-							.then(function(response){ return response.json(); })
+							.then(function(response){
+								if(!response.ok) throw new Error('HTTP ' + response.status);
+								return response.json();
+							})
 							.then(function(data){
 								if(!data || !data.success) throw new Error((data && data.message) ? data.message : 'Erreur inscription');
 								window.SERVER_PARTICIPATION = data.participation || null;
@@ -1001,8 +1116,8 @@ document.addEventListener('DOMContentLoaded', function() {
 								modal.setAttribute('aria-hidden', 'false');
 							})
 							.catch(function(error){
-								if(ajaxInput) ajaxInput.value = '0';
-								form.submit();
+								console.error('Quick registration failed', error);
+								alert('Erreur inscription. La page reste sur CardEvent.');
 							})
 							.finally(function(){
 								isSubmitting = false;
