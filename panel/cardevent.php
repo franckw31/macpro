@@ -356,6 +356,9 @@ error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id(
 	.detail-icon.location{color:var(--cyan)}
 	.detail-icon.money{color:var(--gold)}
 	.detail-icon.info{color:#ff9d3b}
+	#inscription-modal{position:static;inset:auto;background:transparent;z-index:auto;margin-top:14px}
+	#inscription-modal .modal-sheet{position:static;left:auto;right:auto;bottom:auto;max-height:none;overflow:visible;background:rgba(114,90,18,0.20);border:1px solid rgba(255,215,0,0.22);box-shadow:none;border-radius:18px;padding:18px}
+	#inscription-modal .modal-close{position:static;float:right;margin-left:8px}
 	</style>
 	<meta name="referrer" content="no-referrer">
 <?php if(!empty($serverActivity)): ?>
@@ -411,7 +414,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		// Open modal
 		modal.style.display = 'block';
 		modal.setAttribute('aria-hidden', 'false');
-		window.scrollTo(0, 0);
+		if (typeof modal.scrollIntoView === 'function') {
+			modal.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+		}
 	});
 
 	// close modal on background click or close button
@@ -992,7 +997,8 @@ document.addEventListener('DOMContentLoaded', function() {
 								window.SERVER_PARTICIPATION = data.participation || null;
 								applyParticipationState();
 								updateRegistrationUI();
-								closeModal();
+								modal.style.display = 'block';
+								modal.setAttribute('aria-hidden', 'false');
 							})
 							.catch(function(error){
 								if(ajaxInput) ajaxInput.value = '0';
