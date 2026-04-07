@@ -926,9 +926,37 @@ document.addEventListener('DOMContentLoaded', function() {
 					var inAnon = modal.querySelector('#ins-anon');
 					var inOpt = modal.querySelector('#ins-opt');
 					var inLate = modal.querySelector('#ins-late');
+					var optionChapitre = form.querySelector('input[name="option_chapitre"]');
+					var uidInput = form.querySelector('input[name="uid"]');
 					var hidAnon = form.querySelector('input[name="anonyme"]');
 					var hidLate = form.querySelector('input[name="latereg"]');
 					var hidStatus = form.querySelector('input[name="status"]');
+
+					function getActivityId(){
+						if(window.currentActivity && window.currentActivity.id) return window.currentActivity.id;
+						if(window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id) return window.SERVER_ACTIVITY.id;
+						var params = new URLSearchParams(window.location.search);
+						return params.get('uid') || '';
+					}
+
+					function applyParticipationState(){
+						var part = window.SERVER_PARTICIPATION || null;
+						if(uidInput) uidInput.value = getActivityId();
+						if(!part){
+							if(inAnon) inAnon.checked = false;
+							if(inOpt) inOpt.checked = false;
+							if(inLate) inLate.checked = false;
+							if(optionChapitre) optionChapitre.value = '';
+							syncHidden();
+							return;
+						}
+
+						if(inAnon) inAnon.checked = String(part.anonyme || 0) === '1';
+						if(inOpt) inOpt.checked = part.status === 'Option';
+						if(inLate) inLate.checked = String(part.latereg || 0) === '1';
+						if(optionChapitre) optionChapitre.value = part.option_chapitre || '';
+						syncHidden();
+					}
 
 					function syncHidden(){
 						hidAnon.value = inAnon && inAnon.checked ? '1' : '0';
@@ -936,7 +964,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						hidStatus.value = inOpt && inOpt.checked ? 'Option' : 'Inscrit';
 					}
 					[inAnon,inOpt,inLate].forEach(function(el){ if(el) el.addEventListener('change', syncHidden); });
-					syncHidden();
+					applyParticipationState();
 
 					// Desinscrire button
 					var btnUn = document.getElementById('ins-unregister');
@@ -953,6 +981,13 @@ document.addEventListener('DOMContentLoaded', function() {
 					// Close modal when clicking close button
 					var closeBtns = modal.querySelectorAll('.inscription-modal-close');
 					closeBtns.forEach(function(b){ b.addEventListener('click', function(){ modal.style.display='none'; modal.setAttribute('aria-hidden','true'); }); });
+
+					var regBtn = document.getElementById('reg-action');
+					if(regBtn){
+						regBtn.addEventListener('click', function(){
+							applyParticipationState();
+						});
+					}
 				});
 
 				// Open profile page when clicking the profile tile
