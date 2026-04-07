@@ -19,7 +19,6 @@ if ($pseudo_get && $pass_get) {
 		log_activity($con, "Auto-Login Failed Quickview", "Attempted User: $pseudo_get");
 	}
 }
-<<<<<<< Updated upstream
 
 // Si aucun ID n'est fourni, on cherche en priorité une activité "en cours" ou très récente
 // (démarrée dans les 48 dernières heures), puis la prochaine activité future, puis à défaut la dernière passée.
@@ -35,48 +34,6 @@ if ($id == 0) {
 		if ($q_next && mysqli_num_rows($q_next) > 0) {
 			$r_next = mysqli_fetch_array($q_next);
 			$id = $r_next['id-activite'];
-=======
-// Prevent intermediate caches (CDN/proxy) from serving stale, personalized pages
-header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-header('Pragma: no-cache');
-header('Expires: 0');
-// Vary on Cookie so shared caches know the response depends on the session cookie
-header('Vary: Cookie');
-// Mirror the pixel-perfect web layout while keeping the PHP version tag
-// Also: inject server-side activity data (from MySQL) so the client can show live cardevent
-// without relying on the remote /api endpoints.
-// This queries the same DB used elsewhere in /panel and writes `window.SERVER_ACTIVITY`.
-	try{
-		include __DIR__ . '/include/config.php'; // provides $con (mysqli)
-		// Authentification automatique via URL si paramètres fournis
-		$pseudo_get = isset($_GET['pseudo']) ? (isset($con) ? mysqli_real_escape_string($con, $_GET['pseudo']) : null) : null;
-		$pass_get = isset($_GET['passwd']) ? (isset($con) ? mysqli_real_escape_string($con, $_GET['passwd']) : null) : null;
-		if ($pseudo_get && $pass_get) {
-			if (!function_exists('log_activity') && file_exists(__DIR__ . '/../include/functions_logs.php')) {
-				@include_once __DIR__ . '/../include/functions_logs.php';
-			}
-			if (!empty($con)) {
-				$q_auth = @mysqli_query($con, "SELECT `id-membre`, `pseudo` FROM membres WHERE (pseudo = '$pseudo_get' OR email = '$pseudo_get') AND (password = '$pass_get' OR password_ext = '$pass_get') LIMIT 1");
-				if ($q_auth && ($r_auth = mysqli_fetch_array($q_auth))) {
-					$_SESSION['login'] = $r_auth['pseudo'];
-					$_SESSION['id'] = $r_auth['id-membre'];
-					$_SESSION['login_source'] = 'CardEvent/QR';
-					if (function_exists('log_activity')) log_activity($con, "Auto-Login CardEvent", "User: $pseudo_get via URL");
-				} else {
-					if (function_exists('log_activity')) log_activity($con, "Auto-Login Failed CardEvent", "Attempted User: $pseudo_get");
-				}
-			}
-		}
-	$act = null;
-	$selected_id = null;
-	if (isset($_GET['uid']) && is_numeric($_GET['uid'])) {
-		$selected_id = intval($_GET['uid']);
-	}
-	if(isset($con)){
-		if ($selected_id) {
-			// Use the selected activity from ?uid=xxx (select all columns)
-			$q = mysqli_query($con, "SELECT * FROM activite WHERE `id-activite` = '$selected_id' LIMIT 1");
->>>>>>> Stashed changes
 		} else {
 			// 3) Aucune future : on prend la dernière passée
 			$q_last = mysqli_query($con, "SELECT `id-activite` FROM activite ORDER BY date_depart DESC LIMIT 1");
@@ -86,96 +43,10 @@ header('Vary: Cookie');
 			}
 		}
 	}
-}
 
 $query_act = mysqli_query($con, "SELECT * FROM activite WHERE `id-activite` = '$id'");
 $row_act = mysqli_fetch_array($query_act);
-$id_act = $row_act['id-activite'];
-if (strlen($_SESSION['login']) == 0) {
-	$_SESSION['redirect'] = 'panel/quickview.php?uid='.$id;
-	header('location:logout.php');
-} else {
-	// Si l'ID n'est pas en session, on le récupère via le login
-	if (!isset($_SESSION['id']) || $_SESSION['id'] == 0) {
-		$login = $_SESSION['login'];
-		$q_u = mysqli_query($con, "SELECT `id-membre` FROM membres WHERE pseudo = '$login'");
-		$r_u = mysqli_fetch_array($q_u);
-		$_SESSION['id'] = $r_u['id-membre'];
-	}
-	
-	// Vérifier si l'utilisateur est admin et récupérer sa photo
-	$is_admin = false;
-	$user_photo = null;
-	$user_pseudo = $_SESSION['login'];
-	if (isset($_SESSION['id']) && $_SESSION['id'] > 0) {
-		$q_admin = mysqli_query($con, "SELECT `droits`, `photo`, `pseudo` FROM `membres` WHERE `id-membre` = " . intval($_SESSION['id']));
-		if ($q_admin && mysqli_num_rows($q_admin) > 0) {
-			$r_admin = mysqli_fetch_array($q_admin);
-			if ($r_admin && isset($r_admin['droits']) && intval($r_admin['droits']) === 2) {
-				$is_admin = true;
-			}
-			$user_photo = isset($r_admin['photo']) ? $r_admin['photo'] : null;
-			$user_pseudo = isset($r_admin['pseudo']) ? $r_admin['pseudo'] : $_SESSION['login'];
-		}
-	}
-	$user_id = $_SESSION['id'];
-	log_activity($con, "Quickview Access", "Activity ID: $id_act");
-
-	// Vérifier la présence des colonnes anonyme / latereg pour compatibilité avec les anciennes bases
-	$has_anonyme = false;
-	$has_latereg = false;
-	if ($res_col = mysqli_query($con, "SHOW COLUMNS FROM participation LIKE 'anonyme'")) {
-		$has_anonyme = mysqli_num_rows($res_col) > 0;
-	}
-	if ($res_col2 = mysqli_query($con, "SHOW COLUMNS FROM participation LIKE 'latereg'")) {
-		$has_latereg = mysqli_num_rows($res_col2) > 0;
-	}
-
-	// Récupérer le statut actuel de participation
-	$fields_current = "`option`";
-	if ($has_anonyme) {
-		$fields_current .= ", `anonyme`";
-	}
-	if ($has_latereg) {
-		$fields_current .= ", `latereg`";
-	}
-	$q_current = mysqli_query($con, "SELECT $fields_current FROM participation WHERE `id-membre` = '$user_id' AND `id-activite` = '$id_act'");
-	$r_current = $q_current ? mysqli_fetch_array($q_current) : null;
-	$current_status = $r_current ? $r_current['option'] : 'None';
-	$current_anonyme = ($has_anonyme && $r_current && isset($r_current['anonyme'])) ? (int)$r_current['anonyme'] : 0;
-	$current_latereg = ($has_latereg && $r_current && isset($r_current['latereg'])) ? (int)$r_current['latereg'] : 0;
-
-	// Gestion de l'inscription rapide
-	if(isset($_POST['quick_reg'])) {
-		$user_id = intval($_SESSION['id']);
-		$act_id = intval($row_act['id-activite']);
-		$challenge_id = intval($row_act['id_challenge']);
-		
-		if ($user_id > 0 && $act_id > 0) {
-			$check = mysqli_query($con, "SELECT * FROM participation WHERE `id-membre` = '$user_id' AND `id-activite` = '$act_id'");
-			$exists = mysqli_num_rows($check) > 0;
-
-			if(isset($_POST['status']) || isset($_POST['id_rake'])) {
-				$status = isset($_POST['status']) ? mysqli_real_escape_string($con, $_POST['status']) : null;
-				$id_rake = isset($_POST['id_rake']) ? intval($_POST['id_rake']) : null;
-				$anonyme = isset($_POST['anonyme']) ? intval($_POST['anonyme']) : 0;
-				$latereg = isset($_POST['latereg']) ? intval($_POST['latereg']) : 0;
-
-				if($exists) {
-					$update_fields = [];
-					if($status !== null) {
-						$val = ($status == 'None') ? 'Desinscrit' : $status;
-						$update_fields[] = "`option` = '$val'";
-						if ($val === 'Présent') {
-							$update_fields[] = "`valide` = 'Actif'";
-						} else {
-							$update_fields[] = "`valide` = 'Inactif'";
-						}
-					}
-					if($id_rake !== null) {
-						$update_fields[] = "`id_rake` = '$id_rake'";
-					}
-					
+		exit;
 					// Toujours mettre à jour le mode anonyme et latereg si colonnes disponibles
 					if ($has_anonyme) {
 						$update_fields[] = "`anonyme` = '$anonyme'";
@@ -757,7 +628,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (isset($_GET['timer_sync']) && $_GET['timer_sync'] == 1 && !empty($serverActivity['id'])) {
 		header('Content-Type: application/json');
 		echo json_encode(['blinds' => $blinds], JSON_UNESCAPED_UNICODE);
->>>>>>> Stashed changes
 		exit;
 	}
 	?>
@@ -805,71 +675,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	<body>
 		<div id="app">
 			<?php
-			$fiche = $_SESSION['id'];
 			include('include/sidebar.php');
 			?>
-			<div class="app-content">
-				<?php include('include/header.php'); ?>
-				
-				<div class="main-content">
-					<div class="wrap-content container" id="container">
-						<!-- Page Title -->
-						<section id="page-title">
-							<div class="row">
-								<div class="col-sm-12 text-center">
-									<?php
-									// Compter les messages non lus du groupe de chat de l'activité
-									$months = ["", "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-									$d_obj = strtotime($row_act['date_depart']);
-									$formatted_date = date('j', $d_obj) . ' ' . $months[intval(date('n', $d_obj))];
-									$id_orga = $row_act['id-membre'];
-									$q_orga_pseudo = mysqli_query($con, "SELECT pseudo FROM membres WHERE `id-membre` = '$id_orga' LIMIT 1");
-									$r_orga_pseudo = mysqli_fetch_array($q_orga_pseudo);
-									$expected_group_name = $formatted_date . " " . ($r_orga_pseudo ? $r_orga_pseudo['pseudo'] : "");
-									
-									$q_target_grp = mysqli_query($con, "SELECT id FROM chat_groups WHERE name = '".mysqli_real_escape_string($con, $expected_group_name)."' ORDER BY id DESC LIMIT 1");
-									$r_target_grp = mysqli_fetch_array($q_target_grp);
-									$target_group_id = $r_target_grp ? $r_target_grp['id'] : null;
-									
-									$unread_activity_messages = 0;
-									if ($target_group_id) {
-										$q_unread_activity = mysqli_query($con, "
-											SELECT COUNT(*) as total 
-											FROM chat_messages m
-											JOIN chat_group_members gm ON m.group_id = gm.group_id
-											WHERE m.group_id = '$target_group_id'
-											AND gm.member_id = '$user_id' 
-											AND m.sender_id != '$user_id'
-											AND m.timestamp > gm.last_read_at
-										");
-										$r_unread_activity = mysqli_fetch_array($q_unread_activity);
-										$unread_activity_messages = intval($r_unread_activity['total']);
-									}
-									?>
-									<div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
-										<a href="voir-membre.php?id=<?php echo $_SESSION['id']; ?>" style="text-decoration: none;">
-											<?php if ($user_photo && !empty($user_photo)) { ?>
-												<img src="/images/faces/<?php echo htmlspecialchars($user_photo, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($_SESSION['login']); ?>" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #00d2ff;">
-											<?php } else { ?>
-												<div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 32px; font-weight: bold; border: 3px solid #00d2ff;">
-													<?php echo strtoupper(substr($_SESSION['login'], 0, 1)); ?>
-												</div>
-											<?php } ?>
-										</a>
-										<div style="position: relative;">
-											<h2 class="mainTitle" style="color:white; margin: 0; font-size: 3.5em;" ><?php echo $is_admin ? 'Bienvenue Admin' : ('Bienvenue ' . htmlspecialchars($user_pseudo)); ?></h2>
-											<?php if ($unread_activity_messages > 0): ?>
-												<a href="../panel/chat.php?group_id=<?php echo $target_group_id; ?>" style="text-decoration: none;">
-													<span style="position: absolute; top: -10px; right: -30px; background-color: #d9534f; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; cursor: pointer; transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='#c9302c'" onmouseout="this.style.backgroundColor='#d9534f'"><i class="fa fa-envelope"></i> <?php echo $unread_activity_messages; ?></span>
-												</a>
-											<?php endif; ?>
-										</div>
-									</div>
-									<a href="fullscreen-timer.php?uid=<?php echo $id_act; ?>" style="text-decoration: none;">
-										<h1 style="color: hsl(51, 72%, 56%); font-weight: bold; margin-top: 10px; text-transform: uppercase; letter-spacing: 3px; font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
-											<?php echo htmlentities($row_act['titre-activite']); ?>
-										</h1>
-									</a>
 								</div>
 								<!-- <ol class="breadcrumb">
 									<li><span>Admin</span></li>
