@@ -1004,6 +1004,7 @@ document.addEventListener('DOMContentLoaded', function(){
 					var hidAnon = form.querySelector('input[name="anonyme"]');
 					var hidLate = form.querySelector('input[name="latereg"]');
 					var hidStatus = form.querySelector('input[name="status"]');
+					var regReturnKey = 'cardevent-reg-return';
 						var isSubmitting = false;
 
 					function getActivityId(){
@@ -1011,6 +1012,41 @@ document.addEventListener('DOMContentLoaded', function(){
 						if(window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id) return window.SERVER_ACTIVITY.id;
 						var params = new URLSearchParams(window.location.search);
 						return params.get('uid') || '';
+					}
+
+					function rememberRegistrationReturn(){
+						try{
+							sessionStorage.setItem(regReturnKey, JSON.stringify({ uid: String(getActivityId() || ''), ts: Date.now() }));
+						}catch(e){}
+					}
+
+					function clearRegistrationReturn(){
+						try{ sessionStorage.removeItem(regReturnKey); }catch(e){}
+					}
+
+					function shouldAutoOpenRegistration(){
+						var params = new URLSearchParams(window.location.search);
+						if (params.get('open_registration') === '1') {
+							return true;
+						}
+						try{
+							var raw = sessionStorage.getItem(regReturnKey);
+							if(!raw) return false;
+							var data = JSON.parse(raw);
+							if(!data || String(data.uid || '') !== String(getActivityId() || '')) return false;
+							return Math.abs(Date.now() - Number(data.ts || 0)) < 60000;
+						}catch(e){
+							return false;
+						}
+					}
+
+					function cleanupOpenRegistrationParam(){
+						try{
+							var url = new URL(window.location.href);
+							if(url.searchParams.get('open_registration') !== '1') return;
+							url.searchParams.delete('open_registration');
+							window.history.replaceState({}, '', url.toString());
+						}catch(e){}
 					}
 
 					function applyParticipationState(){
@@ -1042,6 +1078,7 @@ document.addEventListener('DOMContentLoaded', function(){
 					function closeModal(){
 						modal.style.display = 'none';
 						modal.setAttribute('aria-hidden', 'true');
+						clearRegistrationReturn();
 					}
 
 					function openModal(event){
@@ -1050,6 +1087,7 @@ document.addEventListener('DOMContentLoaded', function(){
 							event.stopPropagation();
 							if(typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
 						}
+						rememberRegistrationReturn();
 						applyParticipationState();
 						updateRegistrationUI();
 						modal.style.display = 'block';
@@ -1076,6 +1114,7 @@ document.addEventListener('DOMContentLoaded', function(){
 							.then(function(data){
 								if(!data || !data.success) throw new Error((data && data.message) ? data.message : 'Erreur inscription');
 								window.SERVER_PARTICIPATION = data.participation || null;
+								clearRegistrationReturn();
 								applyParticipationState();
 								updateRegistrationUI();
 								modal.style.display = 'block';
@@ -1099,8 +1138,13 @@ document.addEventListener('DOMContentLoaded', function(){
 					[inAnon,inOpt,inLate].forEach(function(el){ if(el) el.addEventListener('change', syncHidden); });
 					applyParticipationState();
 					updateRegistrationUI();
+					cleanupOpenRegistrationParam();
+					if (shouldAutoOpenRegistration()) {
+						openModal();
+					}
 					form.addEventListener('submit', function(e){
 						e.preventDefault();
+						rememberRegistrationReturn();
 						submitQuickRegistration();
 					});
 
