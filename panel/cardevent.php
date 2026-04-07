@@ -470,8 +470,41 @@ error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id(
 	.detail-icon.money{color:var(--gold)}
 	.detail-icon.info{color:#ff9d3b}
 	#inscription-modal{position:static;inset:auto;background:transparent;z-index:auto;margin-top:14px}
-	#inscription-modal .modal-sheet{position:static;left:auto;right:auto;bottom:auto;max-height:none;overflow:visible;background:rgba(114,90,18,0.20);border:1px solid rgba(255,215,0,0.22);box-shadow:none;border-radius:18px;padding:18px}
+	#inscription-modal .modal-sheet{position:static;left:auto;right:auto;bottom:auto;max-height:none;overflow:visible;background:transparent;border:0;box-shadow:none;border-radius:0;padding:0;display:grid;gap:16px}
 	#inscription-modal .modal-close{position:static;float:right;margin-left:8px}
+	.reg-panel-card{background:rgba(20,18,10,0.62);border:1px solid rgba(255,196,0,0.18);border-radius:24px;padding:20px;backdrop-filter:blur(10px);box-shadow:0 18px 44px rgba(0,0,0,0.18)}
+	.reg-panel-card.options-card{border-color:rgba(255,215,0,0.22)}
+	.reg-panel-card.actions-card{border-color:rgba(255,140,30,0.24)}
+	.reg-panel-header{display:flex;align-items:center;gap:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--gold);font-size:12px}
+	.reg-panel-icon{width:26px;height:26px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,173,0,0.12);color:var(--gold);font-size:15px;flex:0 0 auto}
+	.reg-panel-divider{border:none;border-top:1px solid rgba(255,255,255,0.06);margin:14px 0 16px}
+	.reg-settings-list{display:flex;flex-direction:column;gap:12px}
+	.reg-setting{display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.03);border-radius:22px;padding:18px 18px}
+	.reg-setting-main{display:flex;align-items:center;gap:14px;min-width:0;flex:1}
+	.reg-setting-icon{font-size:20px;line-height:1;opacity:.9;width:28px;text-align:center;flex:0 0 28px}
+	.reg-setting-title{font-weight:800;font-size:16px;color:#fff;margin-bottom:4px}
+	.reg-setting-sub{font-size:12px;color:rgba(255,255,255,0.56);line-height:1.25}
+	.reg-switch{appearance:none;-webkit-appearance:none;width:74px;height:40px;border-radius:999px;background:rgba(255,255,255,0.12);position:relative;cursor:pointer;border:1px solid rgba(255,255,255,0.04);transition:background .2s ease, border-color .2s ease, box-shadow .2s ease;flex:0 0 auto}
+	.reg-switch::before{content:'';position:absolute;top:4px;left:4px;width:30px;height:30px;border-radius:50%;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,0.22);transition:transform .2s ease}
+	.reg-switch:checked{background:linear-gradient(135deg,#1fd06b,#18b85d);border-color:rgba(31,208,107,0.58);box-shadow:0 0 0 4px rgba(31,208,107,0.08)}
+	.reg-switch:checked::before{transform:translateX(34px)}
+	.reg-note-input{width:100%;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.05);color:#fff;outline:none;font-size:14px}
+	.reg-note-input::placeholder{color:rgba(255,255,255,0.42)}
+	.reg-status{font-size:18px;font-weight:800;color:#fff;margin-bottom:16px}
+	.reg-status small{display:block;margin-top:6px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.52)}
+	.reg-actions-row{display:flex;gap:14px;margin-top:6px}
+	.reg-actions-row .button{flex:1;border:none;border-radius:18px;padding:15px 16px;font-weight:800;font-size:15px;box-shadow:0 10px 22px rgba(0,0,0,0.18)}
+	#ins-validate{background:linear-gradient(135deg,#31d06d,#22b95b) !important}
+	#ins-unregister{background:linear-gradient(135deg,#df4747,#bd2f2f) !important}
+	#ins-unregister[disabled]{opacity:.45;filter:grayscale(.2);box-shadow:none}
+	@media (max-width: 560px){
+		.reg-panel-card{padding:18px}
+		.reg-setting{padding:16px}
+		.reg-setting-title{font-size:15px}
+		.reg-status{font-size:16px}
+		.reg-actions-row{flex-direction:column}
+		.reg-actions-row .button{width:100%}
+	}
 	</style>
 	<meta name="referrer" content="no-referrer">
 <?php if(!empty($serverActivity)): ?>
@@ -925,9 +958,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 				<!-- Inscription modal (mobile-style switches + actions) -->
 				<div id="inscription-modal" class="modal-overlay" aria-hidden="true" style="display:none">
-					<div class="modal-sheet" role="dialog" aria-modal="true" style="max-width:420px;padding:18px;">
-						<button class="modal-close inscription-modal-close" style="float:right">Fermer</button>
-						<div style="font-weight:700;color:var(--gold);margin-bottom:6px">Options</div>
+					<div class="modal-sheet" role="dialog" aria-modal="true">
 						<form id="ins-form" method="post" action="/panel/cardevent.php<?php echo !empty($serverActivity['id']) ? '?uid=' . intval($serverActivity['id']) : ''; ?>" style="margin-top:8px">
 							<input type="hidden" name="quick_reg" value="1">
 							<input type="hidden" name="ajax" value="1">
@@ -935,52 +966,59 @@ document.addEventListener('DOMContentLoaded', function(){
 							<input type="hidden" name="status" value="Inscrit">
 							<input type="hidden" name="anonyme" value="0">
 							<input type="hidden" name="latereg" value="0">
-							<div style="display:flex;flex-direction:column;gap:12px">
-								<!-- Anonyme -->
-								<label style="display:flex;align-items:center;justify-content:space-between">
-									<div style="display:flex;align-items:center;gap:12px">
-										<span style="opacity:0.9">👁️</span>
-										<div>
-											<div style="font-weight:700">Anonyme</div>
-											<div class="small" style="color:var(--muted)">Votre nom ne sera pas affiché publiquement</div>
-										</div>
-									</div>
-									<input id="ins-anon" type="checkbox" />
-								</label>
-
-								<!-- Option -->
-								<label style="display:flex;align-items:center;justify-content:space-between">
-									<div style="display:flex;align-items:center;gap:12px">
-										<span style="color:var(--gold);">★</span>
-										<div>
-											<div style="font-weight:700">Option</div>
-											<div class="small" style="color:var(--muted)">Inscription sous réserve de confirmation</div>
-										</div>
-									</div>
-									<input id="ins-opt" type="checkbox" />
-								</label>
-
-								<!-- Latereg -->
-								<label style="display:flex;align-items:center;justify-content:space-between">
-									<div style="display:flex;align-items:center;gap:12px">
-										<span style="opacity:0.7">⏱️</span>
-										<div>
-											<div style="font-weight:700">Latereg</div>
-											<div class="small" style="color:var(--muted)">Inscription tardive</div>
-										</div>
-									</div>
-									<input id="ins-late" type="checkbox" />
-								</label>
-
-								<!-- Option / chapitre text -->
-								<div>
-									<input type="text" name="option_chapitre" placeholder="Option / Chapitre" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit">
+							<div class="reg-panel-card options-card">
+								<div class="reg-panel-header">
+									<span class="reg-panel-icon">⚙️</span>
+									<span>Options</span>
+									<button type="button" class="modal-close inscription-modal-close">Fermer</button>
 								</div>
-
-								<!-- Actions -->
-								<div style="display:flex;gap:12px;margin-top:6px">
-									<button type="submit" id="ins-validate" class="button" style="flex:1;background:#17a34a;color:#fff;border-radius:10px;padding:12px 14px;font-weight:700">Valider</button>
-									<button type="button" id="ins-unregister" class="button" style="flex:1;background:#c92b2b;color:#fff;border-radius:10px;padding:12px 14px;font-weight:700">Désinscrire</button>
+								<hr class="reg-panel-divider">
+								<div class="reg-settings-list">
+									<label class="reg-setting">
+										<div class="reg-setting-main">
+											<span class="reg-setting-icon">👁️</span>
+											<div>
+												<div class="reg-setting-title">Anonyme</div>
+												<div class="reg-setting-sub">Votre nom ne sera pas affiché publiquement</div>
+											</div>
+										</div>
+										<input id="ins-anon" class="reg-switch" type="checkbox" />
+									</label>
+									<label class="reg-setting">
+										<div class="reg-setting-main">
+											<span class="reg-setting-icon">★</span>
+											<div>
+												<div class="reg-setting-title">Option</div>
+												<div class="reg-setting-sub">Inscription sous réserve de confirmation</div>
+											</div>
+										</div>
+										<input id="ins-opt" class="reg-switch" type="checkbox" />
+									</label>
+									<label class="reg-setting">
+										<div class="reg-setting-main">
+											<span class="reg-setting-icon">⏱️</span>
+											<div>
+												<div class="reg-setting-title">Latereg</div>
+												<div class="reg-setting-sub">Inscription tardive</div>
+											</div>
+										</div>
+										<input id="ins-late" class="reg-switch" type="checkbox" />
+									</label>
+								</div>
+								<div style="margin-top:14px">
+									<input class="reg-note-input" type="text" name="option_chapitre" placeholder="Option / Chapitre">
+								</div>
+							</div>
+							<div class="reg-panel-card actions-card">
+								<div class="reg-panel-header">
+									<span class="reg-panel-icon">⚡</span>
+									<span>Action rapide</span>
+								</div>
+								<hr class="reg-panel-divider">
+								<div id="reg-status-label" class="reg-status">Vous n'êtes pas encore inscrit(e)<small>Activez les options puis validez votre inscription.</small></div>
+								<div class="reg-actions-row">
+									<button type="submit" id="ins-validate" class="button">Valider</button>
+									<button type="button" id="ins-unregister" class="button">Désinscrire</button>
 								</div>
 							</div>
 						</form>
@@ -1004,6 +1042,7 @@ document.addEventListener('DOMContentLoaded', function(){
 					var hidAnon = form.querySelector('input[name="anonyme"]');
 					var hidLate = form.querySelector('input[name="latereg"]');
 					var hidStatus = form.querySelector('input[name="status"]');
+					var regStatusLabel = document.getElementById('reg-status-label');
 					var regReturnKey = 'cardevent-reg-return';
 						var isSubmitting = false;
 
@@ -1071,8 +1110,16 @@ document.addEventListener('DOMContentLoaded', function(){
 					function updateRegistrationUI(){
 						var part = window.SERVER_PARTICIPATION || null;
 						var isRegistered = !!(part && part.status && part.status !== 'None' && part.status !== 'Desinscrit');
+						var labelText = isRegistered ? "Vous êtes inscrit(e)" : "Vous n'êtes pas encore inscrit(e)";
+						var subText = isRegistered ? "Modifiez vos options puis validez pour mettre à jour votre inscription." : "Activez les options puis validez votre inscription.";
+						if(part && part.status === 'Option'){
+							labelText = "Vous êtes en option";
+							subText = "Votre inscription reste en attente de confirmation.";
+						}
 						if(regBtn) regBtn.textContent = isRegistered ? 'Modifier' : 'S Inscrire';
 						if(regText) regText.textContent = 'Votre Inscription : ' + (isRegistered ? part.status : 'Aucune');
+						if(regStatusLabel) regStatusLabel.innerHTML = labelText + '<small>' + subText + '</small>';
+						if(btnUn) btnUn.disabled = !isRegistered;
 					}
 
 					function closeModal(){
