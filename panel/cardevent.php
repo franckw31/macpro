@@ -861,6 +861,8 @@ document.addEventListener('DOMContentLoaded', function() {
 						<div style="font-weight:700;color:var(--gold);margin-bottom:6px">Options</div>
 						<form id="ins-form" method="post" action="/panel/inscription.php" style="margin-top:8px">
 							<input type="hidden" name="quick_reg" value="1">
+							<input type="hidden" name="ajax" value="1">
+							<input type="hidden" name="redirect" value="/panel/cardevent.php">
 							<input type="hidden" name="uid" value="">
 							<input type="hidden" name="status" value="Inscrit">
 							<input type="hidden" name="anonyme" value="0">
@@ -923,14 +925,18 @@ document.addEventListener('DOMContentLoaded', function() {
 					var modal = document.getElementById('inscription-modal');
 					if(!modal) return;
 					var form = document.getElementById('ins-form');
+						var regBtn = document.getElementById('reg-action');
+						var regText = document.getElementById('reg-text');
 					var inAnon = modal.querySelector('#ins-anon');
 					var inOpt = modal.querySelector('#ins-opt');
 					var inLate = modal.querySelector('#ins-late');
 					var optionChapitre = form.querySelector('input[name="option_chapitre"]');
 					var uidInput = form.querySelector('input[name="uid"]');
+						var ajaxInput = form.querySelector('input[name="ajax"]');
 					var hidAnon = form.querySelector('input[name="anonyme"]');
 					var hidLate = form.querySelector('input[name="latereg"]');
 					var hidStatus = form.querySelector('input[name="status"]');
+						var isSubmitting = false;
 
 					function getActivityId(){
 						if(window.currentActivity && window.currentActivity.id) return window.currentActivity.id;
@@ -958,6 +964,46 @@ document.addEventListener('DOMContentLoaded', function() {
 						syncHidden();
 					}
 
+					function updateRegistrationUI(){
+						var part = window.SERVER_PARTICIPATION || null;
+						var isRegistered = !!(part && part.status && part.status !== 'None' && part.status !== 'Desinscrit');
+						if(regBtn) regBtn.textContent = isRegistered ? 'Modifier' : 'S Inscrire';
+						if(regText) regText.textContent = 'Votre Inscription : ' + (isRegistered ? part.status : 'Aucune');
+					}
+
+					function closeModal(){
+						modal.style.display = 'none';
+						modal.setAttribute('aria-hidden', 'true');
+					}
+
+					function submitQuickRegistration(){
+						if(isSubmitting) return;
+						isSubmitting = true;
+						syncHidden();
+						if(ajaxInput) ajaxInput.value = '1';
+						fetch(form.action, {
+							method: 'POST',
+							body: new FormData(form),
+							credentials: 'same-origin'
+						})
+							.then(function(response){ return response.json(); })
+							.then(function(data){
+								if(!data || !data.success) throw new Error((data && data.message) ? data.message : 'Erreur inscription');
+								window.SERVER_PARTICIPATION = data.participation || null;
+								applyParticipationState();
+								updateRegistrationUI();
+								closeModal();
+							})
+							.catch(function(error){
+								if(ajaxInput) ajaxInput.value = '0';
+								form.submit();
+							})
+							.finally(function(){
+								isSubmitting = false;
+								if(ajaxInput) ajaxInput.value = '1';
+							});
+					}
+
 					function syncHidden(){
 						hidAnon.value = inAnon && inAnon.checked ? '1' : '0';
 						hidLate.value = inLate && inLate.checked ? '1' : '0';
@@ -965,6 +1011,11 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 					[inAnon,inOpt,inLate].forEach(function(el){ if(el) el.addEventListener('change', syncHidden); });
 					applyParticipationState();
+					updateRegistrationUI();
+					form.addEventListener('submit', function(e){
+						e.preventDefault();
+						submitQuickRegistration();
+					});
 
 					// Desinscrire button
 					var btnUn = document.getElementById('ins-unregister');
@@ -975,17 +1026,22 @@ document.addEventListener('DOMContentLoaded', function() {
 							// clear flags
 							form.querySelector('input[name="anonyme"]').value = '0';
 							form.querySelector('input[name="latereg"]').value = '0';
-							form.submit();
+							if(inAnon) inAnon.checked = false;
+							if(inOpt) inOpt.checked = false;
+							if(inLate) inLate.checked = false;
+							if(optionChapitre) optionChapitre.value = '';
+							submitQuickRegistration();
 						});
 					}
 					// Close modal when clicking close button
 					var closeBtns = modal.querySelectorAll('.inscription-modal-close');
-					closeBtns.forEach(function(b){ b.addEventListener('click', function(){ modal.style.display='none'; modal.setAttribute('aria-hidden','true'); }); });
+					closeBtns.forEach(function(b){ b.addEventListener('click', closeModal); });
+					modal.addEventListener('click', function(e){ if(e.target === modal) closeModal(); });
 
-					var regBtn = document.getElementById('reg-action');
 					if(regBtn){
 						regBtn.addEventListener('click', function(){
 							applyParticipationState();
+							updateRegistrationUI();
 						});
 					}
 				});
