@@ -373,16 +373,30 @@ async function fetchPodium(activityId){
 // Register
 // Register (sécurisé)
 const regBtn = document.getElementById('reg-action');
-if(regBtn){
-  regBtn.addEventListener('click', async ()=>{
+if(regBtn && !regBtn.dataset.regActionBound){
+  regBtn.dataset.regActionBound = '1';
+  regBtn.addEventListener('click', async (e)=>{
+    const modal = document.getElementById('inscription-modal');
+    if(modal){
+      e.preventDefault();
+      e.stopPropagation();
+      const activityId = currentActivity?.id || window.SERVER_ACTIVITY?.id || new URLSearchParams(window.location.search).get('uid');
+      const uidInput = modal.querySelector('input[name="uid"]');
+      if(uidInput && activityId) uidInput.value = activityId;
+      modal.style.display = 'block';
+      modal.setAttribute('aria-hidden', 'false');
+      if(typeof modal.scrollIntoView === 'function'){
+        modal.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      return;
+    }
+
     if(!currentActivity || !currentActivity.id) return alert('Aucune activité');
     const an = document.getElementById('opt-anonyme')?.checked;
     const op = document.getElementById('opt-option')?.checked;
     const lr = document.getElementById('opt-latereg')?.checked;
     try{
-      // Attach API token from localStorage when available to avoid 401 from the API
       const headers = {'Content-Type':'application/json'};
-      // Ne jamais envoyer d'Authorization ni de token, session PHP uniquement
       const res = await fetchWithRetry(apiUrl('register-activity.php'), {method:'POST', headers: headers, credentials: 'same-origin', body: JSON.stringify({action:'register', activity_id: currentActivity.id, anonyme: an, is_option: op, latereg: lr, pseudo: 'WebGuest'})}, 2, 700);
       if(res.success){ alert('Inscription: '+(res.registered? 'OK':'?')); fetchNext(); } else alert('Erreur inscription');
     }catch(e){ alert('Erreur réseau: '+(e.message||e)); }
