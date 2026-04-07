@@ -399,20 +399,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	regBtn.addEventListener('click', function(e) {
 		e.preventDefault();
+		e.stopPropagation();
 		var actId = getActivityId();
-		var dest = '/panel/inscription.php';
-		if (actId) dest += '?uid=' + encodeURIComponent(actId);
-		window.location.href = dest;
+		var modal = document.getElementById('inscription-modal');
+		if(!modal) return;
+		
+		// Set uid in hidden form field
+		var uidInput = modal.querySelector('input[name="uid"]');
+		if(uidInput && actId) uidInput.value = actId;
+		
+		// Open modal
+		modal.style.display = 'block';
+		modal.setAttribute('aria-hidden', 'false');
+		window.scrollTo(0, 0);
 	});
-
-	// No auto-open: dedicated inscription page is preferred
 
 	// close modal on background click or close button
 	document.addEventListener('click', function(e){
 		var modal = document.getElementById('inscription-modal');
 		if(!modal) return;
+		// Close when clicking outside the modal sheet
+		if(e.target === modal) {
+			modal.style.display='none'; 
+			modal.setAttribute('aria-hidden','true');
+		}
+		// Close when clicking the close button
 		if(e.target.classList && e.target.classList.contains('inscription-modal-close')){
-			modal.style.display='none'; modal.setAttribute('aria-hidden','true');
+			modal.style.display='none'; 
+			modal.setAttribute('aria-hidden','true');
 		}
 	});
 });
