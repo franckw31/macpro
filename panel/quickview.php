@@ -43,10 +43,96 @@ if ($id == 0) {
 			}
 		}
 	}
+}
 
 $query_act = mysqli_query($con, "SELECT * FROM activite WHERE `id-activite` = '$id'");
 $row_act = mysqli_fetch_array($query_act);
-		exit;
+$id_act = $row_act['id-activite'];
+if (strlen($_SESSION['login']) == 0) {
+	$_SESSION['redirect'] = 'panel/quickview.php?uid='.$id;
+	header('location:logout.php');
+} else {
+	// Si l'ID n'est pas en session, on le récupère via le login
+	if (!isset($_SESSION['id']) || $_SESSION['id'] == 0) {
+		$login = $_SESSION['login'];
+		$q_u = mysqli_query($con, "SELECT `id-membre` FROM membres WHERE pseudo = '$login'");
+		$r_u = mysqli_fetch_array($q_u);
+		$_SESSION['id'] = $r_u['id-membre'];
+	}
+	
+	// Vérifier si l'utilisateur est admin et récupérer sa photo
+	$is_admin = false;
+	$user_photo = null;
+	$user_pseudo = $_SESSION['login'];
+	if (isset($_SESSION['id']) && $_SESSION['id'] > 0) {
+		$q_admin = mysqli_query($con, "SELECT `droits`, `photo`, `pseudo` FROM `membres` WHERE `id-membre` = " . intval($_SESSION['id']));
+		if ($q_admin && mysqli_num_rows($q_admin) > 0) {
+			$r_admin = mysqli_fetch_array($q_admin);
+			if ($r_admin && isset($r_admin['droits']) && intval($r_admin['droits']) === 2) {
+				$is_admin = true;
+			}
+			$user_photo = isset($r_admin['photo']) ? $r_admin['photo'] : null;
+			$user_pseudo = isset($r_admin['pseudo']) ? $r_admin['pseudo'] : $_SESSION['login'];
+		}
+	}
+	$user_id = $_SESSION['id'];
+	log_activity($con, "Quickview Access", "Activity ID: $id_act");
+
+	// Vérifier la présence des colonnes anonyme / latereg pour compatibilité avec les anciennes bases
+	$has_anonyme = false;
+	$has_latereg = false;
+	if ($res_col = mysqli_query($con, "SHOW COLUMNS FROM participation LIKE 'anonyme'")) {
+		$has_anonyme = mysqli_num_rows($res_col) > 0;
+	}
+	if ($res_col2 = mysqli_query($con, "SHOW COLUMNS FROM participation LIKE 'latereg'")) {
+		$has_latereg = mysqli_num_rows($res_col2) > 0;
+	}
+
+	// Récupérer le statut actuel de participation
+	$fields_current = "`option`";
+	if ($has_anonyme) {
+		$fields_current .= ", `anonyme`";
+	}
+	if ($has_latereg) {
+		$fields_current .= ", `latereg`";
+	}
+	$q_current = mysqli_query($con, "SELECT $fields_current FROM participation WHERE `id-membre` = '$user_id' AND `id-activite` = '$id_act'");
+	$r_current = $q_current ? mysqli_fetch_array($q_current) : null;
+	$current_status = $r_current ? $r_current['option'] : 'None';
+	$current_anonyme = ($has_anonyme && $r_current && isset($r_current['anonyme'])) ? (int)$r_current['anonyme'] : 0;
+	$current_latereg = ($has_latereg && $r_current && isset($r_current['latereg'])) ? (int)$r_current['latereg'] : 0;
+
+	// Gestion de l'inscription rapide
+	if(isset($_POST['quick_reg'])) {
+		$user_id = intval($_SESSION['id']);
+		$act_id = intval($row_act['id-activite']);
+		$challenge_id = intval($row_act['id_challenge']);
+		
+		if ($user_id > 0 && $act_id > 0) {
+			$check = mysqli_query($con, "SELECT * FROM participation WHERE `id-membre` = '$user_id' AND `id-activite` = '$act_id'");
+			$exists = mysqli_num_rows($check) > 0;
+
+			if(isset($_POST['status']) || isset($_POST['id_rake'])) {
+				$status = isset($_POST['status']) ? mysqli_real_escape_string($con, $_POST['status']) : null;
+				$id_rake = isset($_POST['id_rake']) ? intval($_POST['id_rake']) : null;
+				$anonyme = isset($_POST['anonyme']) ? intval($_POST['anonyme']) : 0;
+				$latereg = isset($_POST['latereg']) ? intval($_POST['latereg']) : 0;
+
+				if($exists) {
+					$update_fields = [];
+					if($status !== null) {
+						$val = ($status == 'None') ? 'Desinscrit' : $status;
+						$update_fields[] = "`option` = '$val'";
+						if ($val === 'Présent') {
+							$update_fields[] = "`valide` = 'Actif'";
+						} else {
+							$update_fields[] = "`valide` = 'Inactif'";
+						}
+					}
+					if($id_rake !== null) {
+						$update_fields[] = "`id_rake` = '$id_rake'";
+					}
+					
 					// Toujours mettre à jour le mode anonyme et latereg si colonnes disponibles
 					if ($has_anonyme) {
 						$update_fields[] = "`anonyme` = '$anonyme'";
@@ -98,391 +184,6 @@ $row_act = mysqli_fetch_array($query_act);
 	}
 	?>
 	<!DOCTYPE html>
-
-	function getActivityId() {
-		if (window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id) return window.SERVER_ACTIVITY.id;
-		var urlParams = new URLSearchParams(window.location.search);
-		if (urlParams.has('uid')) return urlParams.get('uid');
-		return null;
-	}
-
-	regBtn.addEventListener('click', function(e) {
-		e.preventDefault();
-		var actId = getActivityId();
-		var dest = '/panel/inscription.php';
-		if (actId) dest += '?uid=' + encodeURIComponent(actId);
-		window.location.href = dest;
-	});
-
-	// No auto-open: dedicated inscription page is preferred
-
-	// close modal on background click or close button
-	document.addEventListener('click', function(e){
-		var modal = document.getElementById('inscription-modal');
-		if(!modal) return;
-		if(e.target.classList && e.target.classList.contains('inscription-modal-close')){
-			modal.style.display='none'; modal.setAttribute('aria-hidden','true');
-		}
-	});
-});
-</script>
-<?php endif; ?>
-	<script>
-	// If server knows the API base, set it here. Otherwise client will try to derive it from origin.
-	window.API_BASE = '<?php echo htmlspecialchars(getenv("API_BASE_URL")?:""); ?>';
-	if(!window.API_BASE && location.protocol !== 'file:'){
-		// Default API base (remote production)
-		window.API_BASE = 'https://viendez.com/api';
-	}
-	</script>
-
-	<script>
-	(function(){
-		try{
-			var serverUser = <?php echo json_encode($displayUser, JSON_UNESCAPED_UNICODE); ?>;
-			var el = document.getElementById('user-name');
-			if(el && el.textContent !== serverUser){
-				el.textContent = serverUser;
-			}
-			// Remove legacy client override if present
-			try{ if(window.localStorage && localStorage.getItem('timer_user')) localStorage.removeItem('timer_user'); }catch(e){}
-		}catch(e){}
-	})();
-	</script>
-</head>
-<body>
-
-<?php if(isset($_GET['debug']) && $_GET['debug'] === '1'){
-	$dbgUser = 'Visiteur';
-	if(!empty($_SESSION['user'])) $dbgUser = $_SESSION['user'];
-	elseif(!empty($_SESSION['login'])) $dbgUser = $_SESSION['login'];
-	elseif(!empty($_COOKIE['uname'])) $dbgUser = $_COOKIE['uname'];
-	$dbgUser = htmlspecialchars($dbgUser);
-	$sid = session_id();
-	error_log('DEBUG: session_id=' . $sid . ' | user=' . $dbgUser);
-} ?>
-	<!-- Variant controls removed; Variant A is active by default -->
-		<header class="card header">
-			<div style="display:flex;align-items:center;gap:12px;width:100%">
-				<div class="logo"><img src="/panel/timer_web/public/assets/spade.svg" alt="logo" class="logo-svg"></div>
-				<?php
-				  $displayUser = 'Visiteur';
-				  if(!empty($_SESSION['user'])) $displayUser = $_SESSION['user'];
-				  elseif(!empty($_SESSION['login'])) $displayUser = $_SESSION['login'];
-				  elseif(!empty($_COOKIE['uname'])) $displayUser = $_COOKIE['uname'];
-				  $displayUser = htmlspecialchars($displayUser);
-				?>
-				<div style="display:flex;flex-direction:column;justify-content:center">
-					<div class="title"><svg class="title-spade" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="As de pique"><!-- spade filled (currentColor) + small A mark -->
-						<path d="M16 2 C11 8 8 11 8 15 C8 19 12 21 15 21 L15 26 C15 27.2 16.2 28 17.2 28 C18.2 28 19.4 27.2 19.4 26 L19.4 21 C22.4 21 26 19 26 15 C26 11 23 8 16 2 Z" fill="currentColor"/>
-						<text x="5" y="10" font-family="Helvetica, Arial, sans-serif" font-size="8" font-weight="800" fill="#ffffff">A</text>
-					</svg> CardEvent <span class="small">v<?php echo htmlspecialchars(getenv('CFBundleShortVersionString')?:'2.0'); ?></span></div>
-					<div class="greeting">Bonjour, <span id="user-name"><?php echo $displayUser; ?></span> <span style="color:var(--cyan);margin-left:6px">›</span></div>
-				</div>
-				<div style="margin-left:auto;display:flex;align-items:center;gap:12px">
-					<div id="offline-badge" class="offline-badge" aria-hidden="true"></div>
-					<a id="header-profile-link" href="/panel/profile.php<?php echo (!empty($serverActivity['id'])? '?uid=' . intval($serverActivity['id']): ''); ?>" role="link" title="Mon Profil" style="text-decoration:none;color:inherit">
-						<div class="avatar"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar" style="width:100%;height:100%;object-fit:cover"></div>
-					</a>
-				</div>
-			</div>
-			</div>
-						<!-- Token prompt (hidden by default) -->
-						<div id="token-prompt" class="token-prompt" style="display:none">
-							<div style="font-weight:700;margin-bottom:6px">Connexion API</div>
-							<input id="api-token-input" placeholder="Collez le token API" />
-							<div style="display:flex;gap:8px;margin-top:8px">
-								<button id="save-api-token" class="button primary">Enregistrer</button>
-								<button id="clear-api-token" class="button">Effacer</button>
-							</div>
-							<div class="small" style="margin-top:8px;color:var(--muted)">Le token est stocké en local</div>
-						</div>
-				<!-- debug-info removed to prevent on-screen JSON debug output -->
-		</header>
-
-		<div class="container">
-				<section id="activity-card" class="card stroked">
-			<div class="section-title">Prochaine partie</div>
-			<hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
-			<!-- removed duplicate small label to avoid repeating the title -->
-			<div class="row" style="margin-top:6px">
-				<div style="flex:1">
-					<div id="activity-name" style="font-weight:800;font-size:18px"><?php echo !empty($serverActivity['title'])? htmlspecialchars($serverActivity['title']) : '—'; ?></div>
-					<div style="display:flex;align-items:center;gap:8px;margin-top:6px">
-						<div class="date-pill"><svg class="date-pill-icon" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12.5 8v5l3 1" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
-						<div id="activity-date" class="small" style="color:var(--gold);font-weight:700"><?php echo !empty($serverActivity['display_date'])? htmlspecialchars($serverActivity['display_date']) : (!empty($serverActivity['date'])? htmlspecialchars($serverActivity['date']) : '—'); ?></div>
-					</div>
-					<div style="margin-top:8px;display:flex;gap:1px;align-items:center">
-						<div class="pill" id="buyin-pill"><span><?php echo isset($serverActivity['buyin'])? htmlspecialchars($serverActivity['buyin']).' €':'—'; ?></span></div>
-						<div class="pill" id="rake-pill">
-							<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
-								<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
-								<path d="M9 6v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-								<path d="M10.5 6v6" stroke="currentColor" stroke-width="1.0" stroke-linecap="round"/>
-								<path d="M15 5l-1.5 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-							</svg>
-							<span><?php echo isset($serverActivity['rake'])? htmlspecialchars($serverActivity['rake']).' €':'—'; ?></span>
-						</div>
-						<div class="pill" id="recave-pill"><span><?php echo isset($serverActivity['recave'])? htmlspecialchars($serverActivity['recave']).' Rec':'—'; ?></span></div>
-						<div class="pill" id="inscrits-pill"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><text x="2" y="16" font-size="16" fill="#B47BFF">👥</text></svg>
-							<span><?php
-								if (isset($serverActivity['participants_count'])) {
-									$pc = htmlspecialchars($serverActivity['participants_count']);
-									if (!empty($serverActivity['max_participants'])) {
-										$mp = htmlspecialchars($serverActivity['max_participants']);
-										echo $pc . '/' . $mp . ' Inscrits';
-									} else {
-										echo $pc . ' Inscrits';
-									}
-								} else {
-									echo '— Inscrits';
-								}
-							?></span>
-						</div>
-
-					</div>
-					<div style="margin-top:8px;color:#ff6b6b;font-weight:700"><?php echo (empty($serverActivity) || empty($serverActivity['participants_count']))? '● Pas encore inscrit(e)' : ''; ?></div>
-
-				</div>
-				<div style="width:52px;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center">
-				   <button class="chev" id="next-act" onclick="navigateActivity(1)">›</button>
-				   <button class="chev" id="prev-act" onclick="navigateActivity(-1)">‹</button>
-				</div>
-			</div>
-		</section>
-
-		<section id="shortcuts-card" class="card stroked">
-			   <div class="section-title">Raccourcis</div>
-			   <hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
-			   <div class="shortcuts-grid">
-	<?php
-	// --- ADVANCED TIMER LOGIC (fullscreen-cardevent.php style, with JS sync) ---
-	$timer_level = '--';
-	$timer_blinds = '-- / --';
-	$timer_duration = 0;
-	$timer_seconds_left = 0;
-	$timer_end = null;
-	$timer_start = null;
-	$timer_ordre = 1;
-	$blinds_json = '[]';
-	if (!empty($serverActivity['id'])) {
-		$id = intval($serverActivity['id']);
-		$now = time();
-		$q = mysqli_query($con, "SELECT * FROM `blindes-live` WHERE `id-activite` = '$id' ORDER BY `ordre` ASC");
-		$blinds = [];
-		while($row = mysqli_fetch_assoc($q)) { $blinds[] = $row; }
-		$blinds_json = json_encode($blinds, JSON_UNESCAPED_UNICODE);
-		$currentIndex = -1;
-		foreach($blinds as $k => $b) {
-			if (strtotime($b['fin']) > $now) {
-				$currentIndex = $k;
-				break;
-			}
-		}
-		if ($currentIndex === -1 && count($blinds) > 0) {
-			// All levels finished, show last
-			$currentIndex = count($blinds) - 1;
-		}
-		if ($currentIndex !== -1) {
-			$b = $blinds[$currentIndex];
-			$timer_level = 'Niveau ' . htmlspecialchars($b['ordre']);
-			$timer_blinds = htmlspecialchars($b['sb']) . ' / ' . htmlspecialchars($b['bb']);
-			$timer_end = $b['fin'];
-			$timer_start = $b['debut'];
-			$timer_duration = max(1, strtotime($b['fin']) - strtotime($b['debut']));
-			$timer_seconds_left = max(0, strtotime($b['fin']) - $now);
-			$timer_ordre = intval($b['ordre']);
-		}
-	}
-	?>
-	       <div class="tile" id="live-cardevent-tile">
-		       <div class="tile-top" style="padding-top:0;">
-			       <div class="cardevent-circle-container" style="width:80px;height:80px;position:relative;margin:0 auto;">
-					       <svg class="cardevent-svg" viewBox="0 0 80 80" style="width:100%;height:100%;position:absolute;top:0;left:0;">
-						       <circle class="cardevent-bg" cx="40" cy="40" r="36" style="stroke-width:4;"></circle>
-						       <circle class="cardevent-progress" id="live-cardevent-progress" cx="40" cy="40" r="36" style="stroke-width:4;"></circle>
-				       </svg>
-				       <div class="cardevent-content" style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;">
-									   <div id="live-cardevent-level" style="font-size:10px;font-weight:600;color:#fff;letter-spacing:1px;text-transform:uppercase;"></div>
-									   <div id="live-cardevent-display" style="font-size:18px;font-weight:900;color:#00d2ff;line-height:1;">--:--</div>
-									   <div id="live-cardevent-blinds" style="font-size:10px;color:#ffc107;font-weight:700;margin-top:2px;"></div>
-				       </div>
-			       </div>
-					   <!-- <div class="count-label" id="live-cardevent-label" style="margin-top:8px;">Live Timer</div> -->
-		</div>
-					   <!-- <div class="tile-bottom" id="live-cardevent-status">—</div> -->
-	</div>
-	<script>
-	(function(){
-	       var display = document.getElementById('live-cardevent-display');
-	       var progressCircle = document.getElementById('live-cardevent-progress');
-	       var levelEl = document.getElementById('live-cardevent-level');
-	       var blindsEl = document.getElementById('live-cardevent-blinds');
-	       var seconds = 0;
-	       var total = 0;
-	       var timerPaused = false;
-	       var statusEl = document.getElementById('live-cardevent-status');
-		       // Get activity start time from PHP
-		       var activityStart = null;
-		       try {
-			   activityStart = <?php echo isset($serverActivity['date']) ? '"'.addslashes($serverActivity['date']).'"' : 'null'; ?>;
-		       } catch(e) { activityStart = null; }
-
-
-				   // (activityStart is provided above) — avoid duplicate declaration
-
-				   function updateDisplay() {
-				       var now = new Date();
-				       var showCountdown = false;
-				       var countdownText = '';
-				       var beforeStart = false;
-				       if(activityStart) {
-					   var startDate = new Date(activityStart.replace(/-/g,'/'));
-					   if(startDate > now) {
-					       // Show countdown
-					       var diff = Math.floor((startDate - now) / 1000);
-					       if(diff > 0) {
-						   var h = Math.floor(diff/3600).toString().padStart(2,'0');
-						   var m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
-						   countdownText = h+':'+m;
-						   showCountdown = true;
-						   beforeStart = true;
-					       }
-					   }
-				       }
-				       if(showCountdown) {
-					   display.textContent = countdownText;
-					   display.style.color = '#00d2ff';
-					   progressCircle.style.strokeDashoffset = 0;
-					   progressCircle.style.stroke = '#00d2ff';
-					   progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
-					   if(statusEl) statusEl.textContent = 'A venir';
-					   if(levelEl) levelEl.textContent = '';
-					   if(blindsEl) blindsEl.textContent = '';
-					   return;
-				       }
-				       var m = Math.floor(seconds/60).toString().padStart(2,'0');
-				       var s = (seconds%60).toString().padStart(2,'0');
-				       display.textContent = m+':'+s;
-				       // Progress
-				       if(total > 0){
-					       var elapsed = total - seconds;
-					       var progress = Math.max(0, Math.min(1, elapsed/total));
-					       var circumference = 2 * Math.PI * 50;
-					       var offset = circumference * (1 - progress);
-					       progressCircle.style.strokeDashoffset = offset;
-					       if(seconds <= 120 && seconds > 0){
-						       display.style.color = '#ff0000';
-						       progressCircle.style.stroke = '#ff0000';
-						       progressCircle.style.filter = 'drop-shadow(0 0 6px #ff0000)';
-					       }else{
-						       display.style.color = '#00d2ff';
-						       progressCircle.style.stroke = '#00d2ff';
-						       progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
-					       }
-				       }
-				       // Update status label
-						   if(statusEl){
-							   var now = new Date();
-							   var startDate = null;
-							   if(activityStart){
-								   var parts = String(activityStart).split(/[- :]/);
-								   startDate = new Date(
-									   parseInt(parts[0]||'0',10),
-									   Math.max(0, (parseInt(parts[1]||'1',10)-1)),
-									   parseInt(parts[2]||'1',10),
-									   parseInt(parts[3]||'0',10),
-									   parseInt(parts[4]||'0',10),
-									   parseInt(parts[5]||'0',10)
-								   );
-							   }
-							   // If activity has started and there is no remaining seconds -> mark as finished
-							   if(startDate && now > startDate && seconds === 0){
-								   statusEl.textContent = 'Terminée';
-								   if(levelEl) levelEl.textContent = '';
-								   if(blindsEl) blindsEl.textContent = '';
-								   display.textContent = '--:--';
-								   display.style.color = '#00d2ff';
-								   progressCircle.style.strokeDashoffset = 0;
-								   progressCircle.style.stroke = '#00d2ff';
-								   progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
-								   return;
-							   }
-							   // If activity is in the future
-							   if(startDate && now < startDate){
-								   statusEl.textContent = 'A venir';
-								   return;
-							   }
-							   // Fallback based on available cardevent data
-							   if(total === 0){
-								   statusEl.textContent = '—';
-							   } else if(seconds === 0){
-								   statusEl.textContent = 'Terminé';
-							   } else {
-								   statusEl.textContent = 'Live';
-							   }
-						   }
-			       }
-	       function tick() {
-		       if(!timerPaused && seconds > 0){
-			       seconds--;
-			       updateDisplay();
-		       }
-	       }
-	       function syncTimer() {
-		       var params = new URLSearchParams(window.location.search);
-		       var uid = params.get('uid');
-		       if(!uid) return;
-		       fetch('/panel/cardevent-api.php?uid='+encodeURIComponent(uid))
-		       .then(r=>r.json())
-		       .then(function(data){
-			       if(data.status!=='success') return;
-			       seconds = parseInt(data.seconds_remaining)||0;
-			       total = parseInt(data.duration_seconds)||0;
-					   if(levelEl) {
-						   // Remove 'Niveau' and only show 'x / y'
-						   if(data.level_name){
-							   var txt = data.level_name.replace(/^Niveau\s*/i, '').trim();
-							   levelEl.textContent = txt;
-						   } else {
-							   levelEl.textContent = '--';
-						   }
-					   }
-			       if(blindsEl) blindsEl.textContent = data.blinds_text || '-- / --';
-			       timerPaused = !!data.is_paused;
-			       updateDisplay();
-				// Refresh profile links to point to the active activity id (use URL uid or fallback to lastActivity)
-				try{
-					var actId = null;
-					if(window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id) actId = window.SERVER_ACTIVITY.id;
-					var params = new URLSearchParams(window.location.search);
-					if(!actId && params.has('uid')) actId = params.get('uid');
-					if(!actId){ try{ var la = localStorage.getItem('lastActivity'); if(la){ var obj = JSON.parse(la); if(obj && obj.id) actId = obj.id; } }catch(e){}
-					}
-					_setProfileLinksFromActivity(actId);
-				}catch(e){}
-		       });
-	       }
-		   setInterval(tick, 1000);
-		   setInterval(syncTimer, 5000);
-		   syncTimer();
-		   // Force full page reload every 30 seconds for robustness
-		   setInterval(function(){
-			   // Force cache refresh by appending a random query param
-			   var url = new URL(window.location.href);
-			   url.searchParams.set('cachebust', Math.floor(Math.random()*1e8));
-			   window.location.replace(url.toString());
-		   }, 300000);
-	})();
-	<?php
-	// If timer_sync=1, return JSON for JS sync
-	if (isset($_GET['timer_sync']) && $_GET['timer_sync'] == 1 && !empty($serverActivity['id'])) {
-		header('Content-Type: application/json');
-		echo json_encode(['blinds' => $blinds], JSON_UNESCAPED_UNICODE);
-		exit;
-	}
-	?>
-	<!DOCTYPE html>
 	<html lang="en">
 	<head>
 		<title>Admin | Dashboard</title>
@@ -526,8 +227,71 @@ $row_act = mysqli_fetch_array($query_act);
 	<body>
 		<div id="app">
 			<?php
+			$fiche = $_SESSION['id'];
 			include('include/sidebar.php');
 			?>
+			<div class="app-content">
+				<?php include('include/header.php'); ?>
+				
+				<div class="main-content">
+					<div class="wrap-content container" id="container">
+						<!-- Page Title -->
+						<section id="page-title">
+							<div class="row">
+								<div class="col-sm-12 text-center">
+									<?php
+									// Compter les messages non lus du groupe de chat de l'activité
+									$months = ["", "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+									$d_obj = strtotime($row_act['date_depart']);
+									$formatted_date = date('j', $d_obj) . ' ' . $months[intval(date('n', $d_obj))];
+									$id_orga = $row_act['id-membre'];
+									$q_orga_pseudo = mysqli_query($con, "SELECT pseudo FROM membres WHERE `id-membre` = '$id_orga' LIMIT 1");
+									$r_orga_pseudo = mysqli_fetch_array($q_orga_pseudo);
+									$expected_group_name = $formatted_date . " " . ($r_orga_pseudo ? $r_orga_pseudo['pseudo'] : "");
+									
+									$q_target_grp = mysqli_query($con, "SELECT id FROM chat_groups WHERE name = '".mysqli_real_escape_string($con, $expected_group_name)."' ORDER BY id DESC LIMIT 1");
+									$r_target_grp = mysqli_fetch_array($q_target_grp);
+									$target_group_id = $r_target_grp ? $r_target_grp['id'] : null;
+									
+									$unread_activity_messages = 0;
+									if ($target_group_id) {
+										$q_unread_activity = mysqli_query($con, "
+											SELECT COUNT(*) as total 
+											FROM chat_messages m
+											JOIN chat_group_members gm ON m.group_id = gm.group_id
+											WHERE m.group_id = '$target_group_id'
+											AND gm.member_id = '$user_id' 
+											AND m.sender_id != '$user_id'
+											AND m.timestamp > gm.last_read_at
+										");
+										$r_unread_activity = mysqli_fetch_array($q_unread_activity);
+										$unread_activity_messages = intval($r_unread_activity['total']);
+									}
+									?>
+									<div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+										<a href="voir-membre.php?id=<?php echo $_SESSION['id']; ?>" style="text-decoration: none;">
+											<?php if ($user_photo && !empty($user_photo)) { ?>
+												<img src="/images/faces/<?php echo htmlspecialchars($user_photo, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($_SESSION['login']); ?>" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #00d2ff;">
+											<?php } else { ?>
+												<div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 32px; font-weight: bold; border: 3px solid #00d2ff;">
+													<?php echo strtoupper(substr($_SESSION['login'], 0, 1)); ?>
+												</div>
+											<?php } ?>
+										</a>
+										<div style="position: relative;">
+											<h2 class="mainTitle" style="color:white; margin: 0; font-size: 3.5em;" ><?php echo $is_admin ? 'Bienvenue Admin' : ('Bienvenue ' . htmlspecialchars($user_pseudo)); ?></h2>
+											<?php if ($unread_activity_messages > 0): ?>
+												<a href="../panel/chat.php?group_id=<?php echo $target_group_id; ?>" style="text-decoration: none;">
+													<span style="position: absolute; top: -10px; right: -30px; background-color: #d9534f; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; cursor: pointer; transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='#c9302c'" onmouseout="this.style.backgroundColor='#d9534f'"><i class="fa fa-envelope"></i> <?php echo $unread_activity_messages; ?></span>
+												</a>
+											<?php endif; ?>
+										</div>
+									</div>
+									<a href="fullscreen-cardevent.php?uid=<?php echo $id_act; ?>" style="text-decoration: none;">
+										<h1 style="color: hsl(51, 72%, 56%); font-weight: bold; margin-top: 10px; text-transform: uppercase; letter-spacing: 3px; font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+											<?php echo htmlentities($row_act['titre-activite']); ?>
+										</h1>
+									</a>
 								</div>
 								<!-- <ol class="breadcrumb">
 									<li><span>Admin</span></li>
@@ -540,7 +304,7 @@ $row_act = mysqli_fetch_array($query_act);
 						<div class="row">
 							<div class="col-sm-4">
 								<a href="prochaines-activites.php" class="dashboard-card card-blue">
-									<div class="card-icon"><i class="fa fa-rocket" style="background: linear-gradient(45deg, #FF512F 0%, #DD2476 50%, #FF512F 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;"></i></div>
+									<div class="card-icon"><i class="fa fa-rocket" style="background: linear-gradient(45deg, #FF512F 0%, #DD2476 50%, #FF512F 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;"></i></div>
 									<div class="card-title"> Rdv: <?php echo date('d/m/Y H:i', strtotime($row_act['date_depart'])); ?></div>
 									<div class="card-stat" style="font-size: 18px;">Buy-in: <?php echo htmlentities($row_act['buyin']); ?>€ , Rake: <?php echo htmlentities($row_act['rake']); ?>€</div>
 									<div class="card-stat" style="font-size: 18px;">Recave(s): <?php echo htmlentities($row_act['recave']); ?> (<?php echo htmlentities($row_act['recave_montant']); ?>€)</div>
@@ -1010,69 +774,5 @@ $row_act = mysqli_fetch_array($query_act);
 		</script>
 	</body>
 
-<<<<<<< Updated upstream
 	</html>
 <?php } ?>
-=======
-
-				<script src="/panel/timer_web/public/app.js"></script>
-			   </div>
-		   </section>
-
-	</div>
-
-	<!-- Bottom navigation backdrop to ensure a solid black background under the nav -->
-	<div class="bottom-nav-backdrop" aria-hidden="true"></div>
-	<!-- Bottom navigation (mobile) matching simulator: Accueil, Local Timer, Répartition -->
-	<style>
-	.bottom-nav { margin-top: 20px !important; }
-	</style>
-	<nav class="bottom-nav" role="navigation" aria-label="Main navigation">
-		<button id="nav-home" class="" title="Accueil" onclick="window.location.href='/panel/index.php';">
-			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 21h14a1 1 0 0 0 1-1v-7H4v7a1 1 0 0 0 1 1z"/></svg>
-			<div class="nav-label">Accueil</div>
-		</button>
-		<button id="nav-local" class="active" title="Local Timer" onclick="window.location.href='/panel/quickview.php';">
-			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
-			<div class="nav-label">Local Timer</div>
-		</button>
-		<button id="nav-split" class="" title="Répartition" onclick="window.location.href='/panel/repartition.php';">
-			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-			<div class="nav-label">Répartition</div>
-		</button>
-	</nav>
-
-
-	   <script src="/panel/timer_web/public/app.js?v=<?php echo $asset_ver . '-' . rand(100000,999999); ?>"></script>
-
-	   <script>
-	   // Navigation: reload with ?uid=xxx for selected activity
-	   function navigateActivity(delta) {
-		   if (!window.activitiesList || !window.currentActivity) return;
-		   let idx = window.activitiesList.findIndex(a => String(a.id) === String(window.currentActivity.id));
-		   if (idx === -1) idx = 0;
-		   let newIdx = idx + delta;
-		   if (newIdx < 0 || newIdx >= window.activitiesList.length) return;
-		   let newId = window.activitiesList[newIdx].id;
-		   // Reload with ?uid=xxx
-		   const url = new URL(window.location.href);
-		   url.searchParams.set('uid', newId);
-		   window.location.href = url.toString();
-	   }
-	   </script>
-
-
-	<script>
-		(function(){
-			const link = document.getElementById('theme-stylesheet');
-			const apply = v=>{ link.href = (v==='B')? '/panel/timer_web/public/style.variantB.css':'/panel/timer_web/public/style.variantA.css'; localStorage.setItem('uiVariant', v); };
-			const variantABtn = document.getElementById('variantA');
-			if(variantABtn) variantABtn.addEventListener('click', ()=>apply('A'));
-			const variantBBtn = document.getElementById('variantB');
-			if(variantBBtn) variantBBtn.addEventListener('click', ()=>apply('B'));
-			const saved = localStorage.getItem('uiVariant') || 'A'; apply(saved);
-		})();
-	</script>
-</body>
-</html>
->>>>>>> Stashed changes
