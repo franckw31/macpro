@@ -819,7 +819,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						 <div style="display:flex;align-items:center;justify-content:space-between">
 							 <div id="reg-text" style="font-weight:600;font-size:14px">Votre Inscription : </div>
 							 <div>
-								<button id="reg-action" class="button primary" style="margin-left:12px;padding:8px 12px;border-radius:10px;font-weight:700"><?php echo (!empty($serverParticipation) && isset($serverParticipation['status']) && !in_array($serverParticipation['status'], array('None','Desinscrit'))) ? 'Modifier' : 'S Inscrire'; ?></button>
+								<button id="reg-action" class="button primary" style="margin-left:12px;padding:8px 12px;border-radius:10px;font-weight:700" onclick="document.getElementById('inscription-modal').style.display='block'; document.getElementById('inscription-modal').setAttribute('aria-hidden','false'); return false;"><?php echo (!empty($serverParticipation) && isset($serverParticipation['status']) && !in_array($serverParticipation['status'], array('None','Desinscrit'))) ? 'Modifier' : 'S Inscrire'; ?></button>
 							 </div>
 						 <div>
 
