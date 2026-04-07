@@ -1211,6 +1211,7 @@ document.addEventListener('DOMContentLoaded', function(){
 							submitQuickRegistration();
 						});
 					}
+					updateRegistrationUI();
 					// Close modal when clicking close button
 					var closeBtns = modal.querySelectorAll('.inscription-modal-close');
 					closeBtns.forEach(function(b){ b.addEventListener('click', closeModal); });
