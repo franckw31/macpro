@@ -122,7 +122,7 @@ function render_admin_menu()
             </li>
             <li>
               <a href="/panel/quickview.php">
-                <div class="item-content"><div class="item-media"><i class="ti-id-badge"></i></div><div class="item-inner"><span class="title"><i class="fa fa-passport"></i> Cardevent </span></div></div>
+                <div class="item-content"><div class="item-media"><i class="ti-id-badge"></i></div><div class="item-inner"><span class="title"><i class="fa fa-passport"></i> Quickview </span></div></div>
               </a>
             </li>
             <li>
@@ -190,7 +190,7 @@ function render_user_menu()
             </li>
             <li>
               <a href="/panel/quickview.php">
-                <div class="item-content"><div class="item-media"><i class="ti-id-badge"></i></div><div class="item-inner"><span class="title"><i class="fa fa-passport"></i> Cardevent </span></div></div>
+                <div class="item-content"><div class="item-media"><i class="ti-id-badge"></i></div><div class="item-inner"><span class="title"><i class="fa fa-passport"></i> Quickview </span></div></div>
               </a>
             </li>
             
