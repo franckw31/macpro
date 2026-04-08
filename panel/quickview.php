@@ -772,6 +772,37 @@ if (strlen($_SESSION['login']) == 0) {
 		    staggerCycle: 4
 		  });
 		</script>
+		<script>
+		  document.addEventListener('DOMContentLoaded', function () {
+		    var quickviewHome = '/panel/quickview.php';
+		    var navHome = document.getElementById('nav-home');
+		    if (navHome) {
+		      navHome.setAttribute('onclick', "window.location.href='" + quickviewHome + "';");
+		      if (navHome.tagName === 'A') {
+		        navHome.setAttribute('href', quickviewHome);
+		      }
+		      navHome.addEventListener('click', function (event) {
+		        event.preventDefault();
+		        window.location.href = quickviewHome;
+		      });
+		    }
+
+		    Array.prototype.forEach.call(document.querySelectorAll('.bottom-nav a, .bottom-nav button'), function (item) {
+		      var label = (item.textContent || '').trim().toLowerCase();
+		      if (label.indexOf('accueil') !== -1) {
+		        if (item.tagName === 'A') {
+		          item.setAttribute('href', quickviewHome);
+		        } else {
+		          item.setAttribute('onclick', "window.location.href='" + quickviewHome + "';");
+		        }
+		        item.addEventListener('click', function (event) {
+		          event.preventDefault();
+		          window.location.href = quickviewHome;
+		        });
+		      }
+		    });
+		  });
+		</script>
 	</body>
 
 	</html>
