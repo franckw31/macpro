@@ -31,6 +31,14 @@ while ($row = mysqli_fetch_array($ret)) {
 ;
 // echo "Reorg Ok";
 require 'vendor/autoload.php';
+if (!empty($_GET['uid']) && !empty($_SERVER['HTTP_REFERER'])) {
+    $cardeventUid = intval($_GET['uid']);
+    $referer = (string)$_SERVER['HTTP_REFERER'];
+    if ($cardeventUid > 0 && strpos($referer, '/panel/cardevent.php') !== false) {
+        header('Location: /panel/cardevent.php?uid=' . $cardeventUid . '&open_registration=1');
+        exit;
+    }
+}
 if (strlen($_SESSION['id'] == 0)) {
     // if (1==2) {
     header('location:logout.php');
@@ -441,6 +449,20 @@ window.location.replace("/panel/voir-blindes.php?uid=<?php echo $id ?>");
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
 
 <head>
+    <script>
+    (function(){
+        try {
+            var params = new URLSearchParams(window.location.search);
+            var uid = params.get('uid') || '';
+            var raw = sessionStorage.getItem('cardevent-reg-return');
+            if (!uid || !raw) return;
+            var data = JSON.parse(raw);
+            if (!data || String(data.uid || '') !== String(uid)) return;
+            if (Math.abs(Date.now() - Number(data.ts || 0)) >= 60000) return;
+            window.location.replace('/panel/cardevent.php?uid=' + encodeURIComponent(uid) + '&open_registration=1');
+        } catch (e) {}
+    })();
+    </script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-16" />
     <!-- <meta http-equiv="refresh" content="30"> -->
     <title>Admin | Edition Membre</title>
