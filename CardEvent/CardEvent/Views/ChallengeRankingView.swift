@@ -461,7 +461,7 @@ struct ChallengeRankingView: View {
         }
 
         let challengeToLoad = challengeId ?? selectedChallengeId ?? activityId
-        var urlStr = "\(baseURL)?activity_id=\(challengeToLoad)"
+        let urlStr = "\(baseURL)?activity_id=\(challengeToLoad)"
         guard let url = URL(string: urlStr) else {
             errorMessage = "URL invalide"
             return
