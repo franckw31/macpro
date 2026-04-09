@@ -110,7 +110,7 @@ final class PokerTimerViewModel: NSObject, ObservableObject, AVSpeechSynthesizer
         let timeLeftWhenPaused: Int  // temps restant (si en pause)
     }
 
-    init() {
+    override init() {
         super.init()
         speechSynthesizer.delegate = self
         loadLevels()
