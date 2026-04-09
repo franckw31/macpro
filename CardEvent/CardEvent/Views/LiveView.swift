@@ -49,7 +49,7 @@ private final class LiveTimerViewModel: ObservableObject {
         print("TENTATIVE DE LECTURE AUDIO (TEST) DEPUIS LIVE TIMER...")
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers, .mixWithOthers])
+            try audioSession.setCategory(.ambient, mode: .default, options: [.mixWithOthers])
             try audioSession.setActive(true)
             print("Session audio configurée pour la parole (TEST LIVE)")
         } catch {
@@ -69,7 +69,7 @@ private final class LiveTimerViewModel: ObservableObject {
         print("TENTATIVE DE LECTURE AUDIO (LIVE TIMER) : Changement vers \(nextBlinds)")
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers, .mixWithOthers])
+            try audioSession.setCategory(.ambient, mode: .default, options: [.mixWithOthers])
             try audioSession.setActive(true)
         } catch {
             print("Échec de configuration audio: \(error)")

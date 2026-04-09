@@ -7,56 +7,6 @@ import UserNotifications
 import UIKit
 #endif
 
-// MARK: - Background Audio Keep Alive
-
-private final class BackgroundAudioKeepAlive {
-
-    static let shared = BackgroundAudioKeepAlive()
-
-    private let engine = AVAudioEngine()
-    private var isStarted = false
-
-    private init() {}
-
-    func start() {
-        guard !isStarted else { return }
-        do {
-            let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playback, mode: .default, options: .mixWithOthers)
-            try session.setActive(true)
-        } catch {
-            print("BackgroundAudio: session error: \(error)")
-            return
-        }
-        let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 1)!
-        let sourceNode = AVAudioSourceNode(format: format) { _, _, frameCount, audioBufferList in
-            let ptr = UnsafeMutableAudioBufferListPointer(audioBufferList)
-            for buffer in ptr {
-                memset(buffer.mData, 0, Int(frameCount) * MemoryLayout<Float>.size)
-            }
-            return noErr
-        }
-        engine.attach(sourceNode)
-        engine.connect(sourceNode, to: engine.mainMixerNode, format: format)
-        engine.mainMixerNode.outputVolume = 0.0
-        do {
-            try engine.start()
-            isStarted = true
-            print("BackgroundAudio: started (silence)")
-        } catch {
-            print("BackgroundAudio: engine error: \(error)")
-        }
-    }
-
-    func stop() {
-        guard isStarted else { return }
-        engine.stop()
-        isStarted = false
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        print("BackgroundAudio: stopped")
-    }
-}
-
 // MARK: - PokerTimerViewModel
 
 // MARK: - Participant
@@ -223,7 +173,6 @@ final class PokerTimerViewModel: ObservableObject {
         guard !isRunning else { return }
         isRunning = true
         levelEndDate = Date().addingTimeInterval(TimeInterval(timeLeft))
-        BackgroundAudioKeepAlive.shared.start()
         startTicker()
         scheduleNextLevelNotification()
         saveTimerState()
@@ -238,7 +187,6 @@ final class PokerTimerViewModel: ObservableObject {
         isRunning = false
         cardevent?.invalidate()
         cardevent = nil
-        BackgroundAudioKeepAlive.shared.stop()
         let ids = (0..<50).map { "level_\($0)" }
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ids)
         saveTimerState()
@@ -1155,7 +1103,7 @@ final class PokerTimerViewModel: ObservableObject {
         print("TENTATIVE DE LECTURE AUDIO (TEST)...")
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers, .mixWithOthers])
+            try audioSession.setCategory(.ambient, mode: .default, options: [.mixWithOthers])
             try audioSession.setActive(true)
             print("Session audio configurée pour la parole (TEST)")
         } catch {
@@ -1179,7 +1127,7 @@ final class PokerTimerViewModel: ObservableObject {
         
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers, .mixWithOthers])
+            try audioSession.setCategory(.ambient, mode: .default, options: [.mixWithOthers])
             try audioSession.setActive(true)
             print("Session audio configurée pour la parole")
         } catch {
