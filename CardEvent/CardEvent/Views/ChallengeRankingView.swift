@@ -76,7 +76,7 @@ struct ChallengeRankingView: View {
                             Divider()
                             LazyVStack(spacing: 0) {
                                 ForEach(entries) { entry in
-                                                                     rowView(entry)
+                                    rowView(entry)
                                     Divider().padding(.leading, 16)
                                 }
                             }
@@ -99,39 +99,40 @@ struct ChallengeRankingView: View {
             .sheet(isPresented: $showChallengePicker) {
                 NavigationView {
                     Group {
-                                if isLoadingChallenges {
-                                    VStack(spacing: 20) {
-                                        ProgressView()
-                                        Text("Chargement des challenges...").foregroundColor(.secondary)
-                                    }
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                } else if let err = challengesError {
-                                    VStack(spacing: 16) {
-                                        Image(systemName: "exclamationmark.triangle")
-                                            .font(.system(size: 36))
-                                            .foregroundColor(.orange)
-                                        Text(err)
-                                            .foregroundColor(.secondary)
-                                            .multilineTextAlignment(.center)
-                                            .padding(.horizontal)
-                                        HStack(spacing: 12) {
-                                            Button("Réessayer") { Task { await loadAvailableChallenges() } }
-                                                .buttonStyle(.borderedProminent)
-                                            Button("Fermer") { showChallengePicker = false }
-                                        }
-                                    }
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                } else if availableChallenges.isEmpty {
-                                    VStack(spacing: 12) {
-                                        Image(systemName: "questionmark")
-                                            .font(.system(size: 36))
-                                            .foregroundColor(.secondary)
-                                        Text("Aucun challenge disponible")
-                                            .foregroundColor(.secondary)
-                                        Button("Réessayer") { Task { await loadAvailableChallenges() } }
-                                            .buttonStyle(.bordered)
-                                    }
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        if isLoadingChallenges {
+                            VStack(spacing: 20) {
+                                ProgressView()
+                                Text("Chargement des challenges...")
+                                    .foregroundColor(.secondary)
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        } else if let err = challengesError {
+                            VStack(spacing: 16) {
+                                Image(systemName: "exclamationmark.triangle")
+                                    .font(.system(size: 36))
+                                    .foregroundColor(.orange)
+                                Text(err)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                                    .padding(.horizontal)
+                                HStack(spacing: 12) {
+                                    Button("Réessayer") { Task { await loadAvailableChallenges() } }
+                                        .buttonStyle(.borderedProminent)
+                                    Button("Fermer") { showChallengePicker = false }
+                                }
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        } else if availableChallenges.isEmpty {
+                            VStack(spacing: 12) {
+                                Image(systemName: "questionmark")
+                                    .font(.system(size: 36))
+                                    .foregroundColor(.secondary)
+                                Text("Aucun challenge disponible")
+                                    .foregroundColor(.secondary)
+                                Button("Réessayer") { Task { await loadAvailableChallenges() } }
+                                    .buttonStyle(.bordered)
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                         } else {
                             List(availableChallenges, id: \.id) { ch in
                                 Button(action: {
@@ -166,8 +167,6 @@ struct ChallengeRankingView: View {
         }
         .onAppear { Task { await load() } }
     }
-
-    
 
     // Liste des challenges disponibles
     private func loadAvailableChallenges() async {
