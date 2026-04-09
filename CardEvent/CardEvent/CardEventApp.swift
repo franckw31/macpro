@@ -88,14 +88,6 @@ struct CardEventApp: App {
             .animation(.easeInOut(duration: 0.3), value: auth.isAuthenticated)
             .animation(.easeInOut(duration: 0.3), value: auth.isLoading)
             .onAppear {
-                do {
-                    let audioSession = AVAudioSession.sharedInstance()
-                    try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers, .mixWithOthers])
-                    try audioSession.setActive(true)
-                } catch {
-                    print("Failed to setup audio session for welcome message: \(error)")
-                }
-                
                 let utterance = AVSpeechUtterance(string: "Bienvenue sur Carde Ivènte")
                 utterance.voice = AVSpeechSynthesisVoice(language: "fr-FR")
                 speechSynthesizer.speak(utterance)
