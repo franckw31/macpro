@@ -1,5 +1,4 @@
 import SwiftUI
-import Security
 
 // MARK: - Model
 
@@ -195,7 +194,7 @@ struct ChallengeRankingView: View {
 
         // Prefer token as GET param to ensure server accepts it regardless of header passthrough
         var listURLStr = "https://viendez.com/api/list-challenges.php"
-        if let token = storedAuthToken(), !token.isEmpty {
+        if let token = KeychainHelper.authToken, !token.isEmpty {
             listURLStr += "?token=\(token)"
         }
         guard let url = URL(string: listURLStr) else {
@@ -293,7 +292,7 @@ struct ChallengeRankingView: View {
     private func fetchChallengesFromActivities() async -> [(id: Int, title: String)] {
         guard let url = URL(string: "https://viendez.com/api/activities-list.php") else { return [] }
         var req = URLRequest(url: url)
-        if let token = storedAuthToken() {
+        if let token = KeychainHelper.authToken {
             req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         req.timeoutInterval = 8
@@ -321,7 +320,7 @@ struct ChallengeRankingView: View {
             for actId in recentIds {
                 // Prefer token as GET param to ensure the endpoint accepts it
                 var crURLStr = "\(baseURL)?activity_id=\(actId)"
-                if let token = storedAuthToken(), !token.isEmpty {
+                if let token = KeychainHelper.authToken, !token.isEmpty {
                     crURLStr += "&token=\(token)"
                 }
                 guard let crURL = URL(string: crURLStr) else { continue }
@@ -455,7 +454,7 @@ struct ChallengeRankingView: View {
         errorMessage = nil
         defer { isLoading = false }
 
-        guard let token = storedAuthToken() else {
+        guard let token = KeychainHelper.authToken else {
             errorMessage = "Non connecté"
             return
         }
@@ -507,24 +506,4 @@ struct ChallengeRankingView: View {
         }
     }
 
-    private func storedAuthToken() -> String? {
-        let query: [CFString: Any] = [
-            kSecClass: kSecClassGenericPassword,
-            kSecAttrService: "com.cardevent.auth",
-            kSecAttrAccount: "auth.token",
-            kSecReturnData: true,
-            kSecMatchLimit: kSecMatchLimitOne,
-        ]
-
-        var result: AnyObject?
-        let status = SecItemCopyMatching(query as CFDictionary, &result)
-        guard status == errSecSuccess,
-              let data = result as? Data,
-              let token = String(data: data, encoding: .utf8),
-              !token.isEmpty else {
-            return nil
-        }
-
-        return token
-    }
 }
