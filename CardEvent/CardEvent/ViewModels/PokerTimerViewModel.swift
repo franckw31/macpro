@@ -53,7 +53,7 @@ struct ActivitySummary: Identifiable {
 }
 
 @MainActor
-final class PokerTimerViewModel: ObservableObject {
+final class PokerTimerViewModel: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     @Published var blindLevels: [BlindLevel] = []
     @Published var currentLevelIndex: Int = 0
     @Published var timeLeft: Int = 0
@@ -111,6 +111,8 @@ final class PokerTimerViewModel: ObservableObject {
     }
 
     init() {
+        super.init()
+        speechSynthesizer.delegate = self
         loadLevels()
         loadTimerState()
         loadPlayerCount()
@@ -1095,20 +1097,33 @@ final class PokerTimerViewModel: ObservableObject {
     private func playSound() {
         AudioServicesPlaySystemSound(1016)
     }
+
+    private func configureSpeechSession() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.ambient, mode: .default, options: [.mixWithOthers])
+            try audioSession.setActive(true)
+            print("Session audio configurée pour la parole")
+        } catch {
+            print("Échec de configuration audio pour la synthèse vocale: \(error)")
+        }
+    }
+
+    private func releaseSpeechSession() {
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("Échec de désactivation audio pour la synthèse vocale: \(error)")
+        }
+    }
     
     // Add speech synthesizer as a property to prevent it from being deallocated instantly
     private let speechSynthesizer = AVSpeechSynthesizer()
 
     func playTestAudio() {
         print("TENTATIVE DE LECTURE AUDIO (TEST)...")
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.ambient, mode: .default, options: [.mixWithOthers])
-            try audioSession.setActive(true)
-            print("Session audio configurée pour la parole (TEST)")
-        } catch {
-            print("Échec de configuration audio pour la synthèse vocale: \(error)")
-        }
+        configureSpeechSession()
+        print("Session audio configurée pour la parole (TEST)")
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -1125,14 +1140,7 @@ final class PokerTimerViewModel: ObservableObject {
         // Remove AudioServicesPlaySystemSound to prevent it from muting AVSpeechSynthesizer
         // AudioServicesPlaySystemSound(1016)
         
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.ambient, mode: .default, options: [.mixWithOthers])
-            try audioSession.setActive(true)
-            print("Session audio configurée pour la parole")
-        } catch {
-            print("Échec de configuration audio pour la synthèse vocale: \(error)")
-        }
+        configureSpeechSession()
         
         let blindsText: String
         if currentLevel.smallBlind == 0 && currentLevel.bigBlind == 0 {
@@ -1154,6 +1162,14 @@ final class PokerTimerViewModel: ObservableObject {
             utterance.volume = 1.0
             self.speechSynthesizer.speak(utterance)
         }
+    }
+
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        releaseSpeechSession()
+    }
+
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        releaseSpeechSession()
     }
 
     private func loadLevels() {

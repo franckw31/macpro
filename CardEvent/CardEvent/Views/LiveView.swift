@@ -21,7 +21,7 @@ private struct TimerAPIResponse: Decodable {
 // MARK: - LiveTimerViewModel
 
 @MainActor
-private final class LiveTimerViewModel: ObservableObject {
+private final class LiveTimerViewModel: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     @Published var secondsRemaining: Int = 0
     @Published var durationSeconds: Int = 1
     @Published var blindsText: String = "--/--"
@@ -43,18 +43,32 @@ private final class LiveTimerViewModel: ObservableObject {
 
     init(activityId: Int) {
         self.activityId = activityId
+        super.init()
+        speechSynthesizer.delegate = self
     }
 
-    func playTestAudio() {
-        print("TENTATIVE DE LECTURE AUDIO (TEST) DEPUIS LIVE TIMER...")
+    private func configureSpeechSession() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(.ambient, mode: .default, options: [.mixWithOthers])
             try audioSession.setActive(true)
-            print("Session audio configurée pour la parole (TEST LIVE)")
         } catch {
             print("Échec de configuration audio: \(error)")
         }
+    }
+
+    private func releaseSpeechSession() {
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("Échec de désactivation audio: \(error)")
+        }
+    }
+
+    func playTestAudio() {
+        print("TENTATIVE DE LECTURE AUDIO (TEST) DEPUIS LIVE TIMER...")
+        configureSpeechSession()
+        print("Session audio configurée pour la parole (TEST LIVE)")
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -67,13 +81,7 @@ private final class LiveTimerViewModel: ObservableObject {
 
     func playLevelChange(nextBlinds: String) {
         print("TENTATIVE DE LECTURE AUDIO (LIVE TIMER) : Changement vers \(nextBlinds)")
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.ambient, mode: .default, options: [.mixWithOthers])
-            try audioSession.setActive(true)
-        } catch {
-            print("Échec de configuration audio: \(error)")
-        }
+        configureSpeechSession()
         
         let text: String
         let lowered = nextBlinds.lowercased()
@@ -90,6 +98,14 @@ private final class LiveTimerViewModel: ObservableObject {
             utterance.volume = 1.0
             self.speechSynthesizer.speak(utterance)
         }
+    }
+
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        releaseSpeechSession()
+    }
+
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        releaseSpeechSession()
     }
 
     func start() {
