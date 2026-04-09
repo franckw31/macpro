@@ -344,7 +344,7 @@ struct ChallengeRankingView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text("Pts")
                 .frame(width: 42, alignment: .trailing)
-            Text("TF")
+            Text(ITM")
                 .frame(width: 32, alignment: .trailing)
             Text("Vic.")
                 .frame(width: 36, alignment: .trailing)
