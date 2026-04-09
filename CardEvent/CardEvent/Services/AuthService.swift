@@ -6,6 +6,7 @@ import UIKit
 
 enum KeychainHelper {
     private static let service = "com.cardevent.auth"
+    private static let authTokenKey = "auth.token"
 
     static func save(_ value: String, forKey key: String) {
         guard let data = value.data(using: .utf8) else { return }
@@ -42,6 +43,10 @@ enum KeychainHelper {
             kSecAttrAccount: key,
         ]
         SecItemDelete(query as CFDictionary)
+    }
+
+    static var authToken: String? {
+        read(forKey: authTokenKey)
     }
 }
 
