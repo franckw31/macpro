@@ -5,10 +5,10 @@
 <link rel="icon" type="image/png" href="/panel/assets/images/toulouse.jfif">
 					<!-- start: NAVBAR HEADER -->
 	<div class="navbar-header">
-		<a href="/panel/quickview.php" class="sidebar-mobile-toggler pull-left hidden-md hidden-lg btn btn-navbar sidebar-toggle" data-toggle-class="app-slide-off" data-toggle-target="#app" data-toggle-click-outside="#sidebar">
+		<a href="/index.php" class="sidebar-mobile-toggler pull-left hidden-md hidden-lg btn btn-navbar sidebar-toggle" data-toggle-class="app-slide-off" data-toggle-target="#app" data-toggle-click-outside="#sidebar">
 			<i class="ti-align-justify"></i>
 		</a>
-		<a class="navbar-brand" href="/panel/quickview.php">
+		<a class="navbar-brand" href="/index.php">
 			<img src="/panel/assets/images/toulouse.jfif" height="120" width="120" >
 			<!-- <h2 style="padding-top:20%; color:#fff ">Admin</h2> --> 
 		</a>
