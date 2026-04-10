@@ -1247,7 +1247,7 @@ document.addEventListener('DOMContentLoaded', function(){
 	.bottom-nav { margin-top: 20px !important; }
 	</style>
 	<nav class="bottom-nav" role="navigation" aria-label="Main navigation">
-		<button id="nav-home" class="" title="Accueil">
+		<button id="nav-home" class="" title="Accueil" onclick="window.location.href='/panel/quickview.php';">
 			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 21h14a1 1 0 0 0 1-1v-7H4v7a1 1 0 0 0 1 1z"/></svg>
 			<div class="nav-label">Accueil</div>
 		</button>
