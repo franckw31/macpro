@@ -111,7 +111,7 @@ $displayUser = htmlspecialchars($displayUser);
   <script src="app.js"></script>
 
   <nav class="bottom-nav" role="navigation" aria-label="Main">
-    <button class="active" id="nav-home"><img src="assets/home.svg" aria-hidden="true"><span class="nav-label">Accueil</span></button>
+    <button class="active" id="nav-home" onclick="window.location.href='/panel/quickview.php';"><img src="assets/home.svg" aria-hidden="true"><span class="nav-label">Accueil</span></button>
     <button id="nav-local"><img src="assets/cardevent.svg" aria-hidden="true"><span class="nav-label">Local Timer</span></button>
     <button id="nav-prize"><img src="assets/euro.svg" aria-hidden="true"><span class="nav-label">Répartition</span></button>
   </nav>
