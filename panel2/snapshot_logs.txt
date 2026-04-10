@@ -1,0 +1,1393 @@
+[2025-11-25 07:55:26] Début de la sauvegarde
+[2025-11-25 07:55:26] POST data: Array
+(
+    [id_activite] => 598
+    [snapshot_name] => 20*2
+)
+
+[2025-11-25 07:55:26] id_activite: 598, snapshot_name: 20*2, id_membre: 265
+[2025-11-25 07:55:26] SQL blindes: SELECT * FROM `blindes-live` WHERE `id-activite` = '598' ORDER BY `ordre` ASC
+[2025-11-25 07:55:26] Nombre de blindes trouvées: 20
+[2025-11-25 08:55:26] Données blindes: Array
+(
+    [0] => Array
+        (
+            [ordre] => 1
+            [sb] => 100
+            [bb] => 200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [1] => Array
+        (
+            [ordre] => 2
+            [sb] => 200
+            [bb] => 400
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [2] => Array
+        (
+            [ordre] => 3
+            [sb] => 300
+            [bb] => 600
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [3] => Array
+        (
+            [ordre] => 4
+            [sb] => 400
+            [bb] => 800
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [4] => Array
+        (
+            [ordre] => 5
+            [sb] => 500
+            [bb] => 1000
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [5] => Array
+        (
+            [ordre] => 6
+            [sb] => 600
+            [bb] => 1200
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [6] => Array
+        (
+            [ordre] => 7
+            [sb] => 800
+            [bb] => 1600
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [7] => Array
+        (
+            [ordre] => 8
+            [sb] => 0
+            [bb] => 0
+            [ante] => 0
+            [minutes] => 50
+        )
+
+    [8] => Array
+        (
+            [ordre] => 9
+            [sb] => 1000
+            [bb] => 2000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [9] => Array
+        (
+            [ordre] => 10
+            [sb] => 1200
+            [bb] => 2400
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [10] => Array
+        (
+            [ordre] => 11
+            [sb] => 1600
+            [bb] => 3200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [11] => Array
+        (
+            [ordre] => 12
+            [sb] => 2000
+            [bb] => 4000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [12] => Array
+        (
+            [ordre] => 13
+            [sb] => 3000
+            [bb] => 6000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [13] => Array
+        (
+            [ordre] => 14
+            [sb] => 4000
+            [bb] => 8000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [14] => Array
+        (
+            [ordre] => 15
+            [sb] => 5000
+            [bb] => 10000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [15] => Array
+        (
+            [ordre] => 16
+            [sb] => 6000
+            [bb] => 12000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [16] => Array
+        (
+            [ordre] => 17
+            [sb] => 8000
+            [bb] => 16000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [17] => Array
+        (
+            [ordre] => 18
+            [sb] => 10000
+            [bb] => 20000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [18] => Array
+        (
+            [ordre] => 19
+            [sb] => 15000
+            [bb] => 30000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [19] => Array
+        (
+            [ordre] => 20
+            [sb] => 20000
+            [bb] => 40000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+)
+
+[2025-11-25 08:55:26] JSON blindes: [{"ordre":1,"sb":100,"bb":200,"ante":0,"minutes":20},{"ordre":2,"sb":200,"bb":400,"ante":0,"minutes":20},{"ordre":3,"sb":300,"bb":600,"ante":0,"minutes":25},{"ordre":4,"sb":400,"bb":800,"ante":0,"minutes":25},{"ordre":5,"sb":500,"bb":1000,"ante":0,"minutes":25},{"ordre":6,"sb":600,"bb":1200,"ante":0,"minutes":25},{"ordre":7,"sb":800,"bb":1600,"ante":0,"minutes":25},{"ordre":8,"sb":0,"bb":0,"ante":0,"minutes":50},{"ordre":9,"sb":1000,"bb":2000,"ante":0,"minutes":20},{"ordre":10,"sb":1200,"bb":2400,"ante":0,"minutes":20},{"ordre":11,"sb":1600,"bb":3200,"ante":0,"minutes":20},{"ordre":12,"sb":2000,"bb":4000,"ante":0,"minutes":20},{"ordre":13,"sb":3000,"bb":6000,"ante":0,"minutes":20},{"ordre":14,"sb":4000,"bb":8000,"ante":0,"minutes":20},{"ordre":15,"sb":5000,"bb":10000,"ante":0,"minutes":20},{"ordre":16,"sb":6000,"bb":12000,"ante":0,"minutes":20},{"ordre":17,"sb":8000,"bb":16000,"ante":0,"minutes":20},{"ordre":18,"sb":10000,"bb":20000,"ante":0,"minutes":20},{"ordre":19,"sb":15000,"bb":30000,"ante":0,"minutes":20},{"ordre":20,"sb":20000,"bb":40000,"ante":0,"minutes":20}]
+[2025-11-25 08:55:26] SQL insert: INSERT INTO `blindes_snapshots` (`id_activite`, `id_membre`, `snapshot_name`, `snapshot_data`, `created_at`) VALUES ('598', '265', '20*2', '[{\"ordre\":1,\"sb\":100,\"bb\":200,\"ante\":0,\"minutes\":20},{\"ordre\":2,\"sb\":200,\"bb\":400,\"ante\":0,\"minutes\":20},{\"ordre\":3,\"sb\":300,\"bb\":600,\"ante\":0,\"minutes\":25},{\"ordre\":4,\"sb\":400,\"bb\":800,\"ante\":0,\"minutes\":25},{\"ordre\":5,\"sb\":500,\"bb\":1000,\"ante\":0,\"minutes\":25},{\"ordre\":6,\"sb\":600,\"bb\":1200,\"ante\":0,\"minutes\":25},{\"ordre\":7,\"sb\":800,\"bb\":1600,\"ante\":0,\"minutes\":25},{\"ordre\":8,\"sb\":0,\"bb\":0,\"ante\":0,\"minutes\":50},{\"ordre\":9,\"sb\":1000,\"bb\":2000,\"ante\":0,\"minutes\":20},{\"ordre\":10,\"sb\":1200,\"bb\":2400,\"ante\":0,\"minutes\":20},{\"ordre\":11,\"sb\":1600,\"bb\":3200,\"ante\":0,\"minutes\":20},{\"ordre\":12,\"sb\":2000,\"bb\":4000,\"ante\":0,\"minutes\":20},{\"ordre\":13,\"sb\":3000,\"bb\":6000,\"ante\":0,\"minutes\":20},{\"ordre\":14,\"sb\":4000,\"bb\":8000,\"ante\":0,\"minutes\":20},{\"ordre\":15,\"sb\":5000,\"bb\":10000,\"ante\":0,\"minutes\":20},{\"ordre\":16,\"sb\":6000,\"bb\":12000,\"ante\":0,\"minutes\":20},{\"ordre\":17,\"sb\":8000,\"bb\":16000,\"ante\":0,\"minutes\":20},{\"ordre\":18,\"sb\":10000,\"bb\":20000,\"ante\":0,\"minutes\":20},{\"ordre\":19,\"sb\":15000,\"bb\":30000,\"ante\":0,\"minutes\":20},{\"ordre\":20,\"sb\":20000,\"bb\":40000,\"ante\":0,\"minutes\":20}]', '2025-11-25 08:55:26')
+[2025-11-25 08:55:26] Succès! ID: 11
+[2025-11-25 08:55:26] Réponse: {"status":"success","message":"Sauvegarde cr\u00e9\u00e9e avec succ\u00e8s","snapshot_id":11}
+[2025-11-25 08:55:26] ---
+[2025-11-25 08:31:02] Début de la sauvegarde
+[2025-11-25 08:31:02] POST data: Array
+(
+    [id_activite] => 598
+    [snapshot_name] => 20 * 20
+)
+
+[2025-11-25 08:31:02] id_activite: 598, snapshot_name: 20 * 20, id_membre: 265
+[2025-11-25 08:31:02] SQL blindes: SELECT * FROM `blindes-live` WHERE `id-activite` = '598' ORDER BY `ordre` ASC
+[2025-11-25 08:31:02] Nombre de blindes trouvées: 20
+[2025-11-25 09:31:02] Données blindes: Array
+(
+    [0] => Array
+        (
+            [ordre] => 1
+            [sb] => 100
+            [bb] => 200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [1] => Array
+        (
+            [ordre] => 2
+            [sb] => 200
+            [bb] => 400
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [2] => Array
+        (
+            [ordre] => 3
+            [sb] => 300
+            [bb] => 600
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [3] => Array
+        (
+            [ordre] => 4
+            [sb] => 400
+            [bb] => 800
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [4] => Array
+        (
+            [ordre] => 5
+            [sb] => 500
+            [bb] => 1000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [5] => Array
+        (
+            [ordre] => 6
+            [sb] => 600
+            [bb] => 1200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [6] => Array
+        (
+            [ordre] => 7
+            [sb] => 800
+            [bb] => 1600
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [7] => Array
+        (
+            [ordre] => 8
+            [sb] => 0
+            [bb] => 0
+            [ante] => 0
+            [minutes] => 30
+        )
+
+    [8] => Array
+        (
+            [ordre] => 9
+            [sb] => 1000
+            [bb] => 2000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [9] => Array
+        (
+            [ordre] => 10
+            [sb] => 1200
+            [bb] => 2400
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [10] => Array
+        (
+            [ordre] => 11
+            [sb] => 1600
+            [bb] => 3200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [11] => Array
+        (
+            [ordre] => 12
+            [sb] => 2000
+            [bb] => 4000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [12] => Array
+        (
+            [ordre] => 13
+            [sb] => 3000
+            [bb] => 6000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [13] => Array
+        (
+            [ordre] => 14
+            [sb] => 4000
+            [bb] => 8000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [14] => Array
+        (
+            [ordre] => 15
+            [sb] => 5000
+            [bb] => 10000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [15] => Array
+        (
+            [ordre] => 16
+            [sb] => 6000
+            [bb] => 12000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [16] => Array
+        (
+            [ordre] => 17
+            [sb] => 8000
+            [bb] => 16000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [17] => Array
+        (
+            [ordre] => 18
+            [sb] => 10000
+            [bb] => 20000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [18] => Array
+        (
+            [ordre] => 19
+            [sb] => 15000
+            [bb] => 30000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [19] => Array
+        (
+            [ordre] => 20
+            [sb] => 20000
+            [bb] => 40000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+)
+
+[2025-11-25 09:31:02] JSON blindes: [{"ordre":1,"sb":100,"bb":200,"ante":0,"minutes":20},{"ordre":2,"sb":200,"bb":400,"ante":0,"minutes":20},{"ordre":3,"sb":300,"bb":600,"ante":0,"minutes":20},{"ordre":4,"sb":400,"bb":800,"ante":0,"minutes":20},{"ordre":5,"sb":500,"bb":1000,"ante":0,"minutes":20},{"ordre":6,"sb":600,"bb":1200,"ante":0,"minutes":20},{"ordre":7,"sb":800,"bb":1600,"ante":0,"minutes":20},{"ordre":8,"sb":0,"bb":0,"ante":0,"minutes":30},{"ordre":9,"sb":1000,"bb":2000,"ante":0,"minutes":20},{"ordre":10,"sb":1200,"bb":2400,"ante":0,"minutes":20},{"ordre":11,"sb":1600,"bb":3200,"ante":0,"minutes":20},{"ordre":12,"sb":2000,"bb":4000,"ante":0,"minutes":20},{"ordre":13,"sb":3000,"bb":6000,"ante":0,"minutes":20},{"ordre":14,"sb":4000,"bb":8000,"ante":0,"minutes":20},{"ordre":15,"sb":5000,"bb":10000,"ante":0,"minutes":20},{"ordre":16,"sb":6000,"bb":12000,"ante":0,"minutes":20},{"ordre":17,"sb":8000,"bb":16000,"ante":0,"minutes":20},{"ordre":18,"sb":10000,"bb":20000,"ante":0,"minutes":20},{"ordre":19,"sb":15000,"bb":30000,"ante":0,"minutes":20},{"ordre":20,"sb":20000,"bb":40000,"ante":0,"minutes":20}]
+[2025-11-25 09:31:02] SQL insert: INSERT INTO `blindes_snapshots` (`id_activite`, `id_membre`, `snapshot_name`, `snapshot_data`, `created_at`) VALUES ('598', '265', '20 * 20', '[{\"ordre\":1,\"sb\":100,\"bb\":200,\"ante\":0,\"minutes\":20},{\"ordre\":2,\"sb\":200,\"bb\":400,\"ante\":0,\"minutes\":20},{\"ordre\":3,\"sb\":300,\"bb\":600,\"ante\":0,\"minutes\":20},{\"ordre\":4,\"sb\":400,\"bb\":800,\"ante\":0,\"minutes\":20},{\"ordre\":5,\"sb\":500,\"bb\":1000,\"ante\":0,\"minutes\":20},{\"ordre\":6,\"sb\":600,\"bb\":1200,\"ante\":0,\"minutes\":20},{\"ordre\":7,\"sb\":800,\"bb\":1600,\"ante\":0,\"minutes\":20},{\"ordre\":8,\"sb\":0,\"bb\":0,\"ante\":0,\"minutes\":30},{\"ordre\":9,\"sb\":1000,\"bb\":2000,\"ante\":0,\"minutes\":20},{\"ordre\":10,\"sb\":1200,\"bb\":2400,\"ante\":0,\"minutes\":20},{\"ordre\":11,\"sb\":1600,\"bb\":3200,\"ante\":0,\"minutes\":20},{\"ordre\":12,\"sb\":2000,\"bb\":4000,\"ante\":0,\"minutes\":20},{\"ordre\":13,\"sb\":3000,\"bb\":6000,\"ante\":0,\"minutes\":20},{\"ordre\":14,\"sb\":4000,\"bb\":8000,\"ante\":0,\"minutes\":20},{\"ordre\":15,\"sb\":5000,\"bb\":10000,\"ante\":0,\"minutes\":20},{\"ordre\":16,\"sb\":6000,\"bb\":12000,\"ante\":0,\"minutes\":20},{\"ordre\":17,\"sb\":8000,\"bb\":16000,\"ante\":0,\"minutes\":20},{\"ordre\":18,\"sb\":10000,\"bb\":20000,\"ante\":0,\"minutes\":20},{\"ordre\":19,\"sb\":15000,\"bb\":30000,\"ante\":0,\"minutes\":20},{\"ordre\":20,\"sb\":20000,\"bb\":40000,\"ante\":0,\"minutes\":20}]', '2025-11-25 09:31:02')
+[2025-11-25 09:31:02] Succès! ID: 12
+[2025-11-25 09:31:02] Réponse: {"status":"success","message":"Sauvegarde cr\u00e9\u00e9e avec succ\u00e8s","snapshot_id":12}
+[2025-11-25 09:31:02] ---
+[2025-11-25 10:38:44] Début de la sauvegarde
+[2025-11-25 10:38:44] POST data: Array
+(
+    [id_activite] => 598
+    [snapshot_name] => 15-20
+)
+
+[2025-11-25 10:38:44] id_activite: 598, snapshot_name: 15-20, id_membre: 265
+[2025-11-25 10:38:44] SQL blindes: SELECT * FROM `blindes-live` WHERE `id-activite` = '598' ORDER BY `ordre` ASC
+[2025-11-25 10:38:44] Nombre de blindes trouvées: 20
+[2025-11-25 11:38:44] Données blindes: Array
+(
+    [0] => Array
+        (
+            [ordre] => 1
+            [sb] => 100
+            [bb] => 200
+            [ante] => 0
+            [minutes] => 15
+        )
+
+    [1] => Array
+        (
+            [ordre] => 2
+            [sb] => 200
+            [bb] => 400
+            [ante] => 0
+            [minutes] => 15
+        )
+
+    [2] => Array
+        (
+            [ordre] => 3
+            [sb] => 300
+            [bb] => 600
+            [ante] => 0
+            [minutes] => 15
+        )
+
+    [3] => Array
+        (
+            [ordre] => 4
+            [sb] => 400
+            [bb] => 800
+            [ante] => 0
+            [minutes] => 15
+        )
+
+    [4] => Array
+        (
+            [ordre] => 5
+            [sb] => 500
+            [bb] => 1000
+            [ante] => 0
+            [minutes] => 15
+        )
+
+    [5] => Array
+        (
+            [ordre] => 6
+            [sb] => 600
+            [bb] => 1200
+            [ante] => 0
+            [minutes] => 15
+        )
+
+    [6] => Array
+        (
+            [ordre] => 7
+            [sb] => 800
+            [bb] => 1600
+            [ante] => 0
+            [minutes] => 15
+        )
+
+    [7] => Array
+        (
+            [ordre] => 8
+            [sb] => 0
+            [bb] => 0
+            [ante] => 0
+            [minutes] => 30
+        )
+
+    [8] => Array
+        (
+            [ordre] => 9
+            [sb] => 1000
+            [bb] => 2000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [9] => Array
+        (
+            [ordre] => 10
+            [sb] => 1200
+            [bb] => 2400
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [10] => Array
+        (
+            [ordre] => 11
+            [sb] => 1600
+            [bb] => 3200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [11] => Array
+        (
+            [ordre] => 12
+            [sb] => 2000
+            [bb] => 4000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [12] => Array
+        (
+            [ordre] => 13
+            [sb] => 3000
+            [bb] => 6000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [13] => Array
+        (
+            [ordre] => 14
+            [sb] => 4000
+            [bb] => 8000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [14] => Array
+        (
+            [ordre] => 15
+            [sb] => 5000
+            [bb] => 10000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [15] => Array
+        (
+            [ordre] => 16
+            [sb] => 6000
+            [bb] => 12000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [16] => Array
+        (
+            [ordre] => 17
+            [sb] => 8000
+            [bb] => 16000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [17] => Array
+        (
+            [ordre] => 18
+            [sb] => 10000
+            [bb] => 20000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [18] => Array
+        (
+            [ordre] => 19
+            [sb] => 15000
+            [bb] => 30000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [19] => Array
+        (
+            [ordre] => 20
+            [sb] => 20000
+            [bb] => 40000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+)
+
+[2025-11-25 11:38:44] JSON blindes: [{"ordre":1,"sb":100,"bb":200,"ante":0,"minutes":15},{"ordre":2,"sb":200,"bb":400,"ante":0,"minutes":15},{"ordre":3,"sb":300,"bb":600,"ante":0,"minutes":15},{"ordre":4,"sb":400,"bb":800,"ante":0,"minutes":15},{"ordre":5,"sb":500,"bb":1000,"ante":0,"minutes":15},{"ordre":6,"sb":600,"bb":1200,"ante":0,"minutes":15},{"ordre":7,"sb":800,"bb":1600,"ante":0,"minutes":15},{"ordre":8,"sb":0,"bb":0,"ante":0,"minutes":30},{"ordre":9,"sb":1000,"bb":2000,"ante":0,"minutes":20},{"ordre":10,"sb":1200,"bb":2400,"ante":0,"minutes":20},{"ordre":11,"sb":1600,"bb":3200,"ante":0,"minutes":20},{"ordre":12,"sb":2000,"bb":4000,"ante":0,"minutes":20},{"ordre":13,"sb":3000,"bb":6000,"ante":0,"minutes":20},{"ordre":14,"sb":4000,"bb":8000,"ante":0,"minutes":20},{"ordre":15,"sb":5000,"bb":10000,"ante":0,"minutes":20},{"ordre":16,"sb":6000,"bb":12000,"ante":0,"minutes":20},{"ordre":17,"sb":8000,"bb":16000,"ante":0,"minutes":20},{"ordre":18,"sb":10000,"bb":20000,"ante":0,"minutes":20},{"ordre":19,"sb":15000,"bb":30000,"ante":0,"minutes":20},{"ordre":20,"sb":20000,"bb":40000,"ante":0,"minutes":20}]
+[2025-11-25 11:38:44] SQL insert: INSERT INTO `blindes_snapshots` (`id_activite`, `id_membre`, `snapshot_name`, `snapshot_data`, `created_at`) VALUES ('598', '265', '15-20', '[{\"ordre\":1,\"sb\":100,\"bb\":200,\"ante\":0,\"minutes\":15},{\"ordre\":2,\"sb\":200,\"bb\":400,\"ante\":0,\"minutes\":15},{\"ordre\":3,\"sb\":300,\"bb\":600,\"ante\":0,\"minutes\":15},{\"ordre\":4,\"sb\":400,\"bb\":800,\"ante\":0,\"minutes\":15},{\"ordre\":5,\"sb\":500,\"bb\":1000,\"ante\":0,\"minutes\":15},{\"ordre\":6,\"sb\":600,\"bb\":1200,\"ante\":0,\"minutes\":15},{\"ordre\":7,\"sb\":800,\"bb\":1600,\"ante\":0,\"minutes\":15},{\"ordre\":8,\"sb\":0,\"bb\":0,\"ante\":0,\"minutes\":30},{\"ordre\":9,\"sb\":1000,\"bb\":2000,\"ante\":0,\"minutes\":20},{\"ordre\":10,\"sb\":1200,\"bb\":2400,\"ante\":0,\"minutes\":20},{\"ordre\":11,\"sb\":1600,\"bb\":3200,\"ante\":0,\"minutes\":20},{\"ordre\":12,\"sb\":2000,\"bb\":4000,\"ante\":0,\"minutes\":20},{\"ordre\":13,\"sb\":3000,\"bb\":6000,\"ante\":0,\"minutes\":20},{\"ordre\":14,\"sb\":4000,\"bb\":8000,\"ante\":0,\"minutes\":20},{\"ordre\":15,\"sb\":5000,\"bb\":10000,\"ante\":0,\"minutes\":20},{\"ordre\":16,\"sb\":6000,\"bb\":12000,\"ante\":0,\"minutes\":20},{\"ordre\":17,\"sb\":8000,\"bb\":16000,\"ante\":0,\"minutes\":20},{\"ordre\":18,\"sb\":10000,\"bb\":20000,\"ante\":0,\"minutes\":20},{\"ordre\":19,\"sb\":15000,\"bb\":30000,\"ante\":0,\"minutes\":20},{\"ordre\":20,\"sb\":20000,\"bb\":40000,\"ante\":0,\"minutes\":20}]', '2025-11-25 11:38:44')
+[2025-11-25 11:38:44] Succès! ID: 13
+[2025-11-25 11:38:44] Réponse: {"status":"success","message":"Sauvegarde cr\u00e9\u00e9e avec succ\u00e8s","snapshot_id":13}
+[2025-11-25 11:38:44] ---
+[2025-11-25 11:01:28] Début de la sauvegarde
+[2025-11-25 11:01:28] POST data: Array
+(
+    [id_activite] => 556
+    [snapshot_name] => 25-20
+)
+
+[2025-11-25 11:01:28] id_activite: 556, snapshot_name: 25-20, id_membre: 265
+[2025-11-25 11:01:28] SQL blindes: SELECT * FROM `blindes-live` WHERE `id-activite` = '556' ORDER BY `ordre` ASC
+[2025-11-25 11:01:28] Nombre de blindes trouvées: 20
+[2025-11-25 12:01:28] Données blindes: Array
+(
+    [0] => Array
+        (
+            [ordre] => 1
+            [sb] => 100
+            [bb] => 200
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [1] => Array
+        (
+            [ordre] => 2
+            [sb] => 200
+            [bb] => 400
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [2] => Array
+        (
+            [ordre] => 3
+            [sb] => 300
+            [bb] => 600
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [3] => Array
+        (
+            [ordre] => 4
+            [sb] => 400
+            [bb] => 800
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [4] => Array
+        (
+            [ordre] => 5
+            [sb] => 500
+            [bb] => 1000
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [5] => Array
+        (
+            [ordre] => 6
+            [sb] => 600
+            [bb] => 1200
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [6] => Array
+        (
+            [ordre] => 7
+            [sb] => 800
+            [bb] => 1600
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [7] => Array
+        (
+            [ordre] => 8
+            [sb] => 0
+            [bb] => 0
+            [ante] => 0
+            [minutes] => 50
+        )
+
+    [8] => Array
+        (
+            [ordre] => 9
+            [sb] => 1000
+            [bb] => 2000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [9] => Array
+        (
+            [ordre] => 10
+            [sb] => 1200
+            [bb] => 2400
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [10] => Array
+        (
+            [ordre] => 11
+            [sb] => 1600
+            [bb] => 3200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [11] => Array
+        (
+            [ordre] => 12
+            [sb] => 2000
+            [bb] => 4000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [12] => Array
+        (
+            [ordre] => 13
+            [sb] => 3000
+            [bb] => 6000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [13] => Array
+        (
+            [ordre] => 14
+            [sb] => 4000
+            [bb] => 8000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [14] => Array
+        (
+            [ordre] => 15
+            [sb] => 5000
+            [bb] => 10000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [15] => Array
+        (
+            [ordre] => 16
+            [sb] => 6000
+            [bb] => 12000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [16] => Array
+        (
+            [ordre] => 17
+            [sb] => 8000
+            [bb] => 16000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [17] => Array
+        (
+            [ordre] => 18
+            [sb] => 10000
+            [bb] => 20000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [18] => Array
+        (
+            [ordre] => 19
+            [sb] => 15000
+            [bb] => 30000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [19] => Array
+        (
+            [ordre] => 20
+            [sb] => 20000
+            [bb] => 40000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+)
+
+[2025-11-25 12:01:28] JSON blindes: [{"ordre":1,"sb":100,"bb":200,"ante":0,"minutes":25},{"ordre":2,"sb":200,"bb":400,"ante":0,"minutes":25},{"ordre":3,"sb":300,"bb":600,"ante":0,"minutes":25},{"ordre":4,"sb":400,"bb":800,"ante":0,"minutes":25},{"ordre":5,"sb":500,"bb":1000,"ante":0,"minutes":25},{"ordre":6,"sb":600,"bb":1200,"ante":0,"minutes":25},{"ordre":7,"sb":800,"bb":1600,"ante":0,"minutes":25},{"ordre":8,"sb":0,"bb":0,"ante":0,"minutes":50},{"ordre":9,"sb":1000,"bb":2000,"ante":0,"minutes":20},{"ordre":10,"sb":1200,"bb":2400,"ante":0,"minutes":20},{"ordre":11,"sb":1600,"bb":3200,"ante":0,"minutes":20},{"ordre":12,"sb":2000,"bb":4000,"ante":0,"minutes":20},{"ordre":13,"sb":3000,"bb":6000,"ante":0,"minutes":20},{"ordre":14,"sb":4000,"bb":8000,"ante":0,"minutes":20},{"ordre":15,"sb":5000,"bb":10000,"ante":0,"minutes":20},{"ordre":16,"sb":6000,"bb":12000,"ante":0,"minutes":20},{"ordre":17,"sb":8000,"bb":16000,"ante":0,"minutes":20},{"ordre":18,"sb":10000,"bb":20000,"ante":0,"minutes":20},{"ordre":19,"sb":15000,"bb":30000,"ante":0,"minutes":20},{"ordre":20,"sb":20000,"bb":40000,"ante":0,"minutes":20}]
+[2025-11-25 12:01:28] SQL insert: INSERT INTO `blindes_snapshots` (`id_activite`, `id_membre`, `snapshot_name`, `snapshot_data`, `created_at`) VALUES ('556', '265', '25-20', '[{\"ordre\":1,\"sb\":100,\"bb\":200,\"ante\":0,\"minutes\":25},{\"ordre\":2,\"sb\":200,\"bb\":400,\"ante\":0,\"minutes\":25},{\"ordre\":3,\"sb\":300,\"bb\":600,\"ante\":0,\"minutes\":25},{\"ordre\":4,\"sb\":400,\"bb\":800,\"ante\":0,\"minutes\":25},{\"ordre\":5,\"sb\":500,\"bb\":1000,\"ante\":0,\"minutes\":25},{\"ordre\":6,\"sb\":600,\"bb\":1200,\"ante\":0,\"minutes\":25},{\"ordre\":7,\"sb\":800,\"bb\":1600,\"ante\":0,\"minutes\":25},{\"ordre\":8,\"sb\":0,\"bb\":0,\"ante\":0,\"minutes\":50},{\"ordre\":9,\"sb\":1000,\"bb\":2000,\"ante\":0,\"minutes\":20},{\"ordre\":10,\"sb\":1200,\"bb\":2400,\"ante\":0,\"minutes\":20},{\"ordre\":11,\"sb\":1600,\"bb\":3200,\"ante\":0,\"minutes\":20},{\"ordre\":12,\"sb\":2000,\"bb\":4000,\"ante\":0,\"minutes\":20},{\"ordre\":13,\"sb\":3000,\"bb\":6000,\"ante\":0,\"minutes\":20},{\"ordre\":14,\"sb\":4000,\"bb\":8000,\"ante\":0,\"minutes\":20},{\"ordre\":15,\"sb\":5000,\"bb\":10000,\"ante\":0,\"minutes\":20},{\"ordre\":16,\"sb\":6000,\"bb\":12000,\"ante\":0,\"minutes\":20},{\"ordre\":17,\"sb\":8000,\"bb\":16000,\"ante\":0,\"minutes\":20},{\"ordre\":18,\"sb\":10000,\"bb\":20000,\"ante\":0,\"minutes\":20},{\"ordre\":19,\"sb\":15000,\"bb\":30000,\"ante\":0,\"minutes\":20},{\"ordre\":20,\"sb\":20000,\"bb\":40000,\"ante\":0,\"minutes\":20}]', '2025-11-25 12:01:28')
+[2025-11-25 12:01:28] Succès! ID: 14
+[2025-11-25 12:01:28] Réponse: {"status":"success","message":"Sauvegarde cr\u00e9\u00e9e avec succ\u00e8s","snapshot_id":14}
+[2025-11-25 12:01:28] ---
+[2025-11-25 18:09:05] Début de la sauvegarde
+[2025-11-25 18:09:05] POST data: Array
+(
+    [id_activite] => 648
+    [snapshot_name] => 20*20
+)
+
+[2025-11-25 18:09:05] id_activite: 648, snapshot_name: 20*20, id_membre: 1232
+[2025-11-25 18:09:05] SQL blindes: SELECT * FROM `blindes-live` WHERE `id-activite` = '648' ORDER BY `ordre` ASC
+[2025-11-25 18:09:05] Nombre de blindes trouvées: 20
+[2025-11-25 19:09:05] Données blindes: Array
+(
+    [0] => Array
+        (
+            [ordre] => 1
+            [sb] => 100
+            [bb] => 200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [1] => Array
+        (
+            [ordre] => 2
+            [sb] => 200
+            [bb] => 400
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [2] => Array
+        (
+            [ordre] => 3
+            [sb] => 300
+            [bb] => 600
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [3] => Array
+        (
+            [ordre] => 4
+            [sb] => 400
+            [bb] => 800
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [4] => Array
+        (
+            [ordre] => 5
+            [sb] => 500
+            [bb] => 1000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [5] => Array
+        (
+            [ordre] => 6
+            [sb] => 600
+            [bb] => 1200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [6] => Array
+        (
+            [ordre] => 7
+            [sb] => 800
+            [bb] => 1600
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [7] => Array
+        (
+            [ordre] => 8
+            [sb] => 0
+            [bb] => 0
+            [ante] => 0
+            [minutes] => 30
+        )
+
+    [8] => Array
+        (
+            [ordre] => 9
+            [sb] => 1000
+            [bb] => 2000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [9] => Array
+        (
+            [ordre] => 10
+            [sb] => 1200
+            [bb] => 2400
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [10] => Array
+        (
+            [ordre] => 11
+            [sb] => 1600
+            [bb] => 3200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [11] => Array
+        (
+            [ordre] => 12
+            [sb] => 2000
+            [bb] => 4000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [12] => Array
+        (
+            [ordre] => 13
+            [sb] => 3000
+            [bb] => 6000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [13] => Array
+        (
+            [ordre] => 14
+            [sb] => 4000
+            [bb] => 8000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [14] => Array
+        (
+            [ordre] => 15
+            [sb] => 5000
+            [bb] => 10000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [15] => Array
+        (
+            [ordre] => 16
+            [sb] => 6000
+            [bb] => 12000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [16] => Array
+        (
+            [ordre] => 17
+            [sb] => 8000
+            [bb] => 16000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [17] => Array
+        (
+            [ordre] => 18
+            [sb] => 10000
+            [bb] => 20000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [18] => Array
+        (
+            [ordre] => 19
+            [sb] => 15000
+            [bb] => 30000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [19] => Array
+        (
+            [ordre] => 20
+            [sb] => 20000
+            [bb] => 40000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+)
+
+[2025-11-25 19:09:05] JSON blindes: [{"ordre":1,"sb":100,"bb":200,"ante":0,"minutes":20},{"ordre":2,"sb":200,"bb":400,"ante":0,"minutes":20},{"ordre":3,"sb":300,"bb":600,"ante":0,"minutes":20},{"ordre":4,"sb":400,"bb":800,"ante":0,"minutes":20},{"ordre":5,"sb":500,"bb":1000,"ante":0,"minutes":20},{"ordre":6,"sb":600,"bb":1200,"ante":0,"minutes":20},{"ordre":7,"sb":800,"bb":1600,"ante":0,"minutes":20},{"ordre":8,"sb":0,"bb":0,"ante":0,"minutes":30},{"ordre":9,"sb":1000,"bb":2000,"ante":0,"minutes":20},{"ordre":10,"sb":1200,"bb":2400,"ante":0,"minutes":20},{"ordre":11,"sb":1600,"bb":3200,"ante":0,"minutes":20},{"ordre":12,"sb":2000,"bb":4000,"ante":0,"minutes":20},{"ordre":13,"sb":3000,"bb":6000,"ante":0,"minutes":20},{"ordre":14,"sb":4000,"bb":8000,"ante":0,"minutes":20},{"ordre":15,"sb":5000,"bb":10000,"ante":0,"minutes":20},{"ordre":16,"sb":6000,"bb":12000,"ante":0,"minutes":20},{"ordre":17,"sb":8000,"bb":16000,"ante":0,"minutes":20},{"ordre":18,"sb":10000,"bb":20000,"ante":0,"minutes":20},{"ordre":19,"sb":15000,"bb":30000,"ante":0,"minutes":20},{"ordre":20,"sb":20000,"bb":40000,"ante":0,"minutes":20}]
+[2025-11-25 19:09:05] SQL insert: INSERT INTO `blindes_snapshots` (`id_activite`, `id_membre`, `snapshot_name`, `snapshot_data`, `created_at`) VALUES ('648', '1232', '20*20', '[{\"ordre\":1,\"sb\":100,\"bb\":200,\"ante\":0,\"minutes\":20},{\"ordre\":2,\"sb\":200,\"bb\":400,\"ante\":0,\"minutes\":20},{\"ordre\":3,\"sb\":300,\"bb\":600,\"ante\":0,\"minutes\":20},{\"ordre\":4,\"sb\":400,\"bb\":800,\"ante\":0,\"minutes\":20},{\"ordre\":5,\"sb\":500,\"bb\":1000,\"ante\":0,\"minutes\":20},{\"ordre\":6,\"sb\":600,\"bb\":1200,\"ante\":0,\"minutes\":20},{\"ordre\":7,\"sb\":800,\"bb\":1600,\"ante\":0,\"minutes\":20},{\"ordre\":8,\"sb\":0,\"bb\":0,\"ante\":0,\"minutes\":30},{\"ordre\":9,\"sb\":1000,\"bb\":2000,\"ante\":0,\"minutes\":20},{\"ordre\":10,\"sb\":1200,\"bb\":2400,\"ante\":0,\"minutes\":20},{\"ordre\":11,\"sb\":1600,\"bb\":3200,\"ante\":0,\"minutes\":20},{\"ordre\":12,\"sb\":2000,\"bb\":4000,\"ante\":0,\"minutes\":20},{\"ordre\":13,\"sb\":3000,\"bb\":6000,\"ante\":0,\"minutes\":20},{\"ordre\":14,\"sb\":4000,\"bb\":8000,\"ante\":0,\"minutes\":20},{\"ordre\":15,\"sb\":5000,\"bb\":10000,\"ante\":0,\"minutes\":20},{\"ordre\":16,\"sb\":6000,\"bb\":12000,\"ante\":0,\"minutes\":20},{\"ordre\":17,\"sb\":8000,\"bb\":16000,\"ante\":0,\"minutes\":20},{\"ordre\":18,\"sb\":10000,\"bb\":20000,\"ante\":0,\"minutes\":20},{\"ordre\":19,\"sb\":15000,\"bb\":30000,\"ante\":0,\"minutes\":20},{\"ordre\":20,\"sb\":20000,\"bb\":40000,\"ante\":0,\"minutes\":20}]', '2025-11-25 19:09:05')
+[2025-11-25 19:09:05] Succès! ID: 17
+[2025-11-25 19:09:05] Réponse: {"status":"success","message":"Sauvegarde cr\u00e9\u00e9e avec succ\u00e8s","snapshot_id":17}
+[2025-11-25 19:09:05] ---
+[2025-11-25 18:10:12] Début de la sauvegarde
+[2025-11-25 18:10:12] POST data: Array
+(
+    [id_activite] => 648
+    [snapshot_name] => 20*20
+)
+
+[2025-11-25 18:10:12] id_activite: 648, snapshot_name: 20*20, id_membre: 1232
+[2025-11-25 18:10:12] SQL blindes: SELECT * FROM `blindes-live` WHERE `id-activite` = '648' ORDER BY `ordre` ASC
+[2025-11-25 18:10:12] Nombre de blindes trouvées: 20
+[2025-11-25 19:10:12] Données blindes: Array
+(
+    [0] => Array
+        (
+            [ordre] => 1
+            [sb] => 100
+            [bb] => 200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [1] => Array
+        (
+            [ordre] => 2
+            [sb] => 200
+            [bb] => 400
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [2] => Array
+        (
+            [ordre] => 3
+            [sb] => 300
+            [bb] => 600
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [3] => Array
+        (
+            [ordre] => 4
+            [sb] => 400
+            [bb] => 800
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [4] => Array
+        (
+            [ordre] => 5
+            [sb] => 500
+            [bb] => 1000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [5] => Array
+        (
+            [ordre] => 6
+            [sb] => 600
+            [bb] => 1200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [6] => Array
+        (
+            [ordre] => 7
+            [sb] => 800
+            [bb] => 1600
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [7] => Array
+        (
+            [ordre] => 8
+            [sb] => 0
+            [bb] => 0
+            [ante] => 0
+            [minutes] => 30
+        )
+
+    [8] => Array
+        (
+            [ordre] => 9
+            [sb] => 1000
+            [bb] => 2000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [9] => Array
+        (
+            [ordre] => 10
+            [sb] => 1200
+            [bb] => 2400
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [10] => Array
+        (
+            [ordre] => 11
+            [sb] => 1600
+            [bb] => 3200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [11] => Array
+        (
+            [ordre] => 12
+            [sb] => 2000
+            [bb] => 4000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [12] => Array
+        (
+            [ordre] => 13
+            [sb] => 3000
+            [bb] => 6000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [13] => Array
+        (
+            [ordre] => 14
+            [sb] => 4000
+            [bb] => 8000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [14] => Array
+        (
+            [ordre] => 15
+            [sb] => 5000
+            [bb] => 10000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [15] => Array
+        (
+            [ordre] => 16
+            [sb] => 6000
+            [bb] => 12000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [16] => Array
+        (
+            [ordre] => 17
+            [sb] => 8000
+            [bb] => 16000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [17] => Array
+        (
+            [ordre] => 18
+            [sb] => 10000
+            [bb] => 20000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [18] => Array
+        (
+            [ordre] => 19
+            [sb] => 15000
+            [bb] => 30000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [19] => Array
+        (
+            [ordre] => 20
+            [sb] => 20000
+            [bb] => 40000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+)
+
+[2025-11-25 19:10:12] JSON blindes: [{"ordre":1,"sb":100,"bb":200,"ante":0,"minutes":20},{"ordre":2,"sb":200,"bb":400,"ante":0,"minutes":20},{"ordre":3,"sb":300,"bb":600,"ante":0,"minutes":20},{"ordre":4,"sb":400,"bb":800,"ante":0,"minutes":20},{"ordre":5,"sb":500,"bb":1000,"ante":0,"minutes":20},{"ordre":6,"sb":600,"bb":1200,"ante":0,"minutes":20},{"ordre":7,"sb":800,"bb":1600,"ante":0,"minutes":20},{"ordre":8,"sb":0,"bb":0,"ante":0,"minutes":30},{"ordre":9,"sb":1000,"bb":2000,"ante":0,"minutes":20},{"ordre":10,"sb":1200,"bb":2400,"ante":0,"minutes":20},{"ordre":11,"sb":1600,"bb":3200,"ante":0,"minutes":20},{"ordre":12,"sb":2000,"bb":4000,"ante":0,"minutes":20},{"ordre":13,"sb":3000,"bb":6000,"ante":0,"minutes":20},{"ordre":14,"sb":4000,"bb":8000,"ante":0,"minutes":20},{"ordre":15,"sb":5000,"bb":10000,"ante":0,"minutes":20},{"ordre":16,"sb":6000,"bb":12000,"ante":0,"minutes":20},{"ordre":17,"sb":8000,"bb":16000,"ante":0,"minutes":20},{"ordre":18,"sb":10000,"bb":20000,"ante":0,"minutes":20},{"ordre":19,"sb":15000,"bb":30000,"ante":0,"minutes":20},{"ordre":20,"sb":20000,"bb":40000,"ante":0,"minutes":20}]
+[2025-11-25 19:10:12] SQL insert: INSERT INTO `blindes_snapshots` (`id_activite`, `id_membre`, `snapshot_name`, `snapshot_data`, `created_at`) VALUES ('648', '1232', '20*20', '[{\"ordre\":1,\"sb\":100,\"bb\":200,\"ante\":0,\"minutes\":20},{\"ordre\":2,\"sb\":200,\"bb\":400,\"ante\":0,\"minutes\":20},{\"ordre\":3,\"sb\":300,\"bb\":600,\"ante\":0,\"minutes\":20},{\"ordre\":4,\"sb\":400,\"bb\":800,\"ante\":0,\"minutes\":20},{\"ordre\":5,\"sb\":500,\"bb\":1000,\"ante\":0,\"minutes\":20},{\"ordre\":6,\"sb\":600,\"bb\":1200,\"ante\":0,\"minutes\":20},{\"ordre\":7,\"sb\":800,\"bb\":1600,\"ante\":0,\"minutes\":20},{\"ordre\":8,\"sb\":0,\"bb\":0,\"ante\":0,\"minutes\":30},{\"ordre\":9,\"sb\":1000,\"bb\":2000,\"ante\":0,\"minutes\":20},{\"ordre\":10,\"sb\":1200,\"bb\":2400,\"ante\":0,\"minutes\":20},{\"ordre\":11,\"sb\":1600,\"bb\":3200,\"ante\":0,\"minutes\":20},{\"ordre\":12,\"sb\":2000,\"bb\":4000,\"ante\":0,\"minutes\":20},{\"ordre\":13,\"sb\":3000,\"bb\":6000,\"ante\":0,\"minutes\":20},{\"ordre\":14,\"sb\":4000,\"bb\":8000,\"ante\":0,\"minutes\":20},{\"ordre\":15,\"sb\":5000,\"bb\":10000,\"ante\":0,\"minutes\":20},{\"ordre\":16,\"sb\":6000,\"bb\":12000,\"ante\":0,\"minutes\":20},{\"ordre\":17,\"sb\":8000,\"bb\":16000,\"ante\":0,\"minutes\":20},{\"ordre\":18,\"sb\":10000,\"bb\":20000,\"ante\":0,\"minutes\":20},{\"ordre\":19,\"sb\":15000,\"bb\":30000,\"ante\":0,\"minutes\":20},{\"ordre\":20,\"sb\":20000,\"bb\":40000,\"ante\":0,\"minutes\":20}]', '2025-11-25 19:10:12')
+[2025-11-25 19:10:12] Succès! ID: 18
+[2025-11-25 19:10:12] Réponse: {"status":"success","message":"Sauvegarde cr\u00e9\u00e9e avec succ\u00e8s","snapshot_id":18}
+[2025-11-25 19:10:12] ---
+[2025-11-27 10:38:16] Début de la sauvegarde
+[2025-11-27 10:38:16] POST data: Array
+(
+    [id_activite] => 669
+    [snapshot_name] => 15-25
+)
+
+[2025-11-27 10:38:16] id_activite: 669, snapshot_name: 15-25, id_membre: 265
+[2025-11-27 10:38:16] SQL blindes: SELECT * FROM `blindes-live` WHERE `id-activite` = '669' ORDER BY `ordre` ASC
+[2025-11-27 10:38:16] Nombre de blindes trouvées: 20
+[2025-11-27 11:38:16] Données blindes: Array
+(
+    [0] => Array
+        (
+            [ordre] => 1
+            [sb] => 100
+            [bb] => 200
+            [ante] => 0
+            [minutes] => 15
+        )
+
+    [1] => Array
+        (
+            [ordre] => 2
+            [sb] => 200
+            [bb] => 400
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [2] => Array
+        (
+            [ordre] => 3
+            [sb] => 300
+            [bb] => 600
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [3] => Array
+        (
+            [ordre] => 4
+            [sb] => 400
+            [bb] => 800
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [4] => Array
+        (
+            [ordre] => 5
+            [sb] => 500
+            [bb] => 1000
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [5] => Array
+        (
+            [ordre] => 6
+            [sb] => 600
+            [bb] => 1200
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [6] => Array
+        (
+            [ordre] => 7
+            [sb] => 800
+            [bb] => 1600
+            [ante] => 0
+            [minutes] => 25
+        )
+
+    [7] => Array
+        (
+            [ordre] => 8
+            [sb] => 0
+            [bb] => 0
+            [ante] => 0
+            [minutes] => 50
+        )
+
+    [8] => Array
+        (
+            [ordre] => 9
+            [sb] => 1000
+            [bb] => 2000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [9] => Array
+        (
+            [ordre] => 10
+            [sb] => 1200
+            [bb] => 2400
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [10] => Array
+        (
+            [ordre] => 11
+            [sb] => 1600
+            [bb] => 3200
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [11] => Array
+        (
+            [ordre] => 12
+            [sb] => 2000
+            [bb] => 4000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [12] => Array
+        (
+            [ordre] => 13
+            [sb] => 3000
+            [bb] => 6000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [13] => Array
+        (
+            [ordre] => 14
+            [sb] => 4000
+            [bb] => 8000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [14] => Array
+        (
+            [ordre] => 15
+            [sb] => 5000
+            [bb] => 10000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [15] => Array
+        (
+            [ordre] => 16
+            [sb] => 6000
+            [bb] => 12000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [16] => Array
+        (
+            [ordre] => 17
+            [sb] => 8000
+            [bb] => 16000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [17] => Array
+        (
+            [ordre] => 18
+            [sb] => 10000
+            [bb] => 20000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [18] => Array
+        (
+            [ordre] => 19
+            [sb] => 15000
+            [bb] => 30000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+    [19] => Array
+        (
+            [ordre] => 20
+            [sb] => 20000
+            [bb] => 40000
+            [ante] => 0
+            [minutes] => 20
+        )
+
+)
+
+[2025-11-27 11:38:16] JSON blindes: [{"ordre":1,"sb":100,"bb":200,"ante":0,"minutes":15},{"ordre":2,"sb":200,"bb":400,"ante":0,"minutes":25},{"ordre":3,"sb":300,"bb":600,"ante":0,"minutes":25},{"ordre":4,"sb":400,"bb":800,"ante":0,"minutes":25},{"ordre":5,"sb":500,"bb":1000,"ante":0,"minutes":25},{"ordre":6,"sb":600,"bb":1200,"ante":0,"minutes":25},{"ordre":7,"sb":800,"bb":1600,"ante":0,"minutes":25},{"ordre":8,"sb":0,"bb":0,"ante":0,"minutes":50},{"ordre":9,"sb":1000,"bb":2000,"ante":0,"minutes":20},{"ordre":10,"sb":1200,"bb":2400,"ante":0,"minutes":20},{"ordre":11,"sb":1600,"bb":3200,"ante":0,"minutes":20},{"ordre":12,"sb":2000,"bb":4000,"ante":0,"minutes":20},{"ordre":13,"sb":3000,"bb":6000,"ante":0,"minutes":20},{"ordre":14,"sb":4000,"bb":8000,"ante":0,"minutes":20},{"ordre":15,"sb":5000,"bb":10000,"ante":0,"minutes":20},{"ordre":16,"sb":6000,"bb":12000,"ante":0,"minutes":20},{"ordre":17,"sb":8000,"bb":16000,"ante":0,"minutes":20},{"ordre":18,"sb":10000,"bb":20000,"ante":0,"minutes":20},{"ordre":19,"sb":15000,"bb":30000,"ante":0,"minutes":20},{"ordre":20,"sb":20000,"bb":40000,"ante":0,"minutes":20}]
+[2025-11-27 11:38:16] SQL insert: INSERT INTO `blindes_snapshots` (`id_activite`, `id_membre`, `snapshot_name`, `snapshot_data`, `created_at`) VALUES ('669', '265', '15-25', '[{\"ordre\":1,\"sb\":100,\"bb\":200,\"ante\":0,\"minutes\":15},{\"ordre\":2,\"sb\":200,\"bb\":400,\"ante\":0,\"minutes\":25},{\"ordre\":3,\"sb\":300,\"bb\":600,\"ante\":0,\"minutes\":25},{\"ordre\":4,\"sb\":400,\"bb\":800,\"ante\":0,\"minutes\":25},{\"ordre\":5,\"sb\":500,\"bb\":1000,\"ante\":0,\"minutes\":25},{\"ordre\":6,\"sb\":600,\"bb\":1200,\"ante\":0,\"minutes\":25},{\"ordre\":7,\"sb\":800,\"bb\":1600,\"ante\":0,\"minutes\":25},{\"ordre\":8,\"sb\":0,\"bb\":0,\"ante\":0,\"minutes\":50},{\"ordre\":9,\"sb\":1000,\"bb\":2000,\"ante\":0,\"minutes\":20},{\"ordre\":10,\"sb\":1200,\"bb\":2400,\"ante\":0,\"minutes\":20},{\"ordre\":11,\"sb\":1600,\"bb\":3200,\"ante\":0,\"minutes\":20},{\"ordre\":12,\"sb\":2000,\"bb\":4000,\"ante\":0,\"minutes\":20},{\"ordre\":13,\"sb\":3000,\"bb\":6000,\"ante\":0,\"minutes\":20},{\"ordre\":14,\"sb\":4000,\"bb\":8000,\"ante\":0,\"minutes\":20},{\"ordre\":15,\"sb\":5000,\"bb\":10000,\"ante\":0,\"minutes\":20},{\"ordre\":16,\"sb\":6000,\"bb\":12000,\"ante\":0,\"minutes\":20},{\"ordre\":17,\"sb\":8000,\"bb\":16000,\"ante\":0,\"minutes\":20},{\"ordre\":18,\"sb\":10000,\"bb\":20000,\"ante\":0,\"minutes\":20},{\"ordre\":19,\"sb\":15000,\"bb\":30000,\"ante\":0,\"minutes\":20},{\"ordre\":20,\"sb\":20000,\"bb\":40000,\"ante\":0,\"minutes\":20}]', '2025-11-27 11:38:16')
+[2025-11-27 11:38:16] Succès! ID: 19
+[2025-11-27 11:38:16] Réponse: {"status":"success","message":"Sauvegarde cr\u00e9\u00e9e avec succ\u00e8s","snapshot_id":19}
+[2025-11-27 11:38:16] ---

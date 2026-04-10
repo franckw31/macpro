@@ -1,0 +1,521 @@
+.gain-input {
+            text-align: right;
+            width: 80px !important;
+            min-width: 80px;
+            padding: 2px 4px;
+        }
+
+        td.cell-right input[type="number"] {
+            text-align: right;
+        }
+.gain-input {
+    text-align: right !important;
+    padding: 2px 4px !important;
+    width: 80px !important;
+}
+
+.alpha-keyboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.alpha-key {
+    padding: 8px 12px;
+    margin: 2px;
+    border: 1px solid #ddd;
+    background: #ffffff;
+    cursor: pointer;
+    border-radius: 4px;
+    min-width: 35px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.2s;
+    color: #333;
+}
+
+.alpha-key:hover {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
+
+.alpha-key.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
+
+.alpha-key-special {
+    background-color: #6c757d;
+    color: white;
+    border-color: #545b62;
+    width: auto;
+    padding: 8px 20px;
+}
+
+.membre-select-container {
+    margin-bottom: 15px;
+}
+
+#membre_select {
+    margin-bottom: 10px;
+}
+
+:root {
+    --primary-color: #ff6b2b; /* Orange */
+    --primary-hover: #ff8651;
+    --background: #f5f7fa;    /* Light grey */
+    --card-bg: #ffffff;       /* White */
+    --text-color: #2d3748;    /* Dark grey/blue */
+    --border-color: #e2e8f0;   /* Light grey border */
+    --danger-color: #dc3545;   /* Red */
+    --danger-border: #dc3545;
+    --readonly-bg: #e9ecef;    /* Background for readonly inputs */
+    --total-row-bg: #e9f5ff; /* Light blue for total row */
+}
+
+/* Apply background to body *within* the theme structure */
+.main-content .container-fullw {
+     background-color: var(--background) !important; /* Override theme white */
+}
+
+/* Keep body font, but theme might override */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    color: var(--text-color);
+    line-height: 1.6;
+    font-size: 16px; /* Base size */
+}
+
+/* Adjust container padding within theme */
+.wrap-content.container {
+    max-width: 1400px; /* Slightly wider for totals */
+    margin: 1.5rem auto;
+    padding: 0 1rem; /* Use theme's container padding */
+}
+
+/* Use theme's panel/card styling as base, but apply specific overrides */
+.panel.panel-white, .card { /* Target both theme panel and bootstrap card */
+    background: var(--card-bg) !important; /* Ensure white background */
+    border-radius: 10px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04),
+                0 1px 2px rgba(0, 0, 0, 0.06) !important;
+    padding: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+    border: none !important; /* Remove theme borders if any */
+}
+.panel-body {
+     padding: 0 !important; /* Remove default panel-body padding */
+}
+
+
+h2 { /* Style section titles */
+    margin-top: 0;
+    margin-bottom: 1.2rem;
+    color: var(--text-color);
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.6rem;
+}
+
+/* Form Controls - Adapt to theme but keep specific styles */
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.7rem 1rem !important; /* Use specific padding */
+    border: 1px solid var(--border-color) !important;
+    border-radius: 6px !important;
+    margin: 0.2rem 0;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-size: 1rem !important; /* Use specific font size */
+    box-sizing: border-box;
+    background-color: #fff !important;
+    color: var(--text-color) !important;
+    height: auto !important; /* Override theme height */
+    box-shadow: none !important; /* Override theme shadow */
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(255, 107, 43, 0.15) !important;
+}
+
+select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23555' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    background-size: 16px 16px;
+    padding-right: 2.5rem !important;
+}
+
+input:read-only,
+.form-control:disabled {
+    background-color: var(--readonly-bg) !important;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Buttons - Adapt to theme but keep specific styles */
+.btn {
+    padding: 0.7rem 1.4rem !important;
+    border: none !important;
+    border-radius: 6px !important;
+    cursor: pointer;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    transition: all 0.2s ease;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.5 !important;
+    box-shadow: none !important; /* Override theme shadow */
+}
+
+.btn-primary-orange2 { /* Custom button class */
+    background: var(--primary-color) !important;
+    color: white !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary-orange2:hover,
+.btn-primary-orange2:focus {
+    background: var(--primary-hover) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    outline: none;
+}
+
+.btn-block {
+    width: 100%;
+    display: block;
+}
+
+.btn-delete { /* Specific delete button */
+    background-color: transparent !important;
+    border: none;
+    color: var(--danger-color) !important;
+    padding: 0.3rem 0.5rem !important;
+    font-size: 1.1rem !important;
+    min-width: auto;
+    line-height: 1 !important;
+    font-weight: bold !important;
+    text-transform: none !important; /* Override uppercase */
+    letter-spacing: normal !important; /* Override spacing */
+}
+.btn-delete:hover,
+.btn-delete:focus {
+    color: #a02430 !important;
+    background-color: rgba(220, 53, 69, 0.1) !important;
+    outline: none;
+    transform: none !important; /* Override hover transform */
+    box-shadow: none !important; /* Override hover shadow */
+}
+
+/* Simple Form Table (for quick add/delete forms) */
+.simple-form-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0; /* Remove margin inside card */
+}
+.simple-form-table th,
+.simple-form-table td {
+    padding: 0.5rem 0.2rem;
+    text-align: left;
+    vertical-align: middle;
+    border: none;
+}
+.simple-form-table th {
+    width: 120px;
+    font-weight: 600;
+    padding-right: 1rem;
+    white-space: nowrap;
+}
+.simple-form-table .btn-container-cell {
+    padding-top: 0.8rem;
+}
+ .simple-form-table .btn-container {
+    display: flex;
+    justify-content: flex-end;
+ }
+
+/* Main Data Table Styles */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.data-table { /* Target the specific table class */
+    width: 100%;
+    min-width: 1200px;
+    border-collapse: collapse;
+    background: white;
+    font-size: 0.9rem;
+    margin-bottom: 0; /* Remove default table margin */
+}
+
+.data-table thead th {
+    background: var(--primary-color) !important; /* Orange header */
+    color: white !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px;
+    font-size: 0.8rem !important;
+    padding: 0.8rem 0.8rem !important;
+    text-align: left;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 2px solid var(--primary-hover) !important;
+}
+ .data-table .activity-header th { /* Specific header for activity rows */
+    background-color: #e9ecef !important;
+    color: var(--text-color) !important;
+    text-align: left;
+    font-weight: bold !important;
+    padding: 0.6rem 0.8rem !important;
+    position: sticky;
+    top: 40px; /* Adjust based on main header height */
+    z-index: 9;
+    border-bottom: 1px solid var(--border-color) !important;
+    border-top: 1px solid var(--border-color) !important;
+    text-transform: none !important; /* Override uppercase */
+ }
+
+.data-table tbody tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.015);
+}
+
+.data-table tbody tr:hover {
+    background: rgba(255, 107, 43, 0.05);
+}
+
+.data-table td {
+    padding: 0.6rem 0.8rem !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+ .data-table td.cell-center,
+ .data-table th.cell-center {
+     text-align: center;
+ }
+ .data-table td.cell-right,
+ .data-table th.cell-right {
+    text-align: right;
+ }
+
+
+.data-table input[type="number"],
+.data-table input[type="text"] { /* Inputs within the main table */
+    min-width: 60px;
+    width: auto;
+    max-width: 85px;
+    padding: 0.4rem 0.5rem !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 4px !important;
+    box-sizing: border-box;
+    font-size: 0.9rem !important;
+    text-align: right;
+    height: auto !important;
+    box-shadow: none !important;
+    background-color: #fff !important;
+    color: var(--text-color) !important;
+}
+.data-table input[type="checkbox"] {
+    margin: 0 auto;
+    display: block;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+.data-table input:read-only {
+    background-color: var(--readonly-bg) !important;
+    border-color: var(--border-color) !important;
+    opacity: 0.8;
+    cursor: default;
+}
+.data-table input:disabled,
+.data-table input[type="checkbox"]:disabled {
+     cursor: not-allowed;
+     opacity: 0.5;
+}
+
+/* Footer and Total Row */
+.data-table tfoot td {
+     padding: 1rem !important;
+     text-align: right;
+     border-top: 2px solid var(--primary-color) !important;
+     background-color: #f8f9fa !important;
+     font-weight: bold !important;
+}
+.data-table tfoot tr.total-row td {
+     background-color: var(--total-row-bg) !important;
+     font-weight: bold !important;
+     color: var(--text-color) !important;
+     border-top: 2px solid var(--primary-color) !important;
+     padding: 0.8rem 0.8rem !important;
+     text-align: center; /* Center align all total cells by default */
+}
+ .data-table tfoot tr.total-row td:nth-child(2) { /* Target the 'Total (x):' cell */
+    text-align: left; /* Align Total label left */
+    font-weight: bold;
+ }
+ /* Right align specific total cells */
+ .data-table tfoot tr.total-row td:nth-child(5), /* Buyin Act */
+ .data-table tfoot tr.total-row td:nth-child(6), /* Rake Part */
+ .data-table tfoot tr.total-row td:nth-child(7), /* Cout In */
+ .data-table tfoot tr.total-row td:nth-child(8), /* Recave */
+ .data-table tfoot tr.total-row td:nth-child(12) { /* Cagnotte */
+     text-align: right;
+ }
+ /* Styling for the update button cell in footer */
+ .data-table tfoot td.update-button-cell {
+     background-color: #f8f9fa !important; /* Match default footer background */
+     text-align: right;
+     padding: 1rem !important;
+ }
+
+
+/* Alerts - Use theme's alert styles if possible, or keep these */
+.alert {
+    padding: 12px 15px;
+    margin-bottom: 1.5rem;
+    border: 1px solid transparent;
+    border-radius: 6px !important; /* Use specific radius */
+    font-size: 0.95rem;
+}
+.alert-success { color: #0f5132; background-color: #d1e7dd; border-color: #badbcc; }
+.alert-danger { color: #842029; background-color: #f8d7da; border-color: #f5c2c7; }
+.alert-warning { color: #664d03; background-color: #fff3cd; border-color: #ffecb5; }
+.alert-info { color: #055160; background-color: #cff4fc; border-color: #b6effb; }
+
+ /* Price Pool Display */
+.pricepool-display {
+    text-align: right;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background-color: var(--total-row-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 992px) {
+    .wrap-content.container { max-width: 960px; }
+    .data-table { min-width: 950px; }
+    .simple-form-table th { width: 100px; }
+}
+
+@media (max-width: 768px) {
+    body { font-size: 15px; }
+    .wrap-content.container { margin: 1rem auto; padding: 0 0.8rem; }
+    .panel.panel-white, .card { padding: 1rem !important; }
+    h2 { font-size: 1.2rem; }
+
+    .simple-form-table th,
+    .simple-form-table td { display: block; width: 100%; padding: 0.2rem 0; }
+    .simple-form-table th { width: auto; font-weight: 600; margin-top: 0.8rem; padding-right: 0; white-space: normal; }
+    .simple-form-table tr:first-child th { margin-top: 0; }
+    .simple-form-table td { padding-bottom: 0.8rem; }
+
+     .simple-form-table .btn-container-cell { padding-top: 0.8rem; border-top: 1px solid var(--border-color); margin-top: 0.8rem; }
+     .simple-form-table .btn-container { justify-content: center; }
+     .simple-form-table .btn-container .btn { width: 100%; max-width: 300px; }
+
+    .data-table { min-width: 750px; font-size: 0.85rem; }
+    .data-table thead th { padding: 0.7rem 0.6rem !important; font-size: 0.75rem !important; top: 0; }
+    .data-table .activity-header th { padding: 0.5rem 0.6rem !important; top: 36px; }
+    .data-table td { padding: 0.5rem 0.6rem !important; white-space: nowrap; }
+    .data-table input[type="number"], .data-table input[type="text"] { font-size: 0.85rem !important; padding: 0.3rem 0.4rem !important; max-width: 70px; }
+
+    .data-table tfoot td { padding: 0.8rem !important; text-align: center; } /* Center by default */
+    .data-table tfoot tr.total-row td:first-child { text-align: center; }
+    .data-table tfoot tr.total-row td:nth-child(2){ text-align: center; }
+     /* Right align specific totals */
+    .data-table tfoot tr.total-row td:nth-child(5),
+    .data-table tfoot tr.total-row td:nth-child(6),
+    .data-table tfoot tr.total-row td:nth-child(7),
+    .data-table tfoot tr.total-row td:nth-child(8),
+    .data-table tfoot tr.total-row td:nth-child(12) {
+        text-align: right;
+    }
+    .data-table tfoot td.update-button-cell { text-align: center; }
+    .data-table tfoot .btn { width: 100%; max-width: 320px; padding: 0.8rem 1rem !important; }
+    .pricepool-display { text-align: center; font-size: 1rem; }
+}
+
+@media (max-width: 576px) {
+    .wrap-content.container { padding: 0 0.5rem; }
+    .panel.panel-white, .card { padding: 0.8rem !important; }
+    h2 { font-size: 1.1rem; padding-bottom: 0.5rem; }
+    .btn { font-size: 0.85rem !important; padding: 0.7rem 1rem !important; }
+
+    .data-table thead th { padding: 0.6rem 0.4rem !important; }
+    .data-table .activity-header th { padding: 0.4rem 0.4rem !important; }
+    .data-table td { padding: 0.4rem 0.4rem !important; }
+    .data-table input[type="number"] { max-width: 60px; }
+    .data-table { min-width: 650px; }
+}
+/* Add margin between cards */
+.card + .card {
+    margin-top: 1.5rem;
+}
+
+/* Podium Table Styles */
+.data-table.podium-table {
+    min-width: auto !important;
+    max-width: 600px !important;
+    margin: 0 auto;
+}
+
+.data-table.podium-table th,
+.data-table.podium-table td {
+    padding: 0.5rem !important;
+}
+
+/* Define specific column widths */
+.data-table.podium-table th:nth-child(1),
+.data-table.podium-table td:nth-child(1) {
+    width: 80px; /* Position */
+}
+
+.data-table.podium-table th:nth-child(2),
+.data-table.podium-table td:nth-child(2) {
+    width: 200px; /* Joueur */
+}
+
+.data-table.podium-table th:nth-child(3),
+.data-table.podium-table td:nth-child(3),
+.data-table.podium-table th:nth-child(4),
+.data-table.podium-table td:nth-child(4) {
+    width: 60px; /* Ch. et TF */
+}
+
+.data-table.podium-table th:nth-child(5),
+.data-table.podium-table td:nth-child(5) {
+    width: 80px; /* Points */
+}
+
+.data-table.podium-table th:last-child,
+.data-table.podium-table td:last-child {
+    width: 120px; /* Gain Estimé */
+}

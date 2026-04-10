@@ -1,0 +1,1 @@
+Debug file not created by PHP. This file is a placeholder to test write permissions for PHP debug output.

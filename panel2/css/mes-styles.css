@@ -1,0 +1,130 @@
+﻿html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}
+html,body
+{
+	font-family:Calibri,Verdana,sans-serif;
+	font-size:15px;
+	line-height:1.5;
+	background-color:#fcfcfc;
+	color:#666;
+	padding:0px;
+	margin:0px;
+}
+html{overflow-x:hidden}
+
+#auCentre
+{
+	width:auto;
+	margin:auto;
+	margin-top:10px;
+}
+
+#entete
+{
+	width:100%;
+	text-align:center;
+	font-size:14px;
+	margin-top:10px;
+	min-height:40px;
+	height:auto;
+	padding-top:10px;
+	border-top:#666 1px solid;
+	background: linear-gradient(#999, #fcfcfc);
+}
+
+#pied
+{
+	width:100%;
+	position:fixed;
+	bottom:0px;
+	font-size:14px;
+	padding-top:10px;
+	background-position:right center;
+	padding-right:0px;
+	/* background-image:url("../sources/icones-bg.png"); */
+	background: linear-gradient(#fff, #000); 
+
+	background-repeat: no-repeat;
+	background-position:right center;
+}
+
+#contenu
+{
+	width:95%;
+	height:900px;
+	background: linear-gradient(#edeeee, #fff); 
+	background: linear-gradient(#fff, #000); 
+	border:#666 2px solid;
+	border-radius:35px;
+	margin:auto;
+	box-shadow: 0px 0px 2px 2px #666;	
+	opacity: 0.9;
+}
+
+#conteneur
+{
+	width:100%;
+	text-align:center;
+	margin-top:0px;
+	
+	/* opacity: 0.75; */
+}
+
+#btn
+{
+	position:absolute;
+	left:13%;
+	top:200px;
+}
+
+.rond
+{
+	width:45px;
+	height:45px;
+	border-radius:50%;
+	margin:auto;
+}
+
+.btnMenu
+{
+	 width:250px;
+	 height:40px;
+	 margin-left:12px;
+	 margin-right:12px;
+	 font-weight:bold;
+     color: #ccc;
+	 font-weight:bold;
+     background: #444;
+     background: linear-gradient( #555, #2C2C2C);
+     box-shadow: 0 0 10px rgba( 0, 0, 0, 0.8),
+                 0 -1px 0 rgba( 255, 255, 255, 0.6);	
+	
+	box-shadow: 2px 2px 0px #aaa;
+	font-size:14px;
+	text-align:center;	
+	padding-left:0px;	
+}
+
+.btnMenu:hover
+{
+	cursor:pointer;
+	box-shadow: 6px 6px 10px #aaa;	
+}
+
+.calque
+{
+	width:100%;
+	text-align:center;
+	font-size:20px;
+	font-weight:bold;
+	margin-top:10px;
+	height:50px;
+	padding-top:4px;
+	background-color:#edeeee;
+	color:#2b579a;
+	border-top:#666 2px solid;
+	border-bottom:#666 2px solid;
+	background-image:url("../sources/icones-bg.png");
+	background-repeat: no-repeat;
+	background-position:3% center;
+	opacity: 0.55;
+}

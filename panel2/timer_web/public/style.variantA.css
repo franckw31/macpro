@@ -1,0 +1,353 @@
+/* Variant A - baseline (current) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+:root{
+	/* Precise palette + spacing tokens */
+	--bg: #070707;            /* page background */
+	--card-bg: rgba(255,255,255,0.028);
+	--cyan: #00C9FF;          /* primary accent (countdown, icons) */
+	--gold: #FFB84D;          /* warm accent (podium) */
+	--green: #2ECC71;         /* buyin */
+	--purple: #B47BFF;        /* participants */
+	--muted: rgba(255,255,255,0.72);
+	--white: rgba(255,255,255,0.98);
+
+	/* Exact sizes (change here for pixel-perfect tuning) */
+	--title-size: 42px;
+	--subtitle-size: 14px;
+	--count-size: 20px;
+
+	--card-padding: 14px;
+	--card-radius: 16px;
+
+	--logo-size: 56px;
+	--logo-radius: 12px;
+
+	--pill-padding-vert: 6px;
+	--pill-padding-horz: 10px;
+	--pill-radius: 10px;
+
+	--nav-pad-vert: 8px;
+	--nav-pad-horz: 12px;
+	--nav-radius: 36px;
+}
+*{box-sizing:border-box}
+body{
+	margin:0;
+	font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+	font-weight:300;
+	color:var(--white);
+	/* lighter overlay so background is visible */
+	background: linear-gradient(180deg, rgba(0,0,0,0.36) 0%, rgba(0,0,0,0.24) 100%), url('/panel/images/bg.png') center/cover no-repeat;
+	background-blend-mode:overlay;
+	background-attachment: fixed;
+	/* ensure a solid black fallback behind translucent sections and under the bottom nav */
+	background-color: #000;
+	-webkit-font-smoothing:antialiased;
+}
+
+/* Ensure the root html also has a black background fallback */
+html{background-color:#000}
+.container{max-width:980px;margin:12px auto;padding:0 14px}
+.card{background:linear-gradient(180deg, rgba(6,6,6,0.86), rgba(8,8,8,0.80));backdrop-filter: none; -webkit-backdrop-filter:none;border-radius:var(--card-radius);padding:var(--card-padding);border:1px solid rgba(255,255,255,0.06);margin-bottom:14px;box-shadow: 0 18px 40px rgba(0,0,0,0.6);} 
+.card.stroked{border:1px solid rgba(255,215,0,0.18)}
+.row{display:flex;gap:10px;align-items:center}
+.header{display:flex;align-items:center;gap:10px}
+.logo{width:var(--logo-size);height:var(--logo-size);border-radius:var(--logo-radius);background:linear-gradient(135deg, rgba(0,201,255,0.08), rgba(255,184,77,0.04));display:flex;align-items:center;justify-content:center;color:var(--cyan);font-weight:700;font-size:18px}
+.logo-svg{width:36px;height:36px;color:var(--cyan);filter:drop-shadow(0 8px 20px rgba(0,0,0,0.6));}
+.title .title-spade{width:30px;height:30px;display:inline-block;vertical-align:middle;margin-right:10px;filter:drop-shadow(0 6px 14px rgba(0,0,0,0.45));color:var(--cyan);}
+.title{font-size:var(--title-size);font-weight:700;letter-spacing:0.2px;color:var(--white);line-height:1}
+.subtitle{font-size:var(--subtitle-size);color:var(--cyan);margin-top:4px;font-weight:600}
+.activity-name,#activity-name{font-size:22px;font-weight:700;color:var(--white);margin-top:6px}
+/* Nudge the activity title slightly to the right as requested */
+#activity-name{transform:translateX(6px);} 
+.activity-date,#activity-date{font-size:16px;font-weight:600;color:var(--gold);margin-top:4px}
+.greeting{font-size:20px;color:var(--cyan);font-weight:600;line-height:1;margin-top:6px}
+.small{font-size:11px;color:var(--muted)}
+.button{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.03);cursor:pointer;color:var(--white);border:1px solid rgba(255,255,255,0.04)}
+	:root{
+	    /* Precise palette + spacing tokens (tuned to match simulator) */
+	    --bg: #040404;            /* page background - deeper */
+	    --card-bg: rgba(255,255,255,0.02); /* slightly darker card */
+	    --cyan: #00C9FF;          /* primary accent (countdown, icons) */
+	    --gold: #FFB84D;          /* warm accent (podium) */
+	    --green: #2ECC71;         /* buyin */
+	    --purple: #B47BFF;        /* participants */
+	    --muted: rgba(255,255,255,0.86); /* brighter muted text for legibility */
+	    --white: rgba(255,255,255,1);
+
+	    /* Exact sizes (change here for pixel-perfect tuning) */
+	    --title-size: 48px; /* larger to match simulator */
+	    --subtitle-size: 15px;
+		--count-size: 20px;
+
+	    --card-padding: 20px; /* more padding like the simulator */
+	    --card-radius: 20px;
+
+	    --logo-size: 64px;
+	    --logo-radius: 14px;
+
+	    --pill-padding-vert: 8px;
+	    --pill-padding-horz: 12px;
+	    --pill-radius: 12px;
+
+	    --nav-pad-vert: 10px;
+	    --nav-pad-horz: 14px;
+	    --nav-radius: 40px;
+	}
+.button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06)}
+.button.primary{background:linear-gradient(90deg,#2ecc71,#00d2ff);color:#041011;border:none}
+/* Make the "S'inscrire" action button green with white text and larger font */
+#reg-action.button.primary, .button.primary#reg-action {
+	background: linear-gradient(90deg,#2ecc71,#1fb86a);
+	color: #ffffff;
+	border: none;
+	box-shadow: 0 8px 20px rgba(31,184,106,0.08);
+	font-size: 16px;
+	font-weight: 700;
+	padding: 10px 16px;
+}
+.live{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(0,201,255,0.03), rgba(255,255,255,0.008));min-width:160px}
+.count{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;font-size:var(--count-size);color:var(--cyan);font-weight:700;letter-spacing:1px;text-shadow:0 8px 30px rgba(0,200,255,0.06)}
+.count.small{font-size:18px}
+.count-label{font-size:12px;color:var(--muted);margin-top:6px}
+.pill{padding:var(--pill-padding-vert) var(--pill-padding-horz);border-radius:var(--pill-radius);background:rgba(255,255,255,0.02);text-align:center;color:rgba(255,255,255,0.95);font-weight:600;font-size:12px}
+.pill#buyin-pill{color:var(--green);display:flex;align-items:center;gap:4px}
+/* Nudge the buyin amount slightly left to align visually */
+#buyin-pill span{display:inline-block;transform:translateX(-3px);}
+	body{
+		margin:0;
+		font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+		font-weight:300;
+		color:var(--white);
+		/* lighter overlay so background is visible */
+		background: linear-gradient(180deg, rgba(0,0,0,0.36) 0%, rgba(0,0,0,0.24) 100%), url('/panel/images/bg.png') center/cover no-repeat;
+		background-blend-mode:overlay;
+		background-attachment: fixed;
+		-webkit-font-smoothing:antialiased;
+	}
+	.pill#rake-pill{color:var(--gold);display:flex;align-items:center;gap:4px}
+	.card{background:linear-gradient(180deg, rgba(6,6,6,0.86), rgba(8,8,8,0.80));backdrop-filter: none; -webkit-backdrop-filter:none;border-radius:var(--card-radius);padding:var(--card-padding);border:1px solid rgba(255,255,255,0.06);margin-bottom:16px;box-shadow: 0 18px 40px rgba(0,0,0,0.6);} 
+
+	.card.stroked{border:1px solid rgba(255,215,0,0.18)}
+/* section label */
+	.pill{padding:var(--pill-padding-vert) var(--pill-padding-horz);border-radius:var(--pill-radius);background:rgba(255,255,255,0.02);text-align:center;color:rgba(255,255,255,0.95);font-weight:600;font-size:13px}
+
+	.section-label{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:linear-gradient(90deg, rgba(0,200,255,0.03), rgba(255,255,255,0.01));color:var(--cyan);font-weight:900}
+.chev{width:40px;height:40px;border-radius:50%;border:2px solid rgba(0,201,255,0.22);background:transparent;color:var(--cyan);font-size:18px;display:flex;align-items:center;justify-content:center}
+.chev.flash{background:linear-gradient(90deg, rgba(0,201,255,0.14), rgba(255,255,255,0.02));transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,200,255,0.08);}
+	.count{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;font-size:var(--count-size);color:var(--cyan);font-weight:900;letter-spacing:1px;text-shadow:0 10px 40px rgba(0,200,255,0.08)}
+/* shortcuts grid (2x2) */
+.shortcuts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tile{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:12px;display:flex;flex-direction:column;justify-content:space-between;min-height:92px}
+.tile-top{display:flex;flex-direction:column;align-items:center;gap:6px}
+.tile-bottom{font-weight:700;text-align:center;margin-top:6px}
+.icon-circle{width:52px;height:52px;border-radius:12px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;font-size:20px}
+.icon-circle.info{
+	color:#ffffff;
+	background: linear-gradient(90deg,#ff9d3b,#ff7a45);
+	box-shadow: 0 6px 14px rgba(255,120,40,0.10);
+	font-weight:700;
+	font-size:12px;
+	width:32px;
+	height:32px;
+	border-radius:50%;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+}
+.icon-circle.profile{color:#ffd100}
+.icon-circle.people{color:#b47bff}
+
+/* quick action */
+.quick-action{border:1px solid rgba(255,140,30,0.2);box-shadow:0 8px 30px rgba(255,140,30,0.03)}
+.quick-top{display:flex;align-items:center;gap:10px}
+.flash{width:32px;height:32px;border-radius:8px;background:linear-gradient(90deg,#ffb84d,#ff7a45);display:flex;align-items:center;justify-content:center;color:#041011;font-weight:800}
+
+/* stroked card glow */
+.card.stroked{border:1px solid rgba(255,215,0,0.10);box-shadow:0 8px 30px rgba(0,214,255,0.03), inset 0 1px 0 rgba(255,255,255,0.02)}
+.podium-item{display:flex;align-items:center;justify-content:space-between;padding:6px 0}
+.right{margin-left:auto}
+
+/* Highlight the "Prochaine partie" card with a cyan outline */
+#activity-card.stroked{border:1px solid rgba(0,201,255,0.22);box-shadow:0 12px 30px rgba(0,200,255,0.06), 0 18px 40px rgba(0,0,0,0.6);}
+/* Match the same cyan liseret for the shortcuts / "Raccourcis" card */
+#shortcuts-card.stroked{border:1px solid rgba(0,201,255,0.22);box-shadow:0 12px 30px rgba(0,200,255,0.04), 0 18px 40px rgba(0,0,0,0.6);}
+/* Section title style (use cyan) */
+.section-title{font-weight:700;color:var(--cyan);text-transform:uppercase;font-size:12px;margin-bottom:6px}
+
+/* Ensure the left column inside the activity card aligns its text to the left
+	so titles, dates and pill values are flush-left (e.g. "Franck Bounty...") */
+#activity-card .row > div:first-child{ text-align:left }
+#activity-card .row > div:first-child .pill{ text-align:left }
+/* Cyan outline for individual shortcut tiles */
+#shortcuts-card .tile{border:1px solid rgba(0,201,255,0.14);box-shadow:0 8px 20px rgba(0,200,255,0.04);background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));transition:box-shadow .18s ease,transform .12s ease}
+#shortcuts-card .tile:hover{box-shadow:0 18px 50px rgba(0,200,255,0.06);transform:translateY(-4px)}
+
+/* Bottom floating nav (mobile) */
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;background:linear-gradient(180deg, rgba(12,12,12,0.9), rgba(18,18,18,0.9));border-radius:var(--nav-radius);padding:var(--nav-pad-vert) var(--nav-pad-horz);display:flex;gap:14px;align-items:center;border:1px solid rgba(0,210,255,0.06);backdrop-filter:none;-webkit-backdrop-filter:none;z-index:110}
+.bottom-nav-backdrop{position:fixed;left:0;right:0;bottom:0;height:calc(64px + env(safe-area-inset-bottom,0));background:#000;z-index:100}
+.bottom-nav button{background:transparent;border:none;color:rgba(255,255,255,0.92);padding:6px 10px;border-radius:28px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bottom-nav svg{width:24px;height:24px;display:block;color:rgba(255,255,255,0.9)}
+	@media (max-width:420px){
+		:root{
+			--title-size: 28px;
+			--subtitle-size: 12px;
+			--count-size: 20px;
+	        --card-padding: 12px;
+	        --card-radius: 14px;
+	        --logo-size: 48px;
+	        --logo-radius: 10px;
+	        --pill-padding-vert: 6px;
+	        --pill-padding-horz: 10px;
+	        --nav-pad-vert: 8px;
+	        --nav-pad-horz: 12px;
+	        --nav-radius: 34px;
+	    }
+	    .container{margin:10px auto;padding:0 12px}
+	    .card{margin-bottom:12px}
+	    .tile{min-height:88px;padding:12px}
+	    .flash{width:30px;height:30px;border-radius:6px}
+	    .icon-circle{width:48px;height:48px;border-radius:10px;font-size:18px}
+	    .chev{width:36px;height:36px;font-size:16px}
+	    .bottom-nav{bottom:12px}
+	    .avatar{width:48px;height:48px}
+	}
+.bottom-nav button.active svg{color:var(--cyan)}
+.bottom-nav button.active{background:linear-gradient(90deg, rgba(0,210,255,0.06), rgba(255,215,0,0.03));box-shadow:0 8px 30px rgba(0,200,255,0.06);}
+.nav-icon{font-size:18px}
+.nav-label{font-size:12px}
+
+.bottom-nav button#nav-home{ background: linear-gradient(90deg, rgba(0,201,255,0.18), rgba(255,255,255,0.06)); border-radius:28px; box-shadow: 0 14px 36px rgba(0,200,255,0.12); transform: translateY(-2px); transition:transform .12s ease, box-shadow .12s ease, background .12s ease; border:1px solid rgba(255,255,255,0.04); }
+.bottom-nav button#nav-home svg{ color:var(--cyan); }
+.bottom-nav button#nav-home:hover{ transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,200,255,0.18); }
+
+/* header right avatar */
+.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(45deg,#fff 0%, #ffd700 100%);display:inline-block;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,0.6)}
+
+/* larger avatar in header to match simulator */
+.header .avatar{width:56px;height:56px}
+.header .greeting{margin-top:4px}
+
+/* Offline badge shown in header when network/API unreachable */
+.offline-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;background:linear-gradient(90deg, rgba(255,80,80,0.10), rgba(255,80,80,0.04));color:#ff9b9b;font-weight:700;border:1px solid rgba(255,80,80,0.12);font-size:12px;margin-left:10px;opacity:0;transform:translateY(-4px);transition:opacity .18s ease,transform .18s ease}
+.offline-badge.visible{opacity:1;transform:translateY(0)}
+
+/* severity modifiers */
+.offline-badge.warn{background:linear-gradient(90deg, rgba(255,184,77,0.12), rgba(255,184,77,0.04));color:#ffd89a;border:1px solid rgba(255,184,77,0.12)}
+.offline-badge.error{background:linear-gradient(90deg, rgba(255,80,80,0.12), rgba(255,80,80,0.04));color:#ff9b9b;border:1px solid rgba(255,80,80,0.12)}
+
+/* Token prompt */
+.token-prompt{margin-left:12px;padding:10px;border-radius:12px;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.04);max-width:320px}
+.token-prompt input{width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:var(--white)}
+.token-prompt .button{padding:8px 12px}
+
+/* Debug info box */
+.debug-info{margin:12px 0;padding:10px;border-radius:10px;background:rgba(0,0,0,0.36);border:1px solid rgba(255,255,255,0.04);font-family:Menlo,Consolas,monospace;font-size:12px;color:var(--muted);white-space:pre-wrap;max-height:220px;overflow:auto}
+
+/* Server-side info box (visible even without JS) */
+.server-info{margin:12px 0;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(0,200,255,0.06);font-size:14px;color:var(--muted)}
+.server-info b{color:var(--white);font-weight:900}
+.server-info div{margin-top:6px;font-size:15px;color:var(--white)}
+.server-info .meta{color:var(--gold);font-weight:800;margin-top:4px}
+
+.header .title{font-size:20px;letter-spacing:0.2px}
+.header .subtitle{font-size:14px}
+/* Reduce greeting size to be less dominant than title */
+.header .greeting{font-size:14px;color:var(--cyan);font-weight:700}
+.avatar{box-shadow:0 6px 18px rgba(0,200,255,0.12), 0 2px 6px rgba(0,0,0,0.6)}
+
+@media (max-width:900px){
+	.container{padding:0 12px}
+}
+
+/* Mobile compact adjustments for iPhone-like screens */
+@media (max-width:420px){
+	:root{
+		--title-size: 18px;
+		--subtitle-size: 11px;
+		--count-size: 20px;
+		--card-padding: 10px;
+		--card-radius: 12px;
+		--logo-size: 44px;
+		--logo-radius: 10px;
+		--pill-padding-vert: 5px;
+		--pill-padding-horz: 8px;
+		--nav-pad-vert: 6px;
+		--nav-pad-horz: 10px;
+		--nav-radius: 30px;
+	}
+	.container{margin:8px auto}
+	.card{margin-bottom:10px}
+	.tile{min-height:80px;padding:10px}
+	.flash{width:28px;height:28px;border-radius:6px}
+	.icon-circle{width:44px;height:44px;border-radius:10px;font-size:18px}
+	.chev{width:34px;height:34px;font-size:16px}
+	.bottom-nav{bottom:10px}
+	.avatar{width:36px;height:36px}
+}
+
+/* Centralized responsive overrides (matches quickview.php fixes) */
+@media (max-width: 480px) {
+	.timer-circle-container { width: 60px !important; height: 60px !important; }
+	.timer-content #live-timer-display { font-size: 16px !important; }
+	.timer-content #live-timer-level, .timer-content #live-timer-blinds { font-size: 10px !important; }
+	.row > div[style*="width:52px"], .row > [style*="width:52px"] { width: auto !important; flex: 0 0 auto; display: flex; align-items: center; gap: 6px; padding-left:6px; padding-right:6px; }
+	.chev { width: 40px; height: 40px; font-size: 18px; padding: 0; border-radius: 8px; }
+	.detail-value.box, #d-lieu.detail-value { min-width: 0 !important; max-width: 50% !important; word-break: break-word; }
+	.modal-sheet { max-width: 100% !important; left: 0 !important; right: 0 !important; border-radius: 12px !important; padding: 14px !important; }
+	.tile { min-width: 0 !important; }
+	.pill { font-size: 13px; padding: 6px 8px; }
+	.container { padding-left: 12px; padding-right: 12px; }
+	.title { font-size: 16px; }
+}
+
+@media (max-width: 360px) {
+	.timer-circle-container { width: 52px !important; height: 52px !important; }
+	.chev { width: 36px; height: 36px; font-size: 16px; }
+	.timer-content #live-timer-display { font-size: 14px !important; }
+	.detail-value { font-size: 13px; }
+}
+
+/* Disable fixed bottom navigation on small screens to avoid overlap,
+	 but keep the nav centered horizontally and visually compact. */
+@media (max-width: 600px) {
+	.bottom-nav, .bottom-nav-backdrop {
+		position: static !important;
+		bottom: auto !important;
+		left: auto !important;
+		right: auto !important;
+		width: auto !important;
+		box-shadow: none !important;
+		transform: none !important;
+	}
+	.bottom-nav {
+		margin: 12px auto !important;
+		display: flex !important;
+		justify-content: center !important;
+		gap: 12px !important;
+		padding-left: 6px !important;
+		padding-right: 6px !important;
+	}
+	.bottom-nav button { margin: 0 6px !important; }
+	.bottom-nav-backdrop { display: none !important; }
+	.container { padding-bottom: 0 !important; }
+}
+
+/* Ensure space is reserved for fixed bottom nav on larger screens */
+@media (min-width: 601px) {
+	.container { padding-bottom: 72px !important; }
+	.bottom-nav { position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; z-index: 1100 !important; }
+	.bottom-nav-backdrop { display: block !important; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; height: 64px !important; z-index: 1000 !important; }
+}
+
+/* Stronger left-alignment rules for activity card left column to override generic .pill centering */
+#activity-card .row > div:first-child{ text-align:left !important; display:flex;flex-direction:column;align-items:flex-start }
+#activity-card .row > div:first-child .pill{ text-align:left !important }
+#activity-card .row > div:first-child #activity-name{ text-align:left !important }
+
+/* Extra strong selector: ensure all descendants align left and don't center themselves */
+#activity-card .row > div:first-child *{ text-align:left !important; align-self:flex-start !important }
+
+/* Improve visibility for the small clock icon shown next to the activity date */
+.date-pill{color:var(--cyan);display:inline-flex;align-items:center;justify-content:center}
+.date-pill .date-pill-icon{width:18px;height:18px;filter:drop-shadow(0 6px 14px rgba(0,0,0,0.45));transform:translateY(6px);}

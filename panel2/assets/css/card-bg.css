@@ -1,0 +1,29 @@
+#card-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  z-index: -1;
+  pointer-events: none;
+  display: block;
+}
+
+.card-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px; /* horizontal spacing between symbols */
+  opacity: 0.18; /* overall motif visibility */
+  line-height: 1;
+  margin: 12px 0; /* vertical spacing between rows */
+}
+
+.suit {
+  font-family: Arial, sans-serif;
+  font-size: 60px;
+}
+
+.suit.red { color: #ff0000; }
+.suit.white { color: #ffffff; }
