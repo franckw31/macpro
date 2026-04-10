@@ -220,6 +220,83 @@ if (strlen($_SESSION['login']) == 0) {
 				border-color: #ff6666 !important;
 			}
 
+			#container {
+				padding-bottom: 110px;
+			}
+			.quick-bottom-nav-backdrop {
+				position: fixed;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				height: 76px;
+				background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(6, 10, 18, 0.95) 35%, rgba(6, 10, 18, 1) 100%);
+				z-index: 1090;
+				pointer-events: none;
+			}
+			.quick-bottom-nav {
+				position: fixed;
+				left: 50%;
+				bottom: 14px;
+				transform: translateX(-50%);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 14px;
+				padding: 10px 16px;
+				border-radius: 999px;
+				background: rgba(8, 12, 22, 0.92);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+				backdrop-filter: blur(10px);
+				z-index: 1100;
+			}
+			.quick-bottom-nav a {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 5px;
+				min-width: 84px;
+				padding: 8px 10px;
+				border-radius: 20px;
+				color: rgba(255,255,255,0.88);
+				text-decoration: none;
+				font-size: 12px;
+				font-weight: 700;
+				transition: background .2s ease, color .2s ease, transform .2s ease;
+			}
+			.quick-bottom-nav a i {
+				font-size: 18px;
+			}
+			.quick-bottom-nav a.active {
+				background: linear-gradient(90deg, rgba(0, 210, 255, 0.18), rgba(255, 215, 0, 0.12));
+				color: #ffffff;
+			}
+			.quick-bottom-nav a:hover {
+				color: #ffffff;
+				transform: translateY(-1px);
+			}
+			@media (max-width: 767px) {
+				#container {
+					padding-bottom: 96px;
+				}
+				.quick-bottom-nav {
+					left: 12px;
+					right: 12px;
+					bottom: 10px;
+					transform: none;
+					gap: 6px;
+					padding: 8px;
+					border-radius: 22px;
+				}
+				.quick-bottom-nav a {
+					min-width: 0;
+					flex: 1 1 0;
+					padding: 8px 6px;
+					font-size: 11px;
+				}
+			}
+
 			/* Motif déplacé vers assets/css/card-bg.css pour réutilisation */
 		</style>
 	</head>
@@ -649,6 +726,22 @@ if (strlen($_SESSION['login']) == 0) {
 					</div>
 				</div>
 			</div>
+			
+			<div class="quick-bottom-nav-backdrop" aria-hidden="true"></div>
+			<nav class="quick-bottom-nav" aria-label="Navigation rapide CardEvent">
+				<a href="/panel/quickview.php" class="active" title="Accueil">
+					<i class="fa fa-home" aria-hidden="true"></i>
+					<span>Accueil</span>
+				</a>
+				<a href="/panel/cardevent.php?uid=<?php echo intval($id_act); ?>" title="Local Timer">
+					<i class="fa fa-clock-o" aria-hidden="true"></i>
+					<span>Local Timer</span>
+				</a>
+				<a href="/panel/repartition.php" title="Répartition">
+					<i class="fa fa-trophy" aria-hidden="true"></i>
+					<span>Répartition</span>
+				</a>
+			</nav>
 			
 			<?php include('include/footer.php'); ?>
 			<?php include('include/setting.php'); ?>
