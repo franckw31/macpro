@@ -62,6 +62,45 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 }
 #endif
 
+private final class WelcomeSpeaker: NSObject, AVSpeechSynthesizerDelegate {
+    private let speechSynthesizer = AVSpeechSynthesizer()
+
+    override init() {
+        super.init()
+        speechSynthesizer.delegate = self
+    }
+
+    func speakWelcomeMessage() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.ambient, mode: .default, options: [.mixWithOthers])
+            try audioSession.setActive(true)
+        } catch {
+            print("Failed to setup audio session for welcome message: \(error)")
+        }
+
+        let utterance = AVSpeechUtterance(string: "Bienvenue sur Carde Ivènte")
+        utterance.voice = AVSpeechSynthesisVoice(language: "fr-FR")
+        speechSynthesizer.speak(utterance)
+    }
+
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        releaseAudioSession()
+    }
+
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        releaseAudioSession()
+    }
+
+    private func releaseAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("Failed to release audio session after welcome message: \(error)")
+        }
+    }
+}
+
 @main
 struct CardEventApp: App {
     #if canImport(UIKit)
@@ -69,7 +108,7 @@ struct CardEventApp: App {
     #endif
     @StateObject private var viewModel  = PokerTimerViewModel()
     @StateObject private var auth       = AuthService.shared
-    private let speechSynthesizer = AVSpeechSynthesizer()
+    private let welcomeSpeaker = WelcomeSpeaker()
 
     var body: some Scene {
         WindowGroup {
@@ -88,9 +127,7 @@ struct CardEventApp: App {
             .animation(.easeInOut(duration: 0.3), value: auth.isAuthenticated)
             .animation(.easeInOut(duration: 0.3), value: auth.isLoading)
             .onAppear {
-                let utterance = AVSpeechUtterance(string: "Bienvenue sur Carde Ivènte")
-                utterance.voice = AVSpeechSynthesisVoice(language: "fr-FR")
-                speechSynthesizer.speak(utterance)
+                welcomeSpeaker.speakWelcomeMessage()
             }
             .task {
                 await auth.autoLogin()

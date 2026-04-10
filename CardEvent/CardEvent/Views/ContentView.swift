@@ -722,7 +722,7 @@ final class BeepEngine: ObservableObject {
         buffer = buf
         engine.attach(player)
         engine.connect(player, to: engine.mainMixerNode, format: format)
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .mixWithOthers)
+        try? AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default, options: .mixWithOthers)
         try? AVAudioSession.sharedInstance().setActive(true)
         try? engine.start()
     }
