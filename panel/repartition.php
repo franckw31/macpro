@@ -58,7 +58,7 @@ $asset_ver = @filemtime(__DIR__ . '/timer_web/public/style.variantA.css') ?: @fi
 	<!-- Bottom navigation -->
 	<div class="bottom-nav-backdrop" aria-hidden="true"></div>
 	<nav class="bottom-nav" role="navigation" aria-label="Main navigation">
-		<button id="nav-home" class="" title="Accueil" onclick="window.location.href='/panel/quickview.php';">
+		<button id="nav-home" type="button" class="" title="Accueil" onclick="window.location.href='/panel/quickview.php'; return false;">
 			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 21h14a1 1 0 0 0 1-1v-7H4v7a1 1 0 0 0 1 1z"/></svg>
 			<div class="nav-label">Accueil</div>
 		</button>
@@ -157,6 +157,16 @@ $asset_ver = @filemtime(__DIR__ . '/timer_web/public/style.variantA.css') ?: @fi
 
 	<script>
 		(function(){
+			const navHomeBtn = document.getElementById('nav-home');
+			if(navHomeBtn){
+				navHomeBtn.addEventListener('click', function(event){
+					event.preventDefault();
+					event.stopPropagation();
+					if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
+					window.location.href = '/panel/quickview.php';
+					return false;
+				}, true);
+			}
 			const link = document.getElementById('theme-stylesheet');
 			const apply = v=>{ link.href = (v==='B')? '/panel/timer_web/public/style.variantB.css':'/panel/timer_web/public/style.variantA.css'; localStorage.setItem('uiVariant', v); };
 			const saved = localStorage.getItem('uiVariant') || 'A'; apply(saved);
