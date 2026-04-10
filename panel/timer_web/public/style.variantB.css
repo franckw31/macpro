@@ -91,3 +91,35 @@ body{
 @media (max-width:900px){
 	.container{padding:0 12px}
 }
+
+/* Disable fixed bottom navigation on small screens to avoid overlap,
+	 but keep the nav centered horizontally and visually compact. */
+@media (max-width: 600px) {
+	.bottom-nav, .bottom-nav-backdrop {
+		position: static !important;
+		bottom: auto !important;
+		left: auto !important;
+		right: auto !important;
+		width: auto !important;
+		box-shadow: none !important;
+		transform: none !important;
+	}
+	.bottom-nav {
+		margin: 12px auto !important;
+		display: flex !important;
+		justify-content: center !important;
+		gap: 12px !important;
+		padding-left: 6px !important;
+		padding-right: 6px !important;
+	}
+	.bottom-nav button { margin: 0 6px !important; }
+	.bottom-nav-backdrop { display: none !important; }
+	.container { padding-bottom: 0 !important; }
+}
+
+/* Ensure space is reserved for fixed bottom nav on larger screens */
+@media (min-width: 601px) {
+	.container { padding-bottom: 72px !important; }
+	.bottom-nav { position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; z-index: 1100 !important; transform: none !important; justify-content: center !important; }
+	.bottom-nav-backdrop { display: block !important; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; height: 64px !important; z-index: 1000 !important; }
+}
