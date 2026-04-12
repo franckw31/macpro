@@ -51,10 +51,9 @@ try {
     $rows = $stmt->fetchAll();
 
     $optMap = [
-        'Confirmé'    => 'confirme',
-        'Réservation' => 'liste_attente',
-        'Absent'      => 'absent',
-        'Inscrit'     => 'inscrit',
+        'Inscrit'  => 'inscrit',
+        'Option'   => 'liste_attente',
+        'Annulé'   => 'absent',
     ];
 
     $members = array_map(fn($r) => [

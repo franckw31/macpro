@@ -54,11 +54,11 @@ try {
         FROM `activite` a
         LEFT JOIN `membres` m ON m.`id-membre` = a.`id-membre`
         LEFT JOIN (
-            SELECT event_id, COUNT(*) AS nb
-            FROM   `pro_registrations`
-            WHERE  statut IN ('inscrit','confirme')
-            GROUP BY event_id
-        ) r ON r.event_id = a.`id-activite`
+            SELECT `id-activite`, COUNT(*) AS nb
+            FROM   `participation`
+            WHERE  `option` = 'Inscrit'
+            GROUP BY `id-activite`
+        ) r ON r.`id-activite` = a.`id-activite`
         WHERE a.`id-membre` = :oid
         $having
         ORDER BY a.`date_depart` DESC

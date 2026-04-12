@@ -152,7 +152,7 @@ try {
         JOIN `membres` m ON m.`id-membre` = a.`id-membre`
         LEFT JOIN (
             SELECT `id-activite`, COUNT(*) AS nb FROM `participation`
-            WHERE `option` IN ('Inscrit','Confirmé') GROUP BY `id-activite`
+            WHERE `option` = 'Inscrit' GROUP BY `id-activite`
         ) r ON r.`id-activite` = a.`id-activite`
         WHERE a.`id-activite` = ?
     ");
