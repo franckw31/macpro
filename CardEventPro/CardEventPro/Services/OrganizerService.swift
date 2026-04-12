@@ -259,14 +259,15 @@ final class OrganizerService: ObservableObject {
 
     // MARK: - Créer un nouveau membre (joueur non-inscrit)
 
-    func createMember(pseudo: String, fname: String, lname: String, email: String) async -> CreateMemberResponse? {
+    func createMember(pseudo: String, fname: String, lname: String, email: String, visibility: String = "organizers") async -> CreateMemberResponse? {
         guard let url = URL(string: "\(baseURL)/create-member.php") else { return nil }
         var req = authorizedRequest(url: url, method: "POST")
         req.httpBody = try? JSONSerialization.data(withJSONObject: [
-            "pseudo": pseudo,
-            "fname":  fname,
-            "lname":  lname,
-            "email":  email
+            "pseudo":     pseudo,
+            "fname":      fname,
+            "lname":      lname,
+            "email":      email,
+            "visibility": visibility
         ])
         do {
             let (data, _) = try await URLSession.shared.data(for: req)
