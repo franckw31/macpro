@@ -7,7 +7,7 @@
 //    action : "register" | "unregister" | "confirm" | "set_absent"
 //
 //  Utilise la table `participation` existante :
-//    option  : 'Inscrit' | 'Réservation' (liste attente) | 'Confirmé' | 'Absent'
+//    option  : 'Inscrit' | 'Option' (liste attente) | 'Annulé' (absent)
 //    anonyme : 1 = inscription privée (visible org. seul)
 // ============================================================
 
@@ -26,10 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // Correspondance statut Pro ↔ participation.option
 function optionToPro(string $option): string {
     return match($option) {
-        'Confirmé'    => 'confirme',
-        'Réservation' => 'liste_attente',
-        'Absent'      => 'absent',
-        default       => 'inscrit',
+        'Inscrit'  => 'confirme',
+        'Option'   => 'liste_attente',
+        'Annulé'   => 'absent',
+        default    => 'inscrit',
     };
 }
 
@@ -143,7 +143,7 @@ try {
             // Promouvoir le premier en liste d'attente
             $stmtWait = $pdo->prepare("
                 SELECT `id-participation`, `id-membre` FROM `participation`
-                WHERE `id-activite` = ? AND `option` = 'Réservation'
+                WHERE `id-activite` = ? AND `option` = 'Option'
                 ORDER BY `ds` ASC LIMIT 1
             ");
             $stmtWait->execute([$eventId]);
@@ -161,7 +161,7 @@ try {
 
         case 'confirm':
             $pdo->prepare("
-                UPDATE `participation` SET `option` = 'Confirmé'
+                UPDATE `participation` SET `option` = 'Inscrit'
                 WHERE `id-activite` = ? AND `id-membre` = ?
             ")->execute([$eventId, $memberId]);
             $message = 'Joueur confirmé';
@@ -170,7 +170,7 @@ try {
 
         case 'set_absent':
             $pdo->prepare("
-                UPDATE `participation` SET `option` = 'Absent'
+                UPDATE `participation` SET `option` = 'Annulé'
                 WHERE `id-activite` = ? AND `id-membre` = ?
             ")->execute([$eventId, $memberId]);
             $message = 'Joueur marqué absent';
@@ -179,7 +179,7 @@ try {
 
         case 'set_waiting':
             $pdo->prepare("
-                UPDATE `participation` SET `option` = 'Réservation'
+                UPDATE `participation` SET `option` = 'Option'
                 WHERE `id-activite` = ? AND `id-membre` = ?
             ")->execute([$eventId, $memberId]);
             $message = 'Joueur placé en liste d\'attente';
