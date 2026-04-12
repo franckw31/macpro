@@ -324,6 +324,16 @@ struct CreateEventView: View {
             form.devise      = event.devise
             form.isPublic    = event.isPublic
 
+            form.structureId   = event.structureId
+            form.rake          = event.rake
+            form.bounty        = event.bounty
+            form.jetons        = event.jetons
+            form.nbRecaves     = event.nbRecaves
+            form.recaveMontant = event.recaveMontant
+            form.recaveJetons  = event.recaveJetons
+            form.bonus         = event.bonus
+            form.nbTables      = event.nbTables
+
             let fmtIn = DateFormatter()
             fmtIn.dateFormat = "yyyy-MM-dd HH:mm:ss"
             if let d = fmtIn.date(from: event.dateEvent) {
