@@ -81,6 +81,18 @@ try {
         }
     }
 
+    // Helper : détermine si un membre est organisateur Pro vérifié
+    function getIsOrganizer(PDO $pdo, int $memberId): bool {
+        try {
+            $s = $pdo->prepare("SELECT is_verified FROM pro_organizers WHERE member_id = ? LIMIT 1");
+            $s->execute([$memberId]);
+            $row = $s->fetch(PDO::FETCH_ASSOC);
+            return $row && (bool)$row['is_verified'];
+        } catch (PDOException $e) {
+            return false; // Table absente → pas encore installé
+        }
+    }
+
     // ── Action : login ────────────────────────────────────────────
     if ($action === 'login') {
 
@@ -111,8 +123,9 @@ try {
             exit;
         }
 
-        $memberId  = (int)$user['id-membre'];
-        $isAdmin   = getIsAdmin($pdo, $memberId);
+        $memberId    = (int)$user['id-membre'];
+        $isAdmin     = getIsAdmin($pdo, $memberId);
+        $isOrganizer = $isAdmin || getIsOrganizer($pdo, $memberId);
         $token     = bin2hex(random_bytes(32));   // 64 caractères hex
         $expiresAt = date('Y-m-d H:i:s', strtotime('+90 days'));
 
@@ -129,12 +142,13 @@ try {
         $logAuth('login_success', $user['pseudo'], $memberId);
 
         echo json_encode([
-            'success'    => true,
-            'token'      => $token,
-            'user_id'    => $memberId,
-            'pseudo'     => $user['pseudo'],
-            'is_admin'   => $isAdmin,
-            'expires_at' => $expiresAt,
+            'success'      => true,
+            'token'        => $token,
+            'user_id'      => $memberId,
+            'pseudo'       => $user['pseudo'],
+            'is_admin'     => $isAdmin,
+            'is_organizer' => $isOrganizer,
+            'expires_at'   => $expiresAt,
         ]);
 
     // ── Action : verify_token ─────────────────────────────────────
@@ -170,15 +184,17 @@ try {
         $pdo->prepare("UPDATE `app_auth_tokens` SET `last_used_at` = NOW() WHERE `token` = ?")
             ->execute([$token]);
 
-        $isAdmin = getIsAdmin($pdo, (int)$row['user_id']);
+        $isAdmin     = getIsAdmin($pdo, (int)$row['user_id']);
+        $isOrganizer = $isAdmin || getIsOrganizer($pdo, (int)$row['user_id']);
 
         $logAuth('verify_success', $row['pseudo'], $row['user_id']);
 
         echo json_encode([
-            'success'  => true,
-            'pseudo'   => $row['pseudo'],
-            'user_id'  => $row['user_id'],
-            'is_admin' => $isAdmin,
+            'success'      => true,
+            'pseudo'       => $row['pseudo'],
+            'user_id'      => $row['user_id'],
+            'is_admin'     => $isAdmin,
+            'is_organizer' => $isOrganizer,
         ]);
 
     // ── Action : logout ───────────────────────────────────────────
