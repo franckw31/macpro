@@ -32,6 +32,7 @@
 		PRO0001000A0017 /* OrganizerDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0017 /* OrganizerDashboardView.swift */; };
 		PRO0001000A0018 /* CreateEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0018 /* CreateEventView.swift */; };
 		PRO0001000A0019 /* ManageEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0019 /* ManageEventView.swift */; };
+		PRO0001000A001C /* AddPlayerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B001D /* AddPlayerSheet.swift */; };
 		PRO0001000A001A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = PRO000100B001A /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +63,7 @@
 		PRO000100B0017 /* OrganizerDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizerDashboardView.swift; sourceTree = "<group>"; };
 		PRO000100B0018 /* CreateEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEventView.swift; sourceTree = "<group>"; };
 		PRO000100B0019 /* ManageEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageEventView.swift; sourceTree = "<group>"; };
+		PRO000100B001D /* AddPlayerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlayerSheet.swift; sourceTree = "<group>"; };
 		PRO000100B001A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		PRO000100B001B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		PRO000100B001C /* CardEventPro.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CardEventPro.entitlements; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				PRO000100B0017 /* OrganizerDashboardView.swift */,
 				PRO000100B0018 /* CreateEventView.swift */,
 				PRO000100B0019 /* ManageEventView.swift */,
+				PRO000100B001D /* AddPlayerSheet.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 				PRO0001000A0017 /* OrganizerDashboardView.swift in Sources */,
 				PRO0001000A0018 /* CreateEventView.swift in Sources */,
 				PRO0001000A0019 /* ManageEventView.swift in Sources */,
+				PRO0001000A001C /* AddPlayerSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
