@@ -130,14 +130,44 @@ struct ProRegistration: Codable, Identifiable {
     let eventId: Int
     let memberId: Int
     let pseudo: String
+    let photoUrl: String
     let statut: String      // "inscrit", "liste_attente", "confirme", "absent"
+    let isPrivate: Bool
     let inscritLe: String
 
     enum CodingKeys: String, CodingKey {
         case id, pseudo, statut
         case eventId   = "event_id"
         case memberId  = "member_id"
+        case photoUrl  = "photo_url"
+        case isPrivate = "is_private"
         case inscritLe = "inscrit_le"
+    }
+}
+
+// MARK: - MemberSearchResult (résultat de recherche dans membres)
+
+struct MemberSearchResult: Codable, Identifiable {
+    let id: Int
+    let pseudo: String
+    let fname: String
+    let lname: String
+    let email: String
+    let photoUrl: String
+    let isRegistered: Bool
+    let regStatut: String
+
+    enum CodingKeys: String, CodingKey {
+        case pseudo, fname, lname, email
+        case id          = "member_id"
+        case photoUrl    = "photo_url"
+        case isRegistered = "is_registered"
+        case regStatut   = "reg_statut"
+    }
+
+    var fullName: String {
+        let full = "\(fname) \(lname)".trimmingCharacters(in: .whitespaces)
+        return full.isEmpty ? pseudo : full
     }
 }
 
@@ -159,6 +189,24 @@ struct ProRegistrationListResponse: Codable {
     let success: Bool
     let registrations: [ProRegistration]
     let message: String?
+}
+
+struct MemberSearchResponse: Codable {
+    let success: Bool
+    let members: [MemberSearchResult]
+    let message: String?
+}
+
+struct CreateMemberResponse: Codable {
+    let success: Bool
+    let memberId: Int?
+    let pseudo: String?
+    let message: String?
+
+    enum CodingKeys: String, CodingKey {
+        case success, pseudo, message
+        case memberId = "member_id"
+    }
 }
 
 struct ProActionResponse: Codable {
