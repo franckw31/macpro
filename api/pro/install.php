@@ -27,6 +27,8 @@ foreach ([
     'description'     => "ALTER TABLE `activite` ADD COLUMN IF NOT EXISTS `description` TEXT NULL COMMENT 'Pro: description libre'",
     'devise'          => "ALTER TABLE `activite` ADD COLUMN IF NOT EXISTS `devise` VARCHAR(10) NOT NULL DEFAULT 'EUR' COMMENT 'Pro: devise du buy-in'",
     'part_anonyme'    => "ALTER TABLE `participation` ADD COLUMN IF NOT EXISTS `anonyme` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Inscription privée (visible uniquement par lorganisateur)'",
+    'mbr_created_by'  => "ALTER TABLE `membres` ADD COLUMN IF NOT EXISTS `pro_created_by` INT NULL DEFAULT NULL COMMENT 'ID organisateur ayant créé ce joueur via CardEventPro'",
+    'mbr_visibility'  => "ALTER TABLE `membres` ADD COLUMN IF NOT EXISTS `pro_visibility` VARCHAR(20) NOT NULL DEFAULT 'public' COMMENT 'public|organizers|private'",
 ] as $col => $sql) {
     try { $pdo->exec($sql); $alterResults[$col] = 'OK'; }
     catch (PDOException $e) { $alterResults[$col] = 'SKIP: ' . $e->getMessage(); }
