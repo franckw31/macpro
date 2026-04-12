@@ -80,15 +80,23 @@ final class OrganizerService: ObservableObject {
         let dateStr = formatter.string(from: form.dateEvent)
 
         let body: [String: Any] = [
-            "titre":       form.titre,
-            "description": form.description,
-            "lieu":        form.lieu,
-            "date_event":  dateStr,
-            "max_joueurs": form.maxJoueurs,
-            "buy_in":      form.buyIn,
-            "devise":      form.devise,
-            "is_public":   form.isPublic,
-            "structure_id": form.structureId as Any
+            "titre":          form.titre,
+            "description":    form.description,
+            "lieu":           form.lieu,
+            "date_event":     dateStr,
+            "max_joueurs":    form.maxJoueurs,
+            "buy_in":         form.buyIn,
+            "devise":         form.devise,
+            "is_public":      form.isPublic,
+            "structure_id":   form.structureId,
+            "rake":           form.rake,
+            "bounty":         form.bounty,
+            "jetons":         form.jetons,
+            "nb_recaves":     form.nbRecaves,
+            "recave_montant": form.recaveMontant,
+            "recave_jetons":  form.recaveJetons,
+            "bonus":          form.bonus,
+            "nb_tables":      form.nbTables
         ]
         req.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
@@ -119,15 +127,24 @@ final class OrganizerService: ObservableObject {
         let dateStr = formatter.string(from: form.dateEvent)
 
         let body: [String: Any] = [
-            "event_id":    id,
-            "titre":       form.titre,
-            "description": form.description,
-            "lieu":        form.lieu,
-            "date_event":  dateStr,
-            "max_joueurs": form.maxJoueurs,
-            "buy_in":      form.buyIn,
-            "devise":      form.devise,
-            "is_public":   form.isPublic
+            "event_id":       id,
+            "titre":          form.titre,
+            "description":    form.description,
+            "lieu":           form.lieu,
+            "date_event":     dateStr,
+            "max_joueurs":    form.maxJoueurs,
+            "buy_in":         form.buyIn,
+            "devise":         form.devise,
+            "is_public":      form.isPublic,
+            "structure_id":   form.structureId,
+            "rake":           form.rake,
+            "bounty":         form.bounty,
+            "jetons":         form.jetons,
+            "nb_recaves":     form.nbRecaves,
+            "recave_montant": form.recaveMontant,
+            "recave_jetons":  form.recaveJetons,
+            "bonus":          form.bonus,
+            "nb_tables":      form.nbTables
         ]
         req.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
