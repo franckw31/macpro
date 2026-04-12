@@ -342,7 +342,7 @@ struct ManageEventView: View {
         let (text, color): (String, Color) = {
             switch statut {
             case "confirme":        return ("Confirmé", .green)
-            case "liste_attente":   return ("En attente", .orange)
+            case "liste_attente":   return ("Option", .orange)
             case "absent":          return ("Absent", .red)
             default:                return ("Inscrit", .blue)
             }
