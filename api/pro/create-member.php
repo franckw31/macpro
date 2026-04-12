@@ -70,10 +70,12 @@ try {
     }
 
     // Générer un mot de passe temporaire — le joueur pourra réinitialiser plus tard
-    $tempPwd    = bin2hex(random_bytes(8));
-    $hashedPwd  = password_hash($tempPwd, PASSWORD_DEFAULT);
-    $emailFinal = $email !== '' ? $email : 'guest_' . uniqid() . '@cardeventpro.local';
-    $fnameVal   = $fname !== '' ? $fname : $pseudo;
+    $tempPwd   = bin2hex(random_bytes(8));
+    $hashedPwd = password_hash($tempPwd, PASSWORD_DEFAULT);
+    $fnameVal  = $fname !== '' ? $fname : $pseudo;
+
+    // Si email fourni, l'utiliser ; sinon on utilisera pseudo.{id}@viendez.com après INSERT
+    $emailInsert = $email !== '' ? $email : ('tmp_' . uniqid() . '@viendez.com');
 
     $stmt = $pdo->prepare("
         INSERT INTO `membres`
@@ -86,13 +88,22 @@ try {
         ':pseudo'      => $pseudo,
         ':fname'       => $fnameVal,
         ':lname'       => $lname,
-        ':email'       => $emailFinal,
+        ':email'       => $emailInsert,
         ':pwd'         => $hashedPwd,
         ':created_by'  => $authUser['member_id'],
         ':visibility'  => $visibility,
     ]);
 
     $newId = (int)$pdo->lastInsertId();
+
+    // Si pas d'email fourni, mettre à jour avec pseudo.id@viendez.com
+    if ($email === '') {
+        $emailFinal = strtolower($pseudo) . '.' . $newId . '@viendez.com';
+        $pdo->prepare("UPDATE `membres` SET `email` = ? WHERE `id-membre` = ?")
+            ->execute([$emailFinal, $newId]);
+    } else {
+        $emailFinal = $email;
+    }
 
     // Log
     $pdo->prepare("INSERT INTO pro_logs (member_id, event_id, action, details, ip) VALUES (?,?,?,?,?)")
