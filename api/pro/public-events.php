@@ -24,33 +24,32 @@ try {
 
     $stmt = $pdo->prepare("
         SELECT
-            e.id,
-            e.titre,
-            e.description,
-            e.lieu,
-            DATE_FORMAT(e.date_event, '%Y-%m-%d %H:%i:%s') AS date_event,
-            e.max_joueurs,
-            e.buy_in,
-            e.devise,
-            e.statut,
-            e.is_public,
-            e.organizer_id,
-            m.pseudo            AS organizer_pseudo,
-            e.activity_id,
-            e.created_at,
-            COALESCE(r.nb, 0)   AS nb_inscrits
-        FROM `pro_events` e
-        JOIN `membres` m ON m.`id-membre` = e.organizer_id
+            a.`id-activite`                                     AS event_id,
+            a.`titre-activite`                                  AS titre,
+            COALESCE(a.`description`, '')                       AS description,
+            a.`ville`                                           AS lieu,
+            DATE_FORMAT(a.`date_depart`, '%Y-%m-%d %H:%i:%s')  AS date_event,
+            COALESCE(a.`places`, 0)                             AS max_joueurs,
+            COALESCE(a.`buyin`, 0)                              AS buy_in,
+            COALESCE(a.`devise`, 'EUR')                         AS devise,
+            COALESCE(a.`statut`, 'publie')                      AS statut,
+            COALESCE(a.`is_public`, 1)                          AS is_public,
+            a.`id-membre`                                       AS organizer_id,
+            m.`pseudo`                                          AS organizer_pseudo,
+            COALESCE(r.nb, 0)                                       AS nb_inscrits,
+            a.`created_at`
+        FROM `activite` a
+        LEFT JOIN `membres` m ON m.`id-membre` = a.`id-membre`
         LEFT JOIN (
             SELECT event_id, COUNT(*) AS nb
             FROM   `pro_registrations`
-            WHERE  statut IN ('inscrit','confirme','liste_attente')
+            WHERE  statut IN ('inscrit','confirme')
             GROUP BY event_id
-        ) r ON r.event_id = e.id
-        WHERE e.is_public = 1
-          AND e.statut IN ('publie', 'en_cours')
+        ) r ON r.event_id = a.`id-activite`
+        WHERE COALESCE(a.`is_public`, 1) = 1
+          AND COALESCE(a.`statut`, 'publie') IN ('publie', 'en_cours')
           $dateFilter
-        ORDER BY e.date_event ASC
+        ORDER BY a.`date_depart` ASC
         LIMIT $limit OFFSET $offset
     ");
     $stmt->execute();
@@ -58,21 +57,21 @@ try {
 
     $events = array_map(function(array $r): array {
         return [
-            'id'               => (int)$r['id'],
-            'titre'            => $r['titre'],
-            'description'      => $r['description'],
-            'lieu'             => $r['lieu'],
-            'date_event'       => $r['date_event'],
+            'id'               => (int)$r['event_id'],
+            'titre'            => $r['titre'] ?? '',
+            'description'      => $r['description'] ?? '',
+            'lieu'             => $r['lieu'] ?? '',
+            'date_event'       => $r['date_event'] ?? null,
             'max_joueurs'      => (int)$r['max_joueurs'],
             'buy_in'           => (float)$r['buy_in'],
-            'devise'           => $r['devise'],
-            'statut'           => $r['statut'],
+            'devise'           => $r['devise'] ?? 'EUR',
+            'statut'           => $r['statut'] ?? 'publie',
             'is_public'        => (bool)$r['is_public'],
             'organizer_id'     => (int)$r['organizer_id'],
-            'organizer_pseudo' => $r['organizer_pseudo'],
-            'activity_id'      => $r['activity_id'] ? (int)$r['activity_id'] : null,
+            'organizer_pseudo' => $r['organizer_pseudo'] ?? '',
+            'activity_id'      => null,
             'nb_inscrits'      => (int)$r['nb_inscrits'],
-            'created_at'       => $r['created_at'],
+            'created_at'       => $r['created_at'] ?? null,
         ];
     }, $rows);
 

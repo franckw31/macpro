@@ -24,8 +24,9 @@ try {
 
     // ── Vérifier que la partie existe et que l'utilisateur a le droit de la voir ──
     $stmtEvent = $pdo->prepare("
-        SELECT organizer_id, statut, is_public, titre
-        FROM pro_events WHERE id = ? LIMIT 1
+        SELECT `id-membre` AS organizer_id, COALESCE(`statut`,'publie') AS statut,
+               COALESCE(`is_public`,1) AS is_public, `titre-activite` AS titre
+        FROM `activite` WHERE `id-activite` = ? LIMIT 1
     ");
     $stmtEvent->execute([$eventId]);
     $event = $stmtEvent->fetch();

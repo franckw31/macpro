@@ -32,7 +32,7 @@ try {
     }
 
     // ── Vérifier que l'event appartient à cet organisateur (ou admin) ──
-    $stmtCheck = $pdo->prepare("SELECT organizer_id, statut FROM pro_events WHERE id = ? LIMIT 1");
+    $stmtCheck = $pdo->prepare("SELECT `id-membre` AS organizer_id, COALESCE(`statut`,'publie') AS statut FROM `activite` WHERE `id-activite` = ? LIMIT 1");
     $stmtCheck->execute([$eventId]);
     $existing = $stmtCheck->fetch();
 
@@ -52,8 +52,8 @@ try {
         exit;
     }
 
-    // ── Récupérer les nouvelles valeurs (fallback sur existantes) ──
-    $stmtOld = $pdo->prepare("SELECT * FROM pro_events WHERE id = ? LIMIT 1");
+    // ── Récupérer les valeurs actuelles (fallback si champ absent du body) ──
+    $stmtOld = $pdo->prepare("SELECT `titre-activite` AS titre, COALESCE(`description`,'') AS description, `ville` AS lieu, `date_depart` AS date_event, COALESCE(`places`,16) AS max_joueurs, COALESCE(`buyin`,0) AS buy_in, COALESCE(`devise`,'EUR') AS devise, COALESCE(`is_public`,1) AS is_public FROM `activite` WHERE `id-activite` = ? LIMIT 1");
     $stmtOld->execute([$eventId]);
     $old = $stmtOld->fetch();
 
@@ -76,18 +76,18 @@ try {
         exit;
     }
 
-    // ── Mise à jour ───────────────────────────────────────────
+    // ── Mise à jour dans `activite` ───────────────────────────
     $pdo->prepare("
-        UPDATE `pro_events` SET
-            titre       = :titre,
-            description = :desc,
-            lieu        = :lieu,
-            date_event  = :date,
-            max_joueurs = :max,
-            buy_in      = :buyin,
-            devise      = :devise,
-            is_public   = :pub
-        WHERE id = :id
+        UPDATE `activite` SET
+            `titre-activite` = :titre,
+            `description`    = :desc,
+            `ville`          = :lieu,
+            `date_depart`    = :date,
+            `places`         = :max,
+            `buyin`          = :buyin,
+            `devise`         = :devise,
+            `is_public`      = :pub
+        WHERE `id-activite` = :id
     ")->execute([
         ':titre'  => $titre,
         ':desc'   => $description,
@@ -112,17 +112,17 @@ try {
 
     // ── Retourner la partie mise à jour ───────────────────────
     $stmtNew = $pdo->prepare("
-        SELECT e.*,
-               DATE_FORMAT(e.date_event, '%Y-%m-%d %H:%i:%s') AS date_event,
-               m.pseudo AS organizer_pseudo,
+        SELECT a.*,
+               DATE_FORMAT(a.`date_depart`, '%Y-%m-%d %H:%i:%s') AS date_event,
+               m.`pseudo` AS organizer_pseudo,
                COALESCE(r.nb, 0) AS nb_inscrits
-        FROM `pro_events` e
-        JOIN `membres` m ON m.`id-membre` = e.organizer_id
+        FROM `activite` a
+        JOIN `membres` m ON m.`id-membre` = a.`id-membre`
         LEFT JOIN (
-            SELECT event_id, COUNT(*) AS nb FROM pro_registrations
-            WHERE statut IN ('inscrit','confirme','liste_attente') GROUP BY event_id
-        ) r ON r.event_id = e.id
-        WHERE e.id = ?
+            SELECT event_id, COUNT(*) AS nb FROM `pro_registrations`
+            WHERE statut IN ('inscrit','confirme') GROUP BY event_id
+        ) r ON r.event_id = a.`id-activite`
+        WHERE a.`id-activite` = ?
     ");
     $stmtNew->execute([$eventId]);
     $row = $stmtNew->fetch();
@@ -141,20 +141,20 @@ try {
 
 function formatProEvent(array $r): array {
     return [
-        'id'               => (int)$r['id'],
-        'titre'            => $r['titre'],
+        'id'               => (int)$r['id-activite'],
+        'titre'            => $r['titre-activite'] ?? '',
         'description'      => $r['description'] ?? '',
-        'lieu'             => $r['lieu'],
-        'date_event'       => $r['date_event'],
-        'max_joueurs'      => (int)$r['max_joueurs'],
-        'buy_in'           => (float)$r['buy_in'],
-        'devise'           => $r['devise'],
-        'statut'           => $r['statut'],
-        'is_public'        => (bool)$r['is_public'],
-        'organizer_id'     => (int)$r['organizer_id'],
+        'lieu'             => $r['ville'] ?? '',
+        'date_event'       => $r['date_event'] ?? null,
+        'max_joueurs'      => (int)($r['places'] ?? 0),
+        'buy_in'           => (float)($r['buyin'] ?? 0),
+        'devise'           => $r['devise'] ?? 'EUR',
+        'statut'           => $r['statut'] ?? 'publie',
+        'is_public'        => (bool)($r['is_public'] ?? 1),
+        'organizer_id'     => (int)($r['id-membre'] ?? 0),
         'organizer_pseudo' => $r['organizer_pseudo'] ?? '',
-        'activity_id'      => isset($r['activity_id']) ? (int)$r['activity_id'] : null,
+        'activity_id'      => null,
         'nb_inscrits'      => (int)($r['nb_inscrits'] ?? 0),
-        'created_at'       => $r['created_at'] ?? '',
+        'created_at'       => $r['created_at'] ?? null,
     ];
 }

@@ -43,7 +43,9 @@ try {
 
     // ── Vérifier la partie ────────────────────────────────────
     $stmtEvent = $pdo->prepare("
-        SELECT organizer_id, statut, max_joueurs FROM pro_events WHERE id = ? LIMIT 1
+        SELECT `id-membre` AS organizer_id, COALESCE(`statut`,'publie') AS statut,
+               COALESCE(`places`,16) AS max_joueurs
+        FROM `activite` WHERE `id-activite` = ? LIMIT 1
     ");
     $stmtEvent->execute([$eventId]);
     $event = $stmtEvent->fetch();
