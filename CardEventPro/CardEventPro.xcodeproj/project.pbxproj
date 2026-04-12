@@ -1,0 +1,470 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		PRO0001000A0001 /* CardEventProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0001 /* CardEventProApp.swift */; };
+		PRO0001000A0002 /* BlindLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0002 /* BlindLevel.swift */; };
+		PRO0001000A0003 /* BlindStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0003 /* BlindStructure.swift */; };
+		PRO0001000A0004 /* PokerTimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0004 /* PokerTimerViewModel.swift */; };
+		PRO0001000A0005 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0005 /* AuthService.swift */; };
+		PRO0001000A0006 /* OrganizerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0006 /* OrganizerModels.swift */; };
+		PRO0001000A0007 /* OrganizerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0007 /* OrganizerService.swift */; };
+		PRO0001000A0008 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0008 /* ContentView.swift */; };
+		PRO0001000A0009 /* EditStructureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0009 /* EditStructureView.swift */; };
+		PRO0001000A000A /* StructureLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B000A /* StructureLibraryView.swift */; };
+		PRO0001000A000B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B000B /* LoginView.swift */; };
+		PRO0001000A000C /* ParticipantsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B000C /* ParticipantsListView.swift */; };
+		PRO0001000A000D /* PlayerProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B000D /* PlayerProfileView.swift */; };
+		PRO0001000A000E /* ActivityInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B000E /* ActivityInfoView.swift */; };
+		PRO0001000A000F /* PlayersMovementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B000F /* PlayersMovementsView.swift */; };
+		PRO0001000A0010 /* LiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0010 /* LiveView.swift */; };
+		PRO0001000A0011 /* PlayersLiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0011 /* PlayersLiveView.swift */; };
+		PRO0001000A0012 /* ChallengeRankingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0012 /* ChallengeRankingView.swift */; };
+		PRO0001000A0013 /* PlayerStatsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0013 /* PlayerStatsDetailView.swift */; };
+		PRO0001000A0014 /* PlayerTrakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0014 /* PlayerTrakView.swift */; };
+		PRO0001000A0015 /* TicketsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0015 /* TicketsListView.swift */; };
+		PRO0001000A0016 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0016 /* HomeView.swift */; };
+		PRO0001000A0017 /* OrganizerDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0017 /* OrganizerDashboardView.swift */; };
+		PRO0001000A0018 /* CreateEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0018 /* CreateEventView.swift */; };
+		PRO0001000A0019 /* ManageEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PRO000100B0019 /* ManageEventView.swift */; };
+		PRO0001000A001A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = PRO000100B001A /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		PRO000100B0000 /* CardEventPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CardEventPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		PRO000100B0001 /* CardEventProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardEventProApp.swift; sourceTree = "<group>"; };
+		PRO000100B0002 /* BlindLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindLevel.swift; sourceTree = "<group>"; };
+		PRO000100B0003 /* BlindStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindStructure.swift; sourceTree = "<group>"; };
+		PRO000100B0004 /* PokerTimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokerTimerViewModel.swift; sourceTree = "<group>"; };
+		PRO000100B0005 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		PRO000100B0006 /* OrganizerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizerModels.swift; sourceTree = "<group>"; };
+		PRO000100B0007 /* OrganizerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizerService.swift; sourceTree = "<group>"; };
+		PRO000100B0008 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		PRO000100B0009 /* EditStructureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditStructureView.swift; sourceTree = "<group>"; };
+		PRO000100B000A /* StructureLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructureLibraryView.swift; sourceTree = "<group>"; };
+		PRO000100B000B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		PRO000100B000C /* ParticipantsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsListView.swift; sourceTree = "<group>"; };
+		PRO000100B000D /* PlayerProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerProfileView.swift; sourceTree = "<group>"; };
+		PRO000100B000E /* ActivityInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityInfoView.swift; sourceTree = "<group>"; };
+		PRO000100B000F /* PlayersMovementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersMovementsView.swift; sourceTree = "<group>"; };
+		PRO000100B0010 /* LiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveView.swift; sourceTree = "<group>"; };
+		PRO000100B0011 /* PlayersLiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersLiveView.swift; sourceTree = "<group>"; };
+		PRO000100B0012 /* ChallengeRankingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeRankingView.swift; sourceTree = "<group>"; };
+		PRO000100B0013 /* PlayerStatsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStatsDetailView.swift; sourceTree = "<group>"; };
+		PRO000100B0014 /* PlayerTrakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTrakView.swift; sourceTree = "<group>"; };
+		PRO000100B0015 /* TicketsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketsListView.swift; sourceTree = "<group>"; };
+		PRO000100B0016 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		PRO000100B0017 /* OrganizerDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizerDashboardView.swift; sourceTree = "<group>"; };
+		PRO000100B0018 /* CreateEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEventView.swift; sourceTree = "<group>"; };
+		PRO000100B0019 /* ManageEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageEventView.swift; sourceTree = "<group>"; };
+		PRO000100B001A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		PRO000100B001B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		PRO000100B001C /* CardEventPro.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CardEventPro.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		PRO000100C0002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		PRO000100D0001 = {
+			isa = PBXGroup;
+			children = (
+				PRO000100D0002 /* CardEventPro */,
+				PRO000100D0003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		PRO000100D0002 /* CardEventPro */ = {
+			isa = PBXGroup;
+			children = (
+				PRO000100B0001 /* CardEventProApp.swift */,
+				PRO000100D0004 /* Models */,
+				PRO000100D0005 /* ViewModels */,
+				PRO000100D0006 /* Views */,
+				PRO000100D0007 /* Services */,
+				PRO000100B001A /* Assets.xcassets */,
+				PRO000100B001B /* Info.plist */,
+				PRO000100B001C /* CardEventPro.entitlements */,
+			);
+			path = CardEventPro;
+			sourceTree = "<group>";
+		};
+		PRO000100D0003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				PRO000100B0000 /* CardEventPro.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		PRO000100D0004 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				PRO000100B0002 /* BlindLevel.swift */,
+				PRO000100B0003 /* BlindStructure.swift */,
+				PRO000100B0006 /* OrganizerModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		PRO000100D0005 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				PRO000100B0004 /* PokerTimerViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		PRO000100D0006 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				PRO000100B0008 /* ContentView.swift */,
+				PRO000100B0009 /* EditStructureView.swift */,
+				PRO000100B000A /* StructureLibraryView.swift */,
+				PRO000100B000B /* LoginView.swift */,
+				PRO000100B000C /* ParticipantsListView.swift */,
+				PRO000100B000D /* PlayerProfileView.swift */,
+				PRO000100B000E /* ActivityInfoView.swift */,
+				PRO000100B000F /* PlayersMovementsView.swift */,
+				PRO000100B0010 /* LiveView.swift */,
+				PRO000100B0011 /* PlayersLiveView.swift */,
+				PRO000100B0012 /* ChallengeRankingView.swift */,
+				PRO000100B0013 /* PlayerStatsDetailView.swift */,
+				PRO000100B0014 /* PlayerTrakView.swift */,
+				PRO000100B0015 /* TicketsListView.swift */,
+				PRO000100B0016 /* HomeView.swift */,
+				PRO000100B0017 /* OrganizerDashboardView.swift */,
+				PRO000100B0018 /* CreateEventView.swift */,
+				PRO000100B0019 /* ManageEventView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		PRO000100D0007 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				PRO000100B0005 /* AuthService.swift */,
+				PRO000100B0007 /* OrganizerService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		PRO000100E0001 /* CardEventPro */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = PRO000100F0002 /* Build configuration list for PBXNativeTarget "CardEventPro" */;
+			buildPhases = (
+				PRO000100C0001 /* Sources */,
+				PRO000100C0002 /* Frameworks */,
+				PRO000100C0003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CardEventPro;
+			productName = CardEventPro;
+			productReference = PRO000100B0000 /* CardEventPro.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		PRO000100E0002 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 2630;
+				TargetAttributes = {
+					PRO000100E0001 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = PRO000100F0001 /* Build configuration list for PBXProject "CardEventPro" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = PRO000100D0001;
+			productRefGroup = PRO000100D0003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				PRO000100E0001 /* CardEventPro */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		PRO000100C0003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				PRO0001000A001A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		PRO000100C0001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				PRO0001000A0001 /* CardEventProApp.swift in Sources */,
+				PRO0001000A0002 /* BlindLevel.swift in Sources */,
+				PRO0001000A0003 /* BlindStructure.swift in Sources */,
+				PRO0001000A0004 /* PokerTimerViewModel.swift in Sources */,
+				PRO0001000A0005 /* AuthService.swift in Sources */,
+				PRO0001000A0006 /* OrganizerModels.swift in Sources */,
+				PRO0001000A0007 /* OrganizerService.swift in Sources */,
+				PRO0001000A0008 /* ContentView.swift in Sources */,
+				PRO0001000A0009 /* EditStructureView.swift in Sources */,
+				PRO0001000A000A /* StructureLibraryView.swift in Sources */,
+				PRO0001000A000B /* LoginView.swift in Sources */,
+				PRO0001000A000C /* ParticipantsListView.swift in Sources */,
+				PRO0001000A000D /* PlayerProfileView.swift in Sources */,
+				PRO0001000A000E /* ActivityInfoView.swift in Sources */,
+				PRO0001000A000F /* PlayersMovementsView.swift in Sources */,
+				PRO0001000A0010 /* LiveView.swift in Sources */,
+				PRO0001000A0011 /* PlayersLiveView.swift in Sources */,
+				PRO0001000A0012 /* ChallengeRankingView.swift in Sources */,
+				PRO0001000A0013 /* PlayerStatsDetailView.swift in Sources */,
+				PRO0001000A0014 /* PlayerTrakView.swift in Sources */,
+				PRO0001000A0015 /* TicketsListView.swift in Sources */,
+				PRO0001000A0016 /* HomeView.swift in Sources */,
+				PRO0001000A0017 /* OrganizerDashboardView.swift in Sources */,
+				PRO0001000A0018 /* CreateEventView.swift in Sources */,
+				PRO0001000A0019 /* ManageEventView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		PRO000100400001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5L3569V4B3;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		PRO000100400002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 5L3569V4B3;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		PRO000100400003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CardEventPro/CardEventPro.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5L3569V4B3;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CardEventPro/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.franck.cardeventpro;
+				PRODUCT_NAME = CardEventPro;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		PRO000100400004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CardEventPro/CardEventPro.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5L3569V4B3;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CardEventPro/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.franck.cardeventpro;
+				PRODUCT_NAME = CardEventPro;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		PRO000100F0001 /* Build configuration list for PBXProject "CardEventPro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				PRO000100400001 /* Debug */,
+				PRO000100400002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		PRO000100F0002 /* Build configuration list for PBXNativeTarget "CardEventPro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				PRO000100400003 /* Debug */,
+				PRO000100400004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = PRO000100E0002 /* Project object */;
+}
