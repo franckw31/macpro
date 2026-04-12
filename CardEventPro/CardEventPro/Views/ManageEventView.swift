@@ -15,6 +15,7 @@ struct ManageEventView: View {
     @State private var showEditSheet  = false
     @State private var showAddPlayer  = false
     @State private var confirmAction: ConfirmAction?
+    @State private var selectedReg: ProRegistration?
 
     private let gold   = Color(red: 1.0, green: 0.75, blue: 0.0)
     private let green  = Color(red: 0.2, green: 0.9, blue: 0.4)
@@ -108,6 +109,48 @@ struct ManageEventView: View {
                         Task {
                             _ = await service.changeStatus(eventId: event.id, statut: action.targetStatut)
                             dismiss()
+                        }
+                    }
+                    Button("Annuler", role: .cancel) {}
+                }
+            }
+            .confirmationDialog(
+                selectedReg.map { "\($0.pseudo)" } ?? "",
+                isPresented: Binding(
+                    get: { selectedReg != nil },
+                    set: { if !$0 { selectedReg = nil } }
+                ),
+                titleVisibility: .visible
+            ) {
+                if let reg = selectedReg {
+                    if reg.statut != "confirme" {
+                        Button("Confirmer") {
+                            Task {
+                                let _ = await service.confirmPlayer(eventId: event.id, memberId: reg.memberId)
+                                await loadRegistrations()
+                            }
+                        }
+                    }
+                    if reg.statut != "liste_attente" {
+                        Button("Option") {
+                            Task {
+                                let _ = await service.setWaitingPlayer(eventId: event.id, memberId: reg.memberId)
+                                await loadRegistrations()
+                            }
+                        }
+                    }
+                    if reg.statut != "absent" {
+                        Button("Marquer absent") {
+                            Task {
+                                let _ = await service.setAbsentPlayer(eventId: event.id, memberId: reg.memberId)
+                                await loadRegistrations()
+                            }
+                        }
+                    }
+                    Button("Désinscrire", role: .destructive) {
+                        Task {
+                            let _ = await service.unregisterPlayer(eventId: event.id, memberId: reg.memberId)
+                            await loadRegistrations()
                         }
                     }
                     Button("Annuler", role: .cancel) {}
@@ -265,51 +308,11 @@ struct ManageEventView: View {
             }
             Spacer()
             statutBadge(reg.statut)
+                .onTapGesture { selectedReg = reg }
         }
         .padding(.vertical, 6)
         .overlay(Divider(), alignment: .bottom)
         .contentShape(Rectangle())
-        .contextMenu {
-            if reg.statut != "confirme" {
-                Button {
-                    Task {
-                        let _ = await service.confirmPlayer(eventId: event.id, memberId: reg.memberId)
-                        await loadRegistrations()
-                    }
-                } label: {
-                    Label("Confirmer", systemImage: "checkmark.circle.fill")
-                }
-            }
-            if reg.statut != "liste_attente" {
-                Button {
-                    Task {
-                        let _ = await service.setWaitingPlayer(eventId: event.id, memberId: reg.memberId)
-                        await loadRegistrations()
-                    }
-                } label: {
-                    Label("Option", systemImage: "clock.badge.questionmark")
-                }
-            }
-            if reg.statut != "absent" {
-                Button {
-                    Task {
-                        let _ = await service.setAbsentPlayer(eventId: event.id, memberId: reg.memberId)
-                        await loadRegistrations()
-                    }
-                } label: {
-                    Label("Marquer absent", systemImage: "person.fill.xmark")
-                }
-            }
-            Divider()
-            Button(role: .destructive) {
-                Task {
-                    let _ = await service.unregisterPlayer(eventId: event.id, memberId: reg.memberId)
-                    await loadRegistrations()
-                }
-            } label: {
-                Label("Désinscrire", systemImage: "trash")
-            }
-        }
     }
 
     // MARK: - Helpers visuels
