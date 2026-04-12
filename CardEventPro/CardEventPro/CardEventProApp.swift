@@ -114,6 +114,7 @@ struct CardEventProApp: App {
                         .transition(.opacity)
                 }
             }
+            .environmentObject(auth)
             .animation(.easeInOut(duration: 0.3), value: auth.isAuthenticated)
             .animation(.easeInOut(duration: 0.3), value: auth.isLoading)
             .onAppear {
