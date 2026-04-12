@@ -49,6 +49,9 @@ struct CreateEventView: View {
                         sectionHeader("Paramètres financiers", icon: "eurosign.circle")
                         financialSection
 
+                        sectionHeader("Structure & Blindes", icon: "chart.bar.fill")
+                        pokerSection
+
                         sectionHeader("Visibilité", icon: "eye")
                         visibilitySection
 
