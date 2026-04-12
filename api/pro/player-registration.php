@@ -185,6 +185,7 @@ try {
             $message = 'Joueur placé en liste d\'attente';
             proLog($pdo, $authUser['member_id'], $eventId, 'set_waiting', "member_id=$memberId");
             break;
+    }
 
     // Retourner le statut courant de l'inscription
     $stmtReg = $pdo->prepare("
