@@ -53,7 +53,7 @@ struct ActivitySummary: Identifiable {
 }
 
 @MainActor
-final class PokerTimerViewModel: NSObject, ObservableObject, @preconcurrency AVSpeechSynthesizerDelegate {
+final class PokerTimerViewModel: NSObject, ObservableObject {
     @Published var blindLevels: [BlindLevel] = []
     @Published var currentLevelIndex: Int = 0
     @Published var timeLeft: Int = 0
