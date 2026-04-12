@@ -200,6 +200,11 @@ final class OrganizerService: ObservableObject {
 
     // MARK: - Inscrire/désinscrire un joueur
 
+    func registerPlayerWithVisibility(eventId: Int, memberId: Int, isPrivate: Bool) async -> Bool {
+        return await playerAction(eventId: eventId, memberId: memberId,
+                                  action: "register", isPrivate: isPrivate)
+    }
+
     func registerPlayer(eventId: Int, memberId: Int) async -> Bool {
         return await playerAction(eventId: eventId, memberId: memberId, action: "register")
     }
@@ -208,13 +213,22 @@ final class OrganizerService: ObservableObject {
         return await playerAction(eventId: eventId, memberId: memberId, action: "unregister")
     }
 
-    private func playerAction(eventId: Int, memberId: Int, action: String) async -> Bool {
+    func confirmPlayer(eventId: Int, memberId: Int) async -> Bool {
+        return await playerAction(eventId: eventId, memberId: memberId, action: "confirm")
+    }
+
+    func setAbsentPlayer(eventId: Int, memberId: Int) async -> Bool {
+        return await playerAction(eventId: eventId, memberId: memberId, action: "set_absent")
+    }
+
+    private func playerAction(eventId: Int, memberId: Int, action: String, isPrivate: Bool = false) async -> Bool {
         guard let url = URL(string: "\(baseURL)/player-registration.php") else { return false }
         var req = authorizedRequest(url: url, method: "POST")
         req.httpBody = try? JSONSerialization.data(withJSONObject: [
-            "event_id":  eventId,
-            "member_id": memberId,
-            "action":    action
+            "event_id":   eventId,
+            "member_id":  memberId,
+            "action":     action,
+            "is_private": isPrivate ? 1 : 0
         ])
         do {
             let (data, _) = try await URLSession.shared.data(for: req)
@@ -223,6 +237,37 @@ final class OrganizerService: ObservableObject {
         } catch {
             return false
         }
+    }
+
+    // MARK: - Rechercher des membres
+
+    func searchMembers(query: String, eventId: Int) async -> [MemberSearchResult] {
+        guard !query.isEmpty,
+              let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: "\(baseURL)/search-members.php?q=\(encoded)&event_id=\(eventId)")
+        else { return [] }
+        do {
+            let (data, _) = try await URLSession.shared.data(for: authorizedRequest(url: url))
+            let response = try JSONDecoder().decode(MemberSearchResponse.self, from: data)
+            return response.success ? response.members : []
+        } catch { return [] }
+    }
+
+    // MARK: - Créer un nouveau membre (joueur non-inscrit)
+
+    func createMember(pseudo: String, fname: String, lname: String, email: String) async -> CreateMemberResponse? {
+        guard let url = URL(string: "\(baseURL)/create-member.php") else { return nil }
+        var req = authorizedRequest(url: url, method: "POST")
+        req.httpBody = try? JSONSerialization.data(withJSONObject: [
+            "pseudo": pseudo,
+            "fname":  fname,
+            "lname":  lname,
+            "email":  email
+        ])
+        do {
+            let (data, _) = try await URLSession.shared.data(for: req)
+            return try JSONDecoder().decode(CreateMemberResponse.self, from: data)
+        } catch { return nil }
     }
 
     // MARK: - Récupérer les inscrits d'une partie
