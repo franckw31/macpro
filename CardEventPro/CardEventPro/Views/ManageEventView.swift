@@ -106,7 +106,7 @@ struct ManageEventView: View {
                 if let action = confirmAction {
                     Button(action.buttonLabel, role: action.role) {
                         Task {
-                            await service.changeStatus(eventId: event.id, statut: action.targetStatut)
+                            _ = await service.changeStatus(eventId: event.id, statut: action.targetStatut)
                             dismiss()
                         }
                     }
@@ -176,7 +176,7 @@ struct ManageEventView: View {
             switch event.statut {
             case .brouillon:
                 actionButton("Publier", icon: "checkmark.circle", color: .blue) {
-                    Task { await service.changeStatus(eventId: event.id, statut: .publie) }
+                    Task { _ = await service.changeStatus(eventId: event.id, statut: .publie) }
                 }
             case .publie:
                 actionButton("Démarrer", icon: "play.fill", color: green) {
@@ -190,7 +190,7 @@ struct ManageEventView: View {
                     confirmAction = .finish
                 }
                 actionButton("Mettre en pause", icon: "pause.fill", color: .orange) {
-                    Task { await service.changeStatus(eventId: event.id, statut: .publie) }
+                    Task { _ = await service.changeStatus(eventId: event.id, statut: .publie) }
                 }
             case .termine, .annule:
                 Text("Partie \(event.statut.label.lowercased())")
