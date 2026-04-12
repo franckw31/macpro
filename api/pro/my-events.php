@@ -41,7 +41,16 @@ try {
             a.`id-membre`                                           AS organizer_id,
             m.`pseudo`                                              AS organizer_pseudo,
             COALESCE(r.nb, 0)                                       AS nb_inscrits,
-            a.`created_at`
+            a.`created_at`,
+            COALESCE(a.`id_structure`, 1)                           AS structure_id,
+            COALESCE(a.`rake`, 5)                                   AS rake,
+            COALESCE(a.`bounty`, 0)                                 AS bounty,
+            COALESCE(a.`jetons`, 35000)                             AS jetons,
+            COALESCE(a.`recave`, 1)                                 AS nb_recaves,
+            COALESCE(a.`recave_montant`, 10)                        AS recave_montant,
+            COALESCE(a.`recave_jetons`, 40000)                      AS recave_jetons,
+            COALESCE(a.`bonus`, 0)                                  AS bonus,
+            COALESCE(a.`nb-tables`, 2)                              AS nb_tables
         FROM `activite` a
         LEFT JOIN `membres` m ON m.`id-membre` = a.`id-membre`
         LEFT JOIN (
@@ -85,5 +94,14 @@ function proFormatEvent(array $r): array {
         'activity_id'      => null,
         'nb_inscrits'      => (int)$r['nb_inscrits'],
         'created_at'       => $r['created_at'] ?? null,
+        'structure_id'     => (int)$r['structure_id'],
+        'rake'             => (int)$r['rake'],
+        'bounty'           => (int)$r['bounty'],
+        'jetons'           => (int)$r['jetons'],
+        'nb_recaves'       => (int)$r['nb_recaves'],
+        'recave_montant'   => (int)$r['recave_montant'],
+        'recave_jetons'    => (int)$r['recave_jetons'],
+        'bonus'            => (int)$r['bonus'],
+        'nb_tables'        => (int)$r['nb_tables'],
     ];
 }
