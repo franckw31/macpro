@@ -12,7 +12,8 @@ struct ManageEventView: View {
 
     @State private var registrations: [ProRegistration] = []
     @State private var isLoadingRegs = false
-    @State private var showEditSheet = false
+    @State private var showEditSheet  = false
+    @State private var showAddPlayer  = false
     @State private var confirmAction: ConfirmAction?
 
     private let gold   = Color(red: 1.0, green: 0.75, blue: 0.0)
@@ -87,6 +88,11 @@ struct ManageEventView: View {
             .sheet(isPresented: $showEditSheet) {
                 CreateEventView(mode: .edit(event)) { _ in
                     showEditSheet = false
+                }
+            }
+            .sheet(isPresented: $showAddPlayer) {
+                AddPlayerSheet(event: event) {
+                    Task { await loadRegistrations() }
                 }
             }
             .confirmationDialog(
@@ -207,6 +213,16 @@ struct ManageEventView: View {
                 if isLoadingRegs {
                     ProgressView().tint(gold).scaleEffect(0.7)
                 }
+                if event.statut != .termine && event.statut != .annule {
+                    Button {
+                        showAddPlayer = true
+                    } label: {
+                        Image(systemName: "person.badge.plus")
+                            .font(.title3)
+                            .foregroundColor(gold)
+                    }
+                    .padding(.leading, 6)
+                }
             }
 
             if registrations.isEmpty && !isLoadingRegs {
@@ -233,9 +249,16 @@ struct ManageEventView: View {
                 .foregroundColor(gold.opacity(0.7))
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(reg.pseudo)
-                    .font(.subheadline.bold())
-                    .foregroundColor(.white)
+                HStack(spacing: 5) {
+                    Text(reg.pseudo)
+                        .font(.subheadline.bold())
+                        .foregroundColor(.white)
+                    if reg.isPrivate {
+                        Image(systemName: "lock.fill")
+                            .font(.caption2)
+                            .foregroundColor(.orange)
+                    }
+                }
                 Text("Inscrit le \(shortDate(reg.inscritLe))")
                     .font(.caption2)
                     .foregroundColor(.gray)
@@ -245,6 +268,38 @@ struct ManageEventView: View {
         }
         .padding(.vertical, 6)
         .overlay(Divider(), alignment: .bottom)
+        .contentShape(Rectangle())
+        .contextMenu {
+            if reg.statut != "confirme" {
+                Button {
+                    Task {
+                        let _ = await service.confirmPlayer(eventId: event.id, memberId: reg.memberId)
+                        await loadRegistrations()
+                    }
+                } label: {
+                    Label("Confirmer", systemImage: "checkmark.circle.fill")
+                }
+            }
+            if reg.statut != "absent" {
+                Button {
+                    Task {
+                        let _ = await service.setAbsentPlayer(eventId: event.id, memberId: reg.memberId)
+                        await loadRegistrations()
+                    }
+                } label: {
+                    Label("Marquer absent", systemImage: "person.fill.xmark")
+                }
+            }
+            Divider()
+            Button(role: .destructive) {
+                Task {
+                    let _ = await service.unregisterPlayer(eventId: event.id, memberId: reg.memberId)
+                    await loadRegistrations()
+                }
+            } label: {
+                Label("Désinscrire", systemImage: "trash")
+            }
+        }
     }
 
     // MARK: - Helpers visuels
