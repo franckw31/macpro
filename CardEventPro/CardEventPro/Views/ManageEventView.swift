@@ -222,9 +222,6 @@ struct ManageEventView: View {
                     Task { _ = await service.changeStatus(eventId: event.id, statut: .publie) }
                 }
             case .publie:
-                actionButton("Démarrer", icon: "play.fill", color: green) {
-                    confirmAction = .start
-                }
                 actionButton("Annuler", icon: "xmark.circle", color: .red) {
                     confirmAction = .cancel
                 }
