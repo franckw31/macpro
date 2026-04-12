@@ -221,6 +221,10 @@ final class OrganizerService: ObservableObject {
         return await playerAction(eventId: eventId, memberId: memberId, action: "set_absent")
     }
 
+    func setWaitingPlayer(eventId: Int, memberId: Int) async -> Bool {
+        return await playerAction(eventId: eventId, memberId: memberId, action: "set_waiting")
+    }
+
     private func playerAction(eventId: Int, memberId: Int, action: String, isPrivate: Bool = false) async -> Bool {
         guard let url = URL(string: "\(baseURL)/player-registration.php") else { return false }
         var req = authorizedRequest(url: url, method: "POST")
