@@ -23,17 +23,27 @@ struct ProEvent: Codable, Identifiable {
     var titre: String
     var description: String
     var lieu: String
-    var dateEvent: String       // "YYYY-MM-DD HH:MM"
+    var dateEvent: String
     var maxJoueurs: Int
     var buyIn: Double
-    var devise: String          // "EUR", "USD", …
+    var devise: String
     var statut: ProEventStatus
     var isPublic: Bool
     var organizerId: Int
     var organizerPseudo: String
-    var activityId: Int?        // lié à une activité CardEvent existante
+    var activityId: Int?
     var nbInscrits: Int
     var createdAt: String
+    // Parametres poker
+    var structureId: Int
+    var rake: Int
+    var bounty: Int
+    var jetons: Int
+    var nbRecaves: Int
+    var recaveMontant: Int
+    var recaveJetons: Int
+    var bonus: Int
+    var nbTables: Int
 
     enum CodingKeys: String, CodingKey {
         case id, titre, description, lieu, devise, statut
@@ -46,6 +56,12 @@ struct ProEvent: Codable, Identifiable {
         case activityId      = "activity_id"
         case nbInscrits      = "nb_inscrits"
         case createdAt       = "created_at"
+        case structureId     = "structure_id"
+        case rake, bounty, jetons, bonus
+        case nbRecaves       = "nb_recaves"
+        case recaveMontant   = "recave_montant"
+        case recaveJetons    = "recave_jetons"
+        case nbTables        = "nb_tables"
     }
 }
 
@@ -83,12 +99,21 @@ struct NewEventForm {
     var titre: String = ""
     var description: String = ""
     var lieu: String = ""
-    var dateEvent: Date = Date().addingTimeInterval(7 * 86400) // +7 jours
+    var dateEvent: Date = Date().addingTimeInterval(7 * 86400)
     var maxJoueurs: Int = 20
     var buyIn: Double = 20.0
     var devise: String = "EUR"
     var isPublic: Bool = true
-    var structureId: Int? = nil     // structure de blindes optionnelle
+    // Parametres poker
+    var structureId: Int = 1
+    var rake: Int = 5
+    var bounty: Int = 0
+    var jetons: Int = 35000
+    var nbRecaves: Int = 1
+    var recaveMontant: Int = 10
+    var recaveJetons: Int = 40000
+    var bonus: Int = 0
+    var nbTables: Int = 2
 
     var isValid: Bool {
         !titre.trimmingCharacters(in: .whitespaces).isEmpty &&
