@@ -21,9 +21,22 @@ struct AddPlayerSheet: View {
     // MARK: Flow
     @State private var step: AddStep = .search
     @State private var isPrivate = false
+    @State private var playerVisibility: PlayerVisibility = .shared
     @State private var isSaving  = false
     @State private var errorMessage: String?
     @State private var showError = false
+
+    enum PlayerVisibility {
+        case shared   // organizers — tous les organisateurs peuvent utiliser ce joueur
+        case `private` // private   — seulement moi
+
+        var apiValue: String {
+            switch self {
+            case .shared:   return "organizers"
+            case .private:  return "private"
+            }
+        }
+    }
 
     // MARK: Create-new form
     @State private var newPseudo = ""
@@ -220,9 +233,20 @@ struct AddPlayerSheet: View {
                 }
 
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(member.pseudo)
-                        .font(.subheadline.bold())
-                        .foregroundColor(member.isRegistered ? .gray : .white)
+                    HStack(spacing: 5) {
+                        Text(member.pseudo)
+                            .font(.subheadline.bold())
+                            .foregroundColor(member.isRegistered ? .gray : .white)
+                        if member.proVisibility == "private" {
+                            Image(systemName: "lock.fill")
+                                .font(.caption2)
+                                .foregroundColor(.orange)
+                        } else if member.proVisibility == "organizers" {
+                            Image(systemName: "person.2.fill")
+                                .font(.caption2)
+                                .foregroundColor(gold.opacity(0.7))
+                        }
+                    }
                     let name = "\(member.fname) \(member.lname)".trimmingCharacters(in: .whitespaces)
                     if !name.isEmpty {
                         Text(name)
@@ -326,6 +350,8 @@ struct AddPlayerSheet: View {
                 .padding(.horizontal)
                 .padding(.top, 8)
 
+                playerVisibilityCard.padding(.horizontal)
+
                 visibilityCard.padding(.horizontal)
 
                 Text("Le joueur pourra se connecter avec ce pseudo et réinitialiser son mot de passe plus tard.")
@@ -407,6 +433,64 @@ struct AddPlayerSheet: View {
         .cornerRadius(14)
     }
 
+    private var playerVisibilityCard: some View {
+        VStack(spacing: 0) {
+            Text("Visibilité de ce joueur")
+                .font(.caption.bold())
+                .foregroundColor(.gray)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 6)
+
+            HStack(spacing: 0) {
+                visibilityOption(
+                    label: "Partagé",
+                    subtitle: "Tous les organisateurs",
+                    icon: "person.2.fill",
+                    color: gold,
+                    isSelected: playerVisibility == .shared
+                ) { playerVisibility = .shared }
+
+                Divider().frame(height: 56)
+
+                visibilityOption(
+                    label: "Privé",
+                    subtitle: "Moi seulement",
+                    icon: "lock.fill",
+                    color: .orange,
+                    isSelected: playerVisibility == .private
+                ) { playerVisibility = .private }
+            }
+            .background(Color(white: 0.12))
+            .cornerRadius(12)
+            .padding(.horizontal, 0)
+            .padding(.bottom, 12)
+        }
+        .background(Color(white: 0.1))
+        .cornerRadius(14)
+    }
+
+    private func visibilityOption(label: String, subtitle: String, icon: String,
+                                   color: Color, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.title3)
+                    .foregroundColor(isSelected ? color : Color(white: 0.45))
+                Text(label)
+                    .font(.subheadline.bold())
+                    .foregroundColor(isSelected ? .white : Color(white: 0.45))
+                Text(subtitle)
+                    .font(.caption2)
+                    .foregroundColor(isSelected ? color.opacity(0.8) : Color(white: 0.35))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background(isSelected ? color.opacity(0.15) : Color.clear)
+        }
+    }
+
     // MARK: - Logic
 
     private func scheduleSearch() {
@@ -445,7 +529,8 @@ struct AddPlayerSheet: View {
             pseudo: newPseudo.trimmingCharacters(in: .whitespaces),
             fname:  newFname.trimmingCharacters(in: .whitespaces),
             lname:  newLname.trimmingCharacters(in: .whitespaces),
-            email:  newEmail.trimmingCharacters(in: .whitespaces)
+            email:  newEmail.trimmingCharacters(in: .whitespaces),
+            visibility: playerVisibility.apiValue
         ) else {
             errorMessage = "Impossible de créer le joueur (erreur réseau)"
             showError = true
