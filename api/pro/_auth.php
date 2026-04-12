@@ -46,7 +46,6 @@ if (!$_proToken) {
 $_stmt = $pdo->prepare("
     SELECT t.membre_id,
            m.pseudo,
-           m.droits,
            t.expires_at
     FROM   app_auth_tokens t
     JOIN   membres m ON m.`id-membre` = t.membre_id
@@ -67,21 +66,41 @@ if (!$_row) {
 $pdo->prepare("UPDATE app_auth_tokens SET last_used_at = NOW() WHERE token = ?")
     ->execute([$_proToken]);
 
-// ---- Vérifier le rôle organisateur dans pro_organizers ----
-$_orgStmt = $pdo->prepare("
-    SELECT is_verified FROM pro_organizers WHERE member_id = ? LIMIT 1
-");
-$_orgStmt->execute([(int)$_row['membre_id']]);
-$_orgRow = $_orgStmt->fetch();
+$_memberId = (int)$_row['membre_id'];
 
-$_isAdmin     = ((int)$_row['droits'] === 2 || (int)$_row['membre_id'] === 265);
-$_isOrganizer = $_isAdmin || ($_orgRow && (int)$_orgRow['is_verified'] === 1);
+// ---- Déterminer le rôle admin (droits peut ne pas exister) ----
+$_isAdmin = ($_memberId === 265);
+if (!$_isAdmin) {
+    try {
+        $_dStmt = $pdo->prepare("SELECT `droits` FROM `membres` WHERE `id-membre` = ? LIMIT 1");
+        $_dStmt->execute([$_memberId]);
+        $_droits = $_dStmt->fetchColumn();
+        $_isAdmin = ((int)$_droits === 2);
+    } catch (PDOException $_e) {
+        // colonne droits absente → pas admin
+    }
+}
+
+// ---- Vérifier le rôle organisateur dans pro_organizers ----
+$_isOrganizer = $_isAdmin;
+if (!$_isOrganizer) {
+    try {
+        $_orgStmt = $pdo->prepare("
+            SELECT is_verified FROM pro_organizers WHERE member_id = ? LIMIT 1
+        ");
+        $_orgStmt->execute([$_memberId]);
+        $_orgRow = $_orgStmt->fetch();
+        $_isOrganizer = ($_orgRow && (int)$_orgRow['is_verified'] === 1);
+    } catch (PDOException $_e) {
+        // table pro_organizers absente → pas organisateur
+    }
+}
 
 $authUser = [
-    'member_id'    => (int)$_row['membre_id'],
+    'member_id'    => $_memberId,
     'pseudo'       => $_row['pseudo'],
     'is_admin'     => $_isAdmin,
     'is_organizer' => $_isOrganizer,
 ];
 
-unset($_proToken, $_headers, $_authHeader, $_m, $_body, $_input, $_stmt, $_row, $_orgStmt, $_orgRow);
+unset($_proToken, $_headers, $_authHeader, $_m, $_body, $_input, $_stmt, $_row);
