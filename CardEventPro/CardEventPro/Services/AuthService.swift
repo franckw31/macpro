@@ -136,7 +136,13 @@ final class AuthService: ObservableObject {
         request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
         let (data, _) = try await URLSession.shared.data(for: request)
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any], let success = json["success"] as? Bool else { return false }
-        if success, let p = json["pseudo"] as? String { KeychainHelper.save(p, forKey: pseudoKey); let adminFlag = (json["is_admin"] as? Bool == true) ? "1" : "0"; KeychainHelper.save(adminFlag, forKey: adminKey) }
+        if success, let p = json["pseudo"] as? String {
+            KeychainHelper.save(p, forKey: pseudoKey)
+            let adminFlag = (json["is_admin"] as? Bool == true) ? "1" : "0"
+            KeychainHelper.save(adminFlag, forKey: adminKey)
+            let orgFlag = (json["is_organizer"] as? Bool == true || json["is_admin"] as? Bool == true) ? "1" : "0"
+            KeychainHelper.save(orgFlag, forKey: organizerKey)
+        }
         return success
     }
 
