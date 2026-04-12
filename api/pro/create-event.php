@@ -5,7 +5,8 @@
 //  Authorization: Bearer <token>
 //  Body JSON : { titre, description, lieu, date_event,
 //                max_joueurs, buy_in, devise, is_public,
-//                structure_id? }
+//                structure_id, rake, bounty, jetons, nb_recaves,
+//                recave_montant, recave_jetons, bonus, nb_tables }
 // ============================================================
 
 header('Content-Type: application/json');
@@ -41,7 +42,15 @@ try {
     $devise     = trim($body['devise']       ?? 'EUR');
     $description = trim($body['description'] ?? '');
     $isPublic   = isset($body['is_public'])  ? (int)(bool)$body['is_public'] : 1;
-    $structureId = isset($body['structure_id']) ? (int)$body['structure_id'] : null;
+    $structureId   = isset($body['structure_id']) ? (int)$body['structure_id'] : 1;
+    $rake          = min(25, max(0, (int)($body['rake']           ?? 5)));
+    $bounty        = min(10, max(0, (int)($body['bounty']         ?? 0)));
+    $jetons        = max(0,        (int)($body['jetons']          ?? 35000));
+    $nbRecaves     = max(0,        (int)($body['nb_recaves']      ?? 1));
+    $recaveMontant = max(0,        (int)($body['recave_montant']  ?? 10));
+    $recaveJetons  = max(0,        (int)($body['recave_jetons']   ?? 40000));
+    $bonus         = max(0,        (int)($body['bonus']           ?? 0));
+    $nbTables      = max(1,        (int)($body['nb_tables']       ?? 2));
 
     if ($titre === '') {
         http_response_code(400);
@@ -67,26 +76,36 @@ try {
         exit;
     }
 
-    // ── Insertion ─────────────────────────────────────────────
+    // ── Insertion dans `activite` ─────────────────────────────
     $stmt = $pdo->prepare("
-        INSERT INTO `pro_events`
-            (titre, description, lieu, date_event, max_joueurs, buy_in, devise,
-             statut, is_public, organizer_id, activity_id)
+        INSERT INTO `activite`
+            (`titre-activite`, `description`, `ville`, `date_depart`, `places`, `buyin`, `devise`,
+             `statut`, `is_public`, `id-membre`, `id_structure`,
+             `rake`, `bounty`, `jetons`, `recave`, `recave_montant`, `recave_jetons`, `bonus`, `nb-tables`)
         VALUES
             (:titre, :desc, :lieu, :date, :max, :buyin, :devise,
-             'brouillon', :pub, :orgid, :actid)
+             'brouillon', :pub, :orgid, :strucid,
+             :rake, :bounty, :jetons, :nbrecaves, :recavemontant, :recavejetons, :bonus, :nbtables)
     ");
     $stmt->execute([
-        ':titre'  => $titre,
-        ':desc'   => $description,
-        ':lieu'   => $lieu,
-        ':date'   => $parsedDate,
-        ':max'    => $maxJoueurs,
-        ':buyin'  => $buyIn,
-        ':devise' => $devise,
-        ':pub'    => $isPublic,
-        ':orgid'  => $authUser['member_id'],
-        ':actid'  => $structureId,   // activity_id (peut être null ou un id_structure)
+        ':titre'        => $titre,
+        ':desc'         => $description,
+        ':lieu'         => $lieu,
+        ':date'         => $parsedDate,
+        ':max'          => $maxJoueurs,
+        ':buyin'        => $buyIn,
+        ':devise'       => $devise,
+        ':pub'          => $isPublic,
+        ':orgid'        => $authUser['member_id'],
+        ':strucid'      => $structureId,
+        ':rake'         => $rake,
+        ':bounty'       => $bounty,
+        ':jetons'       => $jetons,
+        ':nbrecaves'    => $nbRecaves,
+        ':recavemontant'=> $recaveMontant,
+        ':recavejetons' => $recaveJetons,
+        ':bonus'        => $bonus,
+        ':nbtables'     => $nbTables,
     ]);
 
     $newId = (int)$pdo->lastInsertId();
@@ -103,13 +122,13 @@ try {
 
     // ── Retourner la partie créée ─────────────────────────────
     $newEvent = $pdo->prepare("
-        SELECT e.*,
-               DATE_FORMAT(e.date_event, '%Y-%m-%d %H:%i:%s') AS date_event,
-               m.pseudo AS organizer_pseudo,
+        SELECT a.*,
+               DATE_FORMAT(a.`date_depart`, '%Y-%m-%d %H:%i:%s') AS date_event,
+               m.`pseudo` AS organizer_pseudo,
                0 AS nb_inscrits
-        FROM `pro_events` e
-        JOIN `membres` m ON m.`id-membre` = e.organizer_id
-        WHERE e.id = ?
+        FROM `activite` a
+        JOIN `membres` m ON m.`id-membre` = a.`id-membre`
+        WHERE a.`id-activite` = ?
     ");
     $newEvent->execute([$newId]);
     $row = $newEvent->fetch();
@@ -130,20 +149,29 @@ try {
 // ── Helper ────────────────────────────────────────────────────
 function formatProEvent(array $r): array {
     return [
-        'id'               => (int)$r['id'],
-        'titre'            => $r['titre'],
+        'id'               => (int)$r['id-activite'],
+        'titre'            => $r['titre-activite'] ?? '',
         'description'      => $r['description'] ?? '',
-        'lieu'             => $r['lieu'],
-        'date_event'       => $r['date_event'],
-        'max_joueurs'      => (int)$r['max_joueurs'],
-        'buy_in'           => (float)$r['buy_in'],
-        'devise'           => $r['devise'],
-        'statut'           => $r['statut'],
-        'is_public'        => (bool)$r['is_public'],
-        'organizer_id'     => (int)$r['organizer_id'],
+        'lieu'             => $r['ville'] ?? '',
+        'date_event'       => $r['date_event'] ?? null,
+        'max_joueurs'      => (int)($r['places'] ?? 0),
+        'buy_in'           => (float)($r['buyin'] ?? 0),
+        'devise'           => $r['devise'] ?? 'EUR',
+        'statut'           => $r['statut'] ?? 'brouillon',
+        'is_public'        => (bool)($r['is_public'] ?? 1),
+        'organizer_id'     => (int)($r['id-membre'] ?? 0),
         'organizer_pseudo' => $r['organizer_pseudo'] ?? '',
-        'activity_id'      => isset($r['activity_id']) ? (int)$r['activity_id'] : null,
+        'activity_id'      => null,
         'nb_inscrits'      => (int)($r['nb_inscrits'] ?? 0),
-        'created_at'       => $r['created_at'] ?? date('Y-m-d H:i:s'),
+        'created_at'       => $r['created_at'] ?? null,
+        'structure_id'     => (int)($r['id_structure'] ?? 1),
+        'rake'             => (int)($r['rake'] ?? 5),
+        'bounty'           => (int)($r['bounty'] ?? 0),
+        'jetons'           => (int)($r['jetons'] ?? 35000),
+        'nb_recaves'       => (int)($r['recave'] ?? 1),
+        'recave_montant'   => (int)($r['recave_montant'] ?? 10),
+        'recave_jetons'    => (int)($r['recave_jetons'] ?? 40000),
+        'bonus'            => (int)($r['bonus'] ?? 0),
+        'nb_tables'        => (int)($r['nb-tables'] ?? 2),
     ];
 }
