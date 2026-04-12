@@ -280,6 +280,16 @@ struct ManageEventView: View {
                     Label("Confirmer", systemImage: "checkmark.circle.fill")
                 }
             }
+            if reg.statut != "liste_attente" {
+                Button {
+                    Task {
+                        let _ = await service.setWaitingPlayer(eventId: event.id, memberId: reg.memberId)
+                        await loadRegistrations()
+                    }
+                } label: {
+                    Label("Option", systemImage: "clock.badge.questionmark")
+                }
+            }
             if reg.statut != "absent" {
                 Button {
                     Task {
