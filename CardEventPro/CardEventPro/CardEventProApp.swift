@@ -59,7 +59,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 }
 #endif
 
-private final class WelcomeSpeaker: NSObject, AVSpeechSynthesizerDelegate {
+private final class WelcomeSpeaker: NSObject, AVSpeechSynthesizerDelegate, @unchecked Sendable {
     private let speechSynthesizer = AVSpeechSynthesizer()
 
     override init() {
@@ -68,6 +68,7 @@ private final class WelcomeSpeaker: NSObject, AVSpeechSynthesizerDelegate {
     }
 
     func speakWelcomeMessage() {
+        #if os(iOS)
         do {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(.ambient, mode: .default, options: [.mixWithOthers])
@@ -75,6 +76,7 @@ private final class WelcomeSpeaker: NSObject, AVSpeechSynthesizerDelegate {
         } catch {
             print("Failed to setup audio session: \(error)")
         }
+        #endif
         let utterance = AVSpeechUtterance(string: "Bienvenue sur Carde Ivènte Pro")
         utterance.voice = AVSpeechSynthesisVoice(language: "fr-FR")
         speechSynthesizer.speak(utterance)
@@ -87,7 +89,9 @@ private final class WelcomeSpeaker: NSObject, AVSpeechSynthesizerDelegate {
         releaseAudioSession()
     }
     private func releaseAudioSession() {
+        #if os(iOS)
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        #endif
     }
 }
 
