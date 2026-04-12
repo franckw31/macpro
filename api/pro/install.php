@@ -7,7 +7,7 @@
 
 header('Content-Type: application/json');
 
-$secret = 'CardEventPro2026!';   // ← changez après installation
+$secret = 'CardEventPro2026';   // ← changez après installation
 if (($_GET['secret'] ?? '') !== $secret) {
     http_response_code(403);
     echo json_encode(['success' => false, 'error' => 'Accès refusé']);
