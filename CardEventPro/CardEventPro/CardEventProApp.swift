@@ -181,9 +181,13 @@ private struct ProSplashView: View {
                         .foregroundColor(gold)
                         .offset(x: 28, y: -28)
                 }
-                Text("CardEvent Pro")
+                Group {
+                        Text("C").foregroundColor(gold) +
+                        Text("ard").foregroundColor(.white) +
+                        Text("E").foregroundColor(gold) +
+                        Text("vent Pro").foregroundColor(.white)
+                    }
                     .font(.largeTitle.bold())
-                    .foregroundColor(gold)
                 ProgressView().tint(gold)
             }
         }
