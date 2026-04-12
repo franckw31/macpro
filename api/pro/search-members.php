@@ -39,15 +39,15 @@ try {
             COALESCE(p.`option`, '')                    AS reg_option
         FROM `membres` m
         LEFT JOIN `participation` p
-               ON p.`id-membre` = m.`id-membre` AND p.`id-activite` = :eid
-        WHERE (m.`pseudo` LIKE :q
-            OR m.`fname`  LIKE :q
-            OR m.`lname`  LIKE :q
-            OR m.`email`  LIKE :q)
+               ON p.`id-membre` = m.`id-membre` AND p.`id-activite` = ?
+        WHERE (m.`pseudo` LIKE ?
+            OR m.`fname`  LIKE ?
+            OR m.`lname`  LIKE ?
+            OR m.`email`  LIKE ?)
         ORDER BY m.`pseudo` ASC
         LIMIT 30
     ");
-    $stmt->execute([':q' => $like, ':eid' => $eventId]);
+    $stmt->execute([$eventId, $like, $like, $like, $like]);
     $rows = $stmt->fetchAll();
 
     $optMap = [
