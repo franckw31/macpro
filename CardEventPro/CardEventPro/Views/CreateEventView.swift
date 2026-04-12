@@ -1,0 +1,292 @@
+import SwiftUI
+
+// MARK: - CreateEventView
+// Formulaire pour créer ou modifier une partie Pro
+
+enum EventFormMode {
+    case create
+    case edit(ProEvent)
+}
+
+struct CreateEventView: View {
+
+    let mode: EventFormMode
+    var onDone: (ProEvent?) -> Void
+
+    @StateObject private var service = OrganizerService.shared
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var form = NewEventForm()
+    @State private var isSaving = false
+    @State private var errorMessage: String?
+    @State private var showError = false
+
+    private let gold   = Color(red: 1.0, green: 0.75, blue: 0.0)
+    private let devises = ["EUR", "USD", "GBP", "CHF", "CAD"]
+
+    var isEditing: Bool {
+        if case .edit = mode { return true }
+        return false
+    }
+
+    var navigationTitle: String {
+        isEditing ? "Modifier la partie" : "Nouvelle partie"
+    }
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color.black.ignoresSafeArea()
+
+                ScrollView {
+                    VStack(spacing: 0) {
+                        sectionHeader("Informations générales", icon: "info.circle")
+                        generalSection
+
+                        sectionHeader("Lieu & Date", icon: "calendar")
+                        locationDateSection
+
+                        sectionHeader("Paramètres financiers", icon: "eurosign.circle")
+                        financialSection
+
+                        sectionHeader("Visibilité", icon: "eye")
+                        visibilitySection
+
+                        Spacer(minLength: 40)
+                    }
+                    .padding(.top, 8)
+                }
+            }
+            .navigationTitle(navigationTitle)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Annuler") { dismiss() }
+                        .foregroundColor(.gray)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        Task { await save() }
+                    } label: {
+                        if isSaving {
+                            ProgressView().tint(gold)
+                        } else {
+                            Text(isEditing ? "Enregistrer" : "Créer")
+                                .bold()
+                                .foregroundColor(form.isValid ? gold : .gray)
+                        }
+                    }
+                    .disabled(!form.isValid || isSaving)
+                }
+            }
+            .onAppear { prefillForm() }
+            .alert("Erreur", isPresented: $showError) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage ?? "")
+            }
+        }
+    }
+
+    // MARK: - Sections
+
+    private var generalSection: some View {
+        VStack(spacing: 1) {
+            ProFormRow {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Titre *").proLabel()
+                    TextField("Ex: Tournoi du vendredi soir", text: $form.titre)
+                        .proTextField()
+                }
+            }
+            ProFormRow {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Description").proLabel()
+                    TextField("Décrivez votre partie…", text: $form.description, axis: .vertical)
+                        .proTextField()
+                        .lineLimit(3...6)
+                }
+            }
+        }
+        .padding(.bottom, 8)
+    }
+
+    private var locationDateSection: some View {
+        VStack(spacing: 1) {
+            ProFormRow {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Lieu *").proLabel()
+                    TextField("Adresse ou nom du lieu", text: $form.lieu)
+                        .proTextField()
+                }
+            }
+            ProFormRow {
+                DatePicker(
+                    "Date et heure",
+                    selection: $form.dateEvent,
+                    in: Date()...,
+                    displayedComponents: [.date, .hourAndMinute]
+                )
+                .foregroundColor(.white)
+                .tint(gold)
+                .environment(\.locale, Locale(identifier: "fr_FR"))
+            }
+        }
+        .padding(.bottom, 8)
+    }
+
+    private var financialSection: some View {
+        VStack(spacing: 1) {
+            ProFormRow {
+                HStack {
+                    Text("Buy-in").foregroundColor(.white)
+                    Spacer()
+                    HStack(spacing: 4) {
+                        TextField("0", value: $form.buyIn, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                            .foregroundColor(gold)
+                            .frame(width: 70)
+                        Picker("", selection: $form.devise) {
+                            ForEach(devises, id: \.self) { d in
+                                Text(d).tag(d)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .foregroundColor(gold)
+                        .tint(gold)
+                    }
+                }
+            }
+            ProFormRow {
+                HStack {
+                    Text("Nombre de joueurs max").foregroundColor(.white)
+                    Spacer()
+                    HStack(spacing: 8) {
+                        Button {
+                            if form.maxJoueurs > 2 { form.maxJoueurs -= 1 }
+                        } label: {
+                            Image(systemName: "minus.circle.fill")
+                                .font(.title3)
+                                .foregroundColor(form.maxJoueurs > 2 ? gold : .gray)
+                        }
+                        Text("\(form.maxJoueurs)")
+                            .font(.headline.monospacedDigit())
+                            .foregroundColor(gold)
+                            .frame(width: 36, alignment: .center)
+                        Button {
+                            if form.maxJoueurs < 500 { form.maxJoueurs += 1 }
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title3)
+                                .foregroundColor(gold)
+                        }
+                    }
+                }
+            }
+        }
+        .padding(.bottom, 8)
+    }
+
+    private var visibilitySection: some View {
+        ProFormRow {
+            Toggle(isOn: $form.isPublic) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Partie publique").foregroundColor(.white)
+                    Text(form.isPublic ? "Visible par tous les joueurs" : "Accessible sur invitation")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+            }
+            .tint(gold)
+        }
+    }
+
+    // MARK: - Helpers visuels
+
+    private func sectionHeader(_ title: String, icon: String) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.caption)
+                .foregroundColor(gold)
+            Text(title.uppercased())
+                .font(.caption.bold())
+                .foregroundColor(.gray)
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 20)
+        .padding(.bottom, 6)
+    }
+
+    // MARK: - Logic
+
+    private func prefillForm() {
+        if case .edit(let event) = mode {
+            form.titre       = event.titre
+            form.description = event.description
+            form.lieu        = event.lieu
+            form.maxJoueurs  = event.maxJoueurs
+            form.buyIn       = event.buyIn
+            form.devise      = event.devise
+            form.isPublic    = event.isPublic
+
+            let fmtIn = DateFormatter()
+            fmtIn.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            if let d = fmtIn.date(from: event.dateEvent) {
+                form.dateEvent = d
+            }
+        }
+    }
+
+    private func save() async {
+        isSaving = true
+        defer { isSaving = false }
+
+        let result: Result<ProEvent, Error>
+        switch mode {
+        case .create:
+            result = await service.createEvent(form: form)
+        case .edit(let event):
+            result = await service.updateEvent(id: event.id, form: form)
+        }
+
+        switch result {
+        case .success(let event):
+            onDone(event)
+            dismiss()
+        case .failure(let error):
+            errorMessage = error.localizedDescription
+            showError = true
+        }
+    }
+}
+
+// MARK: - Composants réutilisables
+
+struct ProFormRow<Content: View>: View {
+    let content: Content
+    init(@ViewBuilder content: () -> Content) { self.content = content() }
+
+    var body: some View {
+        content
+            .padding()
+            .background(Color(white: 0.12))
+            .overlay(Divider().tint(Color.white.opacity(0.08)), alignment: .bottom)
+    }
+}
+
+extension Text {
+    func proLabel() -> some View {
+        self.font(.caption).foregroundColor(.gray)
+    }
+}
+
+extension TextField {
+    func proTextField() -> some View {
+        self
+            .foregroundColor(.white)
+            .tint(Color(red: 1.0, green: 0.75, blue: 0.0))
+    }
+}
