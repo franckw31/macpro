@@ -33,7 +33,7 @@ try {
     }
 
     // ── Vérifier existence et appartenance ────────────────────
-    $stmtCheck = $pdo->prepare("SELECT organizer_id, statut, titre FROM pro_events WHERE id = ? LIMIT 1");
+    $stmtCheck = $pdo->prepare("SELECT `id-membre` AS organizer_id, COALESCE(`statut`,'publie') AS statut, `titre-activite` AS titre FROM `activite` WHERE `id-activite` = ? LIMIT 1");
     $stmtCheck->execute([$eventId]);
     $existing = $stmtCheck->fetch();
 
@@ -56,9 +56,9 @@ try {
         exit;
     }
 
-    // ── Suppression (inscriptions en cascade) ─────────────────
-    $pdo->prepare("DELETE FROM pro_registrations WHERE event_id = ?")->execute([$eventId]);
-    $pdo->prepare("DELETE FROM pro_events WHERE id = ?")->execute([$eventId]);
+    // ── Suppression (inscriptions en cascade via participation, puis activite) ──
+    $pdo->prepare("DELETE FROM `participation` WHERE `id-activite` = ?")->execute([$eventId]);
+    $pdo->prepare("DELETE FROM `activite` WHERE `id-activite` = ?")->execute([$eventId]);
 
     // Log (dans pro_logs, event_id = null car supprimé)
     $pdo->prepare("INSERT INTO pro_logs (member_id, event_id, action, details, ip) VALUES (?,?,?,?,?)")
