@@ -47,10 +47,9 @@ try {
 
     // Correspondance participation.option → statut Pro
     $optMap = [
-        'Confirmé'    => 'confirme',
-        'Réservation' => 'liste_attente',
-        'Absent'      => 'absent',
-        'Inscrit'     => 'inscrit',
+        'Inscrit'  => 'inscrit',
+        'Option'   => 'liste_attente',
+        'Annulé'   => 'absent',
     ];
 
     // ── Récupérer les inscriptions ────────────────────────────
@@ -67,9 +66,9 @@ try {
         FROM `participation` p
         JOIN `membres` m ON m.`id-membre` = p.`id-membre`
         WHERE p.`id-activite` = ?
-          AND p.`option` IN ('Inscrit','Confirmé','Réservation','Absent')
+          AND p.`option` IN ('Inscrit','Option','Annulé')
         ORDER BY
-            FIELD(p.`option`, 'Confirmé', 'Inscrit', 'Réservation', 'Absent'),
+            FIELD(p.`option`, 'Inscrit', 'Option', 'Annulé'),
             p.`ds` ASC
     ");
     $stmtReg->execute([$eventId]);
