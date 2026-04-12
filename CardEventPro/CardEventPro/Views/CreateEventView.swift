@@ -200,8 +200,8 @@ struct CreateEventView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Structure").foregroundColor(.white)
                     Picker("Structure", selection: $form.structureId) {
-                        Text("Semaine").tag(1)
-                        Text("Week-end").tag(2)
+                        Text("Semaine").tag(1 as Int)
+                        Text("Week-end").tag(2 as Int)
                     }
                     .pickerStyle(.segmented)
                 }
