@@ -19,35 +19,23 @@ require_once __DIR__ . '/_db.php';
 $created = [];
 $errors  = [];
 
+// ── 1. Ajout des colonnes Pro dans `activite` (IF NOT EXISTS = sans risque) ──
+$alterResults = [];
+foreach ([
+    'statut'          => "ALTER TABLE `activite` ADD COLUMN IF NOT EXISTS `statut` VARCHAR(20) NOT NULL DEFAULT 'publie' COMMENT 'Pro: brouillon|publie|en_cours|termine|annule'",
+    'is_public'       => "ALTER TABLE `activite` ADD COLUMN IF NOT EXISTS `is_public` TINYINT(1) NOT NULL DEFAULT 1 COMMENT 'Pro: partie publique'",
+    'description'     => "ALTER TABLE `activite` ADD COLUMN IF NOT EXISTS `description` TEXT NULL COMMENT 'Pro: description libre'",
+    'devise'          => "ALTER TABLE `activite` ADD COLUMN IF NOT EXISTS `devise` VARCHAR(10) NOT NULL DEFAULT 'EUR' COMMENT 'Pro: devise du buy-in'",
+    'reg_is_private'  => "ALTER TABLE `pro_registrations` ADD COLUMN IF NOT EXISTS `is_private` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Inscription visible uniquement par lorganisateur'",
+] as $col => $sql) {
+    try { $pdo->exec($sql); $alterResults[$col] = 'OK'; }
+    catch (PDOException $e) { $alterResults[$col] = 'SKIP: ' . $e->getMessage(); }
+}
+
+// ── 2. Tables Pro ─────────────────────────────────────────────
 $tables = [
 
-// ── Table des parties Pro ─────────────────────────────────────
-'pro_events' => "
-CREATE TABLE IF NOT EXISTS `pro_events` (
-    `id`           INT AUTO_INCREMENT PRIMARY KEY,
-    `titre`        VARCHAR(255)    NOT NULL,
-    `description`  TEXT            NOT NULL DEFAULT '',
-    `lieu`         VARCHAR(255)    NOT NULL,
-    `date_event`   DATETIME        NOT NULL,
-    `max_joueurs`  INT             NOT NULL DEFAULT 20,
-    `buy_in`       DECIMAL(10,2)   NOT NULL DEFAULT 0.00,
-    `devise`       VARCHAR(10)     NOT NULL DEFAULT 'EUR',
-    `statut`       ENUM('brouillon','publie','en_cours','termine','annule')
-                                   NOT NULL DEFAULT 'brouillon',
-    `is_public`    TINYINT(1)      NOT NULL DEFAULT 1,
-    `organizer_id` INT             NOT NULL,
-    `activity_id`  INT             NULL DEFAULT NULL
-                   COMMENT 'Lien optionnel vers une activite CardEvent existante',
-    `created_at`   TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`   TIMESTAMP       DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX `idx_organizer` (`organizer_id`),
-    INDEX `idx_statut`    (`statut`),
-    INDEX `idx_date`      (`date_event`),
-    INDEX `idx_public`    (`is_public`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-",
-
-// ── Table des inscriptions à une partie Pro ───────────────────
+// ── Table des inscriptions Pro (event_id = activite.id-activite) ─
 'pro_registrations' => "
 CREATE TABLE IF NOT EXISTS `pro_registrations` (
     `id`         INT AUTO_INCREMENT PRIMARY KEY,
@@ -109,10 +97,11 @@ try {
 }
 
 echo json_encode([
-    'success'       => empty($errors),
+    'success'        => empty($errors),
+    'alterations'    => $alterResults,
     'tables_created' => $created,
-    'errors'        => $errors,
-    'message'       => empty($errors)
-        ? 'Installation CardEvent Pro OK ✅'
+    'errors'         => $errors,
+    'message'        => empty($errors)
+        ? 'Installation CardEvent Pro OK ✅ — table activite étendue, 3 tables Pro créées'
         : 'Installation partielle — voir errors',
 ]);
