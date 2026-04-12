@@ -156,13 +156,17 @@ struct MemberSearchResult: Codable, Identifiable {
     let photoUrl: String
     let isRegistered: Bool
     let regStatut: String
+    let proVisibility: String   // "public" | "organizers" | "private"
+    let isMyPrivate: Bool       // true = joueur privé créé par moi
 
     enum CodingKeys: String, CodingKey {
         case pseudo, fname, lname, email
-        case id          = "member_id"
-        case photoUrl    = "photo_url"
-        case isRegistered = "is_registered"
-        case regStatut   = "reg_statut"
+        case id            = "member_id"
+        case photoUrl      = "photo_url"
+        case isRegistered  = "is_registered"
+        case regStatut     = "reg_statut"
+        case proVisibility = "pro_visibility"
+        case isMyPrivate   = "is_my_private"
     }
 
     var fullName: String {
