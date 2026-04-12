@@ -54,6 +54,7 @@ try {
             m.pseudo,
             COALESCE(m.photo, 'avatar.png') AS photo,
             r.statut,
+            COALESCE(r.is_private, 0)       AS is_private,
             DATE_FORMAT(r.inscrit_le, '%Y-%m-%d %H:%i:%s') AS inscrit_le
         FROM `pro_registrations` r
         JOIN `membres` m ON m.`id-membre` = r.member_id
@@ -65,7 +66,7 @@ try {
     $stmtReg->execute([$eventId]);
     $rows = $stmtReg->fetchAll();
 
-    $registrations = array_map(function(array $r): array {
+    $registrations = array_map(function(array $r) use ($isOwner, $authUser): array {
         return [
             'id'         => (int)$r['id'],
             'event_id'   => (int)$r['event_id'],
@@ -73,6 +74,7 @@ try {
             'pseudo'     => $r['pseudo'],
             'photo_url'  => 'https://viendez.com/images/faces/' . $r['photo'],
             'statut'     => $r['statut'],
+            'is_private' => (bool)$r['is_private'],
             'inscrit_le' => $r['inscrit_le'],
         ];
     }, $rows);
