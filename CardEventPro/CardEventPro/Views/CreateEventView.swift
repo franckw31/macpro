@@ -201,7 +201,7 @@ struct CreateEventView: View {
                     Text("Structure").foregroundColor(.white)
                     Picker("Structure", selection: $form.structureId) {
                         Text("Semaine").tag(1 as Int)
-                        Text("Week-end").tag(2 as Int)
+                        Text("Week-end").tag(5 as Int)
                     }
                     .pickerStyle(.segmented)
                 }
@@ -240,7 +240,20 @@ struct CreateEventView: View {
                         .frame(width: 90)
                 }
             }
-            proStepper(label: "Bonus final", suffix: "e", value: $form.bonus, range: 0...500, step: 5)
+            ProFormRow {
+                Toggle(isOn: Binding(
+                    get: { form.bonus > 0 },
+                    set: { form.bonus = $0 ? 5000 : 0 }
+                )) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Bonus").foregroundColor(.white)
+                        Text(form.bonus > 0 ? "5 000 jetons" : "Pas de bonus")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
+                }
+                .tint(gold)
+            }
             proStepper(label: "Nombre de tables", suffix: "", value: $form.nbTables, range: 1...20)
         }
         .padding(.bottom, 8)
