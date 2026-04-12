@@ -49,8 +49,9 @@ try {
     $nbRecaves     = max(0,        (int)($body['nb_recaves']      ?? 1));
     $recaveMontant = max(0,        (int)($body['recave_montant']  ?? 10));
     $recaveJetons  = max(0,        (int)($body['recave_jetons']   ?? 40000));
-    $bonus         = max(0,        (int)($body['bonus']           ?? 0));
+    $bonus         = in_array((int)($body['bonus'] ?? 0), [0, 5000]) ? (int)$body['bonus'] : 0;
     $nbTables      = max(1,        (int)($body['nb_tables']       ?? 2));
+    $idRake        = $rake > 0 ? (int)($rake / 5) : 1;
 
     if ($titre === '') {
         http_response_code(400);
@@ -81,31 +82,32 @@ try {
         INSERT INTO `activite`
             (`titre-activite`, `description`, `ville`, `date_depart`, `places`, `buyin`, `devise`,
              `statut`, `is_public`, `id-membre`, `id_structure`,
-             `rake`, `bounty`, `jetons`, `recave`, `recave_montant`, `recave_jetons`, `bonus`, `nb-tables`)
+             `rake`, `id_rake`, `bounty`, `jetons`, `recave`, `recave_montant`, `recave_jetons`, `bonus`, `nb-tables`)
         VALUES
             (:titre, :desc, :lieu, :date, :max, :buyin, :devise,
              'brouillon', :pub, :orgid, :strucid,
-             :rake, :bounty, :jetons, :nbrecaves, :recavemontant, :recavejetons, :bonus, :nbtables)
+             :rake, :idrake, :bounty, :jetons, :nbrecaves, :recavemontant, :recavejetons, :bonus, :nbtables)
     ");
     $stmt->execute([
-        ':titre'        => $titre,
-        ':desc'         => $description,
-        ':lieu'         => $lieu,
-        ':date'         => $parsedDate,
-        ':max'          => $maxJoueurs,
-        ':buyin'        => $buyIn,
-        ':devise'       => $devise,
-        ':pub'          => $isPublic,
-        ':orgid'        => $authUser['member_id'],
-        ':strucid'      => $structureId,
-        ':rake'         => $rake,
-        ':bounty'       => $bounty,
-        ':jetons'       => $jetons,
-        ':nbrecaves'    => $nbRecaves,
-        ':recavemontant'=> $recaveMontant,
-        ':recavejetons' => $recaveJetons,
-        ':bonus'        => $bonus,
-        ':nbtables'     => $nbTables,
+        ':titre'         => $titre,
+        ':desc'          => $description,
+        ':lieu'          => $lieu,
+        ':date'          => $parsedDate,
+        ':max'           => $maxJoueurs,
+        ':buyin'         => $buyIn,
+        ':devise'        => $devise,
+        ':pub'           => $isPublic,
+        ':orgid'         => $authUser['member_id'],
+        ':strucid'       => $structureId,
+        ':rake'          => $rake,
+        ':idrake'        => $idRake,
+        ':bounty'        => $bounty,
+        ':jetons'        => $jetons,
+        ':nbrecaves'     => $nbRecaves,
+        ':recavemontant' => $recaveMontant,
+        ':recavejetons'  => $recaveJetons,
+        ':bonus'         => $bonus,
+        ':nbtables'      => $nbTables,
     ]);
 
     $newId = (int)$pdo->lastInsertId();
