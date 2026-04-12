@@ -192,6 +192,95 @@ struct CreateEventView: View {
         .padding(.bottom, 8)
     }
 
+    // MARK: - Section Poker
+
+    private var pokerSection: some View {
+        VStack(spacing: 1) {
+            ProFormRow {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Structure").foregroundColor(.white)
+                    Picker("Structure", selection: $form.structureId) {
+                        Text("Semaine").tag(1)
+                        Text("Week-end").tag(2)
+                    }
+                    .pickerStyle(.segmented)
+                }
+            }
+            proStepper(label: "Rake", suffix: "e", value: $form.rake, range: 0...25)
+            proStepper(label: "Bounty", suffix: "e", value: $form.bounty, range: 0...10)
+            ProFormRow {
+                HStack {
+                    Text("Jetons de depart").foregroundColor(.white)
+                    Spacer()
+                    TextField("35000", value: $form.jetons, format: .number)
+                        .multilineTextAlignment(.trailing)
+                        .foregroundColor(gold)
+                        .frame(width: 90)
+                }
+            }
+            proStepper(label: "Nb recaves", suffix: "", value: $form.nbRecaves, range: 0...10)
+            ProFormRow {
+                HStack {
+                    Text("Montant recave").foregroundColor(.white)
+                    Spacer()
+                    TextField("10", value: $form.recaveMontant, format: .number)
+                        .multilineTextAlignment(.trailing)
+                        .foregroundColor(gold)
+                        .frame(width: 80)
+                    Text("e").foregroundColor(.gray)
+                }
+            }
+            ProFormRow {
+                HStack {
+                    Text("Jetons par recave").foregroundColor(.white)
+                    Spacer()
+                    TextField("40000", value: $form.recaveJetons, format: .number)
+                        .multilineTextAlignment(.trailing)
+                        .foregroundColor(gold)
+                        .frame(width: 90)
+                }
+            }
+            proStepper(label: "Bonus final", suffix: "e", value: $form.bonus, range: 0...500, step: 5)
+            proStepper(label: "Nombre de tables", suffix: "", value: $form.nbTables, range: 1...20)
+        }
+        .padding(.bottom, 8)
+    }
+
+    @ViewBuilder
+    private func proStepper(label: String, suffix: String, value: Binding<Int>,
+                            range: ClosedRange<Int>, step: Int = 1) -> some View {
+        ProFormRow {
+            HStack {
+                Text(label).foregroundColor(.white)
+                Spacer()
+                HStack(spacing: 8) {
+                    Button {
+                        if value.wrappedValue > range.lowerBound {
+                            value.wrappedValue -= step
+                        }
+                    } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .font(.title3)
+                            .foregroundColor(value.wrappedValue > range.lowerBound ? gold : .gray)
+                    }
+                    Text(suffix.isEmpty ? "\(value.wrappedValue)" : "\(value.wrappedValue)\(suffix)")
+                        .font(.headline.monospacedDigit())
+                        .foregroundColor(gold)
+                        .frame(minWidth: 44, alignment: .center)
+                    Button {
+                        if value.wrappedValue < range.upperBound {
+                            value.wrappedValue += step
+                        }
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title3)
+                            .foregroundColor(gold)
+                    }
+                }
+            }
+        }
+    }
+
     private var visibilitySection: some View {
         ProFormRow {
             Toggle(isOn: $form.isPublic) {
