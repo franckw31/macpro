@@ -73,8 +73,9 @@ try {
     $nbRecaves     = isset($body['nb_recaves'])    ? max(0,(int)$body['nb_recaves'])            : (int)$old['nb_recaves'];
     $recaveMontant = isset($body['recave_montant'])? max(0,(int)$body['recave_montant'])        : (int)$old['recave_montant'];
     $recaveJetons  = isset($body['recave_jetons']) ? max(0,(int)$body['recave_jetons'])         : (int)$old['recave_jetons'];
-    $bonus         = isset($body['bonus'])         ? max(0,(int)$body['bonus'])                 : (int)$old['bonus'];
+    $bonus         = isset($body['bonus'])         ? (in_array((int)$body['bonus'], [0,5000]) ? (int)$body['bonus'] : 0) : (int)$old['bonus'];
     $nbTables      = isset($body['nb_tables'])     ? max(1,(int)$body['nb_tables'])             : (int)$old['nb_tables'];
+    $idRake        = $rake > 0 ? (int)($rake / 5) : 1;
 
     $dateEvent   = trim($body['date_event']  ?? '');
     $parsedDate  = $dateEvent
@@ -100,6 +101,7 @@ try {
             `is_public`       = :pub,
             `id_structure`    = :strucid,
             `rake`            = :rake,
+            `id_rake`         = :idrake,
             `bounty`          = :bounty,
             `jetons`          = :jetons,
             `recave`          = :nbrecaves,
@@ -119,6 +121,7 @@ try {
         ':pub'           => $isPublic,
         ':strucid'       => $structureId,
         ':rake'          => $rake,
+        ':idrake'        => $idRake,
         ':bounty'        => $bounty,
         ':jetons'        => $jetons,
         ':nbrecaves'     => $nbRecaves,
@@ -148,9 +151,9 @@ try {
         FROM `activite` a
         JOIN `membres` m ON m.`id-membre` = a.`id-membre`
         LEFT JOIN (
-            SELECT event_id, COUNT(*) AS nb FROM `pro_registrations`
-            WHERE statut IN ('inscrit','confirme') GROUP BY event_id
-        ) r ON r.event_id = a.`id-activite`
+            SELECT `id-activite`, COUNT(*) AS nb FROM `participation`
+            WHERE `option` IN ('Inscrit','Confirmé') GROUP BY `id-activite`
+        ) r ON r.`id-activite` = a.`id-activite`
         WHERE a.`id-activite` = ?
     ");
     $stmtNew->execute([$eventId]);

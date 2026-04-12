@@ -45,35 +45,44 @@ try {
         exit;
     }
 
+    // Correspondance participation.option → statut Pro
+    $optMap = [
+        'Confirmé'    => 'confirme',
+        'Réservation' => 'liste_attente',
+        'Absent'      => 'absent',
+        'Inscrit'     => 'inscrit',
+    ];
+
     // ── Récupérer les inscriptions ────────────────────────────
     $stmtReg = $pdo->prepare("
         SELECT
-            r.id,
-            r.event_id,
-            r.member_id,
-            m.pseudo,
-            COALESCE(m.photo, 'avatar.png') AS photo,
-            r.statut,
-            COALESCE(r.is_private, 0)       AS is_private,
-            DATE_FORMAT(r.inscrit_le, '%Y-%m-%d %H:%i:%s') AS inscrit_le
-        FROM `pro_registrations` r
-        JOIN `membres` m ON m.`id-membre` = r.member_id
-        WHERE r.event_id = ?
+            p.`id-participation`                            AS id,
+            p.`id-activite`                                 AS event_id,
+            p.`id-membre`                                   AS member_id,
+            m.`pseudo`,
+            COALESCE(m.`photo`, 'avatar.png')               AS photo,
+            p.`option`,
+            COALESCE(p.`anonyme`, 0)                        AS is_private,
+            DATE_FORMAT(p.`ds`, '%Y-%m-%d %H:%i:%s')        AS inscrit_le
+        FROM `participation` p
+        JOIN `membres` m ON m.`id-membre` = p.`id-membre`
+        WHERE p.`id-activite` = ?
+          AND p.`option` IN ('Inscrit','Confirmé','Réservation','Absent')
         ORDER BY
-            FIELD(r.statut, 'confirme', 'inscrit', 'liste_attente', 'absent'),
-            r.inscrit_le ASC
+            FIELD(p.`option`, 'Confirmé', 'Inscrit', 'Réservation', 'Absent'),
+            p.`ds` ASC
     ");
     $stmtReg->execute([$eventId]);
     $rows = $stmtReg->fetchAll();
 
-    $registrations = array_map(function(array $r) use ($isOwner, $authUser): array {
+    $registrations = array_map(function(array $r) use ($isOwner, $authUser, $optMap): array {
         return [
             'id'         => (int)$r['id'],
             'event_id'   => (int)$r['event_id'],
             'member_id'  => (int)$r['member_id'],
             'pseudo'     => $r['pseudo'],
             'photo_url'  => 'https://viendez.com/images/faces/' . $r['photo'],
-            'statut'     => $r['statut'],
+            'statut'     => $optMap[$r['option']] ?? 'inscrit',
             'is_private' => (bool)$r['is_private'],
             'inscrit_le' => $r['inscrit_le'],
         ];
