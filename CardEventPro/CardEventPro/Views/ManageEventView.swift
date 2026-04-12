@@ -35,10 +35,10 @@ struct ManageEventView: View {
             case .cancel: return "Annuler"
             }
         }
-        var role: ButtonRole {
+        var role: ButtonRole? {
             switch self {
-            case .start:  return .none
-            case .finish: return .none
+            case .start:  return nil
+            case .finish: return nil
             case .cancel: return .destructive
             }
         }
