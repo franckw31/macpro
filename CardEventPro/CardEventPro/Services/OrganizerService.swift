@@ -211,7 +211,7 @@ final class OrganizerService: ObservableObject {
     // MARK: - Récupérer les inscrits d'une partie
 
     func fetchRegistrations(eventId: Int) async -> [ProRegistration] {
-        guard let url = URL(string: "\(baseURL)/event-registrations.php?event_id=\(eventId)") else { return [] }
+        guard let url = URL(string: "\(baseURL)/event-participants.php?event_id=\(eventId)") else { return [] }
         do {
             let (data, _) = try await URLSession.shared.data(for: authorizedRequest(url: url))
             let response = try JSONDecoder().decode(ProRegistrationListResponse.self, from: data)
