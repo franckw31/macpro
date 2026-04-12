@@ -211,7 +211,7 @@ struct HomeView: View {
             Image(systemName: "suit.spade.fill").font(.system(size:28)).foregroundColor(cyan).shadow(color: cyan.opacity(0.7), radius: 8)
             VStack(alignment: .leading, spacing: 2) {
                 HStack(alignment:.firstTextBaseline, spacing:6) {
-                    (Text("C").foregroundColor(cyan) + Text("ard").foregroundColor(.white) + Text("E").foregroundColor(cyan) + Text("vent").foregroundColor(.white)).font(.title2.bold())
+                    (Text("C").foregroundColor(gold) + Text("ard").foregroundColor(.white) + Text("E").foregroundColor(gold) + Text("vent").foregroundColor(.white)).font(.title2.bold())
                     
                     let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
                     let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"

@@ -40,11 +40,11 @@ struct LoginView: View {
                                 .shadow(color: cyan.opacity(0.6), radius: 12)
 
                             Group {
-                                Text("C").foregroundColor(cyan) +
+                                Text("C").foregroundColor(.yellow) +
                                 Text("ard").foregroundColor(.white) +
-                                Text("E").foregroundColor(cyan) +
+                                Text("E").foregroundColor(.yellow) +
                                 Text("vent ").foregroundColor(.white) +
-                                Text("Pro").foregroundColor(cyan)
+                                Text("Pro").foregroundColor(.yellow)
                             }
                             .font(.system(size: titleSize, weight: .black, design: .rounded))
 
@@ -56,11 +56,11 @@ struct LoginView: View {
                     } else {
                         // Vue compacte (paysage) : juste le titre
                         Group {
-                            Text("C").foregroundColor(cyan) +
+                            Text("C").foregroundColor(.yellow) +
                             Text("ard").foregroundColor(.white) +
-                            Text("E").foregroundColor(cyan) +
+                            Text("E").foregroundColor(.yellow) +
                             Text("vent ").foregroundColor(.white) +
-                            Text("Pro").foregroundColor(cyan)
+                            Text("Pro").foregroundColor(.yellow)
                         }
                         .font(.system(size: titleSize, weight: .black, design: .rounded))
                         .padding(.top, 16)
