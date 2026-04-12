@@ -27,6 +27,8 @@ try {
 
     $like = '%' . $q . '%';
 
+    $myId = $authUser['member_id'];
+
     $stmt = $pdo->prepare("
         SELECT
             m.`id-membre`                              AS member_id,
@@ -35,6 +37,8 @@ try {
             COALESCE(m.`lname`,  '')                   AS lname,
             COALESCE(m.`email`,  '')                   AS email,
             COALESCE(m.`photo`,  'avatar.png')         AS photo,
+            COALESCE(m.`pro_visibility`, 'public')     AS pro_visibility,
+            COALESCE(m.`pro_created_by`, 0)            AS pro_created_by,
             CASE WHEN p.`id-participation` IS NOT NULL THEN 1 ELSE 0 END AS is_registered,
             COALESCE(p.`option`, '')                    AS reg_option
         FROM `membres` m
@@ -44,10 +48,14 @@ try {
             OR m.`fname`  LIKE ?
             OR m.`lname`  LIKE ?
             OR m.`email`  LIKE ?)
+          AND (
+            COALESCE(m.`pro_visibility`, 'public') != 'private'
+            OR m.`pro_created_by` = ?
+          )
         ORDER BY m.`pseudo` ASC
         LIMIT 30
     ");
-    $stmt->execute([$eventId, $like, $like, $like, $like]);
+    $stmt->execute([$eventId, $like, $like, $like, $like, $myId]);
     $rows = $stmt->fetchAll();
 
     $optMap = [
@@ -57,14 +65,16 @@ try {
     ];
 
     $members = array_map(fn($r) => [
-        'member_id'     => (int)$r['member_id'],
-        'pseudo'        => $r['pseudo'],
-        'fname'         => $r['fname'],
-        'lname'         => $r['lname'],
-        'email'         => $r['email'],
-        'photo_url'     => 'https://viendez.com/images/faces/' . $r['photo'],
-        'is_registered' => (bool)$r['is_registered'],
-        'reg_statut'    => $optMap[$r['reg_option']] ?? '',
+        'member_id'      => (int)$r['member_id'],
+        'pseudo'         => $r['pseudo'],
+        'fname'          => $r['fname'],
+        'lname'          => $r['lname'],
+        'email'          => $r['email'],
+        'photo_url'      => 'https://viendez.com/images/faces/' . $r['photo'],
+        'is_registered'  => (bool)$r['is_registered'],
+        'reg_statut'     => $optMap[$r['reg_option']] ?? '',
+        'pro_visibility' => $r['pro_visibility'],
+        'is_my_private'  => ($r['pro_visibility'] === 'private' && (int)$r['pro_created_by'] === $myId),
     ], $rows);
 
     echo json_encode([

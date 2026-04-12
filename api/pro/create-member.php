@@ -28,10 +28,14 @@ try {
     }
 
     $body   = json_decode(file_get_contents('php://input'), true) ?? [];
-    $pseudo = trim($body['pseudo'] ?? '');
-    $fname  = trim($body['fname']  ?? '');
-    $lname  = trim($body['lname']  ?? '');
-    $email  = trim($body['email']  ?? '');
+    $pseudo     = trim($body['pseudo']     ?? '');
+    $fname      = trim($body['fname']      ?? '');
+    $lname      = trim($body['lname']      ?? '');
+    $email      = trim($body['email']      ?? '');
+    $visibility = trim($body['visibility'] ?? 'organizers');
+    if (!in_array($visibility, ['public', 'organizers', 'private'], true)) {
+        $visibility = 'organizers';
+    }
 
     // ── Validation ─────────────────────────────────────────────
     if ($pseudo === '') {
@@ -73,16 +77,19 @@ try {
 
     $stmt = $pdo->prepare("
         INSERT INTO `membres`
-            (`pseudo`, `fname`, `lname`, `email`, `password`, `droits`, `telephone`, `verification`)
+            (`pseudo`, `fname`, `lname`, `email`, `password`, `droits`, `telephone`, `verification`,
+             `pro_created_by`, `pro_visibility`)
         VALUES
-            (:pseudo, :fname, :lname, :email, :pwd, '1', '0000000000', 0)
+            (:pseudo, :fname, :lname, :email, :pwd, '1', '0000000000', 0, :created_by, :visibility)
     ");
     $stmt->execute([
-        ':pseudo' => $pseudo,
-        ':fname'  => $fnameVal,
-        ':lname'  => $lname,
-        ':email'  => $emailFinal,
-        ':pwd'    => $hashedPwd,
+        ':pseudo'      => $pseudo,
+        ':fname'       => $fnameVal,
+        ':lname'       => $lname,
+        ':email'       => $emailFinal,
+        ':pwd'         => $hashedPwd,
+        ':created_by'  => $authUser['member_id'],
+        ':visibility'  => $visibility,
     ]);
 
     $newId = (int)$pdo->lastInsertId();
@@ -93,7 +100,7 @@ try {
             $authUser['member_id'],
             0,
             'create_member',
-            "pseudo: $pseudo | created_id: $newId",
+            "pseudo: $pseudo | created_id: $newId | visibility: $visibility",
             $_SERVER['REMOTE_ADDR'] ?? null
         ]);
 
