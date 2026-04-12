@@ -26,7 +26,7 @@ foreach ([
     'is_public'       => "ALTER TABLE `activite` ADD COLUMN IF NOT EXISTS `is_public` TINYINT(1) NOT NULL DEFAULT 1 COMMENT 'Pro: partie publique'",
     'description'     => "ALTER TABLE `activite` ADD COLUMN IF NOT EXISTS `description` TEXT NULL COMMENT 'Pro: description libre'",
     'devise'          => "ALTER TABLE `activite` ADD COLUMN IF NOT EXISTS `devise` VARCHAR(10) NOT NULL DEFAULT 'EUR' COMMENT 'Pro: devise du buy-in'",
-    'reg_is_private'  => "ALTER TABLE `pro_registrations` ADD COLUMN IF NOT EXISTS `is_private` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Inscription visible uniquement par lorganisateur'",
+    'part_anonyme'    => "ALTER TABLE `participation` ADD COLUMN IF NOT EXISTS `anonyme` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Inscription privée (visible uniquement par lorganisateur)'",
 ] as $col => $sql) {
     try { $pdo->exec($sql); $alterResults[$col] = 'OK'; }
     catch (PDOException $e) { $alterResults[$col] = 'SKIP: ' . $e->getMessage(); }
@@ -34,21 +34,6 @@ foreach ([
 
 // ── 2. Tables Pro ─────────────────────────────────────────────
 $tables = [
-
-// ── Table des inscriptions Pro (event_id = activite.id-activite) ─
-'pro_registrations' => "
-CREATE TABLE IF NOT EXISTS `pro_registrations` (
-    `id`         INT AUTO_INCREMENT PRIMARY KEY,
-    `event_id`   INT  NOT NULL,
-    `member_id`  INT  NOT NULL,
-    `statut`     ENUM('inscrit','liste_attente','confirme','absent')
-                      NOT NULL DEFAULT 'inscrit',
-    `inscrit_le` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE KEY `unique_registration` (`event_id`, `member_id`),
-    INDEX `idx_event`  (`event_id`),
-    INDEX `idx_member` (`member_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-",
 
 // ── Table des organisateurs habilités ────────────────────────
 'pro_organizers' => "
@@ -102,6 +87,6 @@ echo json_encode([
     'tables_created' => $created,
     'errors'         => $errors,
     'message'        => empty($errors)
-        ? 'Installation CardEvent Pro OK ✅ — table activite étendue, 3 tables Pro créées'
+        ? 'Installation CardEvent Pro OK — table activite etendue, tables Pro creees'
         : 'Installation partielle — voir errors',
 ]);
