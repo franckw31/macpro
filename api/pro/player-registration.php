@@ -47,7 +47,7 @@ try {
         echo json_encode(['success' => false, 'message' => 'event_id manquant']);
         exit;
     }
-    if (!in_array($action, ['register', 'unregister', 'confirm', 'set_absent'], true)) {
+    if (!in_array($action, ['register', 'unregister', 'confirm', 'set_absent', 'set_waiting'], true)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => "Action inconnue : $action"]);
         exit;
@@ -176,7 +176,15 @@ try {
             $message = 'Joueur marqué absent';
             proLog($pdo, $authUser['member_id'], $eventId, 'set_absent', "member_id=$memberId");
             break;
-    }
+
+        case 'set_waiting':
+            $pdo->prepare("
+                UPDATE `participation` SET `option` = 'Réservation'
+                WHERE `id-activite` = ? AND `id-membre` = ?
+            ")->execute([$eventId, $memberId]);
+            $message = 'Joueur placé en liste d\'attente';
+            proLog($pdo, $authUser['member_id'], $eventId, 'set_waiting', "member_id=$memberId");
+            break;
 
     // Retourner le statut courant de l'inscription
     $stmtReg = $pdo->prepare("
