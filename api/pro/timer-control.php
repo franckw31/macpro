@@ -65,62 +65,124 @@ try {
         exit;
     }
 
-    $now = time();
+    $now  = time();
+    $actu = date("Y-m-d H:i:s", $now);
 
+    // ── Lire l'état de pause depuis la ligne ordre=1 (comme timer-api.php) ──
+    $stmtPause = $pdo->prepare(
+        "SELECT `en_pause`, `heure_pause`
+           FROM `blindes-live`
+          WHERE `id-activite` = ? AND `ordre` = 1
+          LIMIT 1"
+    );
+    $stmtPause->execute([$eventId]);
+    $pauseRow = $stmtPause->fetch();
+
+    $isPaused   = $pauseRow && intval($pauseRow['en_pause']) == 1;
+    $heurePause = $pauseRow['heure_pause'] ?? null;
+
+    // Calcul du temps de référence gelé (identique à timer-api.php)
+    $pauseElapsed = 0;
+    if ($isPaused && !empty($heurePause)) {
+        $pe = $now - strtotime($heurePause);
+        if ($pe > 0) $pauseElapsed = $pe;
+    }
+    // nowRef = heure_pause si en pause (temps gelé), sinon now
+    $nowRef     = $now - $pauseElapsed;
+    $nowRefDate = date("Y-m-d H:i:s", $nowRef);
+
+    // =================================================================
     // ── pauseresume ───────────────────────────────────────────────────
+    // =================================================================
     if ($action === 'pauseresume') {
-        $stmt = $pdo->prepare(
-            "SELECT `en_pause` FROM `blindes-live` WHERE `id-activite` = ? LIMIT 1"
-        );
-        $stmt->execute([$eventId]);
-        $row = $stmt->fetch();
-        $etatActuel = (int)($row['en_pause'] ?? 0);
 
-        if ($etatActuel == 0) {
-            // Mettre en pause
-            $pdo->prepare(
-                "UPDATE `blindes-live` SET `en_pause` = 1 WHERE `id-activite` = ?"
-            )->execute([$eventId]);
-            echo json_encode(['success' => true, 'paused' => true]);
-        } else {
-            // Reprendre + décaler fin de 1 seconde pour compenser la latence
-            $pdo->prepare(
-                "UPDATE `blindes-live` SET `en_pause` = 0 WHERE `id-activite` = ?"
-            )->execute([$eventId]);
+        if (!$isPaused) {
+            // ── MISE EN PAUSE : calqué sur en-pause.php ──────────────
+            // Enregistrer heure_pause sur ordre=1 (comme en-pause.php)
             $pdo->prepare(
                 "UPDATE `blindes-live`
-                    SET `fin` = DATE_ADD(`fin`, INTERVAL 1 SECOND)
-                  WHERE `id-activite` = ? AND `fin` > NOW()"
-            )->execute([$eventId]);
+                    SET `heure_pause` = ?,
+                        `delta`       = 0,
+                        `en_pause`    = 1
+                  WHERE `ordre`       = 1
+                    AND `id-activite` = ?"
+            )->execute([$actu, $eventId]);
+
+            echo json_encode(['success' => true, 'paused' => true]);
+
+        } else {
+            // ── REPRISE : calqué sur de-pause.php ────────────────────
+            // Calculer le delta (durée de la pause en secondes)
+            $delta = 0;
+            if (!empty($heurePause)) {
+                $delta = $now - strtotime($heurePause);
+                if ($delta < 0) $delta = 0;
+            }
+
+            // Marquer la reprise sur ordre=1 (comme de-pause.php)
+            $pdo->prepare(
+                "UPDATE `blindes-live`
+                    SET `heure_depause` = ?,
+                        `delta`         = ?,
+                        `en_pause`      = 0
+                  WHERE `ordre`         = 1
+                    AND `id-activite`   = ?"
+            )->execute([$actu, $delta, $eventId]);
+
+            // Décaler TOUTES les fins par le delta de la pause (comme de-pause.php)
+            $shift = max(1, $delta);
+            $pdo->prepare(
+                "UPDATE `blindes-live`
+                    SET `fin` = DATE_ADD(`fin`, INTERVAL ? SECOND)
+                  WHERE `id-activite` = ?"
+            )->execute([$shift, $eventId]);
+
             echo json_encode(['success' => true, 'paused' => false]);
         }
         exit;
     }
 
+    // =================================================================
     // ── plus / moins (±1 minute) ──────────────────────────────────────
+    // Utilise nowRefDate pour gérer l'état pause (fin gelée < now réel)
+    // =================================================================
     if ($action === 'plus' || $action === 'moins') {
         $seconds = ($action === 'plus') ? 60 : -60;
+
         $pdo->prepare(
             "UPDATE `blindes-live`
                 SET `fin` = DATE_ADD(`fin`, INTERVAL ? SECOND)
-              WHERE `id-activite` = ? AND `fin` > NOW()"
-        )->execute([$seconds, $eventId]);
+              WHERE `id-activite` = ?
+                AND `fin` > ?"
+        )->execute([$seconds, $eventId, $nowRefDate]);
+
         echo json_encode(['success' => true]);
         exit;
     }
 
+    // =================================================================
     // ── next_blind / prev_blind ───────────────────────────────────────
+    // Utilise nowRef (calqué sur timer-api.php) pour trouver le niveau
+    // en cours même si le timer est en pause depuis longtemps.
+    // =================================================================
     if ($action === 'next_blind' || $action === 'prev_blind') {
+
+        // Charger toute la structure dans l'ordre
         $stmt = $pdo->prepare(
             "SELECT * FROM `blindes-live` WHERE `id-activite` = ? ORDER BY `ordre` ASC"
         );
         $stmt->execute([$eventId]);
         $blinds = $stmt->fetchAll();
 
-        // Trouver le niveau en cours (premier dont fin > maintenant)
+        if (empty($blinds)) {
+            echo json_encode(['success' => false, 'message' => 'Aucune structure de blindes']);
+            exit;
+        }
+
+        // ── Trouver le niveau en cours via nowRef (même logique que timer-api.php) ──
         $currentIndex = -1;
         foreach ($blinds as $k => $b) {
-            if (strtotime($b['fin']) > $now) {
+            if (!empty($b['fin']) && strtotime($b['fin']) > $nowRef) {
                 $currentIndex = $k;
                 break;
             }
@@ -130,31 +192,42 @@ try {
 
         if ($action === 'next_blind') {
             if ($currentIndex !== -1) {
-                // Expirer le niveau en cours immédiatement
+                // Expirer immédiatement le niveau en cours
                 $pastDate = date("Y-m-d H:i:s", $now - 1);
                 $pdo->prepare(
                     "UPDATE `blindes-live` SET `fin` = ? WHERE `id` = ?"
                 )->execute([$pastDate, $blinds[$currentIndex]['id']]);
                 $targetIndex = $currentIndex + 1;
             }
+            // Si currentIndex === -1, le tournoi est terminé : rien à faire
+
         } elseif ($action === 'prev_blind') {
-            if ($currentIndex === -1)    $targetIndex = count($blinds) - 1;
+            if ($currentIndex === -1)   $targetIndex = count($blinds) - 1;
             elseif ($currentIndex == 0) $targetIndex = 0;
             else                        $targetIndex = $currentIndex - 1;
         }
 
         if ($targetIndex >= 0 && $targetIndex < count($blinds)) {
-            // Dégeler le timer
+
+            // Réinitialiser la pause sur ordre=1 (efface heure_pause)
             $pdo->prepare(
-                "UPDATE `blindes-live` SET `en_pause` = 0 WHERE `id-activite` = ?"
+                "UPDATE `blindes-live`
+                    SET `en_pause`    = 0,
+                        `heure_pause` = NULL,
+                        `delta`       = 0
+                  WHERE `ordre`       = 1
+                    AND `id-activite` = ?"
             )->execute([$eventId]);
 
-            // Recalculer toutes les fins à partir du niveau cible
+            // Recalculer toutes les fins depuis now
+            // • niveaux < targetIndex  → mis dans le passé (si encore "gelés")
+            // • niveaux >= targetIndex → durées recalculées à partir de now
             $runningTime = $now;
+
             foreach ($blinds as $k => $b) {
                 if ($k < $targetIndex) {
-                    // Passer les niveaux précédents au passé
-                    if (strtotime($b['fin']) > $now) {
+                    // Passer au passé seulement si encore dans le futur gelé
+                    if (!empty($b['fin']) && strtotime($b['fin']) > $nowRef) {
                         $past = date("Y-m-d H:i:s", $now - 60);
                         $pdo->prepare(
                             "UPDATE `blindes-live` SET `fin` = ? WHERE `id` = ?"
@@ -162,9 +235,11 @@ try {
                     }
                     continue;
                 }
-                $duration     = intval($b['minutes']) * 60;
+
+                $duration    = intval($b['minutes']) * 60;
                 $runningTime += $duration;
-                $newFin       = date("Y-m-d H:i:s", $runningTime);
+                $newFin      = date("Y-m-d H:i:s", $runningTime);
+
                 $pdo->prepare(
                     "UPDATE `blindes-live` SET `fin` = ? WHERE `id` = ?"
                 )->execute([$newFin, $b['id']]);
