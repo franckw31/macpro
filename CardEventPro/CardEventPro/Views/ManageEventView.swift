@@ -12,9 +12,11 @@ struct ManageEventView: View {
 
     @State private var registrations: [ProRegistration] = []
     @State private var isLoadingRegs = false
-    @State private var showEditSheet  = false
-    @State private var showAddPlayer  = false
-    @State private var showLiveView   = false
+    @State private var showEditSheet    = false
+    @State private var showAddPlayer    = false
+    @State private var showLiveView     = false
+    @State private var showInitConfirm  = false
+    @State private var isInitingTimer   = false
     @State private var confirmAction: ConfirmAction?
     @State private var selectedReg: ProRegistration?
 
@@ -101,6 +103,22 @@ struct ManageEventView: View {
                 NavigationStack {
                     LiveView(activityId: event.id, activityTitle: event.titre)
                 }
+            }
+            .confirmationDialog(
+                "Réinitialiser l'horloge ?",
+                isPresented: $showInitConfirm,
+                titleVisibility: .visible
+            ) {
+                Button("Start (Re) — Démarrer maintenant", role: nil) {
+                    Task {
+                        isInitingTimer = true
+                        await service.initTimer(eventId: event.id)
+                        isInitingTimer = false
+                    }
+                }
+                Button("Annuler", role: .cancel) {}
+            } message: {
+                Text("La structure de blindes sera recréée et l'horloge démarrera maintenant.")
             }
             .confirmationDialog(
                 confirmAction?.title ?? "",
@@ -231,6 +249,9 @@ struct ManageEventView: View {
                 actionButton("Annuler", icon: "xmark.circle", color: .red) {
                     confirmAction = .cancel
                 }
+                actionButton("Start (Re)", icon: "clock.arrow.trianglehead.counterclockwise.rotate.90", color: .green) {
+                    showInitConfirm = true
+                }
                 actionButton("Live Timer", icon: "timer", color: Color(red: 0, green: 0.82, blue: 1)) {
                     showLiveView = true
                 }
@@ -240,6 +261,9 @@ struct ManageEventView: View {
                 }
                 actionButton("Mettre en pause", icon: "pause.fill", color: .orange) {
                     Task { _ = await service.changeStatus(eventId: event.id, statut: .publie) }
+                }
+                actionButton("Start (Re)", icon: "clock.arrow.trianglehead.counterclockwise.rotate.90", color: .green) {
+                    showInitConfirm = true
                 }
                 actionButton("Live Timer", icon: "timer", color: Color(red: 0, green: 0.82, blue: 1)) {
                     showLiveView = true
