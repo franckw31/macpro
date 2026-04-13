@@ -30,6 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// Même timezone que timer-api.php
+date_default_timezone_set('Europe/Paris');
+
 try {
     require_once __DIR__ . '/_auth.php';   // → $authUser, $pdo
 
