@@ -28,6 +28,8 @@
 		E5F607182900DD00003D /* PlayersLiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F607182900DD00002C /* PlayersLiveView.swift */; };
 		F607182900EE00004F /* ChallengeRankingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F607182900EE00003E /* ChallengeRankingView.swift */; };
 		F607182900FF00005F /* PlayerStatsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F607182900FF00004F /* PlayerStatsDetailView.swift */; };
+		CE12345001AA000001 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12345002BB000002 /* RegisterView.swift */; };
+		CE12345003AA000003 /* AuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12345004BB000004 /* AuthTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
