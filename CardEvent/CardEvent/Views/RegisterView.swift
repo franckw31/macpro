@@ -7,8 +7,8 @@ struct RegisterView: View {
 
     // ── Champs du formulaire ─────────────────────────────────────
     @State private var pseudo          = ""
-    @State private var nom             = ""
-    @State private var prenom          = ""
+    @State private var lname           = ""
+    @State private var fname           = ""
     @State private var email           = ""
     @State private var emailConfirm    = ""
     @State private var password        = ""
@@ -23,7 +23,7 @@ struct RegisterView: View {
     @FocusState private var focusedField: Field?
 
     private enum Field: Hashable {
-        case pseudo, nom, prenom, email, emailConfirm
+        case pseudo, lname, fname, email, emailConfirm
         case password, passwordConfirm, ville
     }
 
@@ -36,7 +36,7 @@ struct RegisterView: View {
     }
 
     private var isFormValid: Bool {
-        !pseudo.isEmpty && !nom.isEmpty && !prenom.isEmpty &&
+        !pseudo.isEmpty && !lname.isEmpty && !fname.isEmpty &&
         !email.isEmpty && email == emailConfirm && email.contains("@") &&
         !password.isEmpty && password == passwordConfirm && password.count >= 6 &&
         !ville.isEmpty
@@ -133,14 +133,14 @@ struct RegisterView: View {
 
                     AuthTextField(icon: "person.fill",
                                   placeholder: "Prénom *",
-                                  text: $prenom)
-                        .focused($focusedField, equals: .prenom)
+                                  text: $fname)
+                        .focused($focusedField, equals: .fname)
                         .textInputAutocapitalization(.words)
 
                     AuthTextField(icon: "person.fill",
                                   placeholder: "Nom *",
-                                  text: $nom)
-                        .focused($focusedField, equals: .nom)
+                                  text: $lname)
+                        .focused($focusedField, equals: .lname)
                         .textInputAutocapitalization(.words)
 
                     // Date de naissance
@@ -346,8 +346,8 @@ struct RegisterView: View {
                 let payload: [String: Any] = [
                     "action":          "register",
                     "pseudo":          pseudo,
-                    "nom":             nom,
-                    "prenom":          prenom,
+                    "lname":           lname,
+                    "fname":           fname,
                     "email":           email,
                     "password":        password,
                     "ville":           ville,
