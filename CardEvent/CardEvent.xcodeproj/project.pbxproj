@@ -55,6 +55,8 @@
 		E5F607182900DD00002C /* PlayersLiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersLiveView.swift; sourceTree = "<group>"; };
 		F607182900EE00003E /* ChallengeRankingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeRankingView.swift; sourceTree = "<group>"; };
 		F607182900FF00004F /* PlayerStatsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStatsDetailView.swift; sourceTree = "<group>"; };
+		CE12345002BB000002 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		CE12345004BB000004 /* AuthTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,8 @@
 				AA07182900BB00006A /* PlayerTrakView.swift */,
 				CC07182900EE00009C /* TicketsListView.swift */,
 				BB07182900CC00007B /* HomeView.swift */,
+				CE12345002BB000002 /* RegisterView.swift */,
+				CE12345004BB000004 /* AuthTextField.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -235,6 +239,8 @@
 				AA07182900BB00007B /* PlayerTrakView.swift in Sources */,
 				CC07182900EE00009D /* TicketsListView.swift in Sources */,
 				BB07182900CC00008C /* HomeView.swift in Sources */,
+				CE12345001AA000001 /* RegisterView.swift in Sources */,
+				CE12345003AA000003 /* AuthTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
