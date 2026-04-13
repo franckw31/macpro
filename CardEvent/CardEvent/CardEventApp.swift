@@ -101,6 +101,12 @@ private final class WelcomeSpeaker: NSObject, AVSpeechSynthesizerDelegate {
     }
 }
 
+// MARK: - Notification name
+
+extension Notification.Name {
+    static let cardEventEmailVerified = Notification.Name("cardevent.emailVerified")
+}
+
 @main
 struct CardEventApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
