@@ -2,7 +2,7 @@
 // ============================================================
 //  register-player.php  –  Inscription d'un nouveau joueur
 //
-//  POST {"action":"register", pseudo, nom, prenom, email,
+//  POST {"action":"register", pseudo, fname, lname, email,
 //        password, ville, date_naissance}
 //    → crée le compte (email_verified=0), envoie l'e-mail de
 //      vérification, retourne JSON {success:true}
@@ -41,8 +41,8 @@ try {
 
 // ── Colonnes supplémentaires (ajoutées si absentes) ───────────
 $colonnes = [
-    'nom'                        => 'VARCHAR(100) NULL DEFAULT NULL',
-    'prenom'                     => 'VARCHAR(100) NULL DEFAULT NULL',
+    'fname'                      => 'VARCHAR(100) NULL DEFAULT NULL',
+    'lname'                      => 'VARCHAR(100) NULL DEFAULT NULL',
     'ville'                      => 'VARCHAR(100) NULL DEFAULT NULL',
     'date_naissance'             => 'DATE NULL DEFAULT NULL',
     'email_verified'             => 'TINYINT(1) NOT NULL DEFAULT 1',
@@ -94,15 +94,15 @@ function handleRegister(PDO $pdo): void
 
     // Récupération des champs
     $pseudo        = trim($input['pseudo']        ?? '');
-    $nom           = trim($input['nom']           ?? '');
-    $prenom        = trim($input['prenom']        ?? '');
+    $lname         = trim($input['lname']         ?? '');
+    $fname         = trim($input['fname']         ?? '');
     $email         = strtolower(trim($input['email'] ?? ''));
     $password      = trim($input['password']      ?? '');
     $ville         = trim($input['ville']         ?? '');
     $dateNaissance = trim($input['date_naissance'] ?? '');
 
     // Validation
-    if (empty($pseudo) || empty($nom) || empty($prenom) ||
+    if (empty($pseudo) || empty($lname) || empty($fname) ||
         empty($email)  || empty($password) ||
         empty($ville)  || empty($dateNaissance)) {
         http_response_code(400);
@@ -153,12 +153,12 @@ function handleRegister(PDO $pdo): void
     // Insertion du membre (non vérifié)
     $pdo->prepare("
         INSERT INTO `membres`
-            (`pseudo`, `nom`, `prenom`, `email`, `password`,
+            (`pseudo`, `fname`, `lname`, `email`, `password`,
              `ville`, `date_naissance`,
              `email_verified`, `email_verification_token`, `email_verification_expires`)
         VALUES (?, ?, ?, ?, ?,  ?, ?,  0, ?, ?)
     ")->execute([
-        $pseudo, $nom, $prenom, $email, $password,
+        $pseudo, $fname, $lname, $email, $password,
         $ville, $dateNaissance,
         $token, $expires,
     ]);
@@ -193,7 +193,7 @@ function handleRegister(PDO $pdo): void
           <tr>
             <td style="padding:32px">
               <p style="font-size:16px;margin:0 0 12px">
-                Bonjour <strong style="color:#00d1ff">{$prenom} {$nom}</strong>,
+                Bonjour <strong style="color:#00d1ff">{$fname} {$lname}</strong>,
               </p>
               <p style="color:rgba(255,255,255,0.75);line-height:1.7;margin:0 0 12px">
                 Bienvenue sur <strong>CardEvent</strong> ! Votre compte joueur a été créé
@@ -324,10 +324,6 @@ function renderHtml(string $title, string $message, bool $ok): void
     <h1 style="color:#00d1ff;font-size:26px;font-weight:900;margin:0 0 6px">CardEvent</h1>
     <h2 style="color:$color;font-size:22px;margin:28px 0 16px">$icon&nbsp;$title</h2>
     <p style="color:rgba(255,255,255,0.75);line-height:1.7;font-size:15px">$message</p>
-    <a href="https://viendez.com"
-       style="display:inline-block;margin-top:32px;color:#00d1ff;text-decoration:none;font-size:14px">
-      ← Retour au site
-    </a>
   </div>
 </body>
 </html>
