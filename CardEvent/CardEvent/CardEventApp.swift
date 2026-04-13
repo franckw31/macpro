@@ -103,7 +103,6 @@ private final class WelcomeSpeaker: NSObject, AVSpeechSynthesizerDelegate {
 
 @main
 struct CardEventApp: App {
-    #if canImport(UIKit)
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     #endif
     @StateObject private var viewModel  = PokerTimerViewModel()
@@ -131,6 +130,11 @@ struct CardEventApp: App {
             }
             .task {
                 await auth.autoLogin()
+            }
+            .onOpenURL { url in
+                if url.scheme == "cardevent", url.host == "email-verified" {
+                    NotificationCenter.default.post(name: .cardEventEmailVerified, object: nil)
+                }
             }
         }
     }
