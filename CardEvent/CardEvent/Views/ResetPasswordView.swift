@@ -226,7 +226,9 @@ struct ResetPasswordView: View {
                 }
                 guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
                       let success = json["success"] as? Bool, success else {
-                    errorMessage = apiError(from: data) ?? "Erreur lors de la mise à jour"
+                    let msg = apiError(from: data) ?? "Erreur lors de la mise à jour"
+                    errorMessage = msg
+                    isTokenError = msg.lowercased().contains("lien") || msg.lowercased().contains("expir")
                     return
                 }
                 resetSuccess = true
