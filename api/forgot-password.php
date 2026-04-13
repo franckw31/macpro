@@ -41,16 +41,22 @@ handleRequestReset($pdo, $body);
 
 function handleRequestReset(PDO $pdo, array $body): void
 {
-    $email = trim($body['email'] ?? '');
+    $email  = trim($body['email']  ?? '');
+    $pseudo = trim($body['pseudo'] ?? '');
 
-    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if (empty($email) && empty($pseudo)) {
         http_response_code(400);
-        echo json_encode(['error' => 'Adresse e-mail invalide']);
+        echo json_encode(['error' => 'Saisissez votre e-mail ou votre pseudo']);
         exit;
     }
 
-    $stmt = $pdo->prepare("SELECT pseudo, password_ext FROM membres WHERE email = :email LIMIT 1");
-    $stmt->execute([':email' => $email]);
+    // Recherche par e-mail OU pseudo
+    if (!empty($email)) {
+        $stmt = $pdo->prepare("SELECT pseudo, password_ext, email FROM membres WHERE email = :val LIMIT 1");
+    } else {
+        $stmt = $pdo->prepare("SELECT pseudo, password_ext, email FROM membres WHERE pseudo = :val LIMIT 1");
+    }
+    $stmt->execute([':val' => !empty($email) ? $email : $pseudo]);
     $member = $stmt->fetch();
 
     // Toujours repondre succes — ne revele pas si l'e-mail existe
