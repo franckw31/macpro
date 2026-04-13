@@ -52,6 +52,22 @@ try {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     ");
 
+    // S'assurer que la colonne email_verified existe (avec DEFAULT 1 pour les comptes existants)
+    try {
+        $chk = $pdo->prepare(
+            "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+             WHERE TABLE_SCHEMA = DATABASE()
+               AND TABLE_NAME   = 'membres'
+               AND COLUMN_NAME  = 'email_verified'"
+        );
+        $chk->execute();
+        if ((int)$chk->fetchColumn() === 0) {
+            $pdo->exec("ALTER TABLE `membres` ADD COLUMN `email_verified` TINYINT(1) NOT NULL DEFAULT 1");
+        }
+    } catch (PDOException $eChk) {
+        // Ignore : la colonne sera ajoutée par register-player.php lors de la première inscription
+    }
+
     // ── Helper : écrire dans activity_logs (même table que logs.php) ──
     $logAuth = function(string $event, ?string $pseudo = null, ?int $membreId = null)
         use ($pdo, $deviceId, $ip, $ua)
@@ -111,12 +127,27 @@ try {
             FROM `membres`
             WHERE (`pseudo` = :u OR `email` = :u)
               AND (`password` = :p OR `password_ext` = :p)
+              AND (email_verified IS NULL OR email_verified = 1)
             LIMIT 1
         ");
         $stmt->execute([':u' => $username, ':p' => $password]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$user) {
+            // Vérifier si le compte existe mais n'est pas encore vérifié
+            $stmtUnverified = $pdo->prepare("
+                SELECT COUNT(*) FROM `membres`
+                WHERE (`pseudo` = :u OR `email` = :u)
+                  AND (`password` = :p OR `password_ext` = :p)
+                  AND email_verified = 0
+            ");
+            $stmtUnverified->execute([':u' => $username, ':p' => $password]);
+            if ((int)$stmtUnverified->fetchColumn() > 0) {
+                $logAuth('login_failure_unverified', $username);
+                http_response_code(401);
+                echo json_encode(['success' => false, 'error' => 'Compte non vérifié – consultez votre e-mail pour activer votre compte']);
+                exit;
+            }
             $logAuth('login_failure', $username);
             http_response_code(401);
             echo json_encode(['success' => false, 'error' => 'Identifiants invalides']);
