@@ -34,7 +34,7 @@ try {
     }
 
     // ── Vérifier appartenance ─────────────────────────────────
-    $stmtCheck = $pdo->prepare("SELECT organizer_id, statut FROM pro_events WHERE id = ? LIMIT 1");
+    $stmtCheck = $pdo->prepare("SELECT `id-membre` AS organizer_id, COALESCE(`statut`,'publie') AS statut FROM `activite` WHERE `id-activite` = ? LIMIT 1");
     $stmtCheck->execute([$eventId]);
     $existing = $stmtCheck->fetch();
 
@@ -74,7 +74,7 @@ try {
     }
 
     // ── Mise à jour ───────────────────────────────────────────
-    $pdo->prepare("UPDATE pro_events SET statut = ? WHERE id = ?")
+    $pdo->prepare("UPDATE `activite` SET `statut` = ? WHERE `id-activite` = ?")
         ->execute([$statut, $eventId]);
 
     // Log

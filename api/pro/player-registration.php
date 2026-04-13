@@ -91,15 +91,15 @@ try {
                 exit;
             }
 
-            // Compter les places prises (Inscrit + Confirmé)
+            // Compter les places prises (Inscrit uniquement)
             $stmtCnt = $pdo->prepare("
                 SELECT COUNT(*) AS nb FROM `participation`
-                WHERE `id-activite` = ? AND `option` IN ('Inscrit','Confirmé')
+                WHERE `id-activite` = ? AND `option` = 'Inscrit'
             ");
             $stmtCnt->execute([$eventId]);
             $nbInscrits = (int)$stmtCnt->fetchColumn();
 
-            $optionVal = $nbInscrits >= (int)$event['max_joueurs'] ? 'Réservation' : 'Inscrit';
+            $optionVal = $nbInscrits >= (int)$event['max_joueurs'] ? 'Option' : 'Inscrit';
 
             // Pseudo du membre pour nom-membre
             $stmtPseudo = $pdo->prepare("SELECT pseudo FROM `membres` WHERE `id-membre` = ? LIMIT 1");
@@ -128,7 +128,7 @@ try {
                 ")->execute([$memberId, $eventId, $nomMembre, $optionVal, $isPrivate]);
             }
 
-            $message = $optionVal === 'Réservation'
+            $message = $optionVal === 'Option'
                 ? "Ajouté en liste d'attente (partie complète)"
                 : 'Inscription enregistrée';
 
