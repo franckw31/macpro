@@ -7,6 +7,7 @@ struct LoginView: View {
 
     @State private var username = ""
     @State private var password = ""
+    @State private var showRegister = false
     @FocusState private var focusedField: Field?
     @Environment(\.verticalSizeClass) private var vSizeClass
 
@@ -114,12 +115,23 @@ struct LoginView: View {
                     }
                     .disabled(auth.isLoading || username.isEmpty || password.isEmpty)
                     .padding(.horizontal, 28)
+
+                    // Bouton créer un compte
+                    Button(action: { showRegister = true }) {
+                        Text("Nouveau joueur ? Créer un compte")
+                            .font(.footnote)
+                            .foregroundColor(.white.opacity(0.5))
+                            .padding(.vertical, 8)
+                    }
                     .padding(.bottom, isCompact ? 16 : 40)
                 }
                 .frame(maxWidth: 480) // centré sur iPad/paysage
                 .frame(maxWidth: .infinity)
             }
             .scrollDismissesKeyboard(.interactively)
+        }
+        .sheet(isPresented: $showRegister) {
+            RegisterView()
         }
     }
 
