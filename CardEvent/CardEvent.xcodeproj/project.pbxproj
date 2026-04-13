@@ -30,6 +30,8 @@
 		F607182900FF00005F /* PlayerStatsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F607182900FF00004F /* PlayerStatsDetailView.swift */; };
 		CE12345001AA000001 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12345002BB000002 /* RegisterView.swift */; };
 		CE12345003AA000003 /* AuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12345004BB000004 /* AuthTextField.swift */; };
+		CE12345005AA000005 /* ForgotPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12345006BB000006 /* ForgotPasswordView.swift */; };
+		CE12345007AA000007 /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12345008BB000008 /* ResetPasswordView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +61,8 @@
 		F607182900FF00004F /* PlayerStatsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStatsDetailView.swift; sourceTree = "<group>"; };
 		CE12345002BB000002 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		CE12345004BB000004 /* AuthTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTextField.swift; sourceTree = "<group>"; };
+		CE12345006BB000006 /* ForgotPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordView.swift; sourceTree = "<group>"; };
+		CE12345008BB000008 /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +144,8 @@
 				BB07182900CC00007B /* HomeView.swift */,
 				CE12345002BB000002 /* RegisterView.swift */,
 				CE12345004BB000004 /* AuthTextField.swift */,
+				CE12345006BB000006 /* ForgotPasswordView.swift */,
+				CE12345008BB000008 /* ResetPasswordView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -243,6 +249,8 @@
 				BB07182900CC00008C /* HomeView.swift in Sources */,
 				CE12345001AA000001 /* RegisterView.swift in Sources */,
 				CE12345003AA000003 /* AuthTextField.swift in Sources */,
+				CE12345005AA000005 /* ForgotPasswordView.swift in Sources */,
+				CE12345007AA000007 /* ResetPasswordView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
