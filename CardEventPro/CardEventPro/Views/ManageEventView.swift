@@ -14,6 +14,7 @@ struct ManageEventView: View {
     @State private var isLoadingRegs = false
     @State private var showEditSheet  = false
     @State private var showAddPlayer  = false
+    @State private var showLiveView   = false
     @State private var confirmAction: ConfirmAction?
     @State private var selectedReg: ProRegistration?
 
@@ -94,6 +95,11 @@ struct ManageEventView: View {
             .sheet(isPresented: $showAddPlayer) {
                 AddPlayerSheet(event: event) {
                     Task { await loadRegistrations() }
+                }
+            }
+            .sheet(isPresented: $showLiveView) {
+                NavigationStack {
+                    LiveView(activityId: event.id, activityTitle: event.titre)
                 }
             }
             .confirmationDialog(
@@ -225,12 +231,18 @@ struct ManageEventView: View {
                 actionButton("Annuler", icon: "xmark.circle", color: .red) {
                     confirmAction = .cancel
                 }
+                actionButton("Live Timer", icon: "timer", color: Color(red: 0, green: 0.82, blue: 1)) {
+                    showLiveView = true
+                }
             case .enCours:
                 actionButton("Terminer", icon: "flag.checkered", color: .purple) {
                     confirmAction = .finish
                 }
                 actionButton("Mettre en pause", icon: "pause.fill", color: .orange) {
                     Task { _ = await service.changeStatus(eventId: event.id, statut: .publie) }
+                }
+                actionButton("Live Timer", icon: "timer", color: Color(red: 0, green: 0.82, blue: 1)) {
+                    showLiveView = true
                 }
             case .termine, .annule:
                 Text("Partie \(event.statut.label.lowercased())")
