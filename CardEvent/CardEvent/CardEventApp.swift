@@ -109,6 +109,7 @@ extension Notification.Name {
 
 @main
 struct CardEventApp: App {
+    #if canImport(UIKit)
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     #endif
     @StateObject private var viewModel  = PokerTimerViewModel()
