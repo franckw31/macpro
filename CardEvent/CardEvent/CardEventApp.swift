@@ -105,6 +105,7 @@ private final class WelcomeSpeaker: NSObject, AVSpeechSynthesizerDelegate {
 
 extension Notification.Name {
     static let cardEventEmailVerified = Notification.Name("cardevent.emailVerified")
+    static let cardEventPasswordReset = Notification.Name("cardevent.passwordReset")
 }
 
 @main
@@ -141,6 +142,10 @@ struct CardEventApp: App {
             .onOpenURL { url in
                 if url.scheme == "cardevent", url.host == "email-verified" {
                     NotificationCenter.default.post(name: .cardEventEmailVerified, object: nil)
+                } else if url.scheme == "cardevent", url.host == "reset-password",
+                          let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                          let token = components.queryItems?.first(where: { $0.name == "token" })?.value {
+                    NotificationCenter.default.post(name: .cardEventPasswordReset, object: token)
                 }
             }
         }
