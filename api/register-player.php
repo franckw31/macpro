@@ -309,6 +309,10 @@ function renderHtml(string $title, string $message, bool $ok): void
     header('Content-Type: text/html; charset=UTF-8');
     $color = $ok ? '#00d1ff' : '#ff6b6b';
     $icon  = $ok ? '✅' : '❌';
+    // Si succès, on tente de rouvrir l'app iOS via le custom URL scheme
+    $redirectScript = $ok
+        ? '<script>setTimeout(function(){ window.location = "cardevent://email-verified"; }, 800);</script>'
+        : '';
     echo <<<HTML
 <!DOCTYPE html>
 <html lang="fr">
@@ -316,6 +320,7 @@ function renderHtml(string $title, string $message, bool $ok): void
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>CardEvent – Vérification du compte</title>
+  $redirectScript
 </head>
 <body style="margin:0;padding:0;background:#0d0d0d;font-family:Arial,sans-serif;
              display:flex;justify-content:center;align-items:center;min-height:100vh">
