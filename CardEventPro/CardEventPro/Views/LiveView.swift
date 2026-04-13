@@ -176,6 +176,29 @@ private final class LiveTimerViewModel: NSObject, ObservableObject, @preconcurre
         guard durationSeconds > 0 else { return 0 }
         return min(1, max(0, Double(secondsRemaining) / Double(durationSeconds)))
     }
+
+    // MARK: - Timer control (organisateur)
+
+    func sendTimerAction(_ action: String) {
+        Task {
+            guard let url = URL(string: "https://viendez.com/api/pro/timer-control.php") else { return }
+            var req = URLRequest(url: url)
+            req.httpMethod = "POST"
+            req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            req.timeoutInterval = 10
+            if let token = KeychainHelper.authToken {
+                req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            }
+            let body: [String: Any] = ["event_id": activityId, "action": action]
+            req.httpBody = try? JSONSerialization.data(withJSONObject: body)
+            do {
+                let (_, _) = try await URLSession.shared.data(for: req)
+                await sync()
+            } catch {
+                print("[LiveView] Erreur action timer: \(error)")
+            }
+        }
+    }
 }
 
 // MARK: - LiveView
@@ -322,6 +345,7 @@ struct LiveView: View {
             blindsBlock(blindFont: blindFont, labelFont: labelFont)
             nextInfoBlock(labelFont: labelFont)
             statsBlock(labelFont: labelFont)
+            controlBar
             playersButton
             Spacer(minLength: 0)
         }
@@ -336,11 +360,12 @@ struct LiveView: View {
         HStack(spacing: 0) {
             circleTimer(size: circleSize, timerFont: timerFont, labelFont: labelFont)
                 .frame(maxWidth: w * 0.5)
-            VStack(spacing: h * 0.06) {
+            VStack(spacing: h * 0.05) {
                 Spacer()
                 blindsBlock(blindFont: blindFont, labelFont: labelFont)
                 nextInfoBlock(labelFont: labelFont)
                 statsBlock(labelFont: labelFont)
+                controlBar
                 playersButton
                 Spacer()
             }
@@ -525,5 +550,83 @@ struct LiveView: View {
                 .font(.system(size: labelFont * 1.5, weight: .bold))
                 .foregroundColor(.white.opacity(0.7))
         }
+    }
+
+    // MARK: - Barre de contrôle organisateur
+
+    private var controlBar: some View {
+        HStack(spacing: 12) {
+            controlButton(
+                icon: "backward.end.fill",
+                label: "Préc.",
+                color: .white.opacity(0.75)
+            ) { liveVM.sendTimerAction("prev_blind") }
+
+            controlButton(
+                icon: "minus.circle.fill",
+                label: "-1 min",
+                color: .white.opacity(0.75)
+            ) { liveVM.sendTimerAction("moins") }
+
+            // Bouton pause / reprise — plus grand et en couleur
+            Button { liveVM.sendTimerAction("pauseresume") } label: {
+                VStack(spacing: 3) {
+                    Image(systemName: liveVM.isPaused ? "play.fill" : "pause.fill")
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundColor(liveVM.isPaused ? .green : .orange)
+                    Text(liveVM.isPaused ? "Reprendre" : "Pause")
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundColor(liveVM.isPaused ? .green.opacity(0.8) : .orange.opacity(0.8))
+                }
+                .frame(width: 54, height: 52)
+                .background((liveVM.isPaused ? Color.green : Color.orange).opacity(0.15))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke((liveVM.isPaused ? Color.green : Color.orange).opacity(0.4), lineWidth: 1)
+                )
+            }
+            .buttonStyle(.plain)
+
+            controlButton(
+                icon: "plus.circle.fill",
+                label: "+1 min",
+                color: .white.opacity(0.75)
+            ) { liveVM.sendTimerAction("plus") }
+
+            controlButton(
+                icon: "forward.end.fill",
+                label: "Suiv.",
+                color: .white.opacity(0.75)
+            ) { liveVM.sendTimerAction("next_blind") }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(Color.white.opacity(0.05))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.white.opacity(0.1), lineWidth: 1)
+        )
+    }
+
+    private func controlButton(icon: String,
+                               label: String,
+                               color: Color,
+                               action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 3) {
+                Image(systemName: icon)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(color)
+                Text(label)
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundColor(color.opacity(0.8))
+            }
+            .frame(width: 50, height: 52)
+            .background(Color.white.opacity(0.08))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
     }
 }
