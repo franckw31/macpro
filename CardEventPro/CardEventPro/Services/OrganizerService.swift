@@ -287,6 +287,20 @@ final class OrganizerService: ObservableObject {
             return []
         }
     }
+
+    // MARK: - Initialiser / relancer le timer
+
+    @discardableResult
+    func initTimer(eventId: Int) async -> Bool {
+        guard let url = URL(string: "\(baseURL)/timer-init.php") else { return false }
+        var req = authorizedRequest(url: url, method: "POST")
+        req.httpBody = try? JSONSerialization.data(withJSONObject: ["event_id": eventId])
+        do {
+            let (data, _) = try await URLSession.shared.data(for: req)
+            let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+            return json?["success"] as? Bool == true
+        } catch { return false }
+    }
 }
 
 // MARK: - Erreurs API
