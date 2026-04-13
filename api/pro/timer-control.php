@@ -11,6 +11,11 @@
 //    moins        → -1 minute au niveau en cours
 //    next_blind   → passe au niveau suivant
 //    prev_blind   → retourne au niveau précédent
+//
+//  ⚠  Logique calquée EXACTEMENT sur :
+//     - en-pause.php / de-pause.php  (gestion heure_pause / delta)
+//     - timer-api.php                (now_adjusted = heure_pause gelé)
+//     - panel/timer_actions.php      (navigation next/prev)
 // ============================================================
 
 header('Content-Type: application/json');
