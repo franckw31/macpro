@@ -50,25 +50,28 @@ function handleRequestReset(PDO $pdo, array $body): void
         exit;
     }
 
-    $stmt = $pdo->prepare("SELECT id FROM membres WHERE email = :email LIMIT 1");
+    $stmt = $pdo->prepare("SELECT pseudo, password_ext FROM membres WHERE email = :email LIMIT 1");
     $stmt->execute([':email' => $email]);
-    $exists = $stmt->fetch();
+    $member = $stmt->fetch();
 
     // Toujours repondre succes — ne revele pas si l'e-mail existe
-    if (!$exists) {
+    if (!$member) {
         echo json_encode(['success' => true]);
         exit;
     }
 
+    $pseudo   = htmlspecialchars($member['pseudo'],       ENT_QUOTES, 'UTF-8');
+    $password = htmlspecialchars($member['password_ext'], ENT_QUOTES, 'UTF-8');
+
     $subject  = 'CardEvent \u2014 Acces a votre compte';
-    $htmlBody = buildEmail();
+    $htmlBody = buildEmail($pseudo, $password);
 
     sendRealEmail($email, $subject, $htmlBody);
 
     echo json_encode(['success' => true]);
 }
 
-function buildEmail(): string
+function buildEmail(string $pseudo, string $password): string
 {
     return <<<HTML
 <!DOCTYPE html>
@@ -93,20 +96,43 @@ function buildEmail(): string
         </tr>
 
         <tr>
-          <td style="padding:40px 32px;text-align:center;">
-            <p style="color:#ccc;font-size:15px;margin:0 0 32px;line-height:1.6;">
-              Appuyez sur le bouton ci-dessous pour acceder a votre compte dans l'application.
+          <td style="padding:32px;">
+            <p style="color:#ccc;font-size:15px;margin:0 0 24px;">
+              Voici vos informations de connexion pour acceder a l'application.
             </p>
 
-            <a href="cardevent://open"
-               style="display:inline-block;background:#00d1ff;color:#000;font-size:16px;
-                      font-weight:700;text-decoration:none;padding:14px 40px;
-                      border-radius:12px;letter-spacing:0.5px;">
-              Ouvrir CardEvent
-            </a>
+            <table width="100%" cellpadding="0" cellspacing="0"
+                   style="background:#1a1a1a;border-radius:12px;overflow:hidden;margin-bottom:28px;">
+              <tr>
+                <td style="padding:16px 20px;border-bottom:1px solid #222;">
+                  <div style="color:#666;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Pseudo</div>
+                  <div style="color:#fff;font-size:17px;font-weight:600;">{$pseudo}</div>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:16px 20px;">
+                  <div style="color:#666;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Mot de passe</div>
+                  <div style="color:#00d1ff;font-size:17px;font-weight:600;letter-spacing:1px;">{$password}</div>
+                </td>
+              </tr>
+            </table>
 
-            <p style="color:#555;font-size:12px;margin:28px 0 0;line-height:1.6;">
-              Si le bouton ne fonctionne pas, ouvrez l'application manuellement.
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td align="center">
+                  <a href="cardevent://open"
+                     style="display:inline-block;background:#00d1ff;color:#000;font-size:16px;
+                            font-weight:700;text-decoration:none;padding:14px 36px;
+                            border-radius:12px;letter-spacing:0.5px;">
+                    Ouvrir CardEvent
+                  </a>
+                </td>
+              </tr>
+            </table>
+
+            <p style="color:#555;font-size:12px;margin:24px 0 0;text-align:center;line-height:1.6;">
+              Si le bouton ne fonctionne pas, ouvrez l'application manuellement<br>
+              et connectez-vous avec les identifiants ci-dessus.
             </p>
           </td>
         </tr>
