@@ -46,7 +46,7 @@ struct ForgotPasswordView: View {
                 .foregroundColor(.white)
                 .padding(.bottom, 8)
 
-            Text("Saisissez l'e-mail associé à votre compte.\nVotre pseudo et mot de passe vous seront envoyés par e-mail.")
+            Text("Saisissez l'e-mail associé à votre compte.\nVous recevrez un lien pour relancer l'application.")
                 .font(.subheadline)
                 .foregroundColor(.white.opacity(0.55))
                 .multilineTextAlignment(.center)
@@ -87,7 +87,7 @@ struct ForgotPasswordView: View {
                     if isLoading {
                         ProgressView().tint(.white)
                     } else {
-                        Text("Envoyer mes identifiants")
+                        Text("Envoyer le lien")
                             .font(.headline)
                             .foregroundColor(.white)
                     }
@@ -130,7 +130,7 @@ struct ForgotPasswordView: View {
                 .font(.title2.bold())
                 .foregroundColor(.white)
 
-            Text("Si un compte existe pour **\(email)**, votre pseudo et mot de passe ont été envoyés.\n\nOuvrez l'e-mail depuis votre iPhone et appuyez sur le bouton pour revenir dans l'application.")
+            Text("Si un compte existe pour **\(email)**, un e-mail vient d'être envoyé.\n\nOuvrez l'e-mail depuis votre iPhone et appuyez sur le bouton pour revenir dans l'application.")
                 .font(.subheadline)
                 .foregroundColor(.white.opacity(0.7))
                 .multilineTextAlignment(.center)
