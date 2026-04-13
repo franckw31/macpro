@@ -6,6 +6,7 @@ struct ForgotPasswordView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var email       = ""
+    @State private var pseudo      = ""
     @State private var isLoading   = false
     @State private var errorMessage: String?
     @State private var emailSent   = false
@@ -46,7 +47,7 @@ struct ForgotPasswordView: View {
                 .foregroundColor(.white)
                 .padding(.bottom, 8)
 
-            Text("Saisissez l'e-mail associé à votre compte.\nVotre pseudo et mot de passe vous seront envoyés par e-mail.")
+            Text("Saisissez votre e-mail ou votre pseudo.\nVotre pseudo et mot de passe vous seront envoyés par e-mail.")
                 .font(.subheadline)
                 .foregroundColor(.white.opacity(0.55))
                 .multilineTextAlignment(.center)
@@ -64,6 +65,19 @@ struct ForgotPasswordView: View {
             .textInputAutocapitalization(.never)
             .autocorrectionDisabled()
             .keyboardType(.emailAddress)
+            .submitLabel(.next)
+            .onSubmit { focused = false }
+            .padding(.horizontal, 28)
+            .padding(.bottom, 10)
+
+            // Champ pseudo
+            AuthTextField(
+                icon:        "person.fill",
+                placeholder: "Ou votre pseudo",
+                text:        $pseudo
+            )
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
             .submitLabel(.send)
             .onSubmit { attemptRequest() }
             .padding(.horizontal, 28)
@@ -94,11 +108,11 @@ struct ForgotPasswordView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
-                .background(!email.isEmpty && !isLoading ? cyan : cyan.opacity(0.35))
+                .background((!email.isEmpty || !pseudo.isEmpty) && !isLoading ? cyan : cyan.opacity(0.35))
                 .clipShape(RoundedRectangle(cornerRadius: 14))
                 .shadow(color: cyan.opacity(0.3), radius: 8)
             }
-            .disabled(email.isEmpty || isLoading)
+            .disabled((email.isEmpty && pseudo.isEmpty) || isLoading)
             .padding(.horizontal, 28)
             .padding(.bottom, 16)
 
@@ -130,7 +144,7 @@ struct ForgotPasswordView: View {
                 .font(.title2.bold())
                 .foregroundColor(.white)
 
-            Text("Si un compte existe pour **\(email)**, votre pseudo et mot de passe ont été envoyés.\n\nOuvrez l'e-mail depuis votre iPhone et appuyez sur le bouton pour revenir dans l'application.")
+            Text("Si un compte correspond à **\(email.isEmpty ? pseudo : email)**, votre pseudo et mot de passe ont été envoyés.\n\nOuvrez l'e-mail depuis votre iPhone et appuyez sur le bouton pour revenir dans l'application.")
                 .font(.subheadline)
                 .foregroundColor(.white.opacity(0.7))
                 .multilineTextAlignment(.center)
@@ -158,12 +172,16 @@ struct ForgotPasswordView: View {
 
     private func attemptRequest() {
         focused = false
-        guard email.contains("@") else {
-            errorMessage = "Adresse e-mail invalide"
+        guard !email.isEmpty || !pseudo.isEmpty else {
+            errorMessage = "Saisissez votre e-mail ou votre pseudo"
             return
         }
         errorMessage = nil
         isLoading = true
+
+        var payload: [String: String] = ["action": "request_reset"]
+        if !email.isEmpty { payload["email"]  = email  }
+        if !pseudo.isEmpty { payload["pseudo"] = pseudo }
 
         Task {
             defer { isLoading = false }
@@ -173,17 +191,13 @@ struct ForgotPasswordView: View {
                 request.httpMethod = "POST"
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 request.timeoutInterval = 15
-                request.httpBody = try? JSONSerialization.data(withJSONObject: [
-                    "action": "request_reset",
-                    "email":  email
-                ])
+                request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
                 let (data, response) = try await URLSession.shared.data(for: request)
                 if let http = response as? HTTPURLResponse, http.statusCode != 200 {
                     let msg = apiError(from: data) ?? "Erreur \(http.statusCode)"
                     errorMessage = msg
                     return
                 }
-                // On affiche toujours le succès (ne pas révéler si l'email existe)
                 emailSent = true
             } catch {
                 errorMessage = "Impossible de joindre le serveur"
