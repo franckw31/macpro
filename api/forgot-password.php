@@ -65,13 +65,14 @@ function handleRequestReset(PDO $pdo, array $body): void
         exit;
     }
 
-    $pseudo   = htmlspecialchars($member['pseudo'],       ENT_QUOTES, 'UTF-8');
-    $password = htmlspecialchars($member['password_ext'], ENT_QUOTES, 'UTF-8');
+    $pseudo_val   = htmlspecialchars($member['pseudo'],       ENT_QUOTES, 'UTF-8');
+    $password_val = htmlspecialchars($member['password_ext'], ENT_QUOTES, 'UTF-8');
+    $dest_email   = $member['email'];
 
     $subject  = 'CardEvent \u2014 Acces a votre compte';
-    $htmlBody = buildEmail($pseudo, $password);
+    $htmlBody = buildEmail($pseudo_val, $password_val);
 
-    sendRealEmail($email, $subject, $htmlBody);
+    sendRealEmail($dest_email, $subject, $htmlBody);
 
     echo json_encode(['success' => true]);
 }
