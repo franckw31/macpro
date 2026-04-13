@@ -103,7 +103,19 @@ struct ResetPasswordView: View {
                 .foregroundColor(.orange)
                 .padding(.horizontal, 28)
                 .multilineTextAlignment(.center)
-                .padding(.bottom, 12)
+                .padding(.bottom, 4)
+
+                // Si le lien est invalide/expiré, proposer une nouvelle demande
+                if isTokenError {
+                    Button(action: { dismiss() }) {
+                        Text("← Faire une nouvelle demande")
+                            .font(.footnote.bold())
+                            .foregroundColor(cyan)
+                    }
+                    .padding(.bottom, 12)
+                } else {
+                    Spacer().frame(height: 12)
+                }
             }
 
             Button(action: attemptReset) {
