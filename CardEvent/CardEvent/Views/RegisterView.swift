@@ -17,9 +17,10 @@ struct RegisterView: View {
     @State private var dateNaissance   = Calendar.current.date(byAdding: .year, value: -18, to: Date()) ?? Date()
 
     // ── État UI ──────────────────────────────────────────────────
-    @State private var isLoading         = false
+    @State private var isLoading           = false
     @State private var errorMessage: String?
-    @State private var registrationSuccess = false
+    @State private var registrationSuccess  = false
+    @State private var accountVerified      = false
     @FocusState private var focusedField: Field?
 
     private enum Field: Hashable {
@@ -55,7 +56,10 @@ struct RegisterView: View {
             }
         }
         .preferredColorScheme(.dark)
-    }
+        .onReceive(NotificationCenter.default.publisher(for: .cardEventEmailVerified)) { _ in
+            accountVerified     = true
+            registrationSuccess = true
+        }
 
     // MARK: - Écran de succès
 
@@ -63,26 +67,39 @@ struct RegisterView: View {
         VStack(spacing: 24) {
             Spacer()
 
-            Image(systemName: "envelope.badge.checkmark.fill")
+            Image(systemName: accountVerified
+                  ? "checkmark.seal.fill"
+                  : "envelope.badge.checkmark.fill")
                 .font(.system(size: 72))
-                .foregroundColor(cyan)
-                .shadow(color: cyan.opacity(0.5), radius: 20)
+                .foregroundColor(accountVerified ? .green : cyan)
+                .shadow(color: (accountVerified ? Color.green : cyan).opacity(0.5), radius: 20)
+                .animation(.easeInOut, value: accountVerified)
 
-            Text("Vérifiez votre e-mail !")
+            Text(accountVerified ? "Compte activé !" : "Vérifiez votre e-mail !")
                 .font(.title2.bold())
                 .foregroundColor(.white)
+                .animation(.easeInOut, value: accountVerified)
 
-            Text("Un lien d'activation a été envoyé à :\n**\(email)**\n\nCliquez sur ce lien pour activer votre compte, puis connectez-vous dans l'application.")
-                .font(.subheadline)
-                .foregroundColor(.white.opacity(0.7))
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
-                .lineSpacing(4)
+            if accountVerified {
+                Text("Votre compte est maintenant actif.\nVous pouvez vous connecter.")
+                    .font(.subheadline)
+                    .foregroundColor(.white.opacity(0.7))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 32)
+                    .lineSpacing(4)
+            } else {
+                Text("Un lien d’activation a été envoyé à :\n**\(email)**\n\nCliquez sur ce lien depuis votre téléphone — l’application reprendra automatiquement.")
+                    .font(.subheadline)
+                    .foregroundColor(.white.opacity(0.7))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 32)
+                    .lineSpacing(4)
+            }
 
             Spacer()
 
             Button(action: { dismiss() }) {
-                Text("Retour à la connexion")
+                Text(accountVerified ? "Se connecter" : "Retour à la connexion")
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
