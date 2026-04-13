@@ -15,11 +15,10 @@ header('Access-Control-Allow-Headers: Content-Type');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
-require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../serveur-smtp/send.php';
 
 try {
-    $pdo = new PDO($dsn, $dbUser, $dbPass, [
+    $pdo = new PDO('mysql:host=localhost;dbname=dbs9616600;charset=utf8mb4', 'root', 'Kookies7*', [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
