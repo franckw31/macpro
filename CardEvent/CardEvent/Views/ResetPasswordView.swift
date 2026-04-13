@@ -12,6 +12,7 @@ struct ResetPasswordView: View {
     @State private var isLoading       = false
     @State private var errorMessage: String?
     @State private var resetSuccess    = false
+    @State private var isTokenError    = false
     @FocusState private var focusedField: Field?
 
     private enum Field { case password, passwordConfirm }
