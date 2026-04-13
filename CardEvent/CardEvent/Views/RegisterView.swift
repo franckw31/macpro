@@ -60,6 +60,7 @@ struct RegisterView: View {
             accountVerified     = true
             registrationSuccess = true
         }
+    }
 
     // MARK: - Écran de succès
 
