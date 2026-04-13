@@ -55,7 +55,7 @@ $pdo->exec("
 
 // ── Routage ───────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    handleRedirect();
+    handleRedirect($pdo);
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
     $input  = json_decode(file_get_contents('php://input'), true) ?? [];
@@ -75,11 +75,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 // ── GET : redirection vers le deep link iOS ───────────────────
-function handleRedirect(): void
+function handleRedirect(PDO $pdo): void
 {
     $token = trim($_GET['token'] ?? '');
     if (empty($token)) {
         renderPage('❌ Lien invalide', 'Ce lien de réinitialisation est invalide.', '#ff6b6b');
+        return;
+    }
+
+    // Vérifier le token avant de rediriger l'app
+    $stmt = $pdo->prepare("
+        SELECT expires_at, used FROM `password_reset_tokens`
+        WHERE token = ? LIMIT 1
+    ");
+    $stmt->execute([$token]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$row) {
+        renderPage('❌ Lien invalide', 'Ce lien est invalide ou a déjà été utilisé.', '#ff6b6b');
+        return;
+    }
+    if ($row['used']) {
+        renderPage('❌ Lien déjà utilisé', 'Ce lien a déjà été utilisé. Faites une nouvelle demande depuis l’application.', '#ff6b6b');
+        return;
+    }
+    // Vérification expiration avec l'heure MySQL (pas PHP)
+    $expCheck = $pdo->prepare("SELECT expires_at > NOW() AS valid FROM `password_reset_tokens` WHERE token = ?");
+    $expCheck->execute([$token]);
+    $valid = (int)$expCheck->fetchColumn();
+    if (!$valid) {
+        renderPage('❌ Lien expiré', 'Ce lien de réinitialisation a expiré (2h). Faites une nouvelle demande depuis l’application.', '#ff6b6b');
         return;
     }
 
@@ -140,13 +165,12 @@ function handleRequestReset(PDO $pdo, array $input): void
         $pdo->prepare("DELETE FROM `password_reset_tokens` WHERE `membre_id` = ?")
             ->execute([$memberId]);
 
-        // Générer un token (30 min)
-        $token   = bin2hex(random_bytes(32));
-        $expires = date('Y-m-d H:i:s', strtotime('+30 minutes'));
+        // Générer un token (2 h) – utilise l'heure MySQL pour éviter tout décalage de fuseau horaire
+        $token = bin2hex(random_bytes(32));
         $pdo->prepare("
             INSERT INTO `password_reset_tokens` (`membre_id`, `token`, `expires_at`)
-            VALUES (?, ?, ?)
-        ")->execute([$memberId, $token, $expires]);
+            VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 2 HOUR))
+        ")->execute([$memberId, $token]);
 
         $resetUrl = 'https://viendez.com/api/forgot-password.php?token=' . $token;
 
@@ -176,7 +200,7 @@ function handleRequestReset(PDO $pdo, array $input): void
               </p>
               <p style="color:rgba(255,255,255,0.75);line-height:1.7;margin:0 0 28px">
                 Vous avez demandé la réinitialisation de votre mot de passe CardEvent.<br>
-                Ce lien est valable <strong>30&nbsp;minutes</strong>.
+                Ce lien est valable <strong>2&nbsp;heures</strong>.
               </p>
 
               <div style="text-align:center;margin-bottom:28px">
@@ -240,25 +264,31 @@ function handleResetPassword(PDO $pdo, array $input): void
         return;
     }
 
-    // Valider le token
-    $stmt = $pdo->prepare("
-        SELECT r.membre_id, m.pseudo
+    // Vérification en deux étapes : existence puis validité
+    $stmtExist = $pdo->prepare("
+        SELECT r.membre_id, m.pseudo, r.expires_at, r.used,
+               (r.expires_at > NOW()) AS not_expired
         FROM `password_reset_tokens` r
         JOIN `membres` m ON m.`id-membre` = r.membre_id
         WHERE r.token = ?
-          AND r.expires_at > NOW()
-          AND r.used = 0
         LIMIT 1
     ");
-    $stmt->execute([$token]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmtExist->execute([$token]);
+    $row = $stmtExist->fetch(PDO::FETCH_ASSOC);
 
     if (!$row) {
         http_response_code(401);
-        echo json_encode([
-            'success' => false,
-            'error'   => 'Lien invalide ou expiré (30 min). Veuillez faire une nouvelle demande.',
-        ]);
+        echo json_encode(['success' => false, 'error' => 'Lien invalide. Veuillez faire une nouvelle demande depuis l’application.']);
+        return;
+    }
+    if ($row['used']) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'Ce lien a déjà été utilisé. Veuillez faire une nouvelle demande.']);
+        return;
+    }
+    if (!$row['not_expired']) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'Lien expiré (2h). Veuillez faire une nouvelle demande depuis l’application.']);
         return;
     }
 
