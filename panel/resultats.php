@@ -45,7 +45,7 @@ if($activity){
 
                 // place / challenge / recave / bounty fallbacks
                 $place = null;
-                foreach(['place','position','rank','rang'] as $c){ if(isset($r[$c]) && $r[$c] !== ''){ $place = $r[$c]; break; } }
+                foreach(['classement','place','position','rank','rang'] as $c){ if(isset($r[$c]) && $r[$c] !== '' && intval($r[$c]) > 0){ $place = $r[$c]; break; } }
                 $challenge = '';
                 foreach(['challenge','chall','numero','ticket'] as $c){ if(isset($r[$c]) && $r[$c] !== ''){ $challenge = $r[$c]; break; } }
                 $recave = 0; foreach(['recave','rebuys','r'] as $c){ if(isset($r[$c]) && $r[$c] !== ''){ $recave = (int)$r[$c]; break; } }
