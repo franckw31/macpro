@@ -432,6 +432,36 @@ struct PlayerProfileView: View {
         } catch {
             statsError = "Chargement impossible"
         }
+        // Charger le rang challenge directement depuis challenge-ranking.php
+        await loadChallengeRank()
+    }
+
+    private func loadChallengeRank() async {
+        guard let token = AuthService.shared.token else { return }
+        var urlStr = "https://viendez.com/api/challenge-ranking.php"
+        if activityId > 0 { urlStr += "?activity_id=\(activityId)" }
+        guard let url = URL(string: urlStr) else { return }
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.timeoutInterval = 10
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request)
+            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let success = json["success"] as? Bool, success,
+               let entries = json["ranking"] as? [[String: Any]] {
+                let lowerPseudo = pseudo.lowercased()
+                for (index, entry) in entries.enumerated() {
+                    let entryPseudo = (entry["pseudo"] as? String ?? "").lowercased()
+                    if entryPseudo == lowerPseudo {
+                        fetchedChallengeRank = index + 1
+                        return
+                    }
+                }
+                fetchedChallengeRank = 0
+            }
+        } catch {
+            // silencieux — on garde la valeur du participant si disponible
+        }
     }
 
     private var initialsCircle: some View {
