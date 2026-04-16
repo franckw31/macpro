@@ -18,7 +18,7 @@ private enum AuthTokenStore {
     static func read() -> String? {
         let query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
-            kSecAttrService: "com.cardevent.auth",
+            kSecAttrService: "com.cardeventpro.auth",
             kSecAttrAccount: "auth.token",
             kSecReturnData: true,
             kSecMatchLimit: kSecMatchLimitOne,
