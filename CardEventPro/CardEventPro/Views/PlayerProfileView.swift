@@ -450,10 +450,10 @@ struct PlayerProfileView: View {
                let success = json["success"] as? Bool, success,
                let entries = json["ranking"] as? [[String: Any]] {
                 let lowerPseudo = pseudo.lowercased()
-                for (index, entry) in entries.enumerated() {
+                for entry in entries {
                     let entryPseudo = (entry["pseudo"] as? String ?? "").lowercased()
                     if entryPseudo == lowerPseudo {
-                        fetchedChallengeRank = index + 1
+                        fetchedChallengeRank = entry["rank"] as? Int ?? 0
                         return
                     }
                 }
