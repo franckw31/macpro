@@ -37,6 +37,7 @@ struct PlayerProfileView: View {
     @State private var memberId: Int? = nil
     @State private var memberTickets: Int? = nil
     @State private var showMemberTickets: Bool = false
+    @State private var fetchedChallengeRank: Int = 0
 
     var body: some View {
         NavigationView {
@@ -108,7 +109,7 @@ struct PlayerProfileView: View {
                     // ── Rang Challenge + Notes (toujours visibles) ─────────
                     GroupBox {
                         VStack(spacing: 0) {
-                            let challengeRank = participant?.challengeRank ?? 0
+                            let challengeRank = fetchedChallengeRank > 0 ? fetchedChallengeRank : (participant?.challengeRank ?? 0)
                             NavigationLink {
                                 ChallengeRankingView(
                                     activityId: activityId,
