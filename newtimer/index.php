@@ -1108,6 +1108,36 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         text-align: center;
     }
 
+    .stat-quick-actions {
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .stat-adjust-btn {
+        width: 34px;
+        height: 34px;
+        min-height: 34px;
+        padding: 0;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.04);
+        color: #f4f6fb;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        font-weight: 700;
+        box-shadow: none;
+    }
+
+    .stat-adjust-btn:hover {
+        transform: none;
+        background: rgba(24,196,255,0.12);
+        border-color: rgba(24,196,255,0.22);
+    }
+
     .stat-value {
         display: block;
         font-size: clamp(32px, 5vw, 54px);
@@ -1316,6 +1346,10 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                     <div class="stat-box">
                         <span class="stat-value" id="players-stat">1/16</span>
                         <span class="stat-label">Joueurs</span>
+                        <div class="stat-quick-actions">
+                            <button type="button" class="stat-adjust-btn" id="playersMinusBtn" aria-label="Retirer un joueur">−</button>
+                            <button type="button" class="stat-adjust-btn" id="playersPlusBtn" aria-label="Ajouter un joueur">+</button>
+                        </div>
                     </div>
                     <div class="stat-box">
                         <span class="stat-value" id="stack-stat">1 140 000</span>
@@ -1501,6 +1535,13 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                 playersTotal: total,
                 chipsInPlay: chips
             };
+            saveTournamentStats();
+            renderTournamentStats();
+        }
+
+        function adjustPlayersRemaining(delta) {
+            const nextValue = tournamentStats.playersRemaining + delta;
+            tournamentStats.playersRemaining = Math.max(0, Math.min(tournamentStats.playersTotal, nextValue));
             saveTournamentStats();
             renderTournamentStats();
         }
@@ -2207,6 +2248,8 @@ function addLevel() {
     const prevLevelBtn = document.getElementById('prevLevelBtn');
     const nextLevelBtn = document.getElementById('nextLevelBtn');
     const statsPanel = document.getElementById('statsPanel');
+    const playersMinusBtn = document.getElementById('playersMinusBtn');
+    const playersPlusBtn = document.getElementById('playersPlusBtn');
     
     if (prevLevelBtn) prevLevelBtn.addEventListener('click', () => changeLevel(-1));
     if (nextLevelBtn) nextLevelBtn.addEventListener('click', () => changeLevel(1));
@@ -2217,6 +2260,18 @@ function addLevel() {
                 event.preventDefault();
                 editTournamentStats();
             }
+        });
+    }
+    if (playersMinusBtn) {
+        playersMinusBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            adjustPlayersRemaining(-1);
+        });
+    }
+    if (playersPlusBtn) {
+        playersPlusBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            adjustPlayersRemaining(1);
         });
     }
 
