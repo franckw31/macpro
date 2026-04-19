@@ -2309,7 +2309,7 @@ updateClock(); // Exécution immédiate
     </script>
     <footer class="footer-nav">
         <div class="footer-nav-inner">
-            <a href="#" id="footerAccueil">Accueil</a>
+            <a href="/panel/quickview.php" id="footerAccueil">Accueil</a>
             <a href="#" id="footerTimer" class="active">Local Timer</a>
             <a href="#" id="footerRepartition" tabindex="0">Répartition</a>
         </div>
@@ -2335,7 +2335,7 @@ updateClock(); // Exécution immédiate
         if (btnAccueil) {
             btnAccueil.addEventListener('click', function(e) {
                 e.preventDefault();
-                window.scrollTo({top: 0, behavior: 'smooth'});
+                window.location.href = '/panel/quickview.php';
             });
         }
         if (btnTimer) {
