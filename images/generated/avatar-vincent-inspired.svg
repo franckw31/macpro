@@ -1,0 +1,66 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="avatarClip">
+      <circle cx="512" cy="512" r="460"/>
+    </clipPath>
+    <radialGradient id="bgGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(430 390) rotate(44) scale(700)">
+      <stop offset="0" stop-color="#FFD67A"/>
+      <stop offset="0.45" stop-color="#F2A32B"/>
+      <stop offset="1" stop-color="#924400"/>
+    </radialGradient>
+    <linearGradient id="vignette" x1="90" y1="120" x2="960" y2="920" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.32"/>
+    </linearGradient>
+    <filter id="grain" x="0" y="0" width="1" height="1">
+      <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.07"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#000000" flood-opacity="0.32"/>
+    </filter>
+  </defs>
+
+  <rect width="1024" height="1024" fill="#111111"/>
+  <g clip-path="url(#avatarClip)">
+    <rect x="52" y="52" width="920" height="920" rx="460" fill="url(#bgGlow)"/>
+    <rect x="52" y="52" width="920" height="920" rx="460" fill="#D26A00" opacity="0.18"/>
+    <rect x="52" y="52" width="920" height="920" rx="460" filter="url(#grain)" opacity="0.95"/>
+
+    <g opacity="0.16">
+      <path d="M140 230C290 180 415 205 525 255C650 312 750 325 890 260V360C760 405 650 380 540 335C395 275 275 265 140 325V230Z" fill="#FFF0B5"/>
+      <path d="M120 560C240 520 365 530 470 585C615 660 745 675 905 620V735C755 775 615 760 470 700C365 655 260 648 120 690V560Z" fill="#7E2F00"/>
+      <path d="M95 430C235 380 345 388 470 450C620 525 755 545 940 478V525C745 600 610 578 455 500C340 445 245 438 95 485V430Z" fill="#FFF0B5"/>
+    </g>
+
+    <g filter="url(#shadow)">
+      <ellipse cx="635" cy="735" rx="120" ry="38" fill="#2B1100" opacity="0.35"/>
+
+      <path d="M678 315C664 292 642 276 612 272C578 268 550 278 534 298C520 315 513 337 516 360C519 387 533 406 553 418C569 428 583 445 591 468L612 535L709 520L694 453C688 427 692 404 705 384C718 364 718 337 678 315Z" fill="#080808"/>
+      <path d="M595 510C567 529 548 556 537 592L514 672L597 694L620 626C629 600 645 583 672 570L739 539L710 487L595 510Z" fill="#080808"/>
+      <path d="M727 475L802 432C831 415 852 417 872 435L900 460L887 493L820 498L751 533L727 475Z" fill="#080808"/>
+      <path d="M528 602L485 718C470 757 476 797 503 826L565 891L624 854L574 791C561 774 558 754 565 732L612 616L528 602Z" fill="#080808"/>
+      <path d="M624 610L646 725C653 763 673 797 705 824L795 900L837 844L760 784C746 773 738 759 734 743L709 598L624 610Z" fill="#080808"/>
+      <path d="M543 892L635 892L642 935L530 935L543 892Z" fill="#080808"/>
+      <path d="M778 884L855 884L865 925L794 925L778 884Z" fill="#080808"/>
+    </g>
+
+    <g filter="url(#shadow)">
+      <path d="M310 184C343 142 403 123 468 130C529 136 583 166 616 209C594 214 570 227 549 247C516 240 487 236 449 233C404 229 357 230 310 184Z" fill="#F7F1E6"/>
+      <path d="M327 198C361 163 410 150 465 155C516 160 560 178 589 208C565 211 543 220 524 236C494 230 470 227 438 224C396 220 357 221 327 198Z" fill="#FFFFFF"/>
+      <circle cx="472" cy="256" r="13" fill="#FFFFFF"/>
+      <circle cx="502" cy="282" r="9" fill="#FFFFFF"/>
+      <circle cx="522" cy="303" r="6" fill="#FFFFFF"/>
+      <text x="360" y="183" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" transform="rotate(-5 360 183)">J'ai un vertige,</text>
+      <text x="346" y="219" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" transform="rotate(-5 346 219)">j'ai peut-être abusé</text>
+      <text x="384" y="252" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" transform="rotate(-5 384 252)">de mon génie...</text>
+    </g>
+
+    <rect x="52" y="52" width="920" height="920" rx="460" fill="url(#vignette)"/>
+  </g>
+
+  <circle cx="512" cy="512" r="460" stroke="#1B1B1B" stroke-width="20"/>
+</svg>
