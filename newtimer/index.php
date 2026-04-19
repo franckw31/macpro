@@ -937,6 +937,38 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         box-shadow: none;
     }
 
+    .icon-svg {
+        width: 28px;
+        height: 28px;
+        display: inline-block;
+    }
+
+    .icon-svg svg,
+    .control-icon svg,
+    .action-icon svg {
+        width: 100%;
+        height: 100%;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.9;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .control-icon,
+    .action-icon {
+        width: 30px;
+        height: 30px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .action-icon {
+        width: 24px;
+        height: 24px;
+    }
+
     #clock {
         font-size: 14px;
         font-weight: 700;
@@ -1119,6 +1151,12 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         line-height: 1;
     }
 
+    .control-btn .control-icon,
+    .primary-control .control-icon {
+        width: 32px;
+        height: 32px;
+    }
+
     .control-btn small,
     .primary-control small {
         color: rgba(255,255,255,0.62);
@@ -1245,7 +1283,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                     <div class="live-subtitle" id="timer-date-label">—</div>
                 </div>
                 <div class="pill-btn right-actions">
-                    <button class="icon-btn" id="soundToggle" type="button" title="Son">🔊</button>
+                    <button class="icon-btn" id="soundToggle" type="button" title="Son"><span class="icon-svg"><svg viewBox="0 0 24 24"><path d="M14 5l-5 4H5v6h4l5 4V5z"></path><path d="M18 9.5a4 4 0 0 1 0 5"></path><path d="M20.5 7a7.5 7.5 0 0 1 0 10"></path></svg></span></button>
                     <button class="icon-btn" type="button" title="Horloge"><span id="clock">--:--:--</span></button>
                     <button class="icon-btn close" type="button" onclick="window.location.href='/panel/quickview.php';" title="Fermer">✕</button>
                 </div>
@@ -1279,11 +1317,11 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                 </div>
 
                 <div class="control-dock">
-                    <button class="control-btn level-btn" id="prevLevelBtn"><span>⏮</span><small>Préc.</small></button>
-                    <button class="control-btn edit-btn" id="minusMinBtn"><span>➖</span><small>-1 min</small></button>
-                    <button class="primary-control start-btn" id="startPauseBtn"><span>⏸</span><small>Pause</small></button>
-                    <button class="control-btn edit-btn" id="plusMinBtn"><span>➕</span><small>+1 min</small></button>
-                    <button class="control-btn level-btn" id="nextLevelBtn"><span>⏭</span><small>Suiv.</small></button>
+                    <button class="control-btn level-btn" id="prevLevelBtn"><span class="control-icon"><svg viewBox="0 0 24 24"><path d="M11 7l-5 5 5 5"></path><path d="M18 7l-5 5 5 5"></path></svg></span><small>Préc.</small></button>
+                    <button class="control-btn edit-btn" id="minusMinBtn"><span class="control-icon"><svg viewBox="0 0 24 24"><path d="M6 12h12"></path></svg></span><small>-1 min</small></button>
+                    <button class="primary-control start-btn" id="startPauseBtn"><span class="control-icon"><svg viewBox="0 0 24 24"><path d="M10 8v8"></path><path d="M14 8v8"></path></svg></span><small>Pause</small></button>
+                    <button class="control-btn edit-btn" id="plusMinBtn"><span class="control-icon"><svg viewBox="0 0 24 24"><path d="M12 6v12"></path><path d="M6 12h12"></path></svg></span><small>+1 min</small></button>
+                    <button class="control-btn level-btn" id="nextLevelBtn"><span class="control-icon"><svg viewBox="0 0 24 24"><path d="M13 7l5 5-5 5"></path><path d="M6 7l5 5-5 5"></path></svg></span><small>Suiv.</small></button>
                 </div>
 
                 <div class="secondary-tools">
@@ -1291,7 +1329,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                     <button class="wide-action edit-btn" id="restartBlindsBtn">Rejouer le niveau</button>
                 </div>
 
-                <div class="wide-action" style="max-width:620px;margin:18px auto 0;">👥 Activité des joueurs</div>
+                <div class="wide-action" style="max-width:620px;margin:18px auto 0;"><span class="action-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9.5" cy="7" r="3"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a3 3 0 0 1 0 5.75"></path></svg></span>Activité des joueurs</div>
 
                 <div class="structure-controls">
                     <button class="edit-btn" id="loadFromDbBtn">Charger structure</button>
