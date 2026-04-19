@@ -1250,9 +1250,6 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                     <button class="wide-action reset-btn" id="resetBtn">Réinitialiser</button>
                     <button class="wide-action edit-btn" id="restartBlindsBtn">Rejouer le niveau</button>
                 </div>
-
-                <div class="wide-action" style="max-width:620px;margin:18px auto 0;"><span class="action-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9.5" cy="7" r="3"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a3 3 0 0 1 0 5.75"></path></svg></span>Activité des joueurs</div>
-
                 <div class="structure-controls">
                     <button class="edit-btn" id="loadFromDbBtn">Charger structure</button>
                     <button class="edit-btn" id="editBtn">Modifier blindes</button>
