@@ -1054,7 +1054,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     .blind-info {
         margin: 0;
-        font-size: clamp(58px, 10.5vw, 102px);
+        font-size: clamp(44px, 8vw, 76px);
         line-height: 1;
         color: #ffd119;
         text-shadow: 0 0 14px rgba(255,209,25,0.14);
