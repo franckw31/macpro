@@ -1155,29 +1155,26 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         color: #ffb260;
     }
 
-    .secondary-tools,
-    .structure-controls {
+    .action-dock {
         margin: 20px auto 0;
         max-width: 620px;
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: 12px;
     }
 
-    .structure-controls {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .wide-action,
-    .edit-btn,
-    .start-btn,
-    .pause-btn,
-    .reset-btn {
+    .action-dock button {
+        width: 100%;
         min-height: 62px;
-        padding: 14px 18px;
+        height: 100%;
+        padding: 12px 10px;
         border-radius: 18px;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
     }
 
     .wide-action {
@@ -1215,8 +1212,8 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         .control-dock .level-btn { min-height: 78px; border-radius: 16px; }
         .control-btn span:first-child, .primary-control span:first-child { font-size: 24px; }
         .control-btn small, .primary-control small { font-size: 10px; }
-        .secondary-tools, .structure-controls { grid-template-columns: 1fr 1fr; }
-        .structure-controls { grid-template-columns: 1fr; }
+        .action-dock { grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        .action-dock button { min-height: 58px; font-size: 11px; padding: 10px 6px; border-radius: 16px; }
     }
     </style>
 </head>
@@ -1260,11 +1257,9 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                     <button class="control-btn level-btn" id="nextLevelBtn"><span class="control-icon"><svg viewBox="0 0 24 24"><path d="M13 7l5 5-5 5"></path><path d="M6 7l5 5-5 5"></path></svg></span><small>Suiv.</small></button>
                 </div>
 
-                <div class="secondary-tools">
+                <div class="action-dock">
                     <button class="wide-action reset-btn" id="resetBtn">Réinitialiser</button>
                     <button class="wide-action edit-btn" id="restartBlindsBtn">Rejouer le niveau</button>
-                </div>
-                <div class="structure-controls">
                     <button class="edit-btn" id="loadFromDbBtn">Charger structure</button>
                     <button class="edit-btn" id="editBtn">Modifier blindes</button>
                     <button class="edit-btn" id="saveToDbBtn">Enregistrer</button>
