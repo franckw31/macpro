@@ -999,23 +999,23 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     .timer-ring {
         --progress: 0;
-        width: min(66vw, 520px);
-        height: min(66vw, 520px);
+        width: min(58vw, 430px);
+        height: min(58vw, 430px);
         margin: 0 auto;
         border-radius: 50%;
         position: relative;
         background: conic-gradient(#12cfff calc(var(--progress) * 1turn), rgba(18, 207, 255, 0.22) 0);
-        box-shadow: 0 0 22px rgba(18,207,255,0.34), 0 0 54px rgba(18,207,255,0.14);
-        padding: 10px;
+        box-shadow: 0 0 18px rgba(18,207,255,0.30), 0 0 42px rgba(18,207,255,0.12);
+        padding: 8px;
     }
 
     .timer-ring::before {
         content: '';
         position: absolute;
-        inset: 10px;
+        inset: 8px;
         border-radius: 50%;
         background: #000;
-        box-shadow: inset 0 0 70px rgba(18,207,255,0.10);
+        box-shadow: inset 0 0 54px rgba(18,207,255,0.09);
     }
 
     .timer-center {
@@ -1026,25 +1026,25 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 28px;
+        padding: 22px;
     }
 
     .level-line {
         color: rgba(255,255,255,0.56);
-        font-size: clamp(14px, 1.9vw, 22px);
+        font-size: clamp(12px, 1.5vw, 18px);
         letter-spacing: 0.16em;
         text-transform: uppercase;
-        margin-bottom: 14px;
+        margin-bottom: 10px;
         font-weight: 500;
     }
 
     .cardevent-display {
-        font-size: clamp(72px, 13vw, 138px);
+        font-size: clamp(56px, 10.5vw, 108px);
         line-height: 1;
         font-weight: 500;
         color: #12cfff;
         margin: 0;
-        text-shadow: 0 0 18px rgba(18, 207, 255, 0.26);
+        text-shadow: 0 0 14px rgba(18, 207, 255, 0.24);
         font-variant-numeric: tabular-nums;
     }
 
@@ -1230,10 +1230,10 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         .blind-caption { font-size: 16px; }
         .blind-info-next { font-size: 16px; }
         .pause-line { font-size: 14px; }
-        .timer-ring { width: min(70vw, 420px); height: min(70vw, 420px); }
-        .timer-center { padding: 22px; }
-        .level-line { font-size: 13px; margin-bottom: 10px; }
-        .cardevent-display { font-size: clamp(58px, 12vw, 104px); }
+        .timer-ring { width: min(62vw, 340px); height: min(62vw, 340px); }
+        .timer-center { padding: 18px; }
+        .level-line { font-size: 11px; margin-bottom: 8px; }
+        .cardevent-display { font-size: clamp(46px, 10vw, 82px); }
         .control-dock { gap: 8px; padding: 10px; margin-top: 24px; }
         .control-btn, .primary-control { min-height: 78px; border-radius: 16px; font-size: 14px; }
         .control-btn span:first-child, .primary-control span:first-child { font-size: 24px; }
