@@ -616,7 +616,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	$timer_start = null;
 	$timer_ordre = 1;
 	$blinds_json = '[]';
-	$live_timer_href = !empty($serverActivity['id']) ? '/panel/fullscreen-timer.php?uid=' . intval($serverActivity['id']) : '#';
 	if (!empty($serverActivity['id'])) {
 		$id = intval($serverActivity['id']);
 		$now = time();
@@ -647,7 +646,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 	?>
-	       <a class="tile" id="live-timer-tile" role="link" href="<?php echo htmlspecialchars($live_timer_href); ?>" style="text-decoration:none;color:inherit;<?php echo empty($serverActivity['id']) ? 'pointer-events:none;opacity:.7;' : 'cursor:pointer;'; ?>">
+	       <div class="tile" id="live-timer-tile">
 		       <div class="tile-top" style="padding-top:0;">
 			       <div class="timer-circle-container" style="width:80px;height:80px;position:relative;margin:0 auto;">
 					       <svg class="timer-svg" viewBox="0 0 80 80" style="width:100%;height:100%;position:absolute;top:0;left:0;">
@@ -661,7 +660,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				       </div>
 			       </div>
 					   <!-- <div class="count-label" id="live-timer-label" style="margin-top:8px;">Live Timer</div> -->
-		</a>
+		</div>
 					   <!-- <div class="tile-bottom" id="live-timer-status">—</div> -->
 	</div>
 	<script>
