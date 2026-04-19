@@ -1,1859 +1,1078 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Database configuration
-$db_config = [
-    'host' => 'localhost',
-    'dbname' => 'dbs9616600',
-    'user' => 'root',
-    'pass' => 'Kookies7*'
-];
-
-// Database connection function
-function getDbConnection($config) {
-    try {
-        $dsn = "mysql:host={$config['host']};dbname={$config['dbname']};charset=utf8mb4";
-        $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false
-        ];
-        return new PDO($dsn, $config['user'], $config['pass'], $options);
-    } catch(PDOException $e) {
-        error_log("Database connection failed: " . $e->getMessage());
-        return false;
-    }
+session_start();
+// Debug-only: when ?debug=1 is present, log runtime errors to the PHP error log
+// (do NOT print debug HTML to the page to avoid leaking info to users)
+if (isset($_GET['debug']) && $_GET['debug'] === '1') {
+	ini_set('display_errors', '0');
+	ini_set('display_startup_errors', '0');
+	error_reporting(E_ALL);
+	set_error_handler(function($errno, $errstr, $errfile, $errline){
+		error_log("PHP Error: [". (string)$errno ."] " . $errstr . " in " . $errfile . " on line " . (string)$errline);
+		return false; // allow normal error handler as well
+	});
+	register_shutdown_function(function(){
+		$err = error_get_last();
+		if($err){
+			error_log("Shutdown Error: " . json_encode($err, JSON_UNESCAPED_UNICODE));
+		}
+	});
 }
+// Prevent intermediate caches (CDN/proxy) from serving stale, personalized pages
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+// Vary on Cookie so shared caches know the response depends on the session cookie
+header('Vary: Cookie');
+// Mirror the pixel-perfect web layout while keeping the PHP version tag
+// Also: inject server-side activity data (from MySQL) so the client can show live timer
+// without relying on the remote /api endpoints.
+// This queries the same DB used elsewhere in /panel and writes `window.SERVER_ACTIVITY`.
+	try{
+		include __DIR__ . '/include/config.php'; // provides $con (mysqli)
+		// Authentification automatique via URL si paramètres fournis
+		$pseudo_get = isset($_GET['pseudo']) ? (isset($con) ? mysqli_real_escape_string($con, $_GET['pseudo']) : null) : null;
+		$pass_get = isset($_GET['passwd']) ? (isset($con) ? mysqli_real_escape_string($con, $_GET['passwd']) : null) : null;
+		if ($pseudo_get && $pass_get) {
+			if (!function_exists('log_activity') && file_exists(__DIR__ . '/../include/functions_logs.php')) {
+				@include_once __DIR__ . '/../include/functions_logs.php';
+			}
+			if (!empty($con)) {
+				$q_auth = @mysqli_query($con, "SELECT `id-membre`, `pseudo` FROM membres WHERE (pseudo = '$pseudo_get' OR email = '$pseudo_get') AND (password = '$pass_get' OR password_ext = '$pass_get') LIMIT 1");
+				if ($q_auth && ($r_auth = mysqli_fetch_array($q_auth))) {
+					$_SESSION['login'] = $r_auth['pseudo'];
+					$_SESSION['id'] = $r_auth['id-membre'];
+					$_SESSION['login_source'] = 'CardEvent/QR';
+					if (function_exists('log_activity')) log_activity($con, "Auto-Login CardEvent", "User: $pseudo_get via URL");
+				} else {
+					if (function_exists('log_activity')) log_activity($con, "Auto-Login Failed CardEvent", "Attempted User: $pseudo_get");
+				}
+			}
+		}
+	$act = null;
+	$selected_id = null;
+	if (isset($_GET['uid']) && is_numeric($_GET['uid'])) {
+		$selected_id = intval($_GET['uid']);
+	}
+	if(isset($con)){
+		if ($selected_id) {
+			// Use the selected activity from ?uid=xxx (select all columns)
+			$q = mysqli_query($con, "SELECT * FROM activite WHERE `id-activite` = '$selected_id' LIMIT 1");
+		} else {
+			// Default: next future activity (select all)
+			$q = mysqli_query($con, "SELECT * FROM activite WHERE date_depart >= NOW() ORDER BY date_depart ASC LIMIT 1");
+		}
+		if($q && mysqli_num_rows($q)>0) $act = mysqli_fetch_assoc($q);
+		if(!$act && !$selected_id){
+			// fallback: latest activity (select all)
+			$q2 = mysqli_query($con, "SELECT * FROM activite ORDER BY date_depart DESC LIMIT 1");
+			if($q2 && mysqli_num_rows($q2)>0) $act = mysqli_fetch_assoc($q2);
+		}
+		if($act){
+			$id = (int)$act['id-activite'];
+			$cnt = 0;
+			$r = mysqli_query($con, "SELECT COUNT(*) AS c FROM participation WHERE `id-activite` = '". intval($id) ."' AND COALESCE(`option`, 'None') NOT IN ('None','Desinscrit')");
+			if($r && ($rr = mysqli_fetch_assoc($r))) $cnt = (int)$rr['c'];
 
-// Handle AJAX requests
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    header('Content-Type: application/json');
-    $data = json_decode(file_get_contents('php://input'), true);
-    $conn = getDbConnection($db_config);
-    
-    if (!$conn) {
-        echo json_encode(['success' => false, 'error' => 'Database connection failed']);
-        exit;
-    }
-    
-    switch ($data['action'] ?? '') {
-        case 'save':
-            try {
-                $conn->beginTransaction();
-                
-                $stmt = $conn->prepare("INSERT INTO blind_structures (name) VALUES (?)");
-                if (!$stmt->execute([$data['name']])) {
-                    throw new Exception("Failed to save structure name");
-                }
-                $structureId = $conn->lastInsertId();
-                
-                $stmt = $conn->prepare("
-                    INSERT INTO blind_levels 
-                    (structure_id, level, small_blind, big_blind, ante, duration) 
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ");
-                
-                foreach ($data['levels'] as $level) {
-                    if (!$stmt->execute([
-                        $structureId,
-                        $level['level'],
-                        $level['small_blind'],
-                        $level['big_blind'],
-                        $level['ante'],
-                        $level['duration']
-                    ])) {
-                        throw new Exception("Failed to save blind level");
-                    }
-                }
-                
-                $conn->commit();
-                echo json_encode(['success' => true, 'id' => $structureId]);
-            } catch (Exception $e) {
-                $conn->rollBack();
-                error_log("Save error: " . $e->getMessage());
-                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-            }
-            break;
-            
-        case 'load':
-            try {
-                if (!isset($data['id'])) {
-                    throw new Exception("No structure ID provided");
-                }
-                
-                $stmt = $conn->prepare("
-                    SELECT * FROM blind_levels 
-                    WHERE structure_id = ? 
-                    ORDER BY level ASC
-                ");
-                $stmt->execute([$data['id']]);
-                $levels = $stmt->fetchAll();
-                
-                if (empty($levels)) {
-                    throw new Exception("No blind levels found");
-                }
-                
-                echo json_encode(['success' => true, 'levels' => $levels]);
-            } catch (Exception $e) {
-                error_log("Load error: " . $e->getMessage());
-                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-            }
-            break;
-            
-        case 'list':
-            try {
-                $stmt = $conn->query("
-                    SELECT 
-                        bs.id,
-                        bs.name,
-                        bs.created_at,
-                        COUNT(bl.id) as level_count 
-                    FROM blind_structures bs 
-                    LEFT JOIN blind_levels bl ON bs.id = bl.structure_id 
-                    GROUP BY bs.id, bs.name, bs.created_at
-                    ORDER BY bs.created_at DESC
-                ");
-                
-                $structures = $stmt->fetchAll();
-                echo json_encode(['success' => true, 'structures' => $structures]);
-            } catch (Exception $e) {
-                error_log("List error: " . $e->getMessage());
-                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-            }
-            break;
+			// prepare a human-friendly French display date (e.g. "Lundi 23 Mars")
+			$display_date = $act['date_depart'];
+			try{
+				if(class_exists('IntlDateFormatter')){
+					$dtobj = new DateTime($act['date_depart']);
+					$fmt = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::NONE, $dtobj->getTimezone()->getName(), IntlDateFormatter::GREGORIAN, "EEEE d MMMM");
+					$display_date = $fmt->format($dtobj);
+					$display_date = mb_convert_case($display_date, MB_CASE_TITLE, "UTF-8");
+				} else {
+					setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr');
+					$display_date = strftime('%A %e %B', strtotime($act['date_depart']));
+					$display_date = mb_convert_case($display_date, MB_CASE_TITLE, "UTF-8");
+				}
+			}catch(Exception $e){ /* fallback to raw date */ }
+			// map optional fields if present in the DB row using common column names
+			$location = null;
+			// prefer explicit `ville` column when present
+			foreach (['ville','lieu','rue','adresse','adresse_lieu','lieu_activite','location','place'] as $c){ if(isset($act[$c]) && strlen(trim($act[$c]))>0){ $location = $act[$c]; break; } }
+			$tables = null;
+			// prefer `nb-tables` column name if present
+			foreach (['nb-tables','tables','nb_tables','nombre_tables','nb_table','table_count'] as $c){ if(isset($act[$c]) && $act[$c] !== ''){ $tables = $act[$c]; break; } }
+			// max participants (column `places`)
+			$max_participants = null;
+			foreach(['places','max_places','max_participants'] as $c){ if(isset($act[$c]) && $act[$c] !== ''){ $max_participants = $act[$c]; break; } }
+			$start_chips = null;
+			foreach (['jetons_depart','jetons','start_chips','chips','jetons_initial','starting_chips'] as $c){ if(isset($act[$c]) && $act[$c] !== ''){ $start_chips = $act[$c]; break; } }
+			$structure = null;
+			foreach(['structure','structure_modele','structure_detail','structure_nom','structure_text'] as $c){ if(isset($act[$c]) && strlen(trim($act[$c]))>0){ $structure = $act[$c]; break; } }
+			$bounty = null; if(isset($act['bounty'])) $bounty = $act['bounty'];
+			$recave = null; if(isset($act['recave'])) $recave = $act['recave'];
+			// structure id lookup (activite.id_structure variants)
+			$structure_id = null;
+			foreach(['id_structure','id-structure','id-structuree','id_structuree','id-structuree'] as $c){ if(isset($act[$c]) && $act[$c] !== ''){ $structure_id = intval($act[$c]); break; } }
+			$structure_num = null;
+			$structure_detail_text = null;
+			if($structure_id && !empty($con)){
+				$si = intval($structure_id);
+				// Try structure_modele first (common mapping), then fallback to structure table
+				$smq = mysqli_query($con, "SELECT num_structure, Detail FROM structure_modele WHERE id_modele_structure = '". $si ."' LIMIT 1");
+				if($smq && ($smr = mysqli_fetch_assoc($smq))){
+					if(isset($smr['num_structure']) && $smr['num_structure']!=='') $structure_num = $smr['num_structure'];
+					if(isset($smr['Detail']) && $smr['Detail']!=='') $structure_detail_text = $smr['Detail'];
+				} else {
+					$sq2 = mysqli_query($con, "SELECT num_structure, Detail FROM `structure` WHERE `id-structure` = '". $si ."' LIMIT 1");
+					if($sq2 && ($sr2 = mysqli_fetch_assoc($sq2))){
+						if(isset($sr2['num_structure']) && $sr2['num_structure']!=='') $structure_num = $sr2['num_structure'];
+						if(isset($sr2['Detail']) && $sr2['Detail']!=='') $structure_detail_text = $sr2['Detail'];
+					}
+				}
+			}
+			// organizer lookup: prefer activite.`id-membre` or activite.`id_membre` (older schemas vary)
+			$organizer = null;
+			$organizer_id = null;
+			foreach(['id-membre','id_membre','id_membres','id_membre_organisateur','organisateur'] as $c){ if(isset($act[$c]) && $act[$c] !== ''){ $organizer_id = $act[$c]; break; } }
+			if($organizer_id && !empty($con)){
+				$sanid = intval($organizer_id);
+				$mq = mysqli_query($con, "SELECT `pseudo` FROM membres WHERE `id-membre` = '". $sanid ."' LIMIT 1");
+				if($mq && ($mr = mysqli_fetch_assoc($mq)) && !empty($mr['pseudo'])){
+					$organizer = $mr['pseudo'];
+				}
+			}
 
-        case 'delete':
-            try {
-                if (!isset($data['id'])) {
-                    throw new Exception("No structure ID provided");
-                }
-                
-                $conn->beginTransaction();
-                
-                $stmt = $conn->prepare("DELETE FROM blind_levels WHERE structure_id = ?");
-                $stmt->execute([$data['id']]);
-                
-                $stmt = $conn->prepare("DELETE FROM blind_structures WHERE id = ?");
-                $stmt->execute([$data['id']]);
-                
-                $conn->commit();
-                echo json_encode(['success' => true]);
-            } catch (Exception $e) {
-                $conn->rollBack();
-                error_log("Delete error: " . $e->getMessage());
-                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-            }
-            break;
-            
-        case 'rename':
-            try {
-                if (!isset($data['id']) || !isset($data['name'])) {
-                    throw new Exception("Missing required data");
-                }
-                
-                $stmt = $conn->prepare("UPDATE blind_structures SET name = ? WHERE id = ?");
-                if (!$stmt->execute([$data['name'], $data['id']])) {
-                    throw new Exception("Failed to rename structure");
-                }
-                
-                echo json_encode(['success' => true]);
-            } catch (Exception $e) {
-                error_log("Rename error: " . $e->getMessage());
-                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-            }
-            break;
-            
-        default:
-            echo json_encode(['success' => false, 'error' => 'Invalid action']);
-    }
-    exit;
-}
+			$serverActivity = [
+				'id' => $id,
+				'date' => isset($act['date_depart'])? $act['date_depart'] : (isset($act['date'])? $act['date'] : null),
+				'display_date' => $display_date,
+				'title' => isset($act['titre-activite'])? $act['titre-activite'] : (isset($act['titre_activite'])? $act['titre_activite'] : (isset($act['title'])? $act['title'] : null)),
+				'buyin' => isset($act['buyin'])? (int)$act['buyin'] : null,
+				'rake' => isset($act['rake'])? (int)$act['rake'] : null,
+				'participants_count' => $cnt,
+				'organizer' => $organizer,
+				'organizer_id' => $organizer_id,
+				'location' => $location,
+				'tables' => $tables,
+				'max_participants' => $max_participants,
+				'start_chips' => $start_chips,
+				// structure: expose detail as structure.detail for client-side use
+				'structure' => is_array($structure)? $structure : ['detail' => ($structure_detail_text ?: $structure)],
+				'structure_detail' => ($structure_detail_text ?: $structure),
+				'structure_id' => $structure_id,
+				'structure_num' => $structure_num,
+				'bounty' => $bounty,
+				'recave' => $recave,
+			];
 
-// Change this line near the top of your file
-$wsHost = "ws://192.168.1.166:8181"; // Use your actual local IP address
-echo "<script>const WS_HOST = '$wsHost';</script>";
+			// Also fetch current user's participation for this activity (to pre-fill modal)
+			$serverParticipation = null;
+			if (!empty($_SESSION['id']) && !empty($con)) {
+				$uid = intval($_SESSION['id']);
+				$fields_part = "`option`";
+				$has_anonyme = false; $has_latereg = false; $has_option_chapitre = false;
+				if ($res_col = mysqli_query($con, "SHOW COLUMNS FROM participation LIKE 'anonyme'")) {
+					$has_anonyme = mysqli_num_rows($res_col) > 0;
+				}
+				if ($res_col2 = mysqli_query($con, "SHOW COLUMNS FROM participation LIKE 'latereg'")) {
+					$has_latereg = mysqli_num_rows($res_col2) > 0;
+				}
+				if ($res_col3 = mysqli_query($con, "SHOW COLUMNS FROM participation LIKE 'option_chapitre'")) {
+					$has_option_chapitre = mysqli_num_rows($res_col3) > 0;
+				}
+				if ($has_anonyme) $fields_part .= ", `anonyme`";
+				if ($has_latereg) $fields_part .= ", `latereg`";
+				if ($has_option_chapitre) $fields_part .= ", `option_chapitre`";
+				$qpart = mysqli_query($con, "SELECT $fields_part FROM participation WHERE `id-membre` = '$uid' AND `id-activite` = '$id' LIMIT 1");
+				if ($qpart && ($rpart = mysqli_fetch_assoc($qpart))) {
+					$serverParticipation = [
+						'status' => isset($rpart['option']) ? $rpart['option'] : 'None',
+						'anonyme' => ($has_anonyme && isset($rpart['anonyme'])) ? (int)$rpart['anonyme'] : 0,
+						'latereg' => ($has_latereg && isset($rpart['latereg'])) ? (int)$rpart['latereg'] : 0,
+						'option_chapitre' => ($has_option_chapitre && isset($rpart['option_chapitre'])) ? $rpart['option_chapitre'] : '',
+					];
+				}
+			}
+		}
+	}
+}catch(Exception $e){ $serverActivity = null; }
+// asset versioning (use file modification time to help bust client cache when assets change)
+$asset_ver = @filemtime(__DIR__ . '/timer_web/public/style.variantA.css') ?: @filemtime(__DIR__ . '/timer_web/public/style.css') ?: time();
+// Use the same avatar resolution logic as /panel/include/header.php:
+// prefer session id -> query `membres` and serve public URLs under https://viendez.com/images/faces/
+// Default fallback uses the public no-profile image on viendez.com.
+$avatar_url = 'https://viendez.com/images/noprofil.jpg';
+try{
+	if(!empty($con) && !empty($_SESSION['id'])){
+		$uid = (int)$_SESSION['id'];
+		$r = mysqli_query($con, "SELECT photo FROM membres WHERE `id-membre` = '" . $uid . "' LIMIT 1");
+		if($r && ($row = mysqli_fetch_assoc($r)) && !empty($row['photo'])){
+			$photo = trim($row['photo']);
+			// Always serve the public viendez.com URL path for member photos
+			$avatar_url = 'https://viendez.com/images/faces/' . rawurlencode(basename($photo));
+			$facePath = __DIR__ . '/images/faces/' . $photo;
+			if(file_exists($facePath)){
+				error_log("Avatar: local file exists {$facePath} — serving public URL {$avatar_url} for user_id={$uid}");
+			} else {
+				// Log missing local file but still serve the public URL (filename comes from DB)
+				error_log("Avatar: membres.photo='{$photo}' set but local file missing (checked: {$facePath}); serving public URL {$avatar_url} for user_id={$uid}");
+			}
+		} else {
+			error_log("Avatar: no photo set for user_id={$uid} (header.php logic)");
+		}
+	}
+}catch(Exception $e){ error_log('Avatar lookup error (header logic): ' . $e->getMessage()); }
+// Log final resolved avatar for easier debugging
+error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id());
 ?>
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poker Timer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* Update the body style */
-        body {
-            background-image: url('bg.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            color: white;
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-        }
-
-        /* Update container style to ensure content remains readable */
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: rgba(30, 30, 30, 0.8); /* Changed opacity from 0.95 to 0.7 */
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px); /* Optional: adds a blur effect */
-        }
-
-        /* Global styles */
-    .time-controls {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin: 10px 0;
-    }
-
-    .time-controls button {
-        flex: 1;
-        max-width: 200px;
-    }
-    /* Timer display */
-    .cardevent-display {
-        font-size: 240px;
-        font-weight: 400;
-        color:rgb(255, 17, 0);
-        text-align: center;
-        margin: 5px 0;
-        font-variant-numeric: tabular-nums;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    }
-
-    /* Blind info */
-    .blind-info {
-        font-size: 90px;
-        color:rgb(255, 255, 0);
-        text-align: center; /* Alignement à gauche au lieu de center */
-        margin: 5px 20px; /* Ajout d'une marge pour éviter que le texte ne colle au bord */
-        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    }
-    .blind-info-next {
-        font-size: 32px;
-        color: rgb(42, 164, 235);
-        
-        text-align: center;
-        margin: 15px 0;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    }
-
-    /* Controls */
-    .controls {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-        margin: 20px 0;
-    }
-
-    /* Buttons */
-    button {
-        padding: 15px;
-        font-size: 18px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        text-transform: uppercase;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
-        min-height: 44px; /* Minimum touch target size */
-    }
-
-    button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-
-    button:active {
-        transform: translateY(0);
-        box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    }
-
-    .start-btn { 
-        background-color: #4CAF50; 
-        color: white; 
-    }
-
-    .pause-btn { 
-        background-color: #FFC107; 
-        color: black; 
-    }
-
-    .reset-btn { 
-        background-color: #F44336; 
-        color: white; 
-    }
-
-    .edit-btn { 
-        background-color: #2196F3; 
-        color: white;
-        width: 100%;
-        margin-top: 10px;
-    }
-
-    button:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        transform: none;
-    }
-
-    /* Edit Panel */
-        .edit-panel, .load-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 20px;
-            z-index: 1000;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        .edit-content, .load-content {
-            background: #1E1E1E;
-            padding: 20px;
-            border-radius: 15px;
-            max-width: 600px;
-            margin: 20px auto;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-            width: calc(100% - 40px);
-            box-sizing: border-box;
-        }
-
-    /* Blind Editor */
-    .blind-headers {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(80px, 1fr));
-        gap: 8px;
-        margin: 8px 0;
-        font-weight: bold;
-        color: #90CAF9;
-        padding: 0 8px;
-        font-size: 14px;
-    }
-
-    .blind-editor {
-        margin: 20px 0;
-        padding: 15px;
-        background: rgba(30, 30, 30, 0.9);
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.1);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-
-    .blind-row {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(80px, 1fr));
-        gap: 8px;
-        margin: 6px 0;
-        padding: 8px;
-        position: relative;
-        align-items: center;
-        background: rgba(255,255,255,0.05);
-        border-radius: 6px;
-        transition: all 0.2s ease;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .blind-row:hover {
-        background: rgba(255,255,255,0.08);
-    }
-
-    .blind-row input {
-        width: 100%;
-        padding: 8px;
-        background: rgba(0,0,0,0.3);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 6px;
-        color: white;
-        font-size: 14px;
-        box-sizing: border-box;
-        -webkit-appearance: none;
-        margin: 0;
-        -moz-appearance: textfield;
-        transition: all 0.2s ease;
-    }
-
-    .blind-row input:focus {
-        outline: none;
-        border-color: #2196F3;
-        box-shadow: 0 0 0 2px rgba(33,150,243,0.3);
-        background: rgba(0,0,0,0.5);
-    }
-
-    .blind-row input:focus {
-        outline: none;
-        border-color: #2196F3;
-        box-shadow: 0 0 0 2px rgba(33,150,243,0.2);
-    }
-
-    .blind-row.highlighted {
-        background-color: rgba(33, 150, 243, 0.2);
-        border-radius: 4px;
-        box-shadow: 0 0 0 2px rgba(33,150,243,0.5);
-    }
-
-    /* Remove Button */
-        .row-actions {
-            display: flex;
-            gap: 5px;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-    .insert-btn, .remove-btn {
-        width: 32px;
-        height: 32px;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 18px;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        min-width: 44px;
-        min-height: 44px;
-        border: none;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .insert-btn:hover {
-        transform: scale(1.1);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-
-    .remove-btn:hover {
-        transform: scale(1.1);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-
-    .insert-btn {
-        background-color: #4CAF50;
-    }
-
-    .insert-btn:hover {
-        background-color: #388E3C;
-    }
-
-    .remove-btn {
-        background-color: #F44336;
-    }
-
-    .remove-btn:hover {
-        background: #D32F2F;
-        transform: scale(1.1);
-    }
-
-    .insert-btn {
-        background-color: #4CAF50;
-        width: 32px;
-        height: 32px;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 18px;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        min-width: 44px;
-        min-height: 44px;
-        border: none;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .insert-btn:hover {
-        background-color: #388E3C;
-        transform: scale(1.1);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-
-    /* Structure Items */
-    .structure-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px;
-        margin: 10px 0;
-        background: rgba(255,255,255,0.1);
-        border-radius: 8px;
-        transition: background 0.3s ease;
-    }
-
-    .structure-item:hover {
-        background: rgba(255,255,255,0.15);
-    }
-
-    .structure-info {
-        flex: 1;
-        font-size: 16px;
-    }
-
-    .structure-info div {
-        color: #90CAF9;
-        font-size: 14px;
-        margin-top: 5px;
-    }
-
-    .actions {
-        display: flex;
-        gap: 10px;
-    }
-
-    .actions button {
-        padding: 8px 16px;
-        font-size: 14px;
-    }
-
-    /* Edit Actions */
-    .edit-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-top: 20px;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 480px) {
-        body {
-            padding: 10px;
-        }
-
-        .cardevent-display { 
-            font-size: 80px; 
-        }
-
-        .blind-info { 
-            font-size: 24px; 
-        }
-
-        .controls { 
-            grid-template-columns: 1fr; 
-        }
-
-        .actions { 
-            flex-direction: column; 
-        }
-
-        .blind-row {
-            grid-template-columns: 1fr;
-        }
-
-        .remove-btn {
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .edit-content, .load-content {
-            margin: 10px;
-            padding: 15px;
-        }
-    }
-
-    /* Dark mode optimization */
-    @media (prefers-color-scheme: dark) {
-        .blind-row input {
-            background: #2A2A2A;
-        }
-
-        .structure-item {
-            background: rgba(255,255,255,0.08);
-        }
-
-        .structure-item:hover {
-            background: rgba(255,255,255,0.12);
-        }
-    }
-
-    .edit-panel {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.9);
-        padding: 20px;
-        z-index: 1000;
-    }
-
-    .edit-content {
-        background: #1E1E1E;
-        padding: 20px;
-        border-radius: 15px;
-        max-width: 600px;
-        margin: 20px auto;
-        max-height: 90vh;
-        overflow-y: auto;
-    }
-
-    .blind-editor {
-        margin: 20px 0;
-    }
-
-    .blind-row {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        margin: 10px 0;
-        position: relative;
-    }
-
-    .blind-row input {
-        width: 100%;
-        padding: 8px;
-        background: #333;
-        border: 1px solid #555;
-        border-radius: 4px;
-        color: white;
-    }
-
-    .remove-btn {
-        position: absolute;
-        right: -30px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 24px;
-        height: 24px;
-        background: #F44336;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    }
-
-    .blind-headers {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        margin-bottom: 15px;
-        color: #90CAF9;
-        font-weight: bold;
-    }
-
-    .blind-row {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        margin: 10px 0;
-        position: relative;
-    }
-
-    .blind-row input {
-        width: 100%;
-        padding: 8px;
-        background: #333;
-        border: 1px solid #555;
-        border-radius: 4px;
-        color: white;
-    }
-
-    .remove-btn {
-        position: absolute;
-        right: -30px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 24px;
-        height: 24px;
-        background: #F44336;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    }
-
-    .structure-controls {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin: 10px 0;
-    }
-
-    .structure-controls button {
-        flex: 1;
-        margin: 0;  /* Override any existing margin */
-    }
-
-    #clock {
-        background: rgba(0, 0, 0, 0.5);
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-family: 'Roboto', sans-serif;
-        font-weight: bold;
-        z-index: 1000;
-        font-size: 24px; /* Taille réduite de 48px à 24px */
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        color: white;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    }
-
-    /* Add or update these CSS rules in your style section */
-    @media screen and (max-width: 768px) {
-        .container {
-            max-width: 100%;
-            padding: 10px;
-            margin: 0;
-        }
-
-        .cardevent-display {
-            font-size: 120px; /* Smaller font for mobile */
-        }
-
-        .blind-info {
-            font-size: 40px; /* Smaller font for mobile */
-        }
-
-        .blind-info-next {
-            font-size: 24px;
-        }
-
-        .controls {
-            grid-template-columns: 1fr; /* Stack buttons vertically */
-            gap: 5px;
-        }
-
-        .time-controls {
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .time-controls button {
-            max-width: 100%;
-        }
-
-        .structure-controls {
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .structure-controls button {
-            width: 100%;
-        }
-
-        button {
-            padding: 12px;
-            font-size: 16px;
-        }
-
-        /* Edit panel adjustments */
-        .edit-content {
-            margin: 10px;
-            padding: 10px;
-            max-height: 80vh;
-        }
-
-        .blind-row {
-            grid-template-columns: 1fr 1fr; /* 2 columns instead of 4 */
-            gap: 5px;
-        }
-
-        .blind-headers {
-            grid-template-columns: 1fr 1fr;
-            font-size: 14px;
-        }
-
-        .blind-row input {
-            padding: 6px;
-            font-size: 14px;
-        }
-
-        .remove-btn {
-            right: -25px;
-            width: 20px;
-            height: 20px;
-        }
-
-        /* Clock adjustment */
-        #clock {
-            font-size: 16px; /* Encore plus petit sur mobile */
-            top: 5px;
-            right: 5px;
-        }
-
-        /* Load panel adjustments */
-        .structure-item {
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .actions {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 5px;
-        }
-
-        .actions button {
-            padding: 8px;
-            font-size: 12px;
-        }
-    }
-
-    /* Add viewport meta tag if not present */
-    @viewport {
-        width: device-width;
-        initial-scale: 1;
-    }
-
-    .level-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 24px;
-        padding: 0;
-        border-radius: 50%;
-        background-color: #2196F3;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    }
-
-    .level-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-    </style>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>CardEvent - Live</title>
+	<link rel="stylesheet" href="/panel/timer_web/public/style.css?v=<?php echo $asset_ver; ?>">
+
+
+	<!-- Theme stylesheet loader -->
+	<link id="theme-stylesheet" rel="stylesheet" href="/panel/timer_web/public/style.variantA.css?v=<?php echo $asset_ver; ?>">
+	<!-- Inline background with version to bust cached bg image on clients -->
+	<style>
+	body{background: linear-gradient(180deg, rgba(0,0,0,0.36) 0%, rgba(0,0,0,0.24) 100%), url('/panel/images/bg.png?v=<?php echo $asset_ver; ?>') center/cover no-repeat; background-blend-mode:overlay;}
+	/* When the background image is too small, force a solid black background */
+	body.bg-small{background-image:none !important;background-color:#000 !important;background-blend-mode:normal !important}
+	</style>
+	<script>
+	// If bg.png is smaller than the viewport, switch to a solid black background
+	window.addEventListener('load', function(){
+		try{
+			var img = new Image();
+			img.src = '/panel/images/bg.png?v=<?php echo $asset_ver; ?>';
+			img.onload = function(){
+				var iw = img.naturalWidth || 0, ih = img.naturalHeight || 0;
+				var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+				var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+				// If image is smaller than viewport in either dimension, consider it too small
+				if(iw < vw || ih < vh){
+					document.documentElement.classList.add('bg-small');
+					document.body.classList.add('bg-small');
+				}
+			};
+			img.onerror = function(){ document.body.classList.add('bg-small'); };
+		}catch(e){/* ignore errors */}
+	});
+	</script>
+
+	<script>
+	// Partie detail modal logic (bind after DOM ready)
+	document.addEventListener('DOMContentLoaded', function(){
+		function by(id){return document.getElementById(id)}
+		var tile = by('details-tile');
+		var modal = by('partie-modal');
+		var close = by('modal-close');
+		function openModal(){
+			if(!modal) return;
+			modal.style.display='block'; modal.setAttribute('aria-hidden','false');
+			populate();
+			window.scrollTo(0,0);
+		}
+		function closeModal(){ if(!modal) return; modal.style.display='none'; modal.setAttribute('aria-hidden','true'); }
+		function populate(){
+			var act = window.SERVER_ACTIVITY || null;
+			var user = (typeof window.SERVER_USER !== 'undefined')? window.SERVER_USER : null;
+			if(!act) act = { title: (by('activity-name') && by('activity-name').textContent) || '—', date: (by('activity-date') && by('activity-date').textContent) || '—', participants_count: null, buyin: null, rake: null };
+			if(by('modal-title')) by('modal-title').textContent = act.title || '—';
+				if(by('modal-sub')){
+					var md = '—';
+					if(act.date){
+						var ds = act.date;
+						if(typeof ds === 'string' && ds.indexOf(' ') !== -1 && ds.indexOf('T') === -1) ds = ds.replace(' ', 'T');
+						var dObj = new Date(ds);
+						if(!isNaN(dObj.getTime())){
+							try{
+								md = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }).format(dObj);
+								md = md.replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+							}catch(e){
+								md = dObj.toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+							}
+						} else if(act.display_date) {
+							md = act.display_date;
+						} else {
+							md = act.date;
+						}
+					} else if(act.display_date) {
+						md = act.display_date;
+					}
+					by('modal-sub').textContent = md || '—';
+				}
+			if(by('d-organisateur')) by('d-organisateur').textContent = (act.organizer && act.organizer.length)? act.organizer : (user || (by('user-name') && by('user-name').textContent) || '—');
+			if(by('d-lieu')) by('d-lieu').textContent = act.location || '—';
+			if(by('d-inscrits')) by('d-inscrits').textContent = (act.participants_count!==undefined && act.participants_count!==null)? (act.participants_count + ' / ' + (act.max_participants||'—')) : '—';
+			if(by('d-tables')) by('d-tables').textContent = act.tables || '—';
+			if(by('d-buyin')) by('d-buyin').textContent = (act.buyin!==undefined && act.buyin!==null)? (act.buyin + ' €') : '—';
+			if(by('d-rake')) by('d-rake').textContent = (act.rake!==undefined && act.rake!==null)? (act.rake + ' €') : '—';
+			if(by('d-bounty')) by('d-bounty').textContent = act.bounty? (act.bounty + ' €') : '—';
+			if(by('d-recave')) by('d-recave').textContent = act.recave? act.recave : '—';
+			if(by('d-jetons')) by('d-jetons').textContent = act.start_chips? act.start_chips : '—';
+				// Prefer structure.detail (object) then top-level structure_detail or legacy structure text
+				var structDetail = '—';
+				if(act.structure && typeof act.structure === 'object' && act.structure.detail) structDetail = act.structure.detail;
+				else if(act.structure_detail) structDetail = act.structure_detail;
+				else if(act.structure) structDetail = act.structure;
+				if(by('d-structure-detail')) by('d-structure-detail').textContent = structDetail || '—';
+		}
+		if(tile){
+			tile.addEventListener('click', openModal);
+			tile.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); openModal(); } });
+		}
+		if(close) close.addEventListener('click', closeModal);
+		// close clicking outside sheet
+		var overlay = by('partie-modal');
+		if(overlay) overlay.addEventListener('click', function(e){ if(e.target === overlay) closeModal(); });
+	});
+	</script>
+
+	<style>
+	/* Modal sheet for Partie details (mobile-friendly) - dark sheet for readability */
+	.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;z-index:1200}
+	.modal-sheet{position:fixed;left:0;right:0;bottom:0;max-height:92vh;background:#071019;color:#eef6fb;border-top-left-radius:18px;border-top-right-radius:18px;padding:18px 18px 28px;overflow:auto;box-shadow:0 -12px 40px rgba(0,0,0,0.45)}
+	.modal-close{position:absolute;right:18px;top:12px;background:rgba(255,255,255,0.06);border-radius:20px;padding:6px 10px;font-weight:700;color:#bfe9ff;border:0}
+	.modal-title{font-weight:800;font-size:16px;margin-bottom:6px;color:#ffffff}
+	.modal-sub{color:#a7c6d6;margin-bottom:8px;font-size:13px}
+	.detail-card{background:rgba(255,255,255,0.02);border-radius:12px;padding:10px;margin-bottom:12px}
+	.detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+	.detail-row:last-child{border-bottom:none}
+	.detail-label{color:#9db6c6;font-size:12px;display:flex;align-items:center;gap:8px}
+	.detail-value{font-weight:700;color:#ffffff;font-size:14px}
+	/* Right framed box for specific values like Lieu */
+	.detail-value.box{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);padding:6px 10px;border-radius:8px;min-width:120px;text-align:right}
+	/* Ensure no shadow appears under the Lieu value */
+	#d-lieu, #d-lieu.detail-value { box-shadow: none !important; filter: none !important; text-shadow: none !important; }
+	/* Lieu: blue text, no box, align text to right and reserve width like other values */
+	#d-lieu.detail-value { color: var(--cyan); background: transparent; border: none; text-align: right; min-width:120px; }
+	/* Color buy-in and jetons values in gold/orange */
+	#d-buyin.detail-value, #d-jetons.detail-value { color: var(--gold); }
+	/* Color tables value in green */
+	#d-tables.detail-value { color: var(--green); }
+	/* Color structure detail in green */
+	#d-structure-detail.detail-value, #d-structure-detail { color: var(--green); }
+	/* small icons for detail labels, reusing palette from Variant A */
+	.detail-icon{font-size:14px;line-height:1;display:inline-block}
+	.detail-icon.profile{color:#ffd100}
+	.detail-icon.people{color:#b47bff}
+	.detail-icon.location{color:var(--cyan)}
+	.detail-icon.money{color:var(--gold)}
+	.detail-icon.info{color:#ff9d3b}
+	</style>
+
+	<!-- Responsive overrides: adjust fixed-width elements for small screens -->
+	<style>
+	/* Responsive overrides for small screens */
+	@media (max-width: 480px) {
+		.timer-circle-container { width: 60px !important; height: 60px !important; }
+		.timer-content #live-timer-display { font-size: 16px !important; }
+		.timer-content #live-timer-level, .timer-content #live-timer-blinds { font-size: 10px !important; }
+		/* Allow the action column to shrink instead of forcing 52px */
+		.row > div[style*="width:52px"] { width: auto !important; flex: 0 0 auto; display: flex; align-items: center; gap: 6px; padding-left:6px; padding-right:6px; }
+		.chev { width: 40px; height: 40px; font-size: 18px; padding: 0; border-radius: 8px; }
+		/* Make detail boxes wrap and remove rigid min-width */
+		.detail-value.box, #d-lieu.detail-value { min-width: 0 !important; max-width: 50% !important; word-break: break-word; }
+		.modal-sheet { max-width: 100% !important; left: 0 !important; right: 0 !important; border-radius: 12px !important; padding: 14px !important; }
+		.tile { min-width: 0 !important; }
+		.pill { font-size: 13px; padding: 6px 8px; }
+		.container { padding-left: 12px; padding-right: 12px; }
+		.title { font-size: 16px; }
+	}
+	/* Extra-small phones */
+	@media (max-width: 360px) {
+		.timer-circle-container { width: 52px !important; height: 52px !important; }
+		.chev { width: 36px; height: 36px; font-size: 16px; }
+		.timer-content #live-timer-display { font-size: 14px !important; }
+		.detail-value { font-size: 13px; }
+	}
+
+	/* Disable fixed bottom navigation on small screens to avoid overlap */
+	@media (max-width: 600px) {
+		.bottom-nav, .bottom-nav-backdrop {
+			position: static !important;
+			bottom: auto !important;
+			left: auto !important;
+			right: auto !important;
+			width: 100% !important;
+			box-shadow: none !important;
+		}
+		.bottom-nav-backdrop { display: none !important; }
+		/* Ensure content doesn't get hidden under nav if any theme forces fixed */
+		.container { padding-bottom: 0 !important; }
+	}
+
+/* Ensure space is reserved for fixed bottom nav on larger screens */
+@media (min-width: 601px) {
+	.container { padding-bottom: 72px !important; }
+	.bottom-nav { position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; z-index: 1100 !important; }
+	.bottom-nav-backdrop { display: block !important; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; height: 64px !important; z-index: 1000 !important; }
+}
+	</style>
+	<meta name="referrer" content="no-referrer">
+<?php if(!empty($serverActivity)): ?>
+<script>
+// Provide server-side activity to the client as a fallback (and seed localStorage)
+window.SERVER_ACTIVITY = <?php echo json_encode($serverActivity, JSON_UNESCAPED_UNICODE); ?>;
+window.SERVER_PARTICIPATION = <?php echo json_encode($serverParticipation, JSON_UNESCAPED_UNICODE); ?>;
+try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)); try{ localStorage.setItem('lastParticipation', JSON.stringify(window.SERVER_PARTICIPATION)); }catch(e){} }catch(e){}
+</script>
+<script>
+// Ensure profile links point to the current activity id (may change via client sync)
+function _setProfileLinksFromActivity(actId){
+	try{
+		var href = '/panel/profile.php' + (actId ? ('?uid='+encodeURIComponent(actId)) : '');
+		var h = document.getElementById('header-profile-link'); if(h) h.href = href;
+		var t = document.getElementById('profile-tile'); if(t) t.href = href;
+	}catch(e){}
+}
+try{ if(window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id){ _setProfileLinksFromActivity(window.SERVER_ACTIVITY.id); } }catch(e){}
+</script>
+<script>
+// Ensure participants pill shows count/(places) Inscrits and resist brief client-side overwrites
+document.addEventListener('DOMContentLoaded', function(){
+	var span = document.querySelector('#inscrits-pill span');
+	if(!span) return;
+	function renderInscrits(){
+		try{
+			if(window.SERVER_ACTIVITY && typeof window.SERVER_ACTIVITY.participants_count !== 'undefined'){
+				var pc = window.SERVER_ACTIVITY.participants_count;
+				var mp = window.SERVER_ACTIVITY.max_participants || window.SERVER_ACTIVITY.places || null;
+				span.textContent = mp ? pc + '/' + mp + ' Inscrits' : pc + ' Inscrits';
+			}
+		}catch(e){}
+	}
+	renderInscrits();
+	var tries = 0;
+	var t = setInterval(function(){ renderInscrits(); tries++; if(tries>8) clearInterval(t); }, 200);
+});
+</script>
+<script>
+// Open inscription modal instead of redirecting
+document.addEventListener('DOMContentLoaded', function() {
+	var regBtn = document.getElementById('reg-action');
+	if (!regBtn) return;
+
+	function getActivityId() {
+		if (window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id) return window.SERVER_ACTIVITY.id;
+		var urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.has('uid')) return urlParams.get('uid');
+		return null;
+	}
+
+	regBtn.addEventListener('click', function(e) {
+		e.preventDefault();
+		var actId = getActivityId();
+		var dest = '/panel/inscription.php';
+		if (actId) dest += '?uid=' + encodeURIComponent(actId);
+		window.location.href = dest;
+	});
+
+	// No auto-open: dedicated inscription page is preferred
+
+	// close modal on background click or close button
+	document.addEventListener('click', function(e){
+		var modal = document.getElementById('inscription-modal');
+		if(!modal) return;
+		if(e.target.classList && e.target.classList.contains('inscription-modal-close')){
+			modal.style.display='none'; modal.setAttribute('aria-hidden','true');
+		}
+	});
+});
+</script>
+<?php endif; ?>
+	<script>
+	// If server knows the API base, set it here. Otherwise client will try to derive it from origin.
+	window.API_BASE = '<?php echo htmlspecialchars(getenv("API_BASE_URL")?:""); ?>';
+	if(!window.API_BASE && location.protocol !== 'file:'){
+		// Default API base (remote production)
+		window.API_BASE = 'https://viendez.com/api';
+	}
+	</script>
+
+	<script>
+	(function(){
+		try{
+			var serverUser = <?php echo json_encode($displayUser, JSON_UNESCAPED_UNICODE); ?>;
+			var el = document.getElementById('user-name');
+			if(el && el.textContent !== serverUser){
+				el.textContent = serverUser;
+			}
+			// Remove legacy client override if present
+			try{ if(window.localStorage && localStorage.getItem('timer_user')) localStorage.removeItem('timer_user'); }catch(e){}
+		}catch(e){}
+	})();
+	</script>
 </head>
 <body>
-    <div class="container">
-        <div class="blind-info" style="display: flex; align-items: center; gap: 10px;">
-            <button class="level-btn" id="prevLevelBtn">-</button>
-            N<span id="level">1</span>
-            <button class="level-btn" id="nextLevelBtn">+</button>
-        </div>
-        
-        <div class="cardevent-display" id="cardevent">15:00</div>
-        
-        <div class="blind-info"><span id="blinds">25/50</span></div>
-        <div class="blind-info-next">Next: <span id="next-blind">50/100</span></div>
-        
-        <div class="controls">
-            <button class="start-btn" id="startPauseBtn">Start</button>
-            <button class="reset-btn" id="resetBtn">Reset</button>
-        </div>
-        <div class="time-controls">
-            <button class="edit-btn" id="minusMinBtn">- 2 Min</button>
-            <button class="edit-btn" id="restartBlindsBtn">Restart Blinde</button>
-            <button class="edit-btn" id="plusMinBtn">+ 2 Min</button>
-        </div>
-        
-        <div class="structure-controls">
-            <button class="edit-btn" id="loadFromDbBtn">Load Structure</button>
-            <button class="edit-btn" id="editBtn">Edit Blinds</button>
-            <button class="edit-btn" id="saveToDbBtn">Save Structure</button>
-        </div>
-    </div>
-
-    <div class="edit-panel" id="editPanel">
-    <div class="edit-content">
-        <h2 style="color: #90CAF9;">Edit Blind Structure</h2>
-        <div class="blind-editor" id="blindEditor"></div>
-        <button class="edit-btn" id="addLevelBtn">+ Add Level</button>
-        <div class="edit-actions">
-            <button class="start-btn" id="saveEditBtn">Save Changes</button>
-            <button class="reset-btn" id="cancelEditBtn">Cancel</button>
-        </div>
-    </div>
-</div>
-
-    <div class="load-panel" id="loadPanel">
-        <div class="load-content">
-            <h2 style="color: #90CAF9;">Load Blind Structure</h2>
-            <div id="structuresList"></div>
-            <button class="reset-btn" id="closeLoadBtn">Close</button>
-        </div>
-    </div>
-    <div style="text-align: center; margin-top: 10px; color: #90CAF9; font-size: 12px;">
-    Click anywhere to enable sound notifications
-</div>
-        
-    <audio id="levelSound" preload="auto">
-        <source src="level-up.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="endSound" preload="auto">
-        <source src="end.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="levelSound">
-    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1HOTgzLyspJyUjIiAfHx4dHRwcHBsaGhsZGhoZGhsaGxwaGxwbHBwcHR0dHh4dHh8eHh8fHyAhICEhISIjIiMkIyQkJSYlJiYnKCcpKSorKywtLS4vMDEyMzQ2Nzg5Ozw9P0BBQkNFRkdISUpLTE1OT1BRUVJTVFVVVlVWV1dYV1hXWFhZWFdYV1hXWFhXWFdYV1hYWFhYWVlaW1tcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6ent8fX5/gIGCg4SFhoeIiYqLjI2Oj5CRkpOUlZaXmJmam5ydnp+goaKjpKWmp6ipqqusra6vsLGys7S1tre4ubq7vL2+v8DBwsPExcbHyMnKy8zNzs/Q0dLT1NXW19jZ2tvc3d7f4OHi4+Tl5ufo6err7O3u7/Dx8vP09fb3+Pn6+/z9/v8AAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2Nzg5Ojs8PT4/QEFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaW1xdXl9gYWJjZGVmZ2hpamtsbW5vcHFyc3R1dXZ3eHl6ent8fX5/gIGCg4SFhoeIiYqLjI2Oj5CRkpOUlZaXmJmam5ydnp+goaKjpKWmp6ipqqusra6vsLGys7S1tre4ubq7vL2+v8DBwsPExcbHyMnKy8zNzs/Q0dLT1NXW19jZ2tvc3d7f4OHi4+Tl5ufo6err7O3u7/Dx8vP09fb3+Pn6+/z9/v8=" type="audio/wav">
-    </audio>
-    <audio id="endSound">
-    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1HOTgzLyspJyUjIiAfHx4dHRwcHBsaGhsZGhoZGhsaGxwaGxwbHBwcHR0dHh4dHh8eHh8fHyAhICEhISIjIiMkIyQkJSYlJiYnKCcpKSorKywtLS4vMDEyMzQ2Nzg5Ozw9P0BBQkNFRkdISUpLTE1OT1BRUVJTVFVVVlVWV1dYV1hXWFhZWFdYV1hXWFhXWFdYV1hYWFhYWVlaW1tcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6ent8fX5/gIGCg4SFhoeIiYqLjI2Oj5CRkpOUlZaXmJmam5ydnp+goaKjpKWmp6ipqqusra6vsLGys7S1tre4ubq7vL2+v8DBwsPExcbHyMnKy8zNzs/Q0dLT1NXW19jZ2tvc3d7f4OHi4+Tl5ufo6err7O3u7/Dx8vP09fb3+Pn6+/z9/v8=" type="audio/wav">
-    </audio>
-
-    <div style="position: fixed; top: 10px; right: 10px; font-size: 48px; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);" id="clock"></div>
-
-    <script>
-        // Initial blind structure
-        let blindLevels = [
-            { level: 1, small_blind: 100, big_blind: 200, ante: 0, duration: 1200 },
-            { level: 2, small_blind: 200, big_blind: 400, ante: 0, duration: 1200 },
-            { level: 3, small_blind: 300, big_blind: 600, ante: 0, duration: 1200 },
-            { level: 4, small_blind: 400, big_blind: 800, ante: 0, duration: 1200 },
-            { level: 5, small_blind: 500, big_blind: 1000, ante: 0, duration: 1200 },
-            { level: 6, small_blind: 600, big_blind: 1200, ante: 0, duration: 1200 },
-            { level: 7, small_blind: 800, big_blind: 1600, ante: 0, duration: 1200 },
-            { level: 8, small_blind: 0, big_blind: 0, ante: 0, duration: 600 },
-            { level: 9, small_blind: 1000, big_blind: 2000, ante: 0, duration: 1140 },
-            { level: 10, small_blind: 1500, big_blind: 3000, ante: 0, duration: 1080 },
-            { level: 11, small_blind: 2000, big_blind: 4000, ante: 0, duration: 1020 },            
-            { level: 12, small_blind: 3000, big_blind: 6000, ante: 0, duration: 960 },
-            { level: 13, small_blind: 4000, big_blind: 8000, ante: 0, duration: 900 },
-            { level: 14, small_blind: 0, big_blind: 0, ante: 0, duration: 0 },
-            { level: 15, small_blind: 5000, big_blind: 10000, ante: 0, duration: 900 },
-            { level: 16, small_blind: 8000, big_blind: 16000, ante: 0, duration: 900 },
-            { level: 17, small_blind: 10000, big_blind: 20000, ante: 0, duration: 900 },
-            { level: 18, small_blind: 15000, big_blind: 30000, ante: 0, duration: 900 },
-            { level: 19, small_blind: 20000, big_blind: 40000, ante: 0, duration: 3600 }
-        
-   ];
-
-//    let blindLevels = [
-//             { level: 1, small_blind: 100, big_blind: 200, ante: 0, duration: 900 },
-//             { level: 2, small_blind: 200, big_blind: 400, ante: 0, duration: 900 },
-//             { level: 3, small_blind: 300, big_blind: 600, ante: 0, duration: 900 },
-//             { level: 4, small_blind: 400, big_blind: 800, ante: 0, duration: 900 },
-//             { level: 5, small_blind: 500, big_blind: 1000, ante: 0, duration: 900 },
-//             { level: 6, small_blind: 600, big_blind: 1200, ante: 0, duration: 900 },
-//             { level: 7, small_blind: 800, big_blind: 1600, ante: 0, duration: 900 },
-//             { level: 8, small_blind: 1000, big_blind: 2000, ante: 0, duration: 900 },
-//             { level: 9, small_blind: 0, big_blind: 0, ante: 0, duration: 600 },
-//             { level: 10, small_blind: 1500, big_blind: 3000, ante: 0, duration: 1020 },
-//             { level: 11, small_blind: 2000, big_blind: 4000, ante: 0, duration: 1080 },            
-//             { level: 12, small_blind: 3000, big_blind: 6000, ante: 0, duration: 1140 },
-//             { level: 13, small_blind: 4000, big_blind: 8000, ante: 0, duration: 1200 },
-//             { level: 14, small_blind: 5000, big_blind: 10000, ante: 0, duration: 1200 },
-//             { level: 15, small_blind: 6000, big_blind: 12000, ante: 0, duration: 1200 },
-//             { level: 16, small_blind: 8000, big_blind: 16000, ante: 0, duration: 1200 },
-//             { level: 17, small_blind: 10000, big_blind: 20000, ante: 0, duration: 1200 },
-//             { level: 18, small_blind: 15000, big_blind: 30000, ante: 0, duration: 1200 },
-//             { level: 19, small_blind: 20000, big_blind: 40000, ante: 0, duration: 3600 }
-        
-//    ];
-
-        let currentLevel = 0;
-        let timeLeft = blindLevels[0].duration;
-        let timerInterval;
-        let isRunning = false;
-        let ws;
-        let isLocalUpdate = false;
-
-        function initWebSocket() {
-            ws = new WebSocket(WS_HOST);
-            
-            ws.onopen = function() {
-                console.log('Connected to WebSocket server');
-            };
-            
-            ws.onmessage = function(event) {
-                const message = JSON.parse(event.data);
-                if (message.type === 'sync') {
-                    syncTimerState(message.data);
-                }
-            };
-            
-            ws.onclose = function() {
-                console.log('Disconnected from WebSocket server');
-                // Try to reconnect in 5 seconds
-                setTimeout(initWebSocket, 5000);
-            };
-        }
-
-        function syncTimerState(state) {
-            if (!isLocalUpdate) {
-                clearInterval(timerInterval);
-                currentLevel = state.currentLevel;
-                timeLeft = state.timeLeft;
-                isRunning = state.isRunning;
-                
-                if (isRunning) {
-                    startTimer(false); // false means don't broadcast
-                }
-                
-                updateDisplay();
-            }
-            isLocalUpdate = false;
-        }
-
-        function saveTimerState() {
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                isLocalUpdate = true;
-                ws.send(JSON.stringify({
-                    type: 'update',
-                    data: {
-                        currentLevel,
-                        timeLeft,
-                        isRunning,
-                        blindLevels
-                    }
-                }));
-            }
-        }
-
-        function startTimer(broadcast = true) {
-            isRunning = true;
-            updateButtonStates();
-            
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (timeLeft > 0) {
-                    timeLeft--;
-                    updateDisplay();
-                    if (broadcast) saveTimerState();
-                    if (timeLeft === 30) {
-                        playSound('endSound');
-                    }
-                } else {
-                    handleLevelEnd();
-                }
-            }, 1000);
-            
-            if (broadcast) saveTimerState();
-        }
-
-        function stopTimer() {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            isRunning = false;
-            const startPauseBtn = document.getElementById('startPauseBtn');
-            startPauseBtn.textContent = 'Start';
-            startPauseBtn.className = 'start-btn';
-            
-            // Enable minute adjustment buttons
-            document.getElementById('minusMinBtn').disabled = false;
-            document.getElementById('plusMinBtn').disabled = false;
-            
-            // Enable level change buttons when cardevent is stopped
-            updateLevelButtons();
-        }
-
-        function updateButtonStates() {
-            const startPauseBtn = document.getElementById('startPauseBtn');
-            if (startPauseBtn) {
-                startPauseBtn.textContent = isRunning ? 'Pause' : 'Start';
-                startPauseBtn.className = isRunning ? 'pause-btn' : 'start-btn';
-            }
-        }
-
-        // Timer functions
-        function updateDisplay() {
-            const minutes = Math.floor(Math.max(0, timeLeft) / 60);
-            const seconds = Math.max(0, timeLeft) % 60;
-            document.getElementById('cardevent').textContent = 
-                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            
-            const currentBlinds = blindLevels[currentLevel];
-            document.getElementById('level').textContent = currentBlinds.level;
-            document.getElementById('blinds').textContent = 
-                `${currentBlinds.small_blind}/${currentBlinds.big_blind}`;
-            document.getElementById('ante').textContent = currentBlinds.ante;
-            
-            if (currentLevel < blindLevels.length - 1) {
-                const nextBlinds = blindLevels[currentLevel + 1];
-                document.getElementById('next-blind').textContent = 
-                    `${nextBlinds.small_blind}/${nextBlinds.big_blind}`;
-            } else {
-                document.getElementById('next-blind').textContent = 'Tournament End';
-            }
-
-            // Update minute adjustment buttons state
-            document.getElementById('minusMinBtn').disabled = isRunning;
-            document.getElementById('plusMinBtn').disabled = isRunning;
-
-            updateLevelButtons();
-        }
-        
-        function initAudio() {
-    const sounds = ['levelSound', 'endSound'];
-    sounds.forEach(soundId => {
-        const sound = document.getElementById(soundId);
-        if (sound) {
-            sound.load();
-            // Set volume to 0 and play/pause to initialize
-            sound.volume = 0;
-            sound.play().then(() => {
-                sound.pause();
-                sound.volume = 1;
-            }).catch(() => {});
-        }
-    });
-}
-
-        function playSound(soundId) {
-    // Ne jouer le son que pour 'levelSound' (30 secondes restantes et changement de niveau) 
-    // et 'endSound' (fin du tournoi)
-    if (soundId !== 'levelSound' && soundId !== 'endSound') return;
-
-    try {
-        const sound = document.getElementById(soundId);
-        if (sound) {
-            sound.currentTime = 0;
-            sound.play().catch(error => console.log('Playback prevented:', error));
-        }
-    } catch (e) {
-        console.log('Sound error:', e);
-    }
-}
-
-// Add these functions to your JavaScript code
-function saveTimerState() {
-    const timerState = {
-        currentLevel: currentLevel,
-        timeLeft: timeLeft,
-        isRunning: isRunning,
-        lastUpdate: Date.now()
-    };
-    localStorage.setItem('timerState', JSON.stringify(timerState));
-
-    // Send update to WebSocket server
-    if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({
-            type: 'update',
-            data: timerState
-        }));
-    }
-}
-
-function loadTimerState() {
-    const savedState = localStorage.getItem('timerState');
-    if (savedState) {
-        const state = JSON.parse(savedState);
-        const timePassed = Math.floor((Date.now() - state.lastUpdate) / 1000);
-        
-        currentLevel = state.currentLevel;
-        
-        if (state.isRunning) {
-            timeLeft = Math.max(0, state.timeLeft - timePassed);
-            if (timeLeft > 0) {
-                toggleStartPause(); // Start the cardevent
-            }
-        } else {
-            timeLeft = state.timeLeft;
-        }
-        
-        updateDisplay();
-    }
-}
-
-// Modify your toggleStartPause function to save state
-function toggleStartPause() {
-    if (isRunning) {
-        stopTimer();
-    } else {
-        startTimer();
-    }
-    updateLevelButtons();
-    saveTimerState();
-}
-
-function handleLevelEnd() {
-    if (currentLevel < blindLevels.length - 1) {
-        currentLevel++;
-        timeLeft = blindLevels[currentLevel].duration;
-        updateDisplay();
-        playSound('levelSound'); // Garder le son uniquement pour le changement de niveau
-    } else {
-        stopTimer();
-        playSound('endSound'); // Garder le son pour la fin du tournoi
-        alert('Tournament finished!');
-    }
-}
-
-function initWebSocket() {
-    ws = new WebSocket('ws://your-server:8080');
-    
-    ws.onmessage = function(event) {
-        const message = JSON.parse(event.data);
-        if (message.type === 'sync') {
-            syncTimerState(message.data);
-        }
-    };
-
-    ws.onclose = function() {
-        // Try to reconnect in 5 seconds
-        setTimeout(initWebSocket, 5000);
-    };
-}
-
-function syncTimerState(state) {
-    // Only update if we're not the source of the change
-    if (!isLocalUpdate) {
-        currentLevel = state.currentLevel;
-        timeLeft = state.timeLeft;
-        isRunning = state.isRunning;
-        
-        // Update UI
-        updateDisplay();
-        
-        // Update cardevent state
-        if (isRunning && !timerInterval) {
-            startTimer();
-        } else if (!isRunning && timerInterval) {
-            stopTimer();
-        }
-    }
-}
-
-        // Ajouter cette fonction pour basculer l'état et l'apparence du bouton
-        function toggleStartPause() {
-            const startPauseBtn = document.getElementById('startPauseBtn');
-            if (isRunning) {
-                stopTimer();
-            } else {
-                startTimer();
-            }
-            updateLevelButtons();
-            saveTimerState();
-        }
-
-        // Modifier la fonction resetTimer pour mettre à jour le bouton
-        function resetTimer() {
-            if (confirm("Êtes-vous sûr de vouloir réinitialiser le cardevent ?")) {
-                stopTimer();
-                currentLevel = 0;
-                timeLeft = blindLevels[0].duration;
-                updateDisplay();
-                
-                // Reset button state
-                const startPauseBtn = document.getElementById('startPauseBtn');
-                if (startPauseBtn) {
-                    startPauseBtn.textContent = 'Start';
-                    startPauseBtn.className = 'start-btn';
-                }
-            }
-        }
-
-        // Time adjustment function
-        function adjustTime(minutes) {
-            if (!isRunning) {
-                const newTime = timeLeft + (minutes * 60);
-                // Ensure time doesn't go below 0
-                timeLeft = Math.max(0, newTime);
-                updateDisplay();
-            }
-        }
-
-        function restartBlinds() {
-            // Garde le niveau actuel mais réinitialise le temps
-            timeLeft = blindLevels[currentLevel].duration;
-            updateDisplay();
-        }
-
-        function changeLevel(direction) {
-            if (!isRunning) {
-                const newLevel = currentLevel + direction;
-                if (newLevel >= 0 && newLevel < blindLevels.length) {
-                    currentLevel = newLevel;
-                    timeLeft = blindLevels[currentLevel].duration;
-                    updateDisplay();
-                    updateLevelButtons();
-                }
-            }
-        }
-
-        function updateLevelButtons() {
-            const prevBtn = document.getElementById('prevLevelBtn');
-            const nextBtn = document.getElementById('nextLevelBtn');
-            
-            if (prevBtn) {
-                prevBtn.disabled = isRunning || currentLevel === 0;
-            }
-            if (nextBtn) {
-                nextBtn.disabled = isRunning || currentLevel === blindLevels.length - 1;
-            }
-        }
-
-        // Structure management functions
-        function showEditPanel() {
-    const editPanel = document.getElementById('editPanel');
-    if (editPanel) {
-        renderBlindEditor();
-        editPanel.style.display = 'block';
-    }
-}
-
-function renderBlindEditor() {
-    const blindEditor = document.getElementById('blindEditor');
-    if (!blindEditor) return;
-
-    // Add headers
-    const headers = `
-        <div class="blind-headers">
-            <div>Small Blind</div>
-            <div>Big Blind</div>
-            <div>Ante</div>
-            <div>Duration (min)</div>
-        </div>
-    `;
-
-    const rows = blindLevels.map((level, index) => `
-                <div class="blind-row" data-level="${index + 1}">
-                    <input type="number" value="${level.small_blind}" min="0" step="25" class="small-blind">
-                    <input type="number" value="${level.big_blind}" min="0" step="50" class="big-blind">
-                    <input type="number" value="${level.ante}" min="0" step="25" class="ante">
-                    <input type="number" value="${level.duration / 60}" min="1" max="60" class="duration">
-                    <div class="row-actions">
-                        <button class="insert-btn" onclick="insertLevelAt(${index})">+</button>
-                        ${index > 0 ? `<button class="remove-btn" onclick="removeLevel(${index})">×</button>` : ''}
-                    </div>
-                </div>
-    `).join('');
-
-    blindEditor.innerHTML = headers + rows;
-}
-
-function addLevel() {
-            const currentRow = document.querySelector('.blind-row.highlighted');
-            let insertIndex = blindLevels.length;
-            
-            if (currentRow) {
-                insertIndex = parseInt(currentRow.dataset.level);
-            }
-
-            const prevLevel = insertIndex > 0 ? blindLevels[insertIndex - 1] : 
-                           blindLevels[0] || { small_blind: 25, big_blind: 50, ante: 0, duration: 900 };
-            const nextLevel = insertIndex < blindLevels.length ? blindLevels[insertIndex] : null;
-            
-            // Calculate new blind values based on adjacent levels
-            let smallBlind, bigBlind;
-            if (prevLevel && nextLevel) {
-                // Insert between two levels - average the values
-                smallBlind = Math.round((prevLevel.small_blind + nextLevel.small_blind) / 2);
-                bigBlind = Math.round((prevLevel.big_blind + nextLevel.big_blind) / 2);
-            } else if (prevLevel) {
-                // Insert at end - increment by last step size or default
-                const step = blindLevels.length > 1 ? 
-                    blindLevels[blindLevels.length - 1].small_blind - blindLevels[blindLevels.length - 2].small_blind :
-                    25;
-                smallBlind = prevLevel.small_blind + step;
-                bigBlind = prevLevel.big_blind + (step * 2);
-            } else {
-                // First level
-                smallBlind = 25;
-                bigBlind = 50;
-            }
-
-            const newLevel = {
-                level: insertIndex + 1,
-                small_blind: Math.max(25, smallBlind),
-                big_blind: Math.max(50, bigBlind),
-                ante: prevLevel ? prevLevel.ante : 0,
-                duration: prevLevel ? prevLevel.duration : 900
-            };
-
-            blindLevels.splice(insertIndex, 0, newLevel);
-            
-            // Re-number all levels
-            blindLevels.forEach((level, i) => level.level = i + 1);
-            renderBlindEditor();
-            
-            // Highlight the new row
-            const newRow = document.querySelector(`.blind-row[data-level="${newLevel.level}"]`);
-            if (newRow) {
-                newRow.classList.add('highlighted');
-                newRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-        }
-
-        function removeLevel(index) {
-            if (index > 0 && index < blindLevels.length) {
-                blindLevels.splice(index, 1);
-                blindLevels.forEach((level, i) => level.level = i + 1);
-                renderBlindEditor();
-            }
-        }
-
-        function insertLevelAt(index) {
-            const prevLevel = blindLevels[index];
-            const nextLevel = blindLevels[index + 1];
-            
-            // Calculate new blind values based on adjacent levels
-            let smallBlind, bigBlind;
-            if (prevLevel && nextLevel) {
-                smallBlind = Math.round((prevLevel.small_blind + nextLevel.small_blind) / 2);
-                bigBlind = Math.round((prevLevel.big_blind + nextLevel.big_blind) / 2);
-            } else if (prevLevel) {
-                smallBlind = prevLevel.small_blind * 2;
-                bigBlind = prevLevel.big_blind * 2;
-            } else {
-                smallBlind = 25;
-                bigBlind = 50;
-            }
-
-            const newLevel = {
-                level: index + 2, // Insert after current index
-                small_blind: smallBlind,
-                big_blind: bigBlind,
-                ante: prevLevel ? prevLevel.ante : 0,
-                duration: prevLevel ? prevLevel.duration : 900
-            };
-
-            blindLevels.splice(index + 1, 0, newLevel);
-            
-            // Re-number all levels
-            blindLevels.forEach((level, i) => level.level = i + 1);
-            renderBlindEditor();
-            
-            // Highlight the new row
-            const newRow = document.querySelector(`.blind-row[data-level="${newLevel.level}"]`);
-            if (newRow) {
-                newRow.classList.add('highlighted');
-                newRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-        }
-
-        // Database functions
-        async function saveToDatabase() {
-            const name = prompt("Enter a name for this blind structure:");
-            if (!name) return;
-
-            try {
-                const response = await fetch(window.location.href, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        action: 'save',
-                        name: name,
-                        levels: blindLevels
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('Structure saved successfully!');
-                } else {
-                    throw new Error(result.error);
-                }
-            } catch (error) {
-                console.error('Save error:', error);
-                alert('Error saving structure: ' + error.message);
-            }
-        }
-
-        async function showLoadPanel() {
-            try {
-                const response = await fetch(window.location.href, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({action: 'list'})
-                });
-
-                const result = await response.json();
-                if (!result.success) {
-                    throw new Error(result.error);
-                }
-
-                const structures = result.structures || [];
-                const html = structures.map(s => `
-                    <div class="structure-item">
-                        <div class="structure-info">
-                            ${s.name} (${new Date(s.created_at).toLocaleDateString()})
-                            <div>Levels: ${s.level_count}</div>
-                        </div>
-                        <div class="actions">
-                            <button class="edit-btn" onclick="loadStructure(${s.id})">Load</button>
-                            <button class="edit-btn" onclick="renameStructure(${s.id}, '${s.name}')">Rename</button>
-                            <button class="reset-btn" onclick="deleteStructure(${s.id}, '${s.name}')">Delete</button>
-                        </div>
-                    </div>
-                `).join('');
-
-                document.getElementById('structuresList').innerHTML = 
-                    structures.length ? html : '<div class="structure-item">No saved structures</div>';
-                document.getElementById('loadPanel').style.display = 'block';
-            } catch (error) {
-                console.error('Load error:', error);
-                alert('Error loading structures: ' + error.message);
-            }
-        }
-
-        async function loadStructure(id) {
-            try {
-                const response = await fetch(window.location.href, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({action: 'load', id: id})
-                });
-
-                const result = await response.json();
-                if (!result.success) {
-                    throw new Error(result.error);
-                }
-
-                blindLevels = result.levels;
-                currentLevel = 0;
-                timeLeft = blindLevels[0].duration;
-                updateDisplay();
-                document.getElementById('loadPanel').style.display = 'none';
-            } catch (error) {
-                console.error('Load error:', error);
-                alert('Error loading structure: ' + error.message);
-            }
-        }
-
-        async function deleteStructure(id, name) {
-            if (!confirm(`Are you sure you want to delete "${name}"?`)) {
-                return;
-            }
-
-            try {
-                const response = await fetch(window.location.href, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({action: 'delete', id: id})
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('Structure deleted successfully!');
-                    showLoadPanel();
-                } else {
-                    throw new Error(result.error);
-                }
-            } catch (error) {
-                console.error('Delete error:', error);
-                alert('Error deleting structure: ' + error.message);
-            }
-        }
-
-        async function renameStructure(id, oldName) {
-            const newName = prompt("Enter new name:", oldName);
-            if (!newName || newName === oldName) return;
-
-            try {
-                const response = await fetch(window.location.href, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        action: 'rename',
-                        id: id,
-                        name: newName
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('Structure renamed successfully!');
-                    showLoadPanel();
-                } else {
-                    throw new Error(result.error);
-                }
-            } catch (error) {
-                console.error('Rename error:', error);
-                alert('Error renaming structure: ' + error.message);
-            }
-        }
-
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', () => {
-    // Initialize all buttons and displays
-    updateDisplay();
-    
-    // Main control buttons
-    const startPauseBtn = document.getElementById('startPauseBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    
-    if (startPauseBtn) startPauseBtn.addEventListener('click', toggleStartPause); // Supprimé initAudio
-    if (resetBtn) resetBtn.addEventListener('click', resetTimer);
-
-    // Time adjustment buttons
-    const minusMinBtn = document.getElementById('minusMinBtn');
-    const plusMinBtn = document.getElementById('plusMinBtn');
-    const restartBlindsBtn = document.getElementById('restartBlindsBtn');
-    
-    if (minusMinBtn) minusMinBtn.addEventListener('click', () => adjustTime(-1));
-    if (plusMinBtn) plusMinBtn.addEventListener('click', () => adjustTime(1));
-    if (restartBlindsBtn) restartBlindsBtn.addEventListener('click', restartBlinds);
-
-    // Structure management buttons
-    const editBtn = document.getElementById('editBtn');
-    const saveToDbBtn = document.getElementById('saveToDbBtn');
-    const loadFromDbBtn = document.getElementById('loadFromDbBtn');
-    const closeLoadBtn = document.getElementById('closeLoadBtn');
-    const addLevelBtn = document.getElementById('addLevelBtn');
-    const saveEditBtn = document.getElementById('saveEditBtn');
-    const cancelEditBtn = document.getElementById('cancelEditBtn');
-    
-    if (editBtn) editBtn.addEventListener('click', showEditPanel);
-    if (saveToDbBtn) saveToDbBtn.addEventListener('click', saveToDatabase);
-    if (loadFromDbBtn) loadFromDbBtn.addEventListener('click', showLoadPanel);
-    if (closeLoadBtn) closeLoadBtn.addEventListener('click', () => {
-        document.getElementById('loadPanel').style.display = 'none';
-    });
-    if (addLevelBtn) addLevelBtn.addEventListener('click', addLevel);
-    
-    if (saveEditBtn) {
-        saveEditBtn.addEventListener('click', () => {
-            const rows = document.querySelectorAll('.blind-row');
-            const newStructure = Array.from(rows).map((row, index) => {
-                const smallBlind = parseInt(row.querySelector('.small-blind').value) || 0;
-                const bigBlind = parseInt(row.querySelector('.big-blind').value) || 0;
-                const ante = parseInt(row.querySelector('.ante').value) || 0;
-                const duration = (parseInt(row.querySelector('.duration').value) || 15) * 60;
-
-                return {
-                    level: index + 1,
-                    small_blind: smallBlind,
-                    big_blind: bigBlind,
-                    ante: ante,
-                    duration: duration
-                };
-            });
-
-            if (validateStructure(newStructure)) {
-                blindLevels = newStructure;
-                currentLevel = 0;
-                timeLeft = blindLevels[0].duration;
-                updateDisplay();
-                hideEditPanel();
-            }
-        });
-    }
-    
-    if (cancelEditBtn) cancelEditBtn.addEventListener('click', hideEditPanel);
-
-    // Initialiser l'audio uniquement pour les sons de niveau et de fin
-    document.addEventListener('click', () => {
-        const levelSound = document.getElementById('levelSound');
-        const endSound = document.getElementById('endSound');
-        if (levelSound) levelSound.load();
-        if (endSound) endSound.load();
-    }, { once: true });
-
-    // Load saved cardevent state when page loads
-    loadTimerState();
-    
-    // Add window event listeners for visibility changes
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-            loadTimerState(); // Refresh cardevent state when tab becomes visible
-        }
-    });
-
-    // Initialize WebSocket connection
-    initWebSocket();
-
-    // Level change buttons
-    const prevLevelBtn = document.getElementById('prevLevelBtn');
-    const nextLevelBtn = document.getElementById('nextLevelBtn');
-    
-    if (prevLevelBtn) prevLevelBtn.addEventListener('click', () => changeLevel(-1));
-    if (nextLevelBtn) nextLevelBtn.addEventListener('click', () => changeLevel(1));
-    
-    // Update initial state of buttons
-    updateLevelButtons();
-});
-
-// Also make sure this function is defined at the top level of your script
-function updateDisplay() {
-    const minutes = Math.floor(Math.max(0, timeLeft) / 60);
-    const seconds = Math.max(0, timeLeft) % 60;
-    const timerDisplay = document.getElementById('cardevent');
-    if (timerDisplay) {
-        timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
-    
-    const currentBlinds = blindLevels[currentLevel];
-    const levelElement = document.getElementById('level');
-    const blindsElement = document.getElementById('blinds');
-    const nextBlindElement = document.getElementById('next-blind');
-    
-    if (levelElement) levelElement.textContent = currentBlinds.level;
-    if (blindsElement) blindsElement.textContent = `${currentBlinds.small_blind}/${currentBlinds.big_blind}`;
-    
-    if (nextBlindElement) {
-        if (currentLevel < blindLevels.length - 1) {
-            const nextBlinds = blindLevels[currentLevel + 1];
-            nextBlindElement.textContent = `${nextBlinds.small_blind}/${nextBlinds.big_blind}`;
-        } else {
-            nextBlindElement.textContent = 'Tournament End';
-        }
-    }
-
-    // Update minute adjustment buttons state
-    const minusMinBtn = document.getElementById('minusMinBtn');
-    const plusMinBtn = document.getElementById('plusMinBtn');
-    if (minusMinBtn) minusMinBtn.disabled = isRunning;
-    if (plusMinBtn) plusMinBtn.disabled = isRunning;
-
-    updateLevelButtons();
-}
-
-function validateStructure(structure) {
-    if (!Array.isArray(structure) || structure.length === 0) {
-        alert('Invalid structure format');
-        return false;
-    }
-    return true;
-}
-
-function hideEditPanel() {
-    const editPanel = document.getElementById('editPanel');
-    if (editPanel) {
-        editPanel.style.display = 'none';
-    }
-}
-
-function showEditPanel() {
-    const editPanel = document.getElementById('editPanel');
-    if (editPanel) {
-        renderBlindEditor();
-        editPanel.style.display = 'block';
-    }
-}
-
-        function renderBlindEditor() {
-            const blindEditor = document.getElementById('blindEditor');
-            if (!blindEditor) return;
-
-            // Add headers
-            const headers = `
-                <div class="blind-headers">
-                    <div>Small Blind</div>
-                    <div>Big Blind</div>
-                    <div>Ante</div>
-                    <div>Duration (min)</div>
-                </div>
-            `;
-
-            const rows = blindLevels.map((level, index) => `
-                <div class="blind-row" data-level="${index + 1}">
-                    <input type="number" value="${level.small_blind}" min="0" step="25" class="small-blind">
-                    <input type="number" value="${level.big_blind}" min="0" step="50" class="big-blind">
-                    <input type="number" value="${level.ante}" min="0" step="25" class="ante">
-                    <input type="number" value="${level.duration / 60}" min="1" max="60" class="duration">
-                    <div class="row-actions">
-                        <button class="insert-btn" onclick="insertLevelAt(${index})">+</button>
-                        ${index > 0 ? `<button class="remove-btn" onclick="removeLevel(${index})">×</button>` : ''}
-                    </div>
-                </div>
-            `).join('');
-
-            blindEditor.innerHTML = headers + rows;
-        }
-
-        function insertLevelAt(index) {
-            const prevLevel = blindLevels[index];
-            const nextLevel = blindLevels[index + 1];
-            
-            // Calculate new blind values based on adjacent levels
-            let smallBlind, bigBlind;
-            if (prevLevel && nextLevel) {
-                smallBlind = Math.round((prevLevel.small_blind + nextLevel.small_blind) / 2);
-                bigBlind = Math.round((prevLevel.big_blind + nextLevel.big_blind) / 2);
-            } else if (prevLevel) {
-                smallBlind = prevLevel.small_blind * 2;
-                bigBlind = prevLevel.big_blind * 2;
-            } else {
-                smallBlind = 25;
-                bigBlind = 50;
-            }
-
-            const newLevel = {
-                level: index + 1,
-                small_blind: smallBlind,
-                big_blind: bigBlind,
-                ante: prevLevel ? prevLevel.ante : 0,
-                duration: prevLevel ? prevLevel.duration : 900
-            };
-
-            blindLevels.splice(index + 1, 0, newLevel);
-            blindLevels.forEach((level, i) => level.level = i + 1);
-            renderBlindEditor();
-        }
-
-document.addEventListener('DOMContentLoaded', () => {
-    // ... existing code ...
-
-    // Time adjustment buttons
-    const minusMinBtn = document.getElementById('minusMinBtn');
-    const plusMinBtn = document.getElementById('plusMinBtn');
-    const restartBlindsBtn = document.getElementById('restartBlindsBtn');
-    
-    
-
-
-    if (minusMinBtn) minusMinBtn.addEventListener('click', () => adjustTime(-1));
-    if (plusMinBtn) plusMinBtn.addEventListener('click', () => adjustTime(1));
-    if (restartBlindsBtn) restartBlindsBtn.addEventListener('click', restartBlinds);
-
-    // ... rest of your existing code ...
-});
-
-function updateClock() {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-    document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
-}
-
-setInterval(updateClock, 1000);
-updateClock(); // Exécution immédiate
-    </script>
-    <footer style="position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); padding: 10px; text-align: center; z-index: 1000; display: flex; justify-content: center; gap: 40px;">
-        <a href="#" id="footerAccueil" style="color: white; font-weight: bold; text-decoration: none; font-size: 16px;">Accueil</a>
-        <a href="#" id="footerTimer" style="color: white; font-weight: bold; text-decoration: none; font-size: 16px;">Local Timer</a>
-        <a href="#" id="footerRepartition" style="color: white; font-weight: bold; text-decoration: none; font-size: 16px;" tabindex="0">Répartition</a>
-    </footer>
-    <script>
-    // Affichage dynamique du contenu principal (Raccourcis ou Répartition)
-    document.addEventListener('DOMContentLoaded', function() {
-        // Affichage contextuel du bloc Répartition du prizepool
-        var btnRepartition = document.getElementById('footerRepartition');
-        var btnAccueil = document.getElementById('footerAccueil');
-        var btnTimer = document.getElementById('footerTimer');
-        // Scroll uniquement vers la section Répartition du prizepool sans masquer d'autres blocs
-        var btnRepartition = document.getElementById('footerRepartition');
-        var btnAccueil = document.getElementById('footerAccueil');
-        var btnTimer = document.getElementById('footerTimer');
-        var prizepoolSection = document.getElementById('prizepool-section');
-        if (btnRepartition && prizepoolSection) {
-            btnRepartition.addEventListener('click', function(e) {
-                e.preventDefault();
-                prizepoolSection.scrollIntoView({behavior: 'smooth', block: 'center'});
-            });
-        }
-        if (btnAccueil) {
-            btnAccueil.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.scrollTo({top: 0, behavior: 'smooth'});
-            });
-        }
-        if (btnTimer) {
-            btnTimer.addEventListener('click', function(e) {
-                e.preventDefault();
-                location.reload();
-            });
-        }
-    });
-    </script>
+
+<?php if(isset($_GET['debug']) && $_GET['debug'] === '1'){
+	$dbgUser = 'Visiteur';
+	if(!empty($_SESSION['user'])) $dbgUser = $_SESSION['user'];
+	elseif(!empty($_SESSION['login'])) $dbgUser = $_SESSION['login'];
+	elseif(!empty($_COOKIE['uname'])) $dbgUser = $_COOKIE['uname'];
+	$dbgUser = htmlspecialchars($dbgUser);
+	$sid = session_id();
+	error_log('DEBUG: session_id=' . $sid . ' | user=' . $dbgUser);
+} ?>
+	<!-- Variant controls removed; Variant A is active by default -->
+		<header class="card header">
+			<div style="display:flex;align-items:center;gap:12px;width:100%">
+				<div class="logo"><img src="/panel/timer_web/public/assets/spade.svg" alt="logo" class="logo-svg"></div>
+				<?php
+				  $displayUser = 'Visiteur';
+				  if(!empty($_SESSION['user'])) $displayUser = $_SESSION['user'];
+				  elseif(!empty($_SESSION['login'])) $displayUser = $_SESSION['login'];
+				  elseif(!empty($_COOKIE['uname'])) $displayUser = $_COOKIE['uname'];
+				  $displayUser = htmlspecialchars($displayUser);
+				?>
+				<div style="display:flex;flex-direction:column;justify-content:center">
+					<div class="title"><svg class="title-spade" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="As de pique"><!-- spade filled (currentColor) + small A mark -->
+						<path d="M16 2 C11 8 8 11 8 15 C8 19 12 21 15 21 L15 26 C15 27.2 16.2 28 17.2 28 C18.2 28 19.4 27.2 19.4 26 L19.4 21 C22.4 21 26 19 26 15 C26 11 23 8 16 2 Z" fill="currentColor"/>
+						<text x="5" y="10" font-family="Helvetica, Arial, sans-serif" font-size="8" font-weight="800" fill="#ffffff">A</text>
+					</svg> CardEvent <span class="small">v<?php echo htmlspecialchars(getenv('CFBundleShortVersionString')?:'2.0'); ?></span></div>
+					<div class="greeting">Bonjour, <span id="user-name"><?php echo $displayUser; ?></span> <span style="color:var(--cyan);margin-left:6px">›</span></div>
+				</div>
+				<div style="margin-left:auto;display:flex;align-items:center;gap:12px">
+					<div id="offline-badge" class="offline-badge" aria-hidden="true"></div>
+					<a id="header-profile-link" href="/panel/profile.php<?php echo (!empty($serverActivity['id'])? '?uid=' . intval($serverActivity['id']): ''); ?>" role="link" title="Mon Profil" style="text-decoration:none;color:inherit">
+						<div class="avatar"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar" style="width:100%;height:100%;object-fit:cover"></div>
+					</a>
+				</div>
+			</div>
+			</div>
+						<!-- Token prompt (hidden by default) -->
+						<div id="token-prompt" class="token-prompt" style="display:none">
+							<div style="font-weight:700;margin-bottom:6px">Connexion API</div>
+							<input id="api-token-input" placeholder="Collez le token API" />
+							<div style="display:flex;gap:8px;margin-top:8px">
+								<button id="save-api-token" class="button primary">Enregistrer</button>
+								<button id="clear-api-token" class="button">Effacer</button>
+							</div>
+							<div class="small" style="margin-top:8px;color:var(--muted)">Le token est stocké en local</div>
+						</div>
+				<!-- debug-info removed to prevent on-screen JSON debug output -->
+		</header>
+
+		<div class="container">
+				<section id="activity-card" class="card stroked">
+			<div class="section-title">Prochaine partie</div>
+			<hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
+			<!-- removed duplicate small label to avoid repeating the title -->
+			<div class="row" style="margin-top:6px">
+				<div style="flex:1">
+					<div id="activity-name" style="font-weight:800;font-size:18px"><?php echo !empty($serverActivity['title'])? htmlspecialchars($serverActivity['title']) : '—'; ?></div>
+					<div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+						<div class="date-pill"><svg class="date-pill-icon" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12.5 8v5l3 1" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+						<div id="activity-date" class="small" style="color:var(--gold);font-weight:700"><?php echo !empty($serverActivity['display_date'])? htmlspecialchars($serverActivity['display_date']) : (!empty($serverActivity['date'])? htmlspecialchars($serverActivity['date']) : '—'); ?></div>
+					</div>
+					<div style="margin-top:8px;display:flex;gap:1px;align-items:center">
+						<div class="pill" id="buyin-pill"><span><?php echo isset($serverActivity['buyin'])? htmlspecialchars($serverActivity['buyin']).' €':'—'; ?></span></div>
+						<div class="pill" id="rake-pill">
+							<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
+								<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
+								<path d="M9 6v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+								<path d="M10.5 6v6" stroke="currentColor" stroke-width="1.0" stroke-linecap="round"/>
+								<path d="M15 5l-1.5 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+							</svg>
+							<span><?php echo isset($serverActivity['rake'])? htmlspecialchars($serverActivity['rake']).' €':'—'; ?></span>
+						</div>
+						<div class="pill" id="recave-pill"><span><?php echo isset($serverActivity['recave'])? htmlspecialchars($serverActivity['recave']).' Rec':'—'; ?></span></div>
+						<div class="pill" id="inscrits-pill"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><text x="2" y="16" font-size="16" fill="#B47BFF">👥</text></svg>
+							<span><?php
+								if (isset($serverActivity['participants_count'])) {
+									$pc = htmlspecialchars($serverActivity['participants_count']);
+									if (!empty($serverActivity['max_participants'])) {
+										$mp = htmlspecialchars($serverActivity['max_participants']);
+										echo $pc . '/' . $mp . ' Inscrits';
+									} else {
+										echo $pc . ' Inscrits';
+									}
+								} else {
+									echo '— Inscrits';
+								}
+							?></span>
+						</div>
+
+					</div>
+					<div style="margin-top:8px;color:#ff6b6b;font-weight:700"><?php echo (empty($serverActivity) || empty($serverActivity['participants_count']))? '● Pas encore inscrit(e)' : ''; ?></div>
+
+				</div>
+				<div style="width:52px;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center">
+				   <button class="chev" id="next-act" onclick="navigateActivity(1)">›</button>
+				   <button class="chev" id="prev-act" onclick="navigateActivity(-1)">‹</button>
+				</div>
+			</div>
+		</section>
+
+		<section id="shortcuts-card" class="card stroked">
+			   <div class="section-title">Raccourcis</div>
+			   <hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
+			   <div class="shortcuts-grid">
+	<?php
+	// --- ADVANCED TIMER LOGIC (fullscreen-timer.php style, with JS sync) ---
+	$timer_level = '--';
+	$timer_blinds = '-- / --';
+	$timer_duration = 0;
+	$timer_seconds_left = 0;
+	$timer_end = null;
+	$timer_start = null;
+	$timer_ordre = 1;
+	$blinds_json = '[]';
+	if (!empty($serverActivity['id'])) {
+		$id = intval($serverActivity['id']);
+		$now = time();
+		$q = mysqli_query($con, "SELECT * FROM `blindes-live` WHERE `id-activite` = '$id' ORDER BY `ordre` ASC");
+		$blinds = [];
+		while($row = mysqli_fetch_assoc($q)) { $blinds[] = $row; }
+		$blinds_json = json_encode($blinds, JSON_UNESCAPED_UNICODE);
+		$currentIndex = -1;
+		foreach($blinds as $k => $b) {
+			if (strtotime($b['fin']) > $now) {
+				$currentIndex = $k;
+				break;
+			}
+		}
+		if ($currentIndex === -1 && count($blinds) > 0) {
+			// All levels finished, show last
+			$currentIndex = count($blinds) - 1;
+		}
+		if ($currentIndex !== -1) {
+			$b = $blinds[$currentIndex];
+			$timer_level = 'Niveau ' . htmlspecialchars($b['ordre']);
+			$timer_blinds = htmlspecialchars($b['sb']) . ' / ' . htmlspecialchars($b['bb']);
+			$timer_end = $b['fin'];
+			$timer_start = $b['debut'];
+			$timer_duration = max(1, strtotime($b['fin']) - strtotime($b['debut']));
+			$timer_seconds_left = max(0, strtotime($b['fin']) - $now);
+			$timer_ordre = intval($b['ordre']);
+		}
+	}
+	?>
+	       <div class="tile" id="live-timer-tile">
+		       <div class="tile-top" style="padding-top:0;">
+			       <div class="timer-circle-container" style="width:80px;height:80px;position:relative;margin:0 auto;">
+					       <svg class="timer-svg" viewBox="0 0 80 80" style="width:100%;height:100%;position:absolute;top:0;left:0;">
+						       <circle class="timer-bg" cx="40" cy="40" r="36" style="stroke-width:4;"></circle>
+						       <circle class="timer-progress" id="live-timer-progress" cx="40" cy="40" r="36" style="stroke-width:4;"></circle>
+				       </svg>
+				       <div class="timer-content" style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;">
+									   <div id="live-timer-level" style="font-size:10px;font-weight:600;color:#fff;letter-spacing:1px;text-transform:uppercase;"></div>
+									   <div id="live-timer-display" style="font-size:18px;font-weight:900;color:#00d2ff;line-height:1;">--:--</div>
+									   <div id="live-timer-blinds" style="font-size:10px;color:#ffc107;font-weight:700;margin-top:2px;"></div>
+				       </div>
+			       </div>
+					   <!-- <div class="count-label" id="live-timer-label" style="margin-top:8px;">Live Timer</div> -->
+		</div>
+					   <!-- <div class="tile-bottom" id="live-timer-status">—</div> -->
+	</div>
+	<script>
+	(function(){
+	       var display = document.getElementById('live-timer-display');
+	       var progressCircle = document.getElementById('live-timer-progress');
+	       var levelEl = document.getElementById('live-timer-level');
+	       var blindsEl = document.getElementById('live-timer-blinds');
+	       var seconds = 0;
+	       var total = 0;
+	       var timerPaused = false;
+	       var statusEl = document.getElementById('live-timer-status');
+		       // Get activity start time from PHP
+		       var activityStart = null;
+		       try {
+			   activityStart = <?php echo isset($serverActivity['date']) ? '"'.addslashes($serverActivity['date']).'"' : 'null'; ?>;
+		       } catch(e) { activityStart = null; }
+
+
+				   // (activityStart is provided above) — avoid duplicate declaration
+
+				   function updateDisplay() {
+				       var now = new Date();
+				       var showCountdown = false;
+				       var countdownText = '';
+				       var beforeStart = false;
+				       if(activityStart) {
+					   var startDate = new Date(activityStart.replace(/-/g,'/'));
+					   if(startDate > now) {
+					       // Show countdown
+					       var diff = Math.floor((startDate - now) / 1000);
+					       if(diff > 0) {
+						   var h = Math.floor(diff/3600).toString().padStart(2,'0');
+						   var m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
+						   countdownText = h+':'+m;
+						   showCountdown = true;
+						   beforeStart = true;
+					       }
+					   }
+				       }
+				       if(showCountdown) {
+					   display.textContent = countdownText;
+					   display.style.color = '#00d2ff';
+					   progressCircle.style.strokeDashoffset = 0;
+					   progressCircle.style.stroke = '#00d2ff';
+					   progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
+					   if(statusEl) statusEl.textContent = 'A venir';
+					   if(levelEl) levelEl.textContent = '';
+					   if(blindsEl) blindsEl.textContent = '';
+					   return;
+				       }
+				       var m = Math.floor(seconds/60).toString().padStart(2,'0');
+				       var s = (seconds%60).toString().padStart(2,'0');
+				       display.textContent = m+':'+s;
+				       // Progress
+				       if(total > 0){
+					       var elapsed = total - seconds;
+					       var progress = Math.max(0, Math.min(1, elapsed/total));
+					       var circumference = 2 * Math.PI * 50;
+					       var offset = circumference * (1 - progress);
+					       progressCircle.style.strokeDashoffset = offset;
+					       if(seconds <= 120 && seconds > 0){
+						       display.style.color = '#ff0000';
+						       progressCircle.style.stroke = '#ff0000';
+						       progressCircle.style.filter = 'drop-shadow(0 0 6px #ff0000)';
+					       }else{
+						       display.style.color = '#00d2ff';
+						       progressCircle.style.stroke = '#00d2ff';
+						       progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
+					       }
+				       }
+				       // Update status label
+						   if(statusEl){
+							   var now = new Date();
+							   var startDate = null;
+							   if(activityStart){
+								   var parts = String(activityStart).split(/[- :]/);
+								   startDate = new Date(
+									   parseInt(parts[0]||'0',10),
+									   Math.max(0, (parseInt(parts[1]||'1',10)-1)),
+									   parseInt(parts[2]||'1',10),
+									   parseInt(parts[3]||'0',10),
+									   parseInt(parts[4]||'0',10),
+									   parseInt(parts[5]||'0',10)
+								   );
+							   }
+							   // If activity has started and there is no remaining seconds -> mark as finished
+							   if(startDate && now > startDate && seconds === 0){
+								   statusEl.textContent = 'Terminée';
+								   if(levelEl) levelEl.textContent = '';
+								   if(blindsEl) blindsEl.textContent = '';
+								   display.textContent = '--:--';
+								   display.style.color = '#00d2ff';
+								   progressCircle.style.strokeDashoffset = 0;
+								   progressCircle.style.stroke = '#00d2ff';
+								   progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
+								   return;
+							   }
+							   // If activity is in the future
+							   if(startDate && now < startDate){
+								   statusEl.textContent = 'A venir';
+								   return;
+							   }
+							   // Fallback based on available timer data
+							   if(total === 0){
+								   statusEl.textContent = '—';
+							   } else if(seconds === 0){
+								   statusEl.textContent = 'Terminé';
+							   } else {
+								   statusEl.textContent = 'Live';
+							   }
+						   }
+			       }
+	       function tick() {
+		       if(!timerPaused && seconds > 0){
+			       seconds--;
+			       updateDisplay();
+		       }
+	       }
+	       function syncTimer() {
+		       var params = new URLSearchParams(window.location.search);
+		       var uid = params.get('uid');
+		       if(!uid) return;
+		       fetch('/panel/timer-api.php?uid='+encodeURIComponent(uid))
+		       .then(r=>r.json())
+		       .then(function(data){
+			       if(data.status!=='success') return;
+			       seconds = parseInt(data.seconds_remaining)||0;
+			       total = parseInt(data.duration_seconds)||0;
+					   if(levelEl) {
+						   // Remove 'Niveau' and only show 'x / y'
+						   if(data.level_name){
+							   var txt = data.level_name.replace(/^Niveau\s*/i, '').trim();
+							   levelEl.textContent = txt;
+						   } else {
+							   levelEl.textContent = '--';
+						   }
+					   }
+			       if(blindsEl) blindsEl.textContent = data.blinds_text || '-- / --';
+			       timerPaused = !!data.is_paused;
+			       updateDisplay();
+				// Refresh profile links to point to the active activity id (use URL uid or fallback to lastActivity)
+				try{
+					var actId = null;
+					if(window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id) actId = window.SERVER_ACTIVITY.id;
+					var params = new URLSearchParams(window.location.search);
+					if(!actId && params.has('uid')) actId = params.get('uid');
+					if(!actId){ try{ var la = localStorage.getItem('lastActivity'); if(la){ var obj = JSON.parse(la); if(obj && obj.id) actId = obj.id; } }catch(e){}
+					}
+					_setProfileLinksFromActivity(actId);
+				}catch(e){}
+		       });
+	       }
+		   setInterval(tick, 1000);
+		   setInterval(syncTimer, 5000);
+		   syncTimer();
+		   // Force full page reload every 30 seconds for robustness
+		   setInterval(function(){
+			   // Force cache refresh by appending a random query param
+			   var url = new URL(window.location.href);
+			   url.searchParams.set('cachebust', Math.floor(Math.random()*1e8));
+			   window.location.replace(url.toString());
+		   }, 300000);
+	})();
+	<?php
+	// If timer_sync=1, return JSON for JS sync
+	if (isset($_GET['timer_sync']) && $_GET['timer_sync'] == 1 && !empty($serverActivity['id'])) {
+		header('Content-Type: application/json');
+		echo json_encode(['blinds' => $blinds], JSON_UNESCAPED_UNICODE);
+		exit;
+	}
+	?>
+	</script>
+				<div class="tile" id="details-tile" role="button" tabindex="0" style="cursor:pointer">
+					<div class="tile-top"><div class="icon-circle info">i</div></div>
+					<div class="tile-bottom">Détails Partie</div>
+				</div>
+				<a id="profile-tile" class="tile" role="link" href="/panel/profile.php<?php echo (!empty($serverActivity['id'])? '?uid=' . intval($serverActivity['id']): ''); ?>" style="text-decoration:none;color:inherit">
+					<div class="tile-top"><div class="icon-circle profile">👤</div></div>
+					<div class="tile-bottom">Mon Profil / Traker</div>
+				</a>
+				<?php
+					// If the activity date is in the past, link to results; otherwise link to participants
+					$participants_href = '/panel/participants.php';
+					if (!empty($serverActivity['id'])) {
+						$uid_q = '?uid=' . intval($serverActivity['id']);
+					} else {
+						$uid_q = '';
+					}
+					if (!empty($serverActivity['date']) && @strtotime($serverActivity['date']) !== false && strtotime($serverActivity['date']) < time()) {
+						$participants_href = '/panel/resultats.php' . $uid_q;
+					} else {
+						$participants_href = '/panel/participants.php' . $uid_q;
+					}
+				?>
+				<a id="participants-tile" class="tile" role="link" href="<?php echo htmlspecialchars($participants_href); ?>" style="text-decoration:none;color:inherit">
+					<div class="tile-top"><div class="icon-circle people">👥</div></div>
+					<div class="tile-bottom"><?php echo (strpos($participants_href, 'resultats.php') !== false) ? 'Classement' : 'Liste participants'; ?></div>
+				</a>
+			</div>
+		</section>
+
+		<section class="card stroked" style="display:none" aria-hidden="true">
+			<div style="font-weight:700;color:var(--gold);text-transform:uppercase;font-size:12px">Podium payés</div>
+			<hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
+			<div id="podium-list">
+				<div class="small">Chargement...</div>
+			</div>
+		</section>
+
+		   <section class="card quick-action">
+			   <div class="section-title">Actions</div>
+			   <hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
+						 <div style="display:flex;align-items:center;justify-content:space-between">
+							 <div id="reg-text" style="font-weight:600;font-size:14px">Votre Inscription : </div>
+							 <div>
+								<button id="reg-action" class="button primary" style="margin-left:12px;padding:8px 12px;border-radius:10px;font-weight:700"><?php echo (!empty($serverParticipation) && isset($serverParticipation['status']) && !in_array($serverParticipation['status'], array('None','Desinscrit'))) ? 'Modifier' : 'S Inscrire'; ?></button>
+							 </div>
+						 <div>
+
+				<!-- Partie Detail modal -->
+				<div id="partie-modal" class="modal-overlay" aria-hidden="true">
+					<div class="modal-sheet" role="dialog" aria-modal="true">
+						<button id="modal-close" class="modal-close">Fermer</button>
+						<div class="modal-title" id="modal-title">Titre activité</div>
+						<div class="modal-sub" id="modal-sub">—</div>
+
+						<div class="detail-card">
+							<div style="font-weight:700;margin-bottom:8px">Infos Partie</div>
+							<div class="detail-row"><div class="detail-label"><span class="detail-icon profile">👤</span>Organisateur</div><div class="detail-value" id="d-organisateur">—</div></div>
+							<div class="detail-row"><div class="detail-label"><span class="detail-icon location">📍</span>Lieu</div><div class="detail-value" id="d-lieu">—</div></div>
+							<div class="detail-row"><div class="detail-label"><span class="detail-icon people">👥</span>Inscrits / Max</div><div class="detail-value" id="d-inscrits">—</div></div>
+							<div class="detail-row"><div class="detail-label"><span class="detail-icon info">▦</span>Tables</div><div class="detail-value" id="d-tables">—</div></div>
+						</div>
+
+						<div class="detail-card">
+							<div style="font-weight:700;margin-bottom:8px">Financier</div>
+							<div class="detail-row"><div class="detail-label"><span class="detail-icon money">💶</span>Buy-in</div><div class="detail-value" id="d-buyin">—</div></div>
+							<div class="detail-row"><div class="detail-label"><span class="detail-icon money">✦</span>Rake (Mini)</div><div class="detail-value" id="d-rake">—</div></div>
+							<div class="detail-row"><div class="detail-label"><span class="detail-icon money">🎯</span>Bounty</div><div class="detail-value" id="d-bounty">—</div></div>
+							<div class="detail-row"><div class="detail-label"><span class="detail-icon money">🔁</span>Recave (×2)</div><div class="detail-value" id="d-recave">—</div></div>
+							<div class="detail-row"><div class="detail-label"><span class="detail-icon location">🎲</span>Jetons départ</div><div class="detail-value" id="d-jetons">—</div></div>
+						</div>
+
+						<div class="detail-card">
+							<div style="font-weight:700;margin-bottom:8px">Structure Semaine</div>
+							<div class="detail-row" style="justify-content:flex-end"><div class="detail-value box" id="d-structure-detail">—</div></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Inscription modal (mobile-style switches + actions) -->
+				<div id="inscription-modal" class="modal-overlay" aria-hidden="true" style="display:none">
+					<div class="modal-sheet" role="dialog" aria-modal="true" style="max-width:420px;padding:18px;">
+						<button class="modal-close inscription-modal-close" style="float:right">Fermer</button>
+						<div style="font-weight:700;color:var(--gold);margin-bottom:6px">Options</div>
+						<form id="ins-form" method="post" action="/panel/inscription.php" style="margin-top:8px">
+							<input type="hidden" name="quick_reg" value="1">
+							<input type="hidden" name="uid" value="">
+							<input type="hidden" name="status" value="Inscrit">
+							<input type="hidden" name="anonyme" value="0">
+							<input type="hidden" name="latereg" value="0">
+							<div style="display:flex;flex-direction:column;gap:12px">
+								<!-- Anonyme -->
+								<label style="display:flex;align-items:center;justify-content:space-between">
+									<div style="display:flex;align-items:center;gap:12px">
+										<span style="opacity:0.9">👁️</span>
+										<div>
+											<div style="font-weight:700">Anonyme</div>
+											<div class="small" style="color:var(--muted)">Votre nom ne sera pas affiché publiquement</div>
+										</div>
+									</div>
+									<input id="ins-anon" type="checkbox" />
+								</label>
+
+								<!-- Option -->
+								<label style="display:flex;align-items:center;justify-content:space-between">
+									<div style="display:flex;align-items:center;gap:12px">
+										<span style="color:var(--gold);">★</span>
+										<div>
+											<div style="font-weight:700">Option</div>
+											<div class="small" style="color:var(--muted)">Inscription sous réserve de confirmation</div>
+										</div>
+									</div>
+									<input id="ins-opt" type="checkbox" />
+								</label>
+
+								<!-- Latereg -->
+								<label style="display:flex;align-items:center;justify-content:space-between">
+									<div style="display:flex;align-items:center;gap:12px">
+										<span style="opacity:0.7">⏱️</span>
+										<div>
+											<div style="font-weight:700">Latereg</div>
+											<div class="small" style="color:var(--muted)">Inscription tardive</div>
+										</div>
+									</div>
+									<input id="ins-late" type="checkbox" />
+								</label>
+
+								<!-- Option / chapitre text -->
+								<div>
+									<input type="text" name="option_chapitre" placeholder="Option / Chapitre" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit">
+								</div>
+
+								<!-- Actions -->
+								<div style="display:flex;gap:12px;margin-top:6px">
+									<button type="submit" id="ins-validate" class="button" style="flex:1;background:#17a34a;color:#fff;border-radius:10px;padding:12px 14px;font-weight:700">Valider</button>
+									<button type="button" id="ins-unregister" class="button" style="flex:1;background:#c92b2b;color:#fff;border-radius:10px;padding:12px 14px;font-weight:700">Désinscrire</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<script>
+				// Modal behavior: sync toggles with hidden inputs and handle unregister
+				document.addEventListener('DOMContentLoaded', function(){
+					var modal = document.getElementById('inscription-modal');
+					if(!modal) return;
+					var form = document.getElementById('ins-form');
+					var inAnon = modal.querySelector('#ins-anon');
+					var inOpt = modal.querySelector('#ins-opt');
+					var inLate = modal.querySelector('#ins-late');
+					var hidAnon = form.querySelector('input[name="anonyme"]');
+					var hidLate = form.querySelector('input[name="latereg"]');
+					var hidStatus = form.querySelector('input[name="status"]');
+
+					function syncHidden(){
+						hidAnon.value = inAnon && inAnon.checked ? '1' : '0';
+						hidLate.value = inLate && inLate.checked ? '1' : '0';
+						hidStatus.value = inOpt && inOpt.checked ? 'Option' : 'Inscrit';
+					}
+					[inAnon,inOpt,inLate].forEach(function(el){ if(el) el.addEventListener('change', syncHidden); });
+					syncHidden();
+
+					// Desinscrire button
+					var btnUn = document.getElementById('ins-unregister');
+					if(btnUn){
+						btnUn.addEventListener('click', function(){
+							// set status to None (server maps None -> Desinscrit)
+							form.querySelector('input[name="status"]').value = 'None';
+							// clear flags
+							form.querySelector('input[name="anonyme"]').value = '0';
+							form.querySelector('input[name="latereg"]').value = '0';
+							form.submit();
+						});
+					}
+					// Close modal when clicking close button
+					var closeBtns = modal.querySelectorAll('.inscription-modal-close');
+					closeBtns.forEach(function(b){ b.addEventListener('click', function(){ modal.style.display='none'; modal.setAttribute('aria-hidden','true'); }); });
+				});
+				</script>
+
+
+
+				<script src="/panel/timer_web/public/app.js"></script>
+			   </div>
+		   </section>
+
+	</div>
+
+	<!-- Bottom navigation backdrop to ensure a solid black background under the nav -->
+	<div class="bottom-nav-backdrop" aria-hidden="true"></div>
+	<!-- Bottom navigation (mobile) matching simulator: Accueil, Local Timer, Répartition -->
+	<style>
+	.bottom-nav { margin-top: 20px !important; }
+	</style>
+	<nav class="bottom-nav" role="navigation" aria-label="Main navigation">
+		<button id="nav-home" class="" title="Accueil" onclick="window.location.href='/panel/index.php';">
+			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 21h14a1 1 0 0 0 1-1v-7H4v7a1 1 0 0 0 1 1z"/></svg>
+			<div class="nav-label">Accueil</div>
+		</button>
+		<button id="nav-local" class="active" title="Local Timer" onclick="window.location.href='/panel/local-timer.php';">
+			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
+			<div class="nav-label">Local Timer</div>
+		</button>
+		<button id="nav-split" class="" title="Répartition" onclick="window.location.href='/panel/repartition.php';">
+			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+			<div class="nav-label">Répartition</div>
+		</button>
+	</nav>
+
+
+	   <script src="/panel/timer_web/public/app.js?v=<?php echo $asset_ver . '-' . rand(100000,999999); ?>"></script>
+
+	   <script>
+	   // Navigation: reload with ?uid=xxx for selected activity
+	   function navigateActivity(delta) {
+		   if (!window.activitiesList || !window.currentActivity) return;
+		   let idx = window.activitiesList.findIndex(a => String(a.id) === String(window.currentActivity.id));
+		   if (idx === -1) idx = 0;
+		   let newIdx = idx + delta;
+		   if (newIdx < 0 || newIdx >= window.activitiesList.length) return;
+		   let newId = window.activitiesList[newIdx].id;
+		   // Reload with ?uid=xxx
+		   const url = new URL(window.location.href);
+		   url.searchParams.set('uid', newId);
+		   window.location.href = url.toString();
+	   }
+	   </script>
+
+
+	<script>
+		(function(){
+			const link = document.getElementById('theme-stylesheet');
+			const apply = v=>{ link.href = (v==='B')? '/panel/timer_web/public/style.variantB.css':'/panel/timer_web/public/style.variantA.css'; localStorage.setItem('uiVariant', v); };
+			const variantABtn = document.getElementById('variantA');
+			if(variantABtn) variantABtn.addEventListener('click', ()=>apply('A'));
+			const variantBBtn = document.getElementById('variantB');
+			if(variantBBtn) variantBBtn.addEventListener('click', ()=>apply('B'));
+			const saved = localStorage.getItem('uiVariant') || 'A'; apply(saved);
+		})();
+	</script>
 </body>
 </html>
