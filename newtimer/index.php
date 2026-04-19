@@ -871,7 +871,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         align-items: center;
         justify-content: space-between;
         gap: 14px;
-        margin-bottom: 10px;
+        margin-bottom: 6px;
     }
 
     .pill-btn,
@@ -888,11 +888,12 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     }
 
     .pill-btn {
-        min-height: 72px;
-        padding: 0 26px;
-        font-size: 22px;
+        min-height: 76px;
+        padding: 0 24px;
+        font-size: 20px;
         font-weight: 500;
         color: #31c7ff;
+        border-radius: 999px;
     }
 
     .title-stack {
@@ -902,35 +903,35 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     .live-title {
         color: #18c4ff;
-        font-size: 30px;
+        font-size: 32px;
         font-weight: 700;
         line-height: 1.1;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
     }
 
     .live-subtitle {
         color: rgba(255,255,255,0.46);
-        font-size: 17px;
+        font-size: 15px;
         font-weight: 500;
     }
 
     .right-actions {
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 8px 12px;
-        min-height: 72px;
+        gap: 8px;
+        padding: 8px 10px;
+        min-height: 76px;
     }
 
     .icon-btn {
-        width: 56px;
-        height: 56px;
-        min-height: 56px;
+        width: 52px;
+        height: 52px;
+        min-height: 52px;
         padding: 0;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 28px;
+        font-size: 26px;
         color: #6b74ff;
         background: transparent;
         border: 0;
@@ -981,40 +982,40 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     }
 
     .icon-btn.close {
-        width: 48px;
-        height: 48px;
-        min-height: 48px;
+        width: 44px;
+        height: 44px;
+        min-height: 44px;
         border-radius: 50%;
         background: #d1d1d1;
         color: #1d1d1d;
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 900;
     }
 
     .hero {
-        padding-top: 18px;
+        padding-top: 10px;
         text-align: center;
     }
 
     .timer-ring {
         --progress: 0;
-        width: min(76vw, 620px);
-        height: min(76vw, 620px);
+        width: min(78vw, 650px);
+        height: min(78vw, 650px);
         margin: 0 auto;
         border-radius: 50%;
         position: relative;
         background: conic-gradient(#12cfff calc(var(--progress) * 1turn), rgba(18, 207, 255, 0.22) 0);
-        box-shadow: 0 0 34px rgba(18,207,255,0.34), 0 0 70px rgba(18,207,255,0.18);
-        padding: 16px;
+        box-shadow: 0 0 26px rgba(18,207,255,0.36), 0 0 72px rgba(18,207,255,0.16);
+        padding: 12px;
     }
 
     .timer-ring::before {
         content: '';
         position: absolute;
-        inset: 16px;
+        inset: 12px;
         border-radius: 50%;
         background: #000;
-        box-shadow: inset 0 0 60px rgba(18,207,255,0.12);
+        box-shadow: inset 0 0 90px rgba(18,207,255,0.10);
     }
 
     .timer-center {
@@ -1025,69 +1026,69 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 44px;
+        padding: 36px;
     }
 
     .level-line {
         color: rgba(255,255,255,0.56);
         font-size: clamp(16px, 2.2vw, 28px);
-        letter-spacing: 0.18em;
+        letter-spacing: 0.16em;
         text-transform: uppercase;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
         font-weight: 500;
     }
 
     .cardevent-display {
-        font-size: clamp(86px, 17vw, 170px);
+        font-size: clamp(92px, 18vw, 184px);
         line-height: 1;
         font-weight: 500;
         color: #12cfff;
         margin: 0;
-        text-shadow: 0 0 30px rgba(18, 207, 255, 0.34);
+        text-shadow: 0 0 22px rgba(18, 207, 255, 0.28);
         font-variant-numeric: tabular-nums;
     }
 
     .blinds-block {
-        margin-top: 30px;
+        margin-top: 26px;
     }
 
     .blind-info {
         margin: 0;
-        font-size: clamp(54px, 10vw, 96px);
+        font-size: clamp(58px, 10.5vw, 102px);
         line-height: 1;
         color: #ffd119;
-        text-shadow: 0 0 20px rgba(255,209,25,0.18);
+        text-shadow: 0 0 14px rgba(255,209,25,0.14);
         font-weight: 700;
         text-align: center;
     }
 
     .blind-caption {
-        margin-top: 10px;
+        margin-top: 12px;
         color: rgba(255,255,255,0.35);
-        font-size: 28px;
+        font-size: 24px;
         letter-spacing: 0.18em;
         text-transform: uppercase;
     }
 
     .blind-info-next {
-        margin-top: 22px;
-        font-size: 28px;
+        margin-top: 18px;
+        font-size: 24px;
         color: rgba(255,255,255,0.58);
         text-align: center;
         font-weight: 700;
     }
 
     .pause-line {
-        margin-top: 12px;
-        font-size: 22px;
+        margin-top: 10px;
+        font-size: 18px;
         text-align: center;
         color: #cf7a1e;
     }
 
     .stats-panel {
-        margin: 26px auto 0;
-        padding: 18px 24px;
-        max-width: 430px;
+        margin: 30px auto 0;
+        padding: 16px 22px;
+        max-width: 400px;
         border-radius: 22px;
         background: rgba(24,24,24,0.96);
         border: 1px solid rgba(255,255,255,0.08);
@@ -1103,7 +1104,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     .stat-value {
         display: block;
-        font-size: clamp(34px, 5vw, 56px);
+        font-size: clamp(32px, 5vw, 54px);
         font-weight: 700;
         line-height: 1.05;
     }
@@ -1111,17 +1112,17 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     .stat-label {
         display: block;
         margin-top: 6px;
-        font-size: 16px;
+        font-size: 14px;
         letter-spacing: 0.18em;
         color: rgba(255,255,255,0.4);
         text-transform: uppercase;
     }
 
     .control-dock {
-        margin: 34px auto 0;
+        margin: 30px auto 0;
         max-width: 620px;
-        padding: 16px;
-        border-radius: 28px;
+        padding: 14px;
+        border-radius: 30px;
         background: rgba(20,20,20,0.94);
         border: 1px solid rgba(255,255,255,0.08);
         display: grid;
@@ -1131,15 +1132,15 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     .control-btn,
     .primary-control {
-        min-height: 98px;
-        padding: 12px 10px;
-        border-radius: 20px;
+        min-height: 92px;
+        padding: 10px 10px;
+        border-radius: 18px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 8px;
-        font-size: 18px;
+        font-size: 17px;
         font-weight: 700;
         background: #242424;
         color: #f3f5f9;
@@ -1176,7 +1177,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     .secondary-tools,
     .structure-controls {
-        margin: 24px auto 0;
+        margin: 20px auto 0;
         max-width: 620px;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -1192,10 +1193,10 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     .start-btn,
     .pause-btn,
     .reset-btn {
-        min-height: 64px;
+        min-height: 62px;
         padding: 14px 18px;
         border-radius: 18px;
-        font-size: 17px;
+        font-size: 16px;
         font-weight: 700;
     }
 
@@ -1218,7 +1219,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         right: 0;
         bottom: 0;
         z-index: 1000;
-        padding: 10px 18px 16px;
+        padding: 8px 18px 14px;
         background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.95) 40%);
     }
 
@@ -1256,16 +1257,16 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         .pill-btn { min-height: 56px; padding: 0 16px; font-size: 16px; }
         .right-actions { min-height: 56px; gap: 4px; padding: 4px 8px; }
         .icon-btn { width: 40px; height: 40px; min-height: 40px; font-size: 20px; }
-        .icon-btn.close { width: 38px; height: 38px; min-height: 38px; }
+        .icon-btn.close { width: 36px; height: 36px; min-height: 36px; }
         .live-title { font-size: 22px; }
         .live-subtitle { font-size: 12px; }
         .blind-caption { font-size: 16px; }
         .blind-info-next { font-size: 16px; }
         .pause-line { font-size: 14px; }
-        .stats-panel { max-width: 360px; padding: 14px 16px; }
+        .stats-panel { max-width: 360px; padding: 14px 16px; margin-top: 24px; }
         .stat-label { font-size: 11px; }
-        .control-dock { gap: 8px; padding: 10px; }
-        .control-btn, .primary-control { min-height: 80px; border-radius: 16px; font-size: 14px; }
+        .control-dock { gap: 8px; padding: 10px; margin-top: 24px; }
+        .control-btn, .primary-control { min-height: 78px; border-radius: 16px; font-size: 14px; }
         .control-btn span:first-child, .primary-control span:first-child { font-size: 24px; }
         .control-btn small, .primary-control small { font-size: 10px; }
         .secondary-tools, .structure-controls { grid-template-columns: 1fr 1fr; }
