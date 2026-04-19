@@ -1265,7 +1265,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                 </div>
 
                 <div class="action-dock">
-                    <button class="wide-action reset-btn" id="resetBtn">Réinit.</button>
+                    <button class="wide-action reset-btn" id="resetBtn">ReStart Game</button>
                     <button class="edit-btn" id="loadFromDbBtn">Charger</button>
                     <button class="edit-btn" id="editBtn">Modifier</button>
                     <button class="edit-btn" id="saveToDbBtn">Enreg.</button>
