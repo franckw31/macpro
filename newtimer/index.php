@@ -1100,17 +1100,17 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     .control-btn,
     .primary-control {
-        min-height: 92px;
+        min-height: 78px;
         width: 100%;
         height: 100%;
-        padding: 10px 10px;
+        padding: 8px 8px;
         border-radius: 18px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        font-size: 17px;
+        gap: 6px;
+        font-size: 15px;
         font-weight: 700;
         background: #242424;
         color: #f3f5f9;
@@ -1120,28 +1120,28 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     .control-dock .level-btn {
         width: 100%;
         height: 100%;
-        min-height: 92px;
+        min-height: 78px;
         border-radius: 18px;
-        padding: 10px 10px;
+        padding: 8px 8px;
         background: #242424;
     }
 
     .control-btn span:first-child,
     .primary-control span:first-child {
-        font-size: 34px;
+        font-size: 28px;
         line-height: 1;
     }
 
     .control-btn .control-icon,
     .primary-control .control-icon {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
     }
 
     .control-btn small,
     .primary-control small {
         color: rgba(255,255,255,0.62);
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 600;
     }
 
