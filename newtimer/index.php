@@ -1039,7 +1039,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     }
 
     .cardevent-display {
-        font-size: clamp(68px, 12.5vw, 132px);
+        font-size: clamp(78px, 14vw, 150px);
         line-height: 1;
         font-weight: 500;
         color: #12cfff;
@@ -1054,7 +1054,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     .blind-info {
         margin: 0;
-        font-size: clamp(44px, 8vw, 76px);
+        font-size: clamp(36px, 6.8vw, 62px);
         line-height: 1;
         color: #ffd119;
         text-shadow: 0 0 14px rgba(255,209,25,0.14);
@@ -1233,7 +1233,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         .timer-ring { width: min(54vw, 280px); height: min(54vw, 280px); }
         .timer-center { padding: 14px; }
         .level-line { font-size: 12px; margin-bottom: 8px; }
-        .cardevent-display { font-size: clamp(54px, 11vw, 92px); }
+        .cardevent-display { font-size: clamp(62px, 12vw, 104px); }
         .control-dock { gap: 8px; padding: 10px; margin-top: 24px; }
         .control-btn, .primary-control { min-height: 78px; border-radius: 16px; font-size: 14px; }
         .control-btn span:first-child, .primary-control span:first-child { font-size: 24px; }
