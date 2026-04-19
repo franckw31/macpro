@@ -999,23 +999,23 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     .timer-ring {
         --progress: 0;
-        width: min(58vw, 430px);
-        height: min(58vw, 430px);
+        width: min(50vw, 360px);
+        height: min(50vw, 360px);
         margin: 0 auto;
         border-radius: 50%;
         position: relative;
         background: conic-gradient(#12cfff calc(var(--progress) * 1turn), rgba(18, 207, 255, 0.22) 0);
-        box-shadow: 0 0 18px rgba(18,207,255,0.30), 0 0 42px rgba(18,207,255,0.12);
-        padding: 8px;
+        box-shadow: 0 0 14px rgba(18,207,255,0.26), 0 0 32px rgba(18,207,255,0.10);
+        padding: 7px;
     }
 
     .timer-ring::before {
         content: '';
         position: absolute;
-        inset: 8px;
+        inset: 7px;
         border-radius: 50%;
         background: #000;
-        box-shadow: inset 0 0 54px rgba(18,207,255,0.09);
+        box-shadow: inset 0 0 40px rgba(18,207,255,0.08);
     }
 
     .timer-center {
@@ -1026,7 +1026,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 22px;
+        padding: 18px;
     }
 
     .level-line {
@@ -1230,8 +1230,8 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         .blind-caption { font-size: 16px; }
         .blind-info-next { font-size: 16px; }
         .pause-line { font-size: 14px; }
-        .timer-ring { width: min(62vw, 340px); height: min(62vw, 340px); }
-        .timer-center { padding: 18px; }
+        .timer-ring { width: min(54vw, 280px); height: min(54vw, 280px); }
+        .timer-center { padding: 14px; }
         .level-line { font-size: 12px; margin-bottom: 8px; }
         .cardevent-display { font-size: clamp(54px, 11vw, 92px); }
         .control-dock { gap: 8px; padding: 10px; margin-top: 24px; }
