@@ -1031,20 +1031,20 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     .level-line {
         color: rgba(255,255,255,0.56);
-        font-size: clamp(12px, 1.5vw, 18px);
+        font-size: clamp(14px, 1.9vw, 22px);
         letter-spacing: 0.16em;
         text-transform: uppercase;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         font-weight: 500;
     }
 
     .cardevent-display {
-        font-size: clamp(56px, 10.5vw, 108px);
+        font-size: clamp(68px, 12.5vw, 132px);
         line-height: 1;
         font-weight: 500;
         color: #12cfff;
         margin: 0;
-        text-shadow: 0 0 14px rgba(18, 207, 255, 0.24);
+        text-shadow: 0 0 18px rgba(18, 207, 255, 0.26);
         font-variant-numeric: tabular-nums;
     }
 
@@ -1232,8 +1232,8 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         .pause-line { font-size: 14px; }
         .timer-ring { width: min(62vw, 340px); height: min(62vw, 340px); }
         .timer-center { padding: 18px; }
-        .level-line { font-size: 11px; margin-bottom: 8px; }
-        .cardevent-display { font-size: clamp(46px, 10vw, 82px); }
+        .level-line { font-size: 12px; margin-bottom: 8px; }
+        .cardevent-display { font-size: clamp(54px, 11vw, 92px); }
         .control-dock { gap: 8px; padding: 10px; margin-top: 24px; }
         .control-btn, .primary-control { min-height: 78px; border-radius: 16px; font-size: 14px; }
         .control-btn span:first-child, .primary-control span:first-child { font-size: 24px; }
