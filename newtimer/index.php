@@ -1177,6 +1177,13 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         text-align: center;
     }
 
+    .action-dock .control-btn {
+        background: #242424;
+        color: #f3f5f9;
+        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 10px 24px rgba(0,0,0,0.24);
+    }
+
     .wide-action {
         display: flex;
         align-items: center;
@@ -1259,10 +1266,10 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
                 <div class="action-dock">
                     <button class="wide-action reset-btn" id="resetBtn">Réinit.</button>
-                    <button class="wide-action edit-btn" id="restartBlindsBtn">Rejouer</button>
                     <button class="edit-btn" id="loadFromDbBtn">Charger</button>
                     <button class="edit-btn" id="editBtn">Modifier</button>
                     <button class="edit-btn" id="saveToDbBtn">Enreg.</button>
+                    <button class="control-btn" id="restartBlindsBtn">Rejouer</button>
                 </div>
             </section>
         </div>
