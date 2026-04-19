@@ -15,6 +15,12 @@ if (strlen($_SESSION['login']) == 0) {
 		$r_u = mysqli_fetch_array($q_u);
 		$_SESSION['id'] = $r_u['id-membre'];
 	}
+
+	$allowed_dashboard_ids = array(2, 265);
+	if (!isset($_SESSION['id']) || !in_array(intval($_SESSION['id']), $allowed_dashboard_ids, true)) {
+		header('Location: /panel/quickview.php');
+		exit();
+	}
 	
 	// Vérifier si l'utilisateur est admin et récupérer sa photo
 	$is_admin = false;
