@@ -1085,75 +1085,6 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         color: #cf7a1e;
     }
 
-    .stats-panel {
-        margin: 30px auto 0;
-        padding: 16px 22px;
-        max-width: 400px;
-        border-radius: 22px;
-        background: rgba(24,24,24,0.96);
-        border: 1px solid rgba(255,255,255,0.08);
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-        box-shadow: 0 12px 28px rgba(0,0,0,0.24);
-        cursor: pointer;
-    }
-
-    .stats-panel:focus-visible {
-        outline: 2px solid rgba(24,196,255,0.55);
-        outline-offset: 3px;
-    }
-
-    .stat-box {
-        text-align: center;
-    }
-
-    .stat-quick-actions {
-        margin-top: 10px;
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .stat-adjust-btn {
-        width: 34px;
-        height: 34px;
-        min-height: 34px;
-        padding: 0;
-        border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.08);
-        background: rgba(255,255,255,0.04);
-        color: #f4f6fb;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        font-weight: 700;
-        box-shadow: none;
-    }
-
-    .stat-adjust-btn:hover {
-        transform: none;
-        background: rgba(24,196,255,0.12);
-        border-color: rgba(24,196,255,0.22);
-    }
-
-    .stat-value {
-        display: block;
-        font-size: clamp(32px, 5vw, 54px);
-        font-weight: 700;
-        line-height: 1.05;
-    }
-
-    .stat-label {
-        display: block;
-        margin-top: 6px;
-        font-size: 14px;
-        letter-spacing: 0.18em;
-        color: rgba(255,255,255,0.4);
-        text-transform: uppercase;
-    }
-
     .control-dock {
         margin: 30px auto 0;
         max-width: 620px;
@@ -1299,8 +1230,6 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         .blind-caption { font-size: 16px; }
         .blind-info-next { font-size: 16px; }
         .pause-line { font-size: 14px; }
-        .stats-panel { max-width: 360px; padding: 14px 16px; margin-top: 24px; }
-        .stat-label { font-size: 11px; }
         .control-dock { gap: 8px; padding: 10px; margin-top: 24px; }
         .control-btn, .primary-control { min-height: 78px; border-radius: 16px; font-size: 14px; }
         .control-btn span:first-child, .primary-control span:first-child { font-size: 24px; }
@@ -1340,21 +1269,6 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                     <div class="blind-info-next">→ <span id="next-blind">50/100</span></div>
                     <div class="pause-line" id="pause-info">Pause dans —</div>
                     <span id="ante" class="utility-hidden">0</span>
-                </div>
-
-                <div class="stats-panel" id="statsPanel" role="button" tabindex="0" title="Modifier les stats du tournoi">
-                    <div class="stat-box">
-                        <span class="stat-value" id="players-stat">1/16</span>
-                        <span class="stat-label">Joueurs</span>
-                        <div class="stat-quick-actions">
-                            <button type="button" class="stat-adjust-btn" id="playersMinusBtn" aria-label="Retirer un joueur">−</button>
-                            <button type="button" class="stat-adjust-btn" id="playersPlusBtn" aria-label="Ajouter un joueur">+</button>
-                        </div>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-value" id="stack-stat">1 140 000</span>
-                        <span class="stat-label">Stack moy.</span>
-                    </div>
                 </div>
 
                 <div class="control-dock">
@@ -1471,80 +1385,6 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         let isRunning = false;
         let ws;
         let isLocalUpdate = false;
-        let tournamentStats = {
-            playersRemaining: 1,
-            playersTotal: 16,
-            chipsInPlay: 1140000
-        };
-
-        function formatNumber(value) {
-            return new Intl.NumberFormat('fr-FR').format(value || 0);
-        }
-
-        function renderTournamentStats() {
-            const playersStat = document.getElementById('players-stat');
-            const stackStat = document.getElementById('stack-stat');
-            if (playersStat) {
-                playersStat.textContent = `${tournamentStats.playersRemaining}/${tournamentStats.playersTotal}`;
-            }
-            if (stackStat) {
-                const avgStack = tournamentStats.playersRemaining > 0
-                    ? Math.round(tournamentStats.chipsInPlay / tournamentStats.playersRemaining)
-                    : 0;
-                stackStat.textContent = formatNumber(avgStack);
-            }
-        }
-
-        function saveTournamentStats() {
-            localStorage.setItem('localTimerTournamentStats', JSON.stringify(tournamentStats));
-        }
-
-        function loadTournamentStats() {
-            try {
-                const saved = localStorage.getItem('localTimerTournamentStats');
-                if (!saved) {
-                    renderTournamentStats();
-                    return;
-                }
-                const parsed = JSON.parse(saved);
-                if (parsed && typeof parsed === 'object') {
-                    tournamentStats.playersRemaining = Math.max(0, parseInt(parsed.playersRemaining || tournamentStats.playersRemaining, 10));
-                    tournamentStats.playersTotal = Math.max(tournamentStats.playersRemaining, parseInt(parsed.playersTotal || tournamentStats.playersTotal, 10));
-                    tournamentStats.chipsInPlay = Math.max(0, parseInt(parsed.chipsInPlay || tournamentStats.chipsInPlay, 10));
-                }
-            } catch (error) {
-                console.warn('Unable to load tournament stats', error);
-            }
-            renderTournamentStats();
-        }
-
-        function editTournamentStats() {
-            const remainingInput = prompt('Joueurs restants', String(tournamentStats.playersRemaining));
-            if (remainingInput === null) return;
-            const totalInput = prompt('Joueurs au départ', String(tournamentStats.playersTotal));
-            if (totalInput === null) return;
-            const chipsInput = prompt('Jetons en jeu', String(tournamentStats.chipsInPlay));
-            if (chipsInput === null) return;
-
-            const remaining = Math.max(0, parseInt(remainingInput, 10) || 0);
-            const total = Math.max(remaining, parseInt(totalInput, 10) || remaining);
-            const chips = Math.max(0, parseInt(String(chipsInput).replace(/\s+/g, ''), 10) || 0);
-
-            tournamentStats = {
-                playersRemaining: remaining,
-                playersTotal: total,
-                chipsInPlay: chips
-            };
-            saveTournamentStats();
-            renderTournamentStats();
-        }
-
-        function adjustPlayersRemaining(delta) {
-            const nextValue = tournamentStats.playersRemaining + delta;
-            tournamentStats.playersRemaining = Math.max(0, Math.min(tournamentStats.playersTotal, nextValue));
-            saveTournamentStats();
-            renderTournamentStats();
-        }
 
         function initWebSocket() {
             ws = new WebSocket(WS_HOST);
@@ -2158,7 +1998,6 @@ function addLevel() {
         document.addEventListener('DOMContentLoaded', () => {
     // Initialize all buttons and displays
     updateDisplay();
-    loadTournamentStats();
     
     // Main control buttons
     const startPauseBtn = document.getElementById('startPauseBtn');
@@ -2247,9 +2086,6 @@ function addLevel() {
     // Level change buttons
     const prevLevelBtn = document.getElementById('prevLevelBtn');
     const nextLevelBtn = document.getElementById('nextLevelBtn');
-    const statsPanel = document.getElementById('statsPanel');
-    const playersMinusBtn = document.getElementById('playersMinusBtn');
-    const playersPlusBtn = document.getElementById('playersPlusBtn');
     
     if (prevLevelBtn) prevLevelBtn.addEventListener('click', () => changeLevel(-1));
     if (nextLevelBtn) nextLevelBtn.addEventListener('click', () => changeLevel(1));
@@ -2348,27 +2184,6 @@ function updateDisplay() {
                 break;
             }
         }
-        if (foundPause) {
-            const hours = Math.floor(remaining / 3600);
-            const mins = Math.floor((remaining % 3600) / 60);
-            pauseInfo.textContent = `Pause dans ${hours > 0 ? hours + 'h ' : ''}${mins}m`;
-        } else {
-            pauseInfo.textContent = 'Pas de pause prévue';
-        }
-    }
-
-    updateLevelButtons();
-}
-
-function validateStructure(structure) {
-    if (!Array.isArray(structure) || structure.length === 0) {
-        alert('Invalid structure format');
-        return false;
-    }
-    return true;
-}
-
-function hideEditPanel() {
     const editPanel = document.getElementById('editPanel');
     if (editPanel) {
         editPanel.style.display = 'none';
