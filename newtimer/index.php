@@ -2188,6 +2188,17 @@ function updateDisplay() {
                 break;
             }
         }
+        if (foundPause) {
+            const hours = Math.floor(remaining / 3600);
+            const mins = Math.floor((remaining % 3600) / 60);
+            pauseInfo.textContent = `Pause dans ${hours > 0 ? hours + 'h ' : ''}${mins}m`;
+        } else {
+            pauseInfo.textContent = 'Pas de pause prévue';
+        }
+    }
+}
+
+function hideEditPanel() {
     const editPanel = document.getElementById('editPanel');
     if (editPanel) {
         editPanel.style.display = 'none';
