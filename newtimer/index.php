@@ -384,8 +384,10 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         color: white;
         font-size: 14px;
         box-sizing: border-box;
+        appearance: none;
         -webkit-appearance: none;
         margin: 0;
+        appearance: textfield;
         -moz-appearance: textfield;
         transition: all 0.2s ease;
     }
@@ -933,6 +935,17 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         background: transparent;
         border: 0;
         box-shadow: none;
+    }
+
+    #clock {
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: #6b74ff;
+    }
+
+    #soundToggle.muted {
+        opacity: 0.6;
     }
 
     .icon-btn.close {
@@ -2081,6 +2094,17 @@ function addLevel() {
     
     if (prevLevelBtn) prevLevelBtn.addEventListener('click', () => changeLevel(-1));
     if (nextLevelBtn) nextLevelBtn.addEventListener('click', () => changeLevel(1));
+
+    const soundToggle = document.getElementById('soundToggle');
+    if (soundToggle) {
+        soundToggle.addEventListener('click', () => {
+            const muted = soundToggle.classList.toggle('muted');
+            soundToggle.textContent = muted ? '🔈' : '🔊';
+            document.querySelectorAll('audio').forEach((audio) => {
+                audio.muted = muted;
+            });
+        });
+    }
     
     // Update initial state of buttons
     updateLevelButtons();
@@ -2259,8 +2283,7 @@ function updateClock() {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-    document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+    document.getElementById('clock').textContent = `${hours}:${minutes}`;
 
     const dateLabel = document.getElementById('timer-date-label');
     if (dateLabel) {
