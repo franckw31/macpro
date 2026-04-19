@@ -840,35 +840,452 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         opacity: 0.5;
         cursor: not-allowed;
     }
+
+    body.timer-modern {
+        background: #000;
+        background-image: radial-gradient(circle at top, rgba(0, 210, 255, 0.14), transparent 28%), radial-gradient(circle at bottom, rgba(255, 170, 0, 0.08), transparent 22%), linear-gradient(180deg, #050608 0%, #000 100%);
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    .timer-modern .container {
+        max-width: 820px;
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 18px 18px 120px;
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+        border-radius: 0;
+    }
+
+    .screen-shell {
+        max-width: 760px;
+        margin: 0 auto;
+    }
+
+    .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 10px;
+    }
+
+    .pill-btn,
+    .icon-btn,
+    .control-btn,
+    .primary-control,
+    .wide-action {
+        border: 1px solid rgba(255,255,255,0.10);
+        background: rgba(24,24,24,0.92);
+        color: #f4f6fb;
+        border-radius: 24px;
+        text-transform: none;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 10px 24px rgba(0,0,0,0.24);
+    }
+
+    .pill-btn {
+        min-height: 72px;
+        padding: 0 26px;
+        font-size: 22px;
+        font-weight: 500;
+        color: #31c7ff;
+    }
+
+    .title-stack {
+        text-align: center;
+        flex: 1;
+    }
+
+    .live-title {
+        color: #18c4ff;
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 2px;
+    }
+
+    .live-subtitle {
+        color: rgba(255,255,255,0.46);
+        font-size: 17px;
+        font-weight: 500;
+    }
+
+    .right-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        min-height: 72px;
+    }
+
+    .icon-btn {
+        width: 56px;
+        height: 56px;
+        min-height: 56px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: #6b74ff;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+    }
+
+    .icon-btn.close {
+        width: 48px;
+        height: 48px;
+        min-height: 48px;
+        border-radius: 50%;
+        background: #d1d1d1;
+        color: #1d1d1d;
+        font-size: 22px;
+        font-weight: 900;
+    }
+
+    .hero {
+        padding-top: 18px;
+        text-align: center;
+    }
+
+    .timer-ring {
+        --progress: 0;
+        width: min(76vw, 620px);
+        height: min(76vw, 620px);
+        margin: 0 auto;
+        border-radius: 50%;
+        position: relative;
+        background: conic-gradient(#12cfff calc(var(--progress) * 1turn), rgba(18, 207, 255, 0.22) 0);
+        box-shadow: 0 0 34px rgba(18,207,255,0.34), 0 0 70px rgba(18,207,255,0.18);
+        padding: 16px;
+    }
+
+    .timer-ring::before {
+        content: '';
+        position: absolute;
+        inset: 16px;
+        border-radius: 50%;
+        background: #000;
+        box-shadow: inset 0 0 60px rgba(18,207,255,0.12);
+    }
+
+    .timer-center {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 44px;
+    }
+
+    .level-line {
+        color: rgba(255,255,255,0.56);
+        font-size: clamp(16px, 2.2vw, 28px);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        font-weight: 500;
+    }
+
+    .cardevent-display {
+        font-size: clamp(86px, 17vw, 170px);
+        line-height: 1;
+        font-weight: 500;
+        color: #12cfff;
+        margin: 0;
+        text-shadow: 0 0 30px rgba(18, 207, 255, 0.34);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .blinds-block {
+        margin-top: 30px;
+    }
+
+    .blind-info {
+        margin: 0;
+        font-size: clamp(54px, 10vw, 96px);
+        line-height: 1;
+        color: #ffd119;
+        text-shadow: 0 0 20px rgba(255,209,25,0.18);
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .blind-caption {
+        margin-top: 10px;
+        color: rgba(255,255,255,0.35);
+        font-size: 28px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+    }
+
+    .blind-info-next {
+        margin-top: 22px;
+        font-size: 28px;
+        color: rgba(255,255,255,0.58);
+        text-align: center;
+        font-weight: 700;
+    }
+
+    .pause-line {
+        margin-top: 12px;
+        font-size: 22px;
+        text-align: center;
+        color: #cf7a1e;
+    }
+
+    .stats-panel {
+        margin: 26px auto 0;
+        padding: 18px 24px;
+        max-width: 430px;
+        border-radius: 22px;
+        background: rgba(24,24,24,0.96);
+        border: 1px solid rgba(255,255,255,0.08);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        box-shadow: 0 12px 28px rgba(0,0,0,0.24);
+    }
+
+    .stat-box {
+        text-align: center;
+    }
+
+    .stat-value {
+        display: block;
+        font-size: clamp(34px, 5vw, 56px);
+        font-weight: 700;
+        line-height: 1.05;
+    }
+
+    .stat-label {
+        display: block;
+        margin-top: 6px;
+        font-size: 16px;
+        letter-spacing: 0.18em;
+        color: rgba(255,255,255,0.4);
+        text-transform: uppercase;
+    }
+
+    .control-dock {
+        margin: 34px auto 0;
+        max-width: 620px;
+        padding: 16px;
+        border-radius: 28px;
+        background: rgba(20,20,20,0.94);
+        border: 1px solid rgba(255,255,255,0.08);
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+    }
+
+    .control-btn,
+    .primary-control {
+        min-height: 98px;
+        padding: 12px 10px;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 18px;
+        font-weight: 700;
+        background: #242424;
+        color: #f3f5f9;
+    }
+
+    .control-btn span:first-child,
+    .primary-control span:first-child {
+        font-size: 34px;
+        line-height: 1;
+    }
+
+    .control-btn small,
+    .primary-control small {
+        color: rgba(255,255,255,0.62);
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .primary-control {
+        background: rgba(114, 62, 17, 0.45);
+        border-color: rgba(255, 149, 48, 0.45);
+        color: #ff9a2f;
+    }
+
+    .primary-control small {
+        color: #ffb260;
+    }
+
+    .secondary-tools,
+    .structure-controls {
+        margin: 24px auto 0;
+        max-width: 620px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .structure-controls {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .wide-action,
+    .edit-btn,
+    .start-btn,
+    .pause-btn,
+    .reset-btn {
+        min-height: 64px;
+        padding: 14px 18px;
+        border-radius: 18px;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .wide-action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: #202020;
+    }
+
+    .start-btn { background: #202020; color: #f4f6fb; }
+    .pause-btn { background: rgba(114, 62, 17, 0.45); color: #ff9a2f; }
+    .reset-btn { background: #2c2020; color: #ff8b8b; }
+    .edit-btn { background: #1c2431; color: #b9dbff; }
+
+    .footer-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1000;
+        padding: 10px 18px 16px;
+        background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.95) 40%);
+    }
+
+    .footer-nav-inner {
+        max-width: 620px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .footer-nav a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 56px;
+        border-radius: 16px;
+        background: rgba(24,24,24,0.96);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: rgba(255,255,255,0.85);
+        font-size: 16px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .footer-nav a.active {
+        color: #18c4ff;
+        border-color: rgba(24,196,255,0.35);
+    }
+
+    .utility-hidden { display: none !important; }
+
+    @media (max-width: 768px) {
+        .topbar { gap: 8px; }
+        .pill-btn { min-height: 56px; padding: 0 16px; font-size: 16px; }
+        .right-actions { min-height: 56px; gap: 4px; padding: 4px 8px; }
+        .icon-btn { width: 40px; height: 40px; min-height: 40px; font-size: 20px; }
+        .icon-btn.close { width: 38px; height: 38px; min-height: 38px; }
+        .live-title { font-size: 22px; }
+        .live-subtitle { font-size: 12px; }
+        .blind-caption { font-size: 16px; }
+        .blind-info-next { font-size: 16px; }
+        .pause-line { font-size: 14px; }
+        .stats-panel { max-width: 360px; padding: 14px 16px; }
+        .stat-label { font-size: 11px; }
+        .control-dock { gap: 8px; padding: 10px; }
+        .control-btn, .primary-control { min-height: 80px; border-radius: 16px; font-size: 14px; }
+        .control-btn span:first-child, .primary-control span:first-child { font-size: 24px; }
+        .control-btn small, .primary-control small { font-size: 10px; }
+        .secondary-tools, .structure-controls { grid-template-columns: 1fr 1fr; }
+        .structure-controls { grid-template-columns: 1fr; }
+    }
     </style>
 </head>
-<body>
+<body class="timer-modern">
     <div class="container">
-        <div class="blind-info" style="display: flex; align-items: center; gap: 10px;">
-            <button class="level-btn" id="prevLevelBtn">-</button>
-            N<span id="level">1</span>
-            <button class="level-btn" id="nextLevelBtn">+</button>
-        </div>
-        
-        <div class="cardevent-display" id="cardevent">15:00</div>
-        
-        <div class="blind-info"><span id="blinds">25/50</span></div>
-        <div class="blind-info-next">Next: <span id="next-blind">50/100</span></div>
-        
-        <div class="controls">
-            <button class="start-btn" id="startPauseBtn">Start</button>
-            <button class="reset-btn" id="resetBtn">Reset</button>
-        </div>
-        <div class="time-controls">
-            <button class="edit-btn" id="minusMinBtn">- 2 Min</button>
-            <button class="edit-btn" id="restartBlindsBtn">Restart Blinde</button>
-            <button class="edit-btn" id="plusMinBtn">+ 2 Min</button>
-        </div>
-        
-        <div class="structure-controls">
-            <button class="edit-btn" id="loadFromDbBtn">Load Structure</button>
-            <button class="edit-btn" id="editBtn">Edit Blinds</button>
-            <button class="edit-btn" id="saveToDbBtn">Save Structure</button>
+        <div class="screen-shell">
+            <div class="topbar">
+                <button class="pill-btn" type="button" onclick="window.location.href='/panel/quickview.php';">Retour</button>
+                <div class="title-stack">
+                    <div class="live-title">Live</div>
+                    <div class="live-subtitle" id="timer-date-label">—</div>
+                </div>
+                <div class="pill-btn right-actions">
+                    <button class="icon-btn" id="soundToggle" type="button" title="Son">🔊</button>
+                    <button class="icon-btn" type="button" title="Horloge"><span id="clock">--:--:--</span></button>
+                    <button class="icon-btn close" type="button" onclick="window.location.href='/panel/quickview.php';" title="Fermer">✕</button>
+                </div>
+            </div>
+
+            <section class="hero">
+                <div class="timer-ring" id="timer-ring">
+                    <div class="timer-center">
+                        <div class="level-line">Niveau <span id="level">1</span> / <span id="level-total">19</span></div>
+                        <div class="cardevent-display" id="cardevent">15:00</div>
+                    </div>
+                </div>
+
+                <div class="blinds-block">
+                    <div class="blind-info"><span id="blinds">25/50</span></div>
+                    <div class="blind-caption">Blindes</div>
+                    <div class="blind-info-next">→ <span id="next-blind">50/100</span></div>
+                    <div class="pause-line" id="pause-info">Pause dans —</div>
+                    <span id="ante" class="utility-hidden">0</span>
+                </div>
+
+                <div class="stats-panel">
+                    <div class="stat-box">
+                        <span class="stat-value" id="players-stat">1/16</span>
+                        <span class="stat-label">Joueurs</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-value" id="stack-stat">1 140 000</span>
+                        <span class="stat-label">Stack moy.</span>
+                    </div>
+                </div>
+
+                <div class="control-dock">
+                    <button class="control-btn level-btn" id="prevLevelBtn"><span>⏮</span><small>Préc.</small></button>
+                    <button class="control-btn edit-btn" id="minusMinBtn"><span>➖</span><small>-1 min</small></button>
+                    <button class="primary-control start-btn" id="startPauseBtn"><span>⏸</span><small>Pause</small></button>
+                    <button class="control-btn edit-btn" id="plusMinBtn"><span>➕</span><small>+1 min</small></button>
+                    <button class="control-btn level-btn" id="nextLevelBtn"><span>⏭</span><small>Suiv.</small></button>
+                </div>
+
+                <div class="secondary-tools">
+                    <button class="wide-action reset-btn" id="resetBtn">Réinitialiser</button>
+                    <button class="wide-action edit-btn" id="restartBlindsBtn">Rejouer le niveau</button>
+                </div>
+
+                <div class="wide-action" style="max-width:620px;margin:18px auto 0;">👥 Activité des joueurs</div>
+
+                <div class="structure-controls">
+                    <button class="edit-btn" id="loadFromDbBtn">Charger structure</button>
+                    <button class="edit-btn" id="editBtn">Modifier blindes</button>
+                    <button class="edit-btn" id="saveToDbBtn">Enregistrer</button>
+                </div>
+            </section>
         </div>
     </div>
 
@@ -907,8 +1324,6 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     <audio id="endSound">
     <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1HOTgzLyspJyUjIiAfHx4dHRwcHBsaGhsZGhoZGhsaGxwaGxwbHBwcHR0dHh4dHh8eHh8fHyAhICEhISIjIiMkIyQkJSYlJiYnKCcpKSorKywtLS4vMDEyMzQ2Nzg5Ozw9P0BBQkNFRkdISUpLTE1OT1BRUVJTVFVVVlVWV1dYV1hXWFhZWFdYV1hXWFhXWFdYV1hYWFhYWVlaW1tcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6ent8fX5/gIGCg4SFhoeIiYqLjI2Oj5CRkpOUlZaXmJmam5ydnp+goaKjpKWmp6ipqqusra6vsLGys7S1tre4ubq7vL2+v8DBwsPExcbHyMnKy8zNzs/Q0dLT1NXW19jZ2tvc3d7f4OHi4+Tl5ufo6err7O3u7/Dx8vP09fb3+Pn6+/z9/v8=" type="audio/wav">
     </audio>
-
-    <div style="position: fixed; top: 10px; right: 10px; font-size: 48px; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);" id="clock"></div>
 
     <script>
         // Initial blind structure
@@ -1043,8 +1458,8 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             timerInterval = null;
             isRunning = false;
             const startPauseBtn = document.getElementById('startPauseBtn');
-            startPauseBtn.textContent = 'Start';
-            startPauseBtn.className = 'start-btn';
+            startPauseBtn.innerHTML = '<span>▶</span><small>Démarrer</small>';
+            startPauseBtn.className = 'primary-control start-btn';
             
             // Enable minute adjustment buttons
             document.getElementById('minusMinBtn').disabled = false;
@@ -1057,8 +1472,8 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         function updateButtonStates() {
             const startPauseBtn = document.getElementById('startPauseBtn');
             if (startPauseBtn) {
-                startPauseBtn.textContent = isRunning ? 'Pause' : 'Start';
-                startPauseBtn.className = isRunning ? 'pause-btn' : 'start-btn';
+                startPauseBtn.innerHTML = isRunning ? '<span>⏸</span><small>Pause</small>' : '<span>▶</span><small>Démarrer</small>';
+                startPauseBtn.className = isRunning ? 'primary-control pause-btn' : 'primary-control start-btn';
             }
         }
 
@@ -1244,8 +1659,8 @@ function syncTimerState(state) {
                 // Reset button state
                 const startPauseBtn = document.getElementById('startPauseBtn');
                 if (startPauseBtn) {
-                    startPauseBtn.textContent = 'Start';
-                    startPauseBtn.className = 'start-btn';
+                    startPauseBtn.innerHTML = '<span>▶</span><small>Démarrer</small>';
+                    startPauseBtn.className = 'primary-control start-btn';
                 }
             }
         }
@@ -1686,6 +2101,8 @@ function updateDisplay() {
     const nextBlindElement = document.getElementById('next-blind');
     
     if (levelElement) levelElement.textContent = currentBlinds.level;
+    const levelTotalElement = document.getElementById('level-total');
+    if (levelTotalElement) levelTotalElement.textContent = blindLevels.length;
     if (blindsElement) blindsElement.textContent = `${currentBlinds.small_blind}/${currentBlinds.big_blind}`;
     
     if (nextBlindElement) {
@@ -1702,6 +2119,37 @@ function updateDisplay() {
     const plusMinBtn = document.getElementById('plusMinBtn');
     if (minusMinBtn) minusMinBtn.disabled = isRunning;
     if (plusMinBtn) plusMinBtn.disabled = isRunning;
+
+    const timerRing = document.getElementById('timer-ring');
+    if (timerRing && currentBlinds && currentBlinds.duration) {
+        const progress = Math.max(0, Math.min(1, (currentBlinds.duration - timeLeft) / currentBlinds.duration));
+        timerRing.style.setProperty('--progress', progress.toFixed(4));
+    }
+
+    const pauseInfo = document.getElementById('pause-info');
+    if (pauseInfo) {
+        let remaining = 0;
+        let foundPause = false;
+        for (let index = currentLevel; index < blindLevels.length; index++) {
+            const level = blindLevels[index];
+            if (index === currentLevel) {
+                remaining += timeLeft;
+            } else {
+                remaining += level.duration;
+            }
+            if ((level.small_blind === 0 && level.big_blind === 0) && index >= currentLevel) {
+                foundPause = true;
+                break;
+            }
+        }
+        if (foundPause) {
+            const hours = Math.floor(remaining / 3600);
+            const mins = Math.floor((remaining % 3600) / 60);
+            pauseInfo.textContent = `Pause dans ${hours > 0 ? hours + 'h ' : ''}${mins}m`;
+        } else {
+            pauseInfo.textContent = 'Pas de pause prévue';
+        }
+    }
 
     updateLevelButtons();
 }
@@ -1813,15 +2261,23 @@ function updateClock() {
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const seconds = now.getSeconds().toString().padStart(2, '0');
     document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+
+    const dateLabel = document.getElementById('timer-date-label');
+    if (dateLabel) {
+        const formatted = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'numeric' }).format(now);
+        dateLabel.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+    }
 }
 
 setInterval(updateClock, 1000);
 updateClock(); // Exécution immédiate
     </script>
-    <footer style="position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); padding: 10px; text-align: center; z-index: 1000; display: flex; justify-content: center; gap: 40px;">
-        <a href="#" id="footerAccueil" style="color: white; font-weight: bold; text-decoration: none; font-size: 16px;">Accueil</a>
-        <a href="#" id="footerTimer" style="color: white; font-weight: bold; text-decoration: none; font-size: 16px;">Local Timer</a>
-        <a href="#" id="footerRepartition" style="color: white; font-weight: bold; text-decoration: none; font-size: 16px;" tabindex="0">Répartition</a>
+    <footer class="footer-nav">
+        <div class="footer-nav-inner">
+            <a href="#" id="footerAccueil">Accueil</a>
+            <a href="#" id="footerTimer" class="active">Local Timer</a>
+            <a href="#" id="footerRepartition" tabindex="0">Répartition</a>
+        </div>
     </footer>
     <script>
     // Affichage dynamique du contenu principal (Raccourcis ou Répartition)
