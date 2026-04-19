@@ -62,7 +62,7 @@ $asset_ver = @filemtime(__DIR__ . '/timer_web/public/style.variantA.css') ?: @fi
 			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 21h14a1 1 0 0 0 1-1v-7H4v7a1 1 0 0 0 1 1z"/></svg>
 			<div class="nav-label">Accueil</div>
 		</button>
-		<button id="nav-local" title="Local Timer">
+		<button id="nav-local" title="Local Timer" onclick="window.location.href='/newtimer/index.php';">
 			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
 			<div class="nav-label">Local Timer</div>
 		</button>
