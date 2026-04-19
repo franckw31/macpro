@@ -1258,11 +1258,11 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                 </div>
 
                 <div class="action-dock">
-                    <button class="wide-action reset-btn" id="resetBtn">Réinitialiser</button>
-                    <button class="wide-action edit-btn" id="restartBlindsBtn">Rejouer le niveau</button>
-                    <button class="edit-btn" id="loadFromDbBtn">Charger structure</button>
-                    <button class="edit-btn" id="editBtn">Modifier blindes</button>
-                    <button class="edit-btn" id="saveToDbBtn">Enregistrer</button>
+                    <button class="wide-action reset-btn" id="resetBtn">Réinit.</button>
+                    <button class="wide-action edit-btn" id="restartBlindsBtn">Rejouer</button>
+                    <button class="edit-btn" id="loadFromDbBtn">Charger</button>
+                    <button class="edit-btn" id="editBtn">Modifier</button>
+                    <button class="edit-btn" id="saveToDbBtn">Enreg.</button>
                 </div>
             </section>
         </div>
