@@ -1509,7 +1509,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             timerInterval = null;
             isRunning = false;
             const startPauseBtn = document.getElementById('startPauseBtn');
-            startPauseBtn.innerHTML = '<span>▶</span><small>Démarrer</small>';
+            startPauseBtn.innerHTML = '<span class="control-icon"><svg viewBox="0 0 24 24"><path d="M8 6l10 6-10 6z"></path></svg></span><small>Démarrer</small>';
             startPauseBtn.className = 'primary-control start-btn';
             
             // Enable minute adjustment buttons
@@ -1523,7 +1523,9 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         function updateButtonStates() {
             const startPauseBtn = document.getElementById('startPauseBtn');
             if (startPauseBtn) {
-                startPauseBtn.innerHTML = isRunning ? '<span>⏸</span><small>Pause</small>' : '<span>▶</span><small>Démarrer</small>';
+                startPauseBtn.innerHTML = isRunning
+                    ? '<span class="control-icon"><svg viewBox="0 0 24 24"><path d="M10 8v8"></path><path d="M14 8v8"></path></svg></span><small>Pause</small>'
+                    : '<span class="control-icon"><svg viewBox="0 0 24 24"><path d="M8 6l10 6-10 6z"></path></svg></span><small>Démarrer</small>';
                 startPauseBtn.className = isRunning ? 'primary-control pause-btn' : 'primary-control start-btn';
             }
         }
@@ -1710,7 +1712,7 @@ function syncTimerState(state) {
                 // Reset button state
                 const startPauseBtn = document.getElementById('startPauseBtn');
                 if (startPauseBtn) {
-                    startPauseBtn.innerHTML = '<span>▶</span><small>Démarrer</small>';
+                    startPauseBtn.innerHTML = '<span class="control-icon"><svg viewBox="0 0 24 24"><path d="M8 6l10 6-10 6z"></path></svg></span><small>Démarrer</small>';
                     startPauseBtn.className = 'primary-control start-btn';
                 }
             }
@@ -2137,7 +2139,9 @@ function addLevel() {
     if (soundToggle) {
         soundToggle.addEventListener('click', () => {
             const muted = soundToggle.classList.toggle('muted');
-            soundToggle.textContent = muted ? '🔈' : '🔊';
+            soundToggle.innerHTML = muted
+                ? '<span class="icon-svg"><svg viewBox="0 0 24 24"><path d="M14 5l-5 4H5v6h4l5 4V5z"></path><path d="M19 9l-8 8"></path><path d="M11 9l8 8"></path></svg></span>'
+                : '<span class="icon-svg"><svg viewBox="0 0 24 24"><path d="M14 5l-5 4H5v6h4l5 4V5z"></path><path d="M18 9.5a4 4 0 0 1 0 5"></path><path d="M20.5 7a7.5 7.5 0 0 1 0 10"></path></svg></span>';
             document.querySelectorAll('audio').forEach((audio) => {
                 audio.muted = muted;
             });
