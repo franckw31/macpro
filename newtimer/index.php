@@ -1180,43 +1180,6 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     .reset-btn { background: #2c2020; color: #ff8b8b; }
     .edit-btn { background: #1c2431; color: #b9dbff; }
 
-    .footer-nav {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 1000;
-        padding: 8px 18px 14px;
-        background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.95) 40%);
-    }
-
-    .footer-nav-inner {
-        max-width: 620px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-    }
-
-    .footer-nav a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 56px;
-        border-radius: 16px;
-        background: rgba(24,24,24,0.96);
-        border: 1px solid rgba(255,255,255,0.08);
-        color: rgba(255,255,255,0.85);
-        font-size: 16px;
-        font-weight: 700;
-        text-decoration: none;
-    }
-
-    .footer-nav a.active {
-        color: #18c4ff;
-        border-color: rgba(24,196,255,0.35);
-    }
-
     .utility-hidden { display: none !important; }
 
     @media (max-width: 768px) {
@@ -2306,45 +2269,6 @@ function updateClock() {
 
 setInterval(updateClock, 1000);
 updateClock(); // Exécution immédiate
-    </script>
-    <footer class="footer-nav">
-        <div class="footer-nav-inner">
-            <a href="/panel/quickview.php" id="footerAccueil">Accueil</a>
-            <a href="#" id="footerTimer" class="active">Local Timer</a>
-            <a href="#" id="footerRepartition" tabindex="0">Répartition</a>
-        </div>
-    </footer>
-    <script>
-    // Affichage dynamique du contenu principal (Raccourcis ou Répartition)
-    document.addEventListener('DOMContentLoaded', function() {
-        // Affichage contextuel du bloc Répartition du prizepool
-        var btnRepartition = document.getElementById('footerRepartition');
-        var btnAccueil = document.getElementById('footerAccueil');
-        var btnTimer = document.getElementById('footerTimer');
-        // Scroll uniquement vers la section Répartition du prizepool sans masquer d'autres blocs
-        var btnRepartition = document.getElementById('footerRepartition');
-        var btnAccueil = document.getElementById('footerAccueil');
-        var btnTimer = document.getElementById('footerTimer');
-        var prizepoolSection = document.getElementById('prizepool-section');
-        if (btnRepartition && prizepoolSection) {
-            btnRepartition.addEventListener('click', function(e) {
-                e.preventDefault();
-                prizepoolSection.scrollIntoView({behavior: 'smooth', block: 'center'});
-            });
-        }
-        if (btnAccueil) {
-            btnAccueil.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.location.href = '/panel/quickview.php';
-            });
-        }
-        if (btnTimer) {
-            btnTimer.addEventListener('click', function(e) {
-                e.preventDefault();
-                location.reload();
-            });
-        }
-    });
     </script>
 </body>
 </html>
