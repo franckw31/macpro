@@ -1269,7 +1269,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                     <button class="edit-btn" id="loadFromDbBtn">Charger</button>
                     <button class="edit-btn" id="editBtn">Modifier</button>
                     <button class="edit-btn" id="saveToDbBtn">Enreg.</button>
-                    <button class="control-btn" id="restartBlindsBtn">Rejouer</button>
+                    <button class="control-btn" id="restartBlindsBtn">ReStart Blinde</button>
                 </div>
             </section>
         </div>
