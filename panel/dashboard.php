@@ -194,7 +194,7 @@ if (strlen($_SESSION['login']) == 0) {
 						<!-- Jeu & Compétition -->
 						<div class="row">
 							<div class="col-sm-4">
-								<a href="/newtimer/index.php" class="dashboard-card card-red">
+								<a href="/panel/quickview.php" class="dashboard-card card-red">
 									<div class="card-icon"><i class="fa fa-clock-o"></i></div>
 									<div class="card-title">Horloge Rapide</div>
 									<div class="card-description">Lancer le chronomètre de tournoi</div>
