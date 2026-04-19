@@ -1096,6 +1096,12 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;
         box-shadow: 0 12px 28px rgba(0,0,0,0.24);
+        cursor: pointer;
+    }
+
+    .stats-panel:focus-visible {
+        outline: 2px solid rgba(24,196,255,0.55);
+        outline-offset: 3px;
     }
 
     .stat-box {
@@ -1306,7 +1312,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                     <span id="ante" class="utility-hidden">0</span>
                 </div>
 
-                <div class="stats-panel">
+                <div class="stats-panel" id="statsPanel" role="button" tabindex="0" title="Modifier les stats du tournoi">
                     <div class="stat-box">
                         <span class="stat-value" id="players-stat">1/16</span>
                         <span class="stat-label">Joueurs</span>
@@ -1431,6 +1437,73 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         let isRunning = false;
         let ws;
         let isLocalUpdate = false;
+        let tournamentStats = {
+            playersRemaining: 1,
+            playersTotal: 16,
+            chipsInPlay: 1140000
+        };
+
+        function formatNumber(value) {
+            return new Intl.NumberFormat('fr-FR').format(value || 0);
+        }
+
+        function renderTournamentStats() {
+            const playersStat = document.getElementById('players-stat');
+            const stackStat = document.getElementById('stack-stat');
+            if (playersStat) {
+                playersStat.textContent = `${tournamentStats.playersRemaining}/${tournamentStats.playersTotal}`;
+            }
+            if (stackStat) {
+                const avgStack = tournamentStats.playersRemaining > 0
+                    ? Math.round(tournamentStats.chipsInPlay / tournamentStats.playersRemaining)
+                    : 0;
+                stackStat.textContent = formatNumber(avgStack);
+            }
+        }
+
+        function saveTournamentStats() {
+            localStorage.setItem('localTimerTournamentStats', JSON.stringify(tournamentStats));
+        }
+
+        function loadTournamentStats() {
+            try {
+                const saved = localStorage.getItem('localTimerTournamentStats');
+                if (!saved) {
+                    renderTournamentStats();
+                    return;
+                }
+                const parsed = JSON.parse(saved);
+                if (parsed && typeof parsed === 'object') {
+                    tournamentStats.playersRemaining = Math.max(0, parseInt(parsed.playersRemaining || tournamentStats.playersRemaining, 10));
+                    tournamentStats.playersTotal = Math.max(tournamentStats.playersRemaining, parseInt(parsed.playersTotal || tournamentStats.playersTotal, 10));
+                    tournamentStats.chipsInPlay = Math.max(0, parseInt(parsed.chipsInPlay || tournamentStats.chipsInPlay, 10));
+                }
+            } catch (error) {
+                console.warn('Unable to load tournament stats', error);
+            }
+            renderTournamentStats();
+        }
+
+        function editTournamentStats() {
+            const remainingInput = prompt('Joueurs restants', String(tournamentStats.playersRemaining));
+            if (remainingInput === null) return;
+            const totalInput = prompt('Joueurs au départ', String(tournamentStats.playersTotal));
+            if (totalInput === null) return;
+            const chipsInput = prompt('Jetons en jeu', String(tournamentStats.chipsInPlay));
+            if (chipsInput === null) return;
+
+            const remaining = Math.max(0, parseInt(remainingInput, 10) || 0);
+            const total = Math.max(remaining, parseInt(totalInput, 10) || remaining);
+            const chips = Math.max(0, parseInt(String(chipsInput).replace(/\s+/g, ''), 10) || 0);
+
+            tournamentStats = {
+                playersRemaining: remaining,
+                playersTotal: total,
+                chipsInPlay: chips
+            };
+            saveTournamentStats();
+            renderTournamentStats();
+        }
 
         function initWebSocket() {
             ws = new WebSocket(WS_HOST);
@@ -2044,6 +2117,7 @@ function addLevel() {
         document.addEventListener('DOMContentLoaded', () => {
     // Initialize all buttons and displays
     updateDisplay();
+    loadTournamentStats();
     
     // Main control buttons
     const startPauseBtn = document.getElementById('startPauseBtn');
@@ -2132,9 +2206,19 @@ function addLevel() {
     // Level change buttons
     const prevLevelBtn = document.getElementById('prevLevelBtn');
     const nextLevelBtn = document.getElementById('nextLevelBtn');
+    const statsPanel = document.getElementById('statsPanel');
     
     if (prevLevelBtn) prevLevelBtn.addEventListener('click', () => changeLevel(-1));
     if (nextLevelBtn) nextLevelBtn.addEventListener('click', () => changeLevel(1));
+    if (statsPanel) {
+        statsPanel.addEventListener('click', editTournamentStats);
+        statsPanel.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                editTournamentStats();
+            }
+        });
+    }
 
     const soundToggle = document.getElementById('soundToggle');
     if (soundToggle) {
