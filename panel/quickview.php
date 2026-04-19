@@ -1033,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 21h14a1 1 0 0 0 1-1v-7H4v7a1 1 0 0 0 1 1z"/></svg>
 			<div class="nav-label">Accueil</div>
 		</button>
-		<button id="nav-local" class="active" title="Local Timer" onclick="openLocalTimer();">
+		<button id="nav-local" class="active" title="Local Timer" onclick="window.location.href='/newtimer/index.php';">
 			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
 			<div class="nav-label">Local Timer</div>
 		</button>
@@ -1048,20 +1048,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	   <script>
 	   // Navigation: reload with ?uid=xxx for selected activity
-	   function openLocalTimer() {
-		   var selectedId = null;
-		   if (window.currentActivity && window.currentActivity.id) {
-			   selectedId = window.currentActivity.id;
-		   } else {
-			   selectedId = <?php echo !empty($serverActivity['id']) ? intval($serverActivity['id']) : 'null'; ?>;
-		   }
-		   var dest = '/panel/cardevent.php';
-		   if (selectedId) {
-			   dest += '?uid=' + encodeURIComponent(selectedId);
-		   }
-		   window.location.href = dest;
-	   }
-
 	   function navigateActivity(delta) {
 		   if (!window.activitiesList || !window.currentActivity) return;
 		   let idx = window.activitiesList.findIndex(a => String(a.id) === String(window.currentActivity.id));
