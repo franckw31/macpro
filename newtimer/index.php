@@ -1095,11 +1095,14 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         gap: 14px;
+        align-items: stretch;
     }
 
     .control-btn,
     .primary-control {
         min-height: 92px;
+        width: 100%;
+        height: 100%;
         padding: 10px 10px;
         border-radius: 18px;
         display: flex;
@@ -1111,6 +1114,16 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         font-weight: 700;
         background: #242424;
         color: #f3f5f9;
+        text-align: center;
+    }
+
+    .control-dock .level-btn {
+        width: 100%;
+        height: 100%;
+        min-height: 92px;
+        border-radius: 18px;
+        padding: 10px 10px;
+        background: #242424;
     }
 
     .control-btn span:first-child,
@@ -1199,6 +1212,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         .cardevent-display { font-size: clamp(62px, 12vw, 104px); }
         .control-dock { gap: 8px; padding: 10px; margin-top: 24px; }
         .control-btn, .primary-control { min-height: 78px; border-radius: 16px; font-size: 14px; }
+        .control-dock .level-btn { min-height: 78px; border-radius: 16px; }
         .control-btn span:first-child, .primary-control span:first-child { font-size: 24px; }
         .control-btn small, .primary-control small { font-size: 10px; }
         .secondary-tools, .structure-controls { grid-template-columns: 1fr 1fr; }
