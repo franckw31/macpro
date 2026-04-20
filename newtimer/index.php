@@ -30,8 +30,9 @@ function getDbConnection($config) {
     }
 }
 
-function getCurrentBlindStructureUser(): string {
+function getCurrentBlindStructureUser(array $requestData = []): string {
     $sessionCandidates = [
+        $requestData['user_name'] ?? null,
         $_SESSION['user'] ?? null,
         $_SESSION['login'] ?? null,
         $_SESSION['nom'] ?? null,
@@ -80,6 +81,9 @@ function backfillBlindStructureSavedBy(PDO $conn, string $savedBy): void {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
     $data = json_decode(file_get_contents('php://input'), true);
+    if (!is_array($data)) {
+        $data = [];
+    }
     $conn = getDbConnection($db_config);
     
     if (!$conn) {
@@ -88,13 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     ensureBlindStructureSavedByColumn($conn);
-    backfillBlindStructureSavedBy($conn, getCurrentBlindStructureUser());
+    backfillBlindStructureSavedBy($conn, getCurrentBlindStructureUser($data));
     
     switch ($data['action'] ?? '') {
         case 'save':
             try {
                 $conn->beginTransaction();
-                $savedBy = getCurrentBlindStructureUser();
+                $savedBy = getCurrentBlindStructureUser($data);
                 
                 $stmt = $conn->prepare("INSERT INTO blind_structures (name, saved_by) VALUES (?, ?)");
                 if (!$stmt->execute([$data['name'], $savedBy])) {
