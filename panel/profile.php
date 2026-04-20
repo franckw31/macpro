@@ -130,7 +130,13 @@ $profile_flash = $_SESSION['profile_avatar_flash'] ?? null;
 unset($_SESSION['profile_avatar_flash']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'upload_avatar') {
-    $redirect_uri = $_SERVER['REQUEST_URI'] ?? '/panel/profile.php';
+    // Redirige vers quickview.php?uid=xxx après upload pour éviter les soucis d’historique et de rafraîchissement
+    $uid_param = isset($_GET['uid']) ? intval($_GET['uid']) : (isset($uid) ? intval($uid) : 0);
+    if ($uid_param > 0) {
+        $redirect_uri = '/panel/quickview.php?uid=' . $uid_param;
+    } else {
+        $redirect_uri = '/panel/quickview.php';
+    }
 
     $set_flash = function(string $type, string $message) {
         $_SESSION['profile_avatar_flash'] = ['type' => $type, 'message' => $message];
