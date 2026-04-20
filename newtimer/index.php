@@ -1827,20 +1827,14 @@ function syncTimerState(state) {
 
         function restartBlinds() {
             // Garde le niveau actuel, réinitialise le temps et relance le niveau
-            const wasRunning = isRunning;
-            if (wasRunning) {
+            if (isRunning) {
                 stopTimer(false);
             }
             timeLeft = blindLevels[currentLevel].duration;
             timerEndsAt = null;
             updateDisplay();
             speakAnnouncement(`Redémarrage du niveau ${blindLevels[currentLevel].level}`);
-
-            if (wasRunning) {
-                startTimer();
-            } else {
-                startTimer();
-            }
+            startTimer();
         }
 
         function changeLevel(direction) {
