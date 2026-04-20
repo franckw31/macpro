@@ -130,13 +130,7 @@ $profile_flash = $_SESSION['profile_avatar_flash'] ?? null;
 unset($_SESSION['profile_avatar_flash']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'upload_avatar') {
-    // Redirige vers quickview.php?uid=xxx après upload pour éviter les soucis d’historique et de rafraîchissement
-    $uid_param = isset($_GET['uid']) ? intval($_GET['uid']) : (isset($uid) ? intval($uid) : 0);
-    if ($uid_param > 0) {
-        $redirect_uri = '/panel/quickview.php?uid=' . $uid_param;
-    } else {
-        $redirect_uri = '/panel/quickview.php';
-    }
+    $redirect_uri = $_SERVER['REQUEST_URI'] ?? '/panel/profile.php';
 
     $set_flash = function(string $type, string $message) {
         $_SESSION['profile_avatar_flash'] = ['type' => $type, 'message' => $message];
@@ -236,12 +230,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'uploa
         }
     }
 
-    // Debug: log saved filename and file existence
-    error_log("Avatar upload: new_filename={$new_filename}, target_file={$target_file}, exists=" . (is_file($target_file) ? '1' : '0'));
     $set_flash('success', "Photo de profil mise à jour avec succès.");
-    // Ajoute un paramètre ts pour forcer le rechargement (anti-cache)
-    $sep = (strpos($redirect_uri, '?') === false) ? '?' : '&';
-    header('Location: ' . $redirect_uri . $sep . 'ts=' . time());
+    header('Location: ' . $redirect_uri);
     exit;
 }
 
@@ -326,12 +316,12 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         body{background:rgba(0,0,0,0.85);font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;margin:0;padding:18px;color:#eef6fb}
         /* Centered sheet */
         .sheet{max-width:520px;margin:18px auto;background:#071019;color:#eef6fb;border-radius:18px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
-        .avatar{display:block;flex:none;width:180px;height:180px;border-radius:50%;overflow:hidden;margin:0 auto;line-height:0}
+        .avatar{display:block;flex:none;width:140px;height:140px;border-radius:50%;overflow:hidden;margin:0 auto;line-height:0}
         .avatar img{width:100%;height:100%;object-fit:cover}
         .avatar-upload-form{display:none}
         .avatar-trigger{display:flex;flex-direction:column;align-items:center;justify-content:center;width:-moz-fit-content;width:fit-content;max-width:100%;margin:6px auto 0;background:none;border:0;padding:0;color:inherit;cursor:pointer;text-align:center}
         .avatar-wrap{position:relative;display:inline-block}
-        .avatar-edit-badge{position:absolute;right:-6px;bottom:-6px;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#111;color:#fff;font-size:18px;font-weight:800;box-shadow:0 8px 18px rgba(0,0,0,0.35)}
+        .avatar-edit-badge{position:absolute;right:-5px;bottom:-5px;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#08b0ff;color:#04131d;font-size:16px;font-weight:800;box-shadow:0 8px 18px rgba(0,0,0,0.35)}
         .avatar-hint{margin-top:6px;color:#9aa6b1;font-size:11px}
         .profile-identity{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:12px}
         .profile-identity-text{display:flex;flex-direction:column;align-items:center;text-align:center}
@@ -380,8 +370,8 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         @media (max-width: 480px){
             body{padding:12px}
             .sheet{margin:10px auto;padding:14px;border-radius:16px}
-            .avatar{width:132px;height:132px}
-            .avatar-edit-badge{width:32px;height:32px;font-size:15px}
+            .avatar{width:108px;height:108px}
+            .avatar-edit-badge{width:28px;height:28px;font-size:13px}
             .profile-identity{gap:8px;margin-bottom:10px}
             .avatar-modal-card{width:min(100%,340px);padding:14px;border-radius:18px}
             .avatar-canvas-wrap{width:min(100%,208px)}
@@ -393,38 +383,8 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
     </style>
 </head>
 <body>
-    <script>
-    // Si on est sur profile.php avec un uid, on remplace l'entrée d'historique par quickview.php?uid=xxx
-    (function(){
-        var params = new URLSearchParams(window.location.search);
-        var uid = params.get('uid');
-        if (uid && window.location.pathname.endsWith('/profile.php')) {
-            var quickviewUrl = '/panel/quickview.php?uid=' + encodeURIComponent(uid);
-            history.replaceState({}, '', quickviewUrl);
-        }
-    })();
-    </script>
     <div class="top-actions">
-        <button class="top-action" onclick="closeProfileOrModal();">Fermer</button>
-        <script>
-        function closeProfileOrModal() {
-            var modal = document.getElementById('avatarCropModal');
-            if (modal && modal.classList.contains('is-open')) {
-                // Appelle la fonction JS de fermeture du modal si elle existe
-                if (typeof closeModal === 'function') closeModal();
-                else modal.classList.remove('is-open');
-            } else {
-                // Redirige explicitement vers quickview.php avec l'uid si présent
-                var params = new URLSearchParams(window.location.search);
-                var uid = params.get('uid');
-                if (uid) {
-                    window.location.href = '/panel/quickview.php?uid=' + encodeURIComponent(uid);
-                } else {
-                    window.location.href = '/panel/quickview.php';
-                }
-            }
-        }
-        </script>
+        <button class="top-action" onclick="history.back();">Fermer</button>
     </div>
     <div class="sheet">
         <?php if (!empty($profile_flash['message'])): ?>
