@@ -547,11 +547,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				  $displayUser = htmlspecialchars($displayUser);
 				?>
 				<div style="display:flex;flex-direction:column;justify-content:center">
-					<div class="title"><svg class="title-spade" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="As de pique"><!-- spade filled (currentColor) + small A mark -->
-						<path d="M16 2 C11 8 8 11 8 15 C8 19 12 21 15 21 L15 26 C15 27.2 16.2 28 17.2 28 C18.2 28 19.4 27.2 19.4 26 L19.4 21 C22.4 21 26 19 26 15 C26 11 23 8 16 2 Z" fill="currentColor"/>
-						<text x="5" y="10" font-family="Helvetica, Arial, sans-serif" font-size="8" font-weight="800" fill="#ffffff">A</text>
-					</svg> CardEvent <span class="small">v<?php echo htmlspecialchars(getenv('CFBundleShortVersionString')?:'2.0'); ?></span></div>
-					<div class="greeting">Bonjour, <span id="user-name"><?php echo $displayUser; ?></span> <span style="color:var(--cyan);margin-left:6px">›</span></div>
+					   <!-- Title and greeting removed for clean header -->
 				</div>
 				<div style="margin-left:auto;display:flex;align-items:center;gap:12px">
 					<div id="offline-badge" class="offline-badge" aria-hidden="true"></div>
@@ -561,16 +557,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				</div>
 			</div>
 			</div>
-						<!-- Token prompt (hidden by default) -->
-						<div id="token-prompt" class="token-prompt" style="display:none">
-							<div style="font-weight:700;margin-bottom:6px">Connexion API</div>
-							<input id="api-token-input" placeholder="Collez le token API" />
-							<div style="display:flex;gap:8px;margin-top:8px">
-								<button id="save-api-token" class="button primary">Enregistrer</button>
-								<button id="clear-api-token" class="button">Effacer</button>
-							</div>
-							<div class="small" style="margin-top:8px;color:var(--muted)">Le token est stocké en local</div>
-						</div>
+						   <!-- Token prompt removed for clean header -->
 				<!-- debug-info removed to prevent on-screen JSON debug output -->
 		</header>
 
