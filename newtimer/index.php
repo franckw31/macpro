@@ -1385,13 +1385,15 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     <div class="edit-panel" id="editPanel">
     <div class="edit-content">
-        <h2 style="color: #90CAF9;">Modifier les blindes</h2>
+        <div class="edit-header">
+            <h2 class="edit-title">Modifier les blindes</h2>
+            <div class="edit-done-bar" id="editDoneBar">
+                <button class="edit-done-btn" id="commitFieldBtn" type="button">Terminer</button>
+            </div>
+        </div>
         <div class="blind-editor" id="blindEditor"></div>
         <button class="edit-btn" id="addLevelBtn">+ Ajouter un niveau</button>
         <div class="editor-validation-message" id="editorValidationMessage"></div>
-        <div class="edit-done-bar" id="editDoneBar">
-            <button class="edit-done-btn" id="commitFieldBtn" type="button">Terminer la saisie</button>
-        </div>
         <div class="edit-actions">
             <button class="start-btn" id="saveEditBtn">Enregistrer</button>
             <button class="reset-btn" id="cancelEditBtn">Annuler</button>
