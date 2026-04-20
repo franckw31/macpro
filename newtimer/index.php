@@ -247,6 +247,30 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
+    .resume-indicator {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 28px;
+        margin-top: 10px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(60, 127, 255, 0.16);
+        border: 1px solid rgba(144, 202, 249, 0.34);
+        color: #b9dbff;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        opacity: 0;
+        transform: translateY(4px);
+        transition: opacity 180ms ease, transform 180ms ease;
+        pointer-events: none;
+    }
+
+    .resume-indicator.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
     /* Controls */
     .controls {
         display: grid;
@@ -1210,6 +1234,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         .blind-caption { font-size: 16px; }
         .blind-info-next { font-size: 16px; }
         .pause-line { font-size: 14px; }
+        .resume-indicator { font-size: 11px; padding: 5px 10px; }
         .timer-ring { width: min(54vw, 280px); height: min(54vw, 280px); }
         .timer-center { padding: 14px; }
         .level-line { font-size: 12px; margin-bottom: 8px; }
@@ -1253,6 +1278,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                     <div class="blind-caption">Blindes</div>
                     <div class="blind-info-next">→ <span id="next-blind">50/100</span></div>
                     <div class="pause-line" id="pause-info">Pause dans —</div>
+                    <div class="resume-indicator" id="resume-indicator" aria-live="polite"></div>
                     <span id="ante" class="utility-hidden">0</span>
                 </div>
 
@@ -1367,6 +1393,23 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         let isLocalUpdate = false;
         let timerEndsAt = null;
         let wakeLockSentinel = null;
+        let resumeIndicatorTimeout = null;
+
+        function showResumeIndicator(message = 'Timer recalé après veille') {
+            const indicator = document.getElementById('resume-indicator');
+            if (!indicator) return;
+
+            indicator.textContent = message;
+            indicator.classList.add('visible');
+
+            if (resumeIndicatorTimeout) {
+                clearTimeout(resumeIndicatorTimeout);
+            }
+
+            resumeIndicatorTimeout = setTimeout(() => {
+                indicator.classList.remove('visible');
+            }, 2800);
+        }
 
         async function requestWakeLock() {
             if (!('wakeLock' in navigator) || !isRunning) return;
@@ -1588,6 +1631,11 @@ function loadTimerState() {
 
         if (normalizedStateSnapshot !== previousStateSnapshot) {
             saveTimerState();
+            if (!!state.isRunning && document.visibilityState === 'visible') {
+                showResumeIndicator(isRunning
+                    ? 'Timer repris après veille'
+                    : 'Tournoi recalé à la reprise');
+            }
         }
     }
 }
@@ -2282,3 +2330,4 @@ updateClock(); // Exécution immédiate
     </script>
 </body>
 </html>
+oui
