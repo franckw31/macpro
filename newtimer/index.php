@@ -1302,14 +1302,19 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     <div class="edit-panel" id="editPanel">
     <div class="edit-content">
         <div class="edit-header">
-            <h2 class="edit-title">Modifier les blindes</h2>
+            <div class="edit-title-stack">
+                <h2 class="edit-title">Modifier les blindes</h2>
+                <div class="edit-subtitle">Ajuste chaque niveau, valide rapidement la saisie, puis enregistre la nouvelle structure.</div>
+            </div>
             <div class="edit-done-bar" id="editDoneBar">
                 <button class="edit-done-btn" id="commitFieldBtn" type="button">Terminer</button>
             </div>
         </div>
         <div class="blind-editor" id="blindEditor"></div>
-        <button class="edit-btn" id="addLevelBtn">+ Ajouter un niveau</button>
-        <div class="editor-validation-message" id="editorValidationMessage"></div>
+        <div class="edit-toolbar">
+            <button class="edit-btn" id="addLevelBtn">+ Ajouter un niveau</button>
+            <div class="editor-validation-message" id="editorValidationMessage"></div>
+        </div>
         <div class="edit-actions">
             <button class="start-btn" id="saveEditBtn">Enregistrer</button>
             <button class="reset-btn" id="cancelEditBtn">Annuler</button>
@@ -2029,30 +2034,37 @@ function renderBlindEditor() {
     const blindEditor = document.getElementById('blindEditor');
     if (!blindEditor) return;
 
-    // Add headers
-    const headers = `
-        <div class="blind-headers">
-            <div>Small Blind</div>
-            <div>Big Blind</div>
-            <div>Ante</div>
-            <div>Duration (min)</div>
-        </div>
-    `;
-
     const rows = blindLevels.map((level, index) => `
                 <div class="blind-row" data-level="${index + 1}">
-                    <input type="text" value="${level.small_blind}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="small-blind">
-                    <input type="text" value="${level.big_blind}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="big-blind">
-                    <input type="text" value="${level.ante}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="ante">
-                    <input type="text" value="${level.duration / 60}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="duration">
-                    <div class="row-actions">
-                        <button class="insert-btn" onclick="insertLevelAt(${index})">+</button>
-                        ${index > 0 ? `<button class="remove-btn" onclick="removeLevel(${index})">×</button>` : ''}
+                    <div class="blind-row-top">
+                        <span class="blind-badge">Niveau ${index + 1}</span>
+                        <div class="row-actions">
+                            <button class="insert-btn" type="button" onclick="insertLevelAt(${index})">+</button>
+                            ${index > 0 ? `<button class="remove-btn" type="button" onclick="removeLevel(${index})">×</button>` : ''}
+                        </div>
+                    </div>
+                    <div class="blind-fields">
+                        <label class="blind-field">
+                            <span class="blind-field-label">Petite blinde</span>
+                            <input type="text" value="${level.small_blind}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="small-blind">
+                        </label>
+                        <label class="blind-field">
+                            <span class="blind-field-label">Grosse blinde</span>
+                            <input type="text" value="${level.big_blind}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="big-blind">
+                        </label>
+                        <label class="blind-field">
+                            <span class="blind-field-label">Ante</span>
+                            <input type="text" value="${level.ante}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="ante">
+                        </label>
+                        <label class="blind-field">
+                            <span class="blind-field-label">Durée (min)</span>
+                            <input type="text" value="${level.duration / 60}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="duration">
+                        </label>
                     </div>
                 </div>
     `).join('');
 
-    blindEditor.innerHTML = headers + rows;
+    blindEditor.innerHTML = `<div class="blind-grid">${rows}</div>`;
     updateBlindEditorValidation();
 }
 
