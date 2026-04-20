@@ -400,6 +400,202 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         line-height: 1.4;
     }
 
+    .load-header {
+        position: sticky;
+        top: 0;
+        z-index: 25;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin: -20px -20px 18px;
+        padding: 18px 20px 14px;
+        background: linear-gradient(180deg, rgba(17, 22, 31, 0.98), rgba(17, 22, 31, 0.84));
+        border-radius: 24px 24px 0 0;
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .load-title-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+    }
+
+    .load-title {
+        margin: 0;
+        color: #edf6ff;
+        font-size: 26px;
+        line-height: 1.15;
+        font-weight: 700;
+    }
+
+    .load-subtitle {
+        color: rgba(255,255,255,0.62);
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .load-close-btn {
+        min-height: 46px;
+        padding: 0 16px;
+        border: 0;
+        border-radius: 999px;
+        background: #18c4ff;
+        color: #061018;
+        font-size: 14px;
+        font-weight: 700;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .load-summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }
+
+    .load-summary-badge {
+        display: inline-flex;
+        align-items: center;
+        min-height: 36px;
+        padding: 0 14px;
+        border-radius: 999px;
+        background: rgba(24, 196, 255, 0.14);
+        color: #8edbff;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+    }
+
+    .load-summary-text {
+        color: rgba(255,255,255,0.62);
+        font-size: 13px;
+    }
+
+    .structures-list {
+        display: grid;
+        gap: 14px;
+    }
+
+    .structure-item {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 16px;
+        margin: 0;
+        background: rgba(255,255,255,0.04);
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.08);
+        transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .structure-item:hover {
+        transform: translateY(-1px);
+        background: rgba(255,255,255,0.06);
+        border-color: rgba(144, 202, 249, 0.18);
+    }
+
+    .structure-item.empty,
+    .structure-item.loading {
+        align-items: center;
+        justify-content: center;
+        min-height: 180px;
+        text-align: center;
+        background: rgba(255,255,255,0.03);
+        border-style: dashed;
+    }
+
+    .structure-main {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+    .structure-info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+        min-width: 0;
+        font-size: 16px;
+    }
+
+    .structure-name {
+        color: #edf6ff;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.25;
+        word-break: break-word;
+    }
+
+    .structure-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .structure-chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        padding: 0 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.06);
+        color: rgba(255,255,255,0.78);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+
+    .structure-preview {
+        color: rgba(255,255,255,0.58);
+        font-size: 13px;
+        line-height: 1.45;
+    }
+
+    .structure-actions {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .structure-actions button {
+        margin: 0;
+        min-height: 46px;
+    }
+
+    .structure-empty-icon {
+        width: 62px;
+        height: 62px;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(24, 196, 255, 0.12);
+        color: #8edbff;
+        font-size: 28px;
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+    }
+
+    .structure-empty-title {
+        color: #edf6ff;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .structure-empty-text {
+        max-width: 320px;
+        color: rgba(255,255,255,0.58);
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
     .blind-editor {
         margin: 0;
         padding: 0;
@@ -613,43 +809,6 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         background: linear-gradient(180deg, #ff6969, #df3f3f);
     }
 
-    /* Structure Items */
-    .structure-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px;
-        margin: 10px 0;
-        background: rgba(255,255,255,0.1);
-        border-radius: 8px;
-        transition: background 0.3s ease;
-    }
-
-    .structure-item:hover {
-        background: rgba(255,255,255,0.15);
-    }
-
-    .structure-info {
-        flex: 1;
-        font-size: 16px;
-    }
-
-    .structure-info div {
-        color: #90CAF9;
-        font-size: 14px;
-        margin-top: 5px;
-    }
-
-    .actions {
-        display: flex;
-        gap: 10px;
-    }
-
-    .actions button {
-        padding: 8px 16px;
-        font-size: 14px;
-    }
-
     /* Edit Actions */
     .edit-actions {
         display: grid;
@@ -742,7 +901,15 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             font-size: 20px;
         }
 
+        .load-title {
+            font-size: 20px;
+        }
+
         .edit-subtitle {
+            font-size: 13px;
+        }
+
+        .load-subtitle {
             font-size: 13px;
         }
 
@@ -756,6 +923,30 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             min-height: 42px;
             padding: 0 14px;
             font-size: 14px;
+        }
+
+        .load-header {
+            margin: -16px -16px 14px;
+            padding: 14px 16px 12px;
+            gap: 10px;
+        }
+
+        .load-close-btn {
+            min-height: 42px;
+            padding: 0 14px;
+            font-size: 14px;
+        }
+
+        .load-summary {
+            align-items: stretch;
+        }
+
+        .structure-main {
+            flex-direction: column;
+        }
+
+        .structure-actions {
+            grid-template-columns: 1fr;
         }
 
         .edit-content, .load-content {
@@ -902,19 +1093,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
         /* Load panel adjustments */
         .structure-item {
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .actions {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 5px;
-        }
-
-        .actions button {
-            padding: 8px;
-            font-size: 12px;
+            gap: 12px;
         }
     }
 
