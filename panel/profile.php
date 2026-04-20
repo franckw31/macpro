@@ -453,36 +453,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 <div class="avatar-hint">Touchez la photo pour la changer</div>
             </div>
         </div>
-        <div id="avatarCropModal" class="avatar-modal" aria-hidden="true">
-            <div class="avatar-modal-card" role="dialog" aria-modal="true" aria-labelledby="avatarCropTitle">
-                <h2 id="avatarCropTitle" class="avatar-modal-title">Ajuster votre photo</h2>
-                <p class="avatar-modal-subtitle">Déplacez l’image avec le doigt ou la souris, puis ajustez le zoom avant d’enregistrer.</p>
-                <div class="avatar-editor">
-                    <div id="avatarCanvasWrap" class="avatar-canvas-wrap">
-                        <canvas id="avatarCropCanvas" class="avatar-canvas" width="560" height="560"></canvas>
-                    </div>
-                </div>
-                <div class="avatar-preview-row">
-                    <div>
-                        <div class="avatar-preview-label">Aperçu</div>
-                        <p class="avatar-helper">Le serveur garde aussi un recadrage de secours pour uniformiser l’avatar.</p>
-                    </div>
-                    <div class="avatar-preview-bubble"><img id="avatarPreviewImage" src="<?php echo htmlspecialchars($avatar_url); ?>" alt="aperçu avatar"></div>
-                </div>
-                <div class="avatar-controls">
-                    <div class="avatar-control">
-                        <label for="avatarZoomRange"><span>Zoom</span><span id="avatarZoomValue">100%</span></label>
-                        <input id="avatarZoomRange" class="avatar-range" type="range" min="1" max="3" step="0.01" value="1">
-                    </div>
-                </div>
-                <div id="avatarCropStatus" class="avatar-status"></div>
-                <div class="avatar-modal-actions">
-                    <button type="button" id="avatarCancelButton" class="avatar-action ghost">Annuler</button>
-                    <button type="button" id="avatarChooseOtherButton" class="avatar-action secondary">Autre photo</button>
-                    <button type="button" id="avatarSaveButton" class="avatar-action primary">Enregistrer</button>
-                </div>
-            </div>
-        </div>
+        <!-- client-side cropper removed: upload will be sent directly and server performs centered crop -->
         <div class="card">
             <div style="font-weight:700;margin-bottom:8px"><?php echo !empty($activity_title) ? htmlspecialchars($activity_title) : ((!empty($last_insc))? fmt_fr_date($last_insc, 'EEEE d MMM (dd/MM)') : '—'); ?></div>
             <div class="card-row"><div class="label">Inscription</div><div class="value"><?php echo $last_insc ? fmt_fr_date($last_insc, 'd MMM HH:mm') : '—'; ?><?php $bi = intval(isset($stats['bonus_ins']) ? $stats['bonus_ins'] : 0); if ($bi > 0) { echo ' (<span style="color:#ffd100">+'.intval(min($bi, 5000)).'</span>)'; } ?></div></div>
