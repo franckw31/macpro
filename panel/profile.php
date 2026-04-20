@@ -324,18 +324,18 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         .avatar-edit-badge{position:absolute;right:-2px;bottom:-2px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#08b0ff;color:#04131d;font-size:14px;font-weight:800;box-shadow:0 8px 18px rgba(0,0,0,0.35)}
         .avatar-hint{margin-top:8px;color:#9aa6b1;font-size:12px}
         .avatar-trigger:hover .avatar-edit-badge{transform:scale(1.05)}
-        .avatar-modal{position:fixed;inset:0;background:rgba(1,8,15,0.88);display:none;align-items:center;justify-content:center;padding:18px;z-index:60}
+        .avatar-modal{position:fixed;inset:0;background:rgba(1,8,15,0.88);display:none;align-items:center;justify-content:center;padding:12px;z-index:60}
         .avatar-modal.is-open{display:flex}
-        .avatar-modal-card{width:min(100%,420px);background:#071019;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:18px;box-shadow:0 16px 48px rgba(0,0,0,0.48)}
+        .avatar-modal-card{width:min(100%,380px);max-height:min(88vh,720px);overflow:auto;background:#071019;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:16px;box-shadow:0 16px 48px rgba(0,0,0,0.48)}
         .avatar-modal-title{font-size:18px;font-weight:800;margin:0 0 4px}
         .avatar-modal-subtitle{margin:0 0 14px;color:#9aa6b1;font-size:13px;line-height:1.4}
         .avatar-editor{display:flex;justify-content:center;margin:0 auto 12px}
-        .avatar-canvas-wrap{position:relative;width:min(100%,280px);aspect-ratio:1/1;border-radius:24px;overflow:hidden;background:linear-gradient(180deg,#112130,#071019);border:1px solid rgba(255,255,255,0.08);touch-action:none}
+        .avatar-canvas-wrap{position:relative;width:min(100%,248px);aspect-ratio:1/1;border-radius:24px;overflow:hidden;background:linear-gradient(180deg,#112130,#071019);border:1px solid rgba(255,255,255,0.08);touch-action:none}
         .avatar-canvas-wrap::after{content:'';position:absolute;inset:12px;border:2px solid rgba(255,255,255,0.65);border-radius:28px;box-shadow:0 0 0 200vmax rgba(0,0,0,0.18);pointer-events:none}
         .avatar-canvas{display:block;width:100%;height:100%}
         .avatar-preview-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}
         .avatar-preview-label{color:#9aa6b1;font-size:13px;font-weight:700}
-        .avatar-preview-bubble{width:72px;height:72px;border-radius:50%;overflow:hidden;border:2px solid rgba(8,176,255,0.5);background:#0c1823;flex:none}
+        .avatar-preview-bubble{width:64px;height:64px;border-radius:50%;overflow:hidden;border:2px solid rgba(8,176,255,0.5);background:#0c1823;flex:none}
         .avatar-preview-bubble img{width:100%;height:100%;object-fit:cover;display:block}
         .avatar-controls{display:grid;gap:12px}
         .avatar-control label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;color:#c9d6e2;font-size:13px;font-weight:700}
@@ -365,6 +365,16 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         .top-action{background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:20px;border:0;color:#ff9d3b;font-weight:700;backdrop-filter:blur(4px);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
         .profile-footer-action{display:flex;justify-content:center;margin-top:18px}
         .profile-footer-action .top-action.logout{color:#ff6b6b;min-width:160px;justify-content:center}
+        @media (max-width: 480px){
+            body{padding:12px}
+            .sheet{margin:10px auto;padding:14px;border-radius:16px}
+            .avatar-modal-card{width:min(100%,340px);padding:14px;border-radius:18px}
+            .avatar-canvas-wrap{width:min(100%,208px)}
+            .avatar-modal-subtitle,.avatar-helper,.avatar-status{font-size:12px}
+            .avatar-preview-bubble{width:56px;height:56px}
+            .avatar-modal-actions{grid-template-columns:1fr}
+            .avatar-action{padding:12px 10px}
+        }
     </style>
 </head>
 <body>
@@ -509,16 +519,21 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 offsetX: 0,
                 offsetY: 0,
                 isDragging: false,
+                isPinching: false,
                 dragStartX: 0,
                 dragStartY: 0,
                 startOffsetX: 0,
                 startOffsetY: 0,
+                pinchStartDistance: 0,
+                pinchStartScale: 1,
+                pinchAnchorX: 0,
+                pinchAnchorY: 0,
                 selectedName: 'avatar.jpg'
             };
 
             const getCanvasSize = () => {
                 const wrapRect = avatarCanvasWrap.getBoundingClientRect();
-                const size = Math.max(240, Math.round(Math.min(wrapRect.width || 280, 320)));
+                const size = Math.max(208, Math.round(Math.min(wrapRect.width || 248, 280)));
                 if (avatarCropCanvas.width !== size || avatarCropCanvas.height !== size) {
                     avatarCropCanvas.width = size;
                     avatarCropCanvas.height = size;
@@ -607,7 +622,40 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 avatarCropModal.setAttribute('aria-hidden', 'true');
                 document.body.style.overflow = '';
                 state.isDragging = false;
+                state.isPinching = false;
                 resetStatus('');
+            };
+
+            const getTouchDistance = (event) => {
+                if (!event.touches || event.touches.length < 2) {
+                    return 0;
+                }
+                const first = event.touches[0];
+                const second = event.touches[1];
+                return Math.hypot(second.clientX - first.clientX, second.clientY - first.clientY);
+            };
+
+            const getTouchCenter = (event) => {
+                const rect = avatarCropCanvas.getBoundingClientRect();
+                const first = event.touches[0];
+                const second = event.touches[1];
+                return {
+                    x: ((first.clientX + second.clientX) / 2) - rect.left,
+                    y: ((first.clientY + second.clientY) / 2) - rect.top
+                };
+            };
+
+            const setScaleAroundPoint = (nextScale, anchorX, anchorY) => {
+                const clampedScale = Math.max(state.minScale, Math.min(parseFloat(avatarZoomRange.max || nextScale), nextScale));
+                const previousScale = state.scale || clampedScale;
+                const imagePointX = (anchorX - state.offsetX) / previousScale;
+                const imagePointY = (anchorY - state.offsetY) / previousScale;
+                state.scale = clampedScale;
+                state.offsetX = anchorX - imagePointX * state.scale;
+                state.offsetY = anchorY - imagePointY * state.scale;
+                avatarZoomRange.value = String(state.scale);
+                syncZoomLabel();
+                drawAvatarCanvas();
             };
 
             const initializeImageState = (image, fileName) => {
@@ -659,8 +707,19 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                     return;
                 }
                 event.preventDefault();
+                if (event.touches && event.touches.length === 2) {
+                    state.isDragging = false;
+                    state.isPinching = true;
+                    state.pinchStartDistance = getTouchDistance(event);
+                    state.pinchStartScale = state.scale;
+                    const center = getTouchCenter(event);
+                    state.pinchAnchorX = center.x;
+                    state.pinchAnchorY = center.y;
+                    return;
+                }
                 const point = getPointerPosition(event);
                 state.isDragging = true;
+                state.isPinching = false;
                 state.dragStartX = point.x;
                 state.dragStartY = point.y;
                 state.startOffsetX = state.offsetX;
@@ -668,7 +727,28 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             };
 
             const moveDrag = (event) => {
-                if (!state.isDragging || !state.image) {
+                if (!state.image) {
+                    return;
+                }
+                if (event.touches && event.touches.length === 2) {
+                    event.preventDefault();
+                    if (!state.isPinching) {
+                        state.isDragging = false;
+                        state.isPinching = true;
+                        state.pinchStartDistance = getTouchDistance(event);
+                        state.pinchStartScale = state.scale;
+                        const center = getTouchCenter(event);
+                        state.pinchAnchorX = center.x;
+                        state.pinchAnchorY = center.y;
+                    }
+                    const pinchDistance = getTouchDistance(event);
+                    if (state.pinchStartDistance > 0 && pinchDistance > 0) {
+                        const ratio = pinchDistance / state.pinchStartDistance;
+                        setScaleAroundPoint(state.pinchStartScale * ratio, state.pinchAnchorX, state.pinchAnchorY);
+                    }
+                    return;
+                }
+                if (!state.isDragging) {
                     return;
                 }
                 event.preventDefault();
@@ -680,6 +760,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 
             const endDrag = () => {
                 state.isDragging = false;
+                state.isPinching = false;
             };
 
             const submitCroppedAvatar = () => {
@@ -723,15 +804,8 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                     return;
                 }
                 const size = getCanvasSize();
-                const previousScale = state.scale;
                 const nextScale = Math.max(state.minScale, parseFloat(avatarZoomRange.value || state.minScale));
-                const centerX = (size / 2 - state.offsetX) / previousScale;
-                const centerY = (size / 2 - state.offsetY) / previousScale;
-                state.scale = nextScale;
-                state.offsetX = size / 2 - centerX * state.scale;
-                state.offsetY = size / 2 - centerY * state.scale;
-                syncZoomLabel();
-                drawAvatarCanvas();
+                setScaleAroundPoint(nextScale, size / 2, size / 2);
             });
 
             avatarCropCanvas.addEventListener('mousedown', startDrag);
