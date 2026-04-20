@@ -1303,12 +1303,12 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     <div class="edit-panel" id="editPanel">
     <div class="edit-content">
-        <h2 style="color: #90CAF9;">Edit Blind Structure</h2>
+        <h2 style="color: #90CAF9;">Modifier les blindes</h2>
         <div class="blind-editor" id="blindEditor"></div>
-        <button class="edit-btn" id="addLevelBtn">+ Add Level</button>
+        <button class="edit-btn" id="addLevelBtn">+ Ajouter un niveau</button>
         <div class="edit-actions">
-            <button class="start-btn" id="saveEditBtn">Save Changes</button>
-            <button class="reset-btn" id="cancelEditBtn">Cancel</button>
+            <button class="start-btn" id="saveEditBtn">Enregistrer</button>
+            <button class="reset-btn" id="cancelEditBtn">Annuler</button>
         </div>
     </div>
 </div>
