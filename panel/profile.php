@@ -316,12 +316,12 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         body{background:rgba(0,0,0,0.85);font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;margin:0;padding:18px;color:#eef6fb}
         /* Centered sheet */
         .sheet{max-width:520px;margin:18px auto;background:#071019;color:#eef6fb;border-radius:18px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
-        .avatar{display:block;flex:none;width:140px;height:140px;border-radius:50%;overflow:hidden;margin:0 auto;line-height:0}
+        .avatar{display:block;flex:none;width:180px;height:180px;border-radius:50%;overflow:hidden;margin:0 auto;line-height:0}
         .avatar img{width:100%;height:100%;object-fit:cover}
         .avatar-upload-form{display:none}
         .avatar-trigger{display:flex;flex-direction:column;align-items:center;justify-content:center;width:-moz-fit-content;width:fit-content;max-width:100%;margin:6px auto 0;background:none;border:0;padding:0;color:inherit;cursor:pointer;text-align:center}
         .avatar-wrap{position:relative;display:inline-block}
-        .avatar-edit-badge{position:absolute;right:-5px;bottom:-5px;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#08b0ff;color:#04131d;font-size:16px;font-weight:800;box-shadow:0 8px 18px rgba(0,0,0,0.35)}
+        .avatar-edit-badge{position:absolute;right:-6px;bottom:-6px;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#08b0ff;color:#04131d;font-size:18px;font-weight:800;box-shadow:0 8px 18px rgba(0,0,0,0.35)}
         .avatar-hint{margin-top:6px;color:#9aa6b1;font-size:11px}
         .profile-identity{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:12px}
         .profile-identity-text{display:flex;flex-direction:column;align-items:center;text-align:center}
@@ -370,8 +370,8 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         @media (max-width: 480px){
             body{padding:12px}
             .sheet{margin:10px auto;padding:14px;border-radius:16px}
-            .avatar{width:108px;height:108px}
-            .avatar-edit-badge{width:28px;height:28px;font-size:13px}
+            .avatar{width:132px;height:132px}
+            .avatar-edit-badge{width:32px;height:32px;font-size:15px}
             .profile-identity{gap:8px;margin-bottom:10px}
             .avatar-modal-card{width:min(100%,340px);padding:14px;border-radius:18px}
             .avatar-canvas-wrap{width:min(100%,208px)}
