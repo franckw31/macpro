@@ -2633,6 +2633,26 @@ function addLevel() {
             const structuresList = document.getElementById('structuresList');
             const loadSummaryBadge = document.getElementById('loadSummaryBadge');
 
+            const bindStructureActionButtons = () => {
+                structuresList.querySelectorAll('[data-structure-action]').forEach((actionButton) => {
+                    if (!(actionButton instanceof HTMLButtonElement)) return;
+
+                    actionButton.onclick = () => {
+                        const { structureAction, structureId, structureName } = actionButton.dataset;
+                        const id = Number(structureId);
+                        if (!structureAction || !Number.isFinite(id)) return;
+
+                        if (structureAction === 'load') {
+                            loadStructure(id);
+                        } else if (structureAction === 'rename') {
+                            renameStructure(id, structureName || '');
+                        } else if (structureAction === 'delete') {
+                            deleteStructure(id, structureName || '');
+                        }
+                    };
+                });
+            };
+
             const escapeHtml = (value) => String(value ?? '')
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
@@ -2684,6 +2704,8 @@ function addLevel() {
                         </div>
                     </article>
                 `).join('');
+
+                bindStructureActionButtons();
             };
 
             loadPanel.style.display = 'block';
