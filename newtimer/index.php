@@ -1679,7 +1679,7 @@ function loadTimerState() {
 function toggleStartPause() {
     if (isRunning) {
         stopTimer();
-        speakAnnouncement('Pause du timer');
+        speakAnnouncement('Pause du taimeur');
     } else {
         startTimer();
         speakAnnouncement('Reprise du timer');
