@@ -502,6 +502,29 @@ document.addEventListener('DOMContentLoaded', function() {
 	</script>
 </head>
 <body>
+<style>
+	/* Force header avatar size regardless of global .avatar rules */
+	header .avatar {
+		width: 64px !important;
+		height: 64px !important;
+		min-width: 64px !important;
+		min-height: 64px !important;
+		max-width: 64px !important;
+		max-height: 64px !important;
+		border-radius: 50% !important;
+		box-shadow: 0 4px 16px rgba(0,0,0,0.18) !important;
+		border: 4px solid #fff !important;
+		outline: 3px solid #1976d2 !important;
+		outline-offset: 0 !important;
+		background: #fff !important;
+	}
+	header .avatar img {
+		width: 100% !important;
+		height: 100% !important;
+		object-fit: cover !important;
+		border-radius: 50% !important;
+	}
+</style>
 
 <?php if(isset($_GET['debug']) && $_GET['debug'] === '1'){
 	$dbgUser = 'Visiteur';
