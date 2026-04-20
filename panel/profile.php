@@ -33,6 +33,91 @@ function fmt_fr_date($dt, $pattern = "EEEE d MMM (dd/MM)", $tz = 'Europe/Paris')
     return $d . ' ' . $month . ' ' . $time;
 }
 
+function create_avatar_image_resource(string $tmp_name, string $extension) {
+    switch ($extension) {
+        case 'jpg':
+        case 'jpeg':
+            return function_exists('imagecreatefromjpeg') ? @imagecreatefromjpeg($tmp_name) : false;
+        case 'png':
+            return function_exists('imagecreatefrompng') ? @imagecreatefrompng($tmp_name) : false;
+        case 'gif':
+            return function_exists('imagecreatefromgif') ? @imagecreatefromgif($tmp_name) : false;
+        case 'webp':
+            return function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($tmp_name) : false;
+        default:
+            return false;
+    }
+}
+
+function save_avatar_image_resource($image, string $target_file, string $extension): bool {
+    switch ($extension) {
+        case 'jpg':
+        case 'jpeg':
+            return function_exists('imagejpeg') ? @imagejpeg($image, $target_file, 88) : false;
+        case 'png':
+            return function_exists('imagepng') ? @imagepng($image, $target_file, 6) : false;
+        case 'gif':
+            return function_exists('imagegif') ? @imagegif($image, $target_file) : false;
+        case 'webp':
+            return function_exists('imagewebp') ? @imagewebp($image, $target_file, 88) : false;
+        default:
+            return false;
+    }
+}
+
+function create_square_avatar_file(string $tmp_name, string $target_file, string $extension, int $final_size = 512): bool {
+    if (!function_exists('imagecreatetruecolor') || !function_exists('imagecopyresampled')) {
+        return false;
+    }
+
+    $source = create_avatar_image_resource($tmp_name, $extension);
+    if (!$source) {
+        return false;
+    }
+
+    $source_width = imagesx($source);
+    $source_height = imagesy($source);
+    $crop_size = min($source_width, $source_height);
+    $src_x = (int) floor(($source_width - $crop_size) / 2);
+    $src_y = (int) floor(($source_height - $crop_size) / 2);
+
+    $destination = imagecreatetruecolor($final_size, $final_size);
+    if (!$destination) {
+        imagedestroy($source);
+        return false;
+    }
+
+    if (in_array($extension, ['png', 'gif', 'webp'], true)) {
+        imagealphablending($destination, false);
+        imagesavealpha($destination, true);
+        $transparent = imagecolorallocatealpha($destination, 0, 0, 0, 127);
+        imagefilledrectangle($destination, 0, 0, $final_size, $final_size, $transparent);
+    } else {
+        $background = imagecolorallocate($destination, 255, 255, 255);
+        imagefilledrectangle($destination, 0, 0, $final_size, $final_size, $background);
+    }
+
+    $resampled = imagecopyresampled(
+        $destination,
+        $source,
+        0,
+        0,
+        $src_x,
+        $src_y,
+        $final_size,
+        $final_size,
+        $crop_size,
+        $crop_size
+    );
+
+    $saved = $resampled ? save_avatar_image_resource($destination, $target_file, $extension) : false;
+
+    imagedestroy($destination);
+    imagedestroy($source);
+
+    return $saved;
+}
+
 $uid = isset($_SESSION['id']) ? intval($_SESSION['id']) : 0;
 if ($uid <= 0) {
     // redirect to login flow if needed
@@ -112,7 +197,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'uploa
         mysqli_stmt_close($stmt_old);
     }
 
-    if (!move_uploaded_file($tmp_name, $target_file)) {
+    $saved_file = create_square_avatar_file($tmp_name, $target_file, $extension, 512);
+    if (!$saved_file) {
+        $saved_file = @move_uploaded_file($tmp_name, $target_file);
+    }
+
+    if (!$saved_file) {
         $set_flash('error', "Impossible d'enregistrer l'image téléchargée.");
         header('Location: ' . $redirect_uri);
         exit;
