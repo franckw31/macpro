@@ -2783,6 +2783,7 @@ function addLevel() {
             try {
                 const response = await fetch(window.location.href, {
                     method: 'POST',
+                    credentials: 'same-origin',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         action: 'rename',
