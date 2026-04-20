@@ -1744,6 +1744,73 @@ function syncTimerState(state) {
             }
         }
 
+        function validateStructure(structure) {
+            if (!Array.isArray(structure) || structure.length === 0) {
+                alert('La structure de blindes est vide.');
+                return false;
+            }
+
+            for (let index = 0; index < structure.length; index++) {
+                const level = structure[index];
+                const levelNumber = index + 1;
+
+                if (!Number.isFinite(level.small_blind) || level.small_blind < 0) {
+                    alert(`Niveau ${levelNumber} : la petite blinde est invalide.`);
+                    return false;
+                }
+
+                if (!Number.isFinite(level.big_blind) || level.big_blind < 0) {
+                    alert(`Niveau ${levelNumber} : la grosse blinde est invalide.`);
+                    return false;
+                }
+
+                if (level.big_blind > 0 && level.big_blind < level.small_blind) {
+                    alert(`Niveau ${levelNumber} : la grosse blinde doit être supérieure ou égale à la petite blinde.`);
+                    return false;
+                }
+
+                if (!Number.isFinite(level.ante) || level.ante < 0) {
+                    alert(`Niveau ${levelNumber} : l'ante est invalide.`);
+                    return false;
+                }
+
+                if (!Number.isFinite(level.duration) || level.duration < 0) {
+                    alert(`Niveau ${levelNumber} : la durée est invalide.`);
+                    return false;
+                }
+
+                if (level.small_blind === 0 && level.big_blind === 0 && level.duration === 0) {
+                    continue;
+                }
+
+                if (level.duration <= 0) {
+                    alert(`Niveau ${levelNumber} : la durée doit être supérieure à 0.`);
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function applyEditedStructure(newStructure) {
+            const previousLevel = Math.min(currentLevel, newStructure.length - 1);
+            blindLevels = newStructure;
+            currentLevel = Math.max(0, previousLevel);
+
+            if (!isRunning) {
+                timeLeft = blindLevels[currentLevel].duration;
+                timerEndsAt = null;
+            } else {
+                timeLeft = Math.min(timeLeft, blindLevels[currentLevel].duration);
+                timerEndsAt = Date.now() + (timeLeft * 1000);
+            }
+
+            updateDisplay();
+            updateLevelButtons();
+            saveTimerState();
+            hideEditPanel();
+        }
+
         // Structure management functions
 function renderBlindEditor() {
     const blindEditor = document.getElementById('blindEditor');
@@ -2074,11 +2141,7 @@ function addLevel() {
             });
 
             if (validateStructure(newStructure)) {
-                blindLevels = newStructure;
-                currentLevel = 0;
-                timeLeft = blindLevels[0].duration;
-                updateDisplay();
-                hideEditPanel();
+                applyEditedStructure(newStructure);
             }
         });
     }
