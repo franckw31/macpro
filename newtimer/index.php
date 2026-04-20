@@ -1553,13 +1553,19 @@ function loadTimerState() {
     if (savedState) {
         const state = JSON.parse(savedState);
         const now = Date.now();
+        const previousStateSnapshot = JSON.stringify({
+            currentLevel: state.currentLevel,
+            timeLeft: state.timeLeft,
+            isRunning: !!state.isRunning,
+            timerEndsAt: state.timerEndsAt ?? null
+        });
         
         currentLevel = state.currentLevel;
         isRunning = !!state.isRunning;
-        timerEndsAt = state.timerEndsAt || null;
+        timerEndsAt = state.timerEndsAt ?? null;
         
         if (isRunning) {
-            timeLeft = Math.max(0, parseInt(state.timeLeft || 0, 10));
+            timeLeft = Math.max(0, parseInt(state.timeLeft ?? 0, 10));
             normalizeRunningTimerState(now);
             if (isRunning && timeLeft > 0) {
                 startTimer(false);
@@ -1567,11 +1573,22 @@ function loadTimerState() {
                 updateButtonStates();
             }
         } else {
-            timeLeft = Math.max(0, parseInt(state.timeLeft || blindLevels[currentLevel].duration, 10));
+            timeLeft = Math.max(0, parseInt(state.timeLeft ?? blindLevels[currentLevel].duration, 10));
             updateButtonStates();
         }
         
         updateDisplay();
+
+        const normalizedStateSnapshot = JSON.stringify({
+            currentLevel,
+            timeLeft,
+            isRunning,
+            timerEndsAt: timerEndsAt ?? null
+        });
+
+        if (normalizedStateSnapshot !== previousStateSnapshot) {
+            saveTimerState();
+        }
     }
 }
 
@@ -1627,7 +1644,7 @@ function syncTimerState(state) {
         currentLevel = state.currentLevel;
         timeLeft = state.timeLeft;
         isRunning = !!state.isRunning;
-        timerEndsAt = state.timerEndsAt || null;
+        timerEndsAt = state.timerEndsAt ?? null;
         
         // Update UI
         normalizeRunningTimerState();
