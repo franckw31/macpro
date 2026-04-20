@@ -384,7 +384,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 </head>
 <body>
     <div class="top-actions">
-        <button class="top-action" onclick="history.back();">Fermer</button>
+        <button class="top-action" onclick="window.location.href='/panel/quickview.php';">Fermer</button>
     </div>
     <div class="sheet">
         <?php if (!empty($profile_flash['message'])): ?>
