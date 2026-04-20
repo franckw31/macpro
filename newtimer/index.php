@@ -1587,9 +1587,18 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     <div class="load-panel" id="loadPanel">
         <div class="load-content">
-            <h2 style="color: #90CAF9;">Load Blind Structure</h2>
-            <div id="structuresList"></div>
-            <button class="reset-btn" id="closeLoadBtn">Close</button>
+            <div class="load-header">
+                <div class="load-title-stack">
+                    <h2 class="load-title">Charger une structure</h2>
+                    <div class="load-subtitle">Retrouve une structure enregistrée, charge-la en un tap ou renomme-la avant la prochaine partie.</div>
+                </div>
+                <button class="load-close-btn" id="closeLoadBtn" type="button">Fermer</button>
+            </div>
+            <div class="load-summary">
+                <div class="load-summary-badge" id="loadSummaryBadge">Structures enregistrées</div>
+                <div class="load-summary-text">Le chargement remplace la structure actuelle et repositionne le tournoi au niveau 1.</div>
+            </div>
+            <div class="structures-list" id="structuresList"></div>
         </div>
     </div>
     <div style="text-align: center; margin-top: 10px; color: #90CAF9; font-size: 12px;">
