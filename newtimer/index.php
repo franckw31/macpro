@@ -2879,7 +2879,8 @@ function addLevel() {
     if (addLevelBtn) addLevelBtn.addEventListener('click', addLevel);
     if (structuresList) {
         structuresList.addEventListener('click', (event) => {
-            const actionButton = event.target.closest('[data-structure-action]');
+            const eventTarget = event.target instanceof Element ? event.target : event.target?.parentElement;
+            const actionButton = eventTarget?.closest('[data-structure-action]');
             if (!(actionButton instanceof HTMLButtonElement)) return;
 
             const { structureAction, structureId, structureName } = actionButton.dataset;
