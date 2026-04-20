@@ -868,38 +868,5 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             window.addEventListener('pageshow', function(ev){ if (ev.persisted) redirectToQuickview(); });
         })();
     </script>
-    <script>
-        // Improve back-button behavior after actions (upload etc.):
-        // create a synthetic quickview history entry so that pressing Back
-        // lands on the real /panel/quickview.php?uid=... and triggers a full navigation.
-        (function(){
-            try{
-                var params = new URLSearchParams(window.location.search || '');
-                var uid = params.get('uid') || params.get('id') || '';
-                if (!uid) return; // nothing to preserve
-                var quickUrl = '/panel/quickview.php' + (uid ? ('?uid=' + encodeURIComponent(uid)) : '');
-
-                // Only perform history surgery once per page load
-                if (!window.__viendez_back_setup) {
-                    // Ensure current entry is the profile URL
-                    history.replaceState({}, '', window.location.href);
-                    // Push a quickview entry (no reload)
-                    history.pushState({__viendez_quick:true}, '', quickUrl);
-                    // Push profile URL back on top so user stays on profile
-                    history.pushState({}, '', window.location.href);
-                    window.__viendez_back_setup = true;
-                }
-
-                // When the user goes back to the synthetic quickview URL, navigate there for real
-                window.addEventListener('popstate', function(ev){
-                    try{
-                        if (window.location.pathname === '/panel/quickview.php') {
-                            window.location.href = window.location.href;
-                        }
-                    }catch(e){}
-                });
-            }catch(e){}
-        })();
-    </script>
 </body>
 </html>
