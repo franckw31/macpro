@@ -2739,6 +2739,13 @@ function addLevel() {
             }
         }
 
+        function hideLoadPanel() {
+            const loadPanel = document.getElementById('loadPanel');
+            if (loadPanel) {
+                loadPanel.style.display = 'none';
+            }
+        }
+
         // Event listeners
         document.addEventListener('DOMContentLoaded', () => {
     // Initialize all buttons and displays
@@ -2773,16 +2780,33 @@ function addLevel() {
     const blindEditorForm = document.getElementById('blindEditorForm');
     const commitFieldBtn = document.getElementById('commitFieldBtn');
     const editPanel = document.getElementById('editPanel');
+    const structuresList = document.getElementById('structuresList');
     
     if (editBtn) editBtn.addEventListener('click', showEditPanel);
     if (cancelEditBtn) cancelEditBtn.addEventListener('click', hideEditPanel);
     if (closeEditBtn) closeEditBtn.addEventListener('click', submitBlindEditorChanges);
     if (saveToDbBtn) saveToDbBtn.addEventListener('click', saveToDatabase);
     if (loadFromDbBtn) loadFromDbBtn.addEventListener('click', showLoadPanel);
-    if (closeLoadBtn) closeLoadBtn.addEventListener('click', () => {
-        document.getElementById('loadPanel').style.display = 'none';
-    });
+    if (closeLoadBtn) closeLoadBtn.addEventListener('click', hideLoadPanel);
     if (addLevelBtn) addLevelBtn.addEventListener('click', addLevel);
+    if (structuresList) {
+        structuresList.addEventListener('click', (event) => {
+            const actionButton = event.target.closest('[data-structure-action]');
+            if (!(actionButton instanceof HTMLButtonElement)) return;
+
+            const { structureAction, structureId, structureName } = actionButton.dataset;
+            const id = Number(structureId);
+            if (!structureAction || !Number.isFinite(id)) return;
+
+            if (structureAction === 'load') {
+                loadStructure(id);
+            } else if (structureAction === 'rename') {
+                renameStructure(id, structureName || '');
+            } else if (structureAction === 'delete') {
+                deleteStructure(id, structureName || '');
+            }
+        });
+    }
     if (blindEditor) {
         const refreshEditorValidation = () => updateBlindEditorValidation();
         blindEditor.addEventListener('input', (event) => {
