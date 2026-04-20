@@ -324,6 +324,29 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         .avatar-edit-badge{position:absolute;right:-2px;bottom:-2px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#08b0ff;color:#04131d;font-size:14px;font-weight:800;box-shadow:0 8px 18px rgba(0,0,0,0.35)}
         .avatar-hint{margin-top:8px;color:#9aa6b1;font-size:12px}
         .avatar-trigger:hover .avatar-edit-badge{transform:scale(1.05)}
+        .avatar-modal{position:fixed;inset:0;background:rgba(1,8,15,0.88);display:none;align-items:center;justify-content:center;padding:18px;z-index:60}
+        .avatar-modal.is-open{display:flex}
+        .avatar-modal-card{width:min(100%,420px);background:#071019;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:18px;box-shadow:0 16px 48px rgba(0,0,0,0.48)}
+        .avatar-modal-title{font-size:18px;font-weight:800;margin:0 0 4px}
+        .avatar-modal-subtitle{margin:0 0 14px;color:#9aa6b1;font-size:13px;line-height:1.4}
+        .avatar-editor{display:flex;justify-content:center;margin:0 auto 12px}
+        .avatar-canvas-wrap{position:relative;width:min(100%,280px);aspect-ratio:1/1;border-radius:24px;overflow:hidden;background:linear-gradient(180deg,#112130,#071019);border:1px solid rgba(255,255,255,0.08);touch-action:none}
+        .avatar-canvas-wrap::after{content:'';position:absolute;inset:12px;border:2px solid rgba(255,255,255,0.65);border-radius:28px;box-shadow:0 0 0 200vmax rgba(0,0,0,0.18);pointer-events:none}
+        .avatar-canvas{display:block;width:100%;height:100%}
+        .avatar-preview-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}
+        .avatar-preview-label{color:#9aa6b1;font-size:13px;font-weight:700}
+        .avatar-preview-bubble{width:72px;height:72px;border-radius:50%;overflow:hidden;border:2px solid rgba(8,176,255,0.5);background:#0c1823;flex:none}
+        .avatar-preview-bubble img{width:100%;height:100%;object-fit:cover;display:block}
+        .avatar-controls{display:grid;gap:12px}
+        .avatar-control label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;color:#c9d6e2;font-size:13px;font-weight:700}
+        .avatar-range{width:100%}
+        .avatar-helper{margin:0;color:#9aa6b1;font-size:12px;line-height:1.4}
+        .avatar-modal-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+        .avatar-action{border:0;border-radius:12px;padding:11px 10px;font-weight:800;font-size:13px;cursor:pointer}
+        .avatar-action.secondary{background:rgba(255,255,255,0.07);color:#eef6fb}
+        .avatar-action.primary{background:#08b0ff;color:#04131d}
+        .avatar-action.ghost{background:transparent;color:#9aa6b1;border:1px solid rgba(255,255,255,0.1)}
+        .avatar-status{min-height:18px;margin-top:10px;color:#ffb86b;font-size:12px;font-weight:700}
         .flash{margin:0 0 14px;padding:10px 12px;border-radius:12px;font-size:14px;font-weight:700}
         .flash.success{background:rgba(22,163,74,0.14);color:#7cf0a8;border:1px solid rgba(22,163,74,0.28)}
         .flash.error{background:rgba(255,77,77,0.12);color:#ff9c9c;border:1px solid rgba(255,77,77,0.24)}
@@ -360,11 +383,41 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 
         <button type="button" class="avatar-trigger" onclick="document.getElementById('avatarFileInput').click();">
             <span class="avatar-wrap">
-                <span class="avatar"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar"></span>
+                <span class="avatar"><img id="profileAvatarImage" src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar"></span>
                 <span class="avatar-edit-badge">📷</span>
             </span>
-            <div class="avatar-hint">Cliquer pour changer la photo</div>
+            <div class="avatar-hint">Cliquer pour changer la photo, la prévisualiser et la recadrer</div>
         </button>
+        <div id="avatarCropModal" class="avatar-modal" aria-hidden="true">
+            <div class="avatar-modal-card" role="dialog" aria-modal="true" aria-labelledby="avatarCropTitle">
+                <h2 id="avatarCropTitle" class="avatar-modal-title">Ajuster votre photo</h2>
+                <p class="avatar-modal-subtitle">Déplacez l’image avec le doigt ou la souris, puis ajustez le zoom avant d’enregistrer.</p>
+                <div class="avatar-editor">
+                    <div id="avatarCanvasWrap" class="avatar-canvas-wrap">
+                        <canvas id="avatarCropCanvas" class="avatar-canvas" width="560" height="560"></canvas>
+                    </div>
+                </div>
+                <div class="avatar-preview-row">
+                    <div>
+                        <div class="avatar-preview-label">Aperçu</div>
+                        <p class="avatar-helper">Le serveur garde aussi un recadrage de secours pour uniformiser l’avatar.</p>
+                    </div>
+                    <div class="avatar-preview-bubble"><img id="avatarPreviewImage" src="<?php echo htmlspecialchars($avatar_url); ?>" alt="aperçu avatar"></div>
+                </div>
+                <div class="avatar-controls">
+                    <div class="avatar-control">
+                        <label for="avatarZoomRange"><span>Zoom</span><span id="avatarZoomValue">100%</span></label>
+                        <input id="avatarZoomRange" class="avatar-range" type="range" min="1" max="3" step="0.01" value="1">
+                    </div>
+                </div>
+                <div id="avatarCropStatus" class="avatar-status"></div>
+                <div class="avatar-modal-actions">
+                    <button type="button" id="avatarCancelButton" class="avatar-action ghost">Annuler</button>
+                    <button type="button" id="avatarChooseOtherButton" class="avatar-action secondary">Autre photo</button>
+                    <button type="button" id="avatarSaveButton" class="avatar-action primary">Enregistrer</button>
+                </div>
+            </div>
+        </div>
         <div class="name"><span style="color:#16a34a"><?php echo htmlspecialchars($user['pseudo']); ?></span></div>
 
         <div class="card">
@@ -434,10 +487,281 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
     <script>
         const avatarFileInput = document.getElementById('avatarFileInput');
         const avatarUploadForm = document.getElementById('avatarUploadForm');
-        if (avatarFileInput && avatarUploadForm) {
+        const avatarCropModal = document.getElementById('avatarCropModal');
+        const avatarCanvasWrap = document.getElementById('avatarCanvasWrap');
+        const avatarCropCanvas = document.getElementById('avatarCropCanvas');
+        const avatarPreviewImage = document.getElementById('avatarPreviewImage');
+        const profileAvatarImage = document.getElementById('profileAvatarImage');
+        const avatarZoomRange = document.getElementById('avatarZoomRange');
+        const avatarZoomValue = document.getElementById('avatarZoomValue');
+        const avatarCropStatus = document.getElementById('avatarCropStatus');
+        const avatarCancelButton = document.getElementById('avatarCancelButton');
+        const avatarChooseOtherButton = document.getElementById('avatarChooseOtherButton');
+        const avatarSaveButton = document.getElementById('avatarSaveButton');
+
+        if (avatarFileInput && avatarUploadForm && avatarCropModal && avatarCanvasWrap && avatarCropCanvas && avatarPreviewImage && avatarZoomRange && avatarSaveButton) {
+            const canvasContext = avatarCropCanvas.getContext('2d');
+            const state = {
+                image: null,
+                imageUrl: '',
+                scale: 1,
+                minScale: 1,
+                offsetX: 0,
+                offsetY: 0,
+                isDragging: false,
+                dragStartX: 0,
+                dragStartY: 0,
+                startOffsetX: 0,
+                startOffsetY: 0,
+                selectedName: 'avatar.jpg'
+            };
+
+            const getCanvasSize = () => {
+                const wrapRect = avatarCanvasWrap.getBoundingClientRect();
+                const size = Math.max(240, Math.round(Math.min(wrapRect.width || 280, 320)));
+                if (avatarCropCanvas.width !== size || avatarCropCanvas.height !== size) {
+                    avatarCropCanvas.width = size * 2;
+                    avatarCropCanvas.height = size * 2;
+                    avatarCropCanvas.style.width = size + 'px';
+                    avatarCropCanvas.style.height = size + 'px';
+                }
+                return avatarCropCanvas.width;
+            };
+
+            const revokeImageUrl = () => {
+                if (state.imageUrl) {
+                    URL.revokeObjectURL(state.imageUrl);
+                    state.imageUrl = '';
+                }
+            };
+
+            const clampOffsets = () => {
+                if (!state.image) {
+                    return;
+                }
+                const size = getCanvasSize();
+                const drawWidth = state.image.width * state.scale;
+                const drawHeight = state.image.height * state.scale;
+                const minOffsetX = Math.min(0, size - drawWidth);
+                const minOffsetY = Math.min(0, size - drawHeight);
+                const maxOffsetX = Math.max(0, size - drawWidth);
+                const maxOffsetY = Math.max(0, size - drawHeight);
+
+                if (drawWidth <= size) {
+                    state.offsetX = (size - drawWidth) / 2;
+                } else {
+                    state.offsetX = Math.min(0, Math.max(minOffsetX, state.offsetX));
+                }
+
+                if (drawHeight <= size) {
+                    state.offsetY = (size - drawHeight) / 2;
+                } else {
+                    state.offsetY = Math.min(0, Math.max(minOffsetY, state.offsetY));
+                }
+            };
+
+            const drawAvatarCanvas = () => {
+                const size = getCanvasSize();
+                canvasContext.clearRect(0, 0, size, size);
+                canvasContext.fillStyle = '#0a1722';
+                canvasContext.fillRect(0, 0, size, size);
+
+                if (!state.image) {
+                    return;
+                }
+
+                clampOffsets();
+                canvasContext.drawImage(
+                    state.image,
+                    state.offsetX,
+                    state.offsetY,
+                    state.image.width * state.scale,
+                    state.image.height * state.scale
+                );
+
+                updatePreview();
+            };
+
+            const updatePreview = () => {
+                const dataUrl = avatarCropCanvas.toDataURL('image/jpeg', 0.92);
+                avatarPreviewImage.src = dataUrl;
+            };
+
+            const syncZoomLabel = () => {
+                avatarZoomValue.textContent = Math.round(state.scale * 100) + '%';
+            };
+
+            const resetStatus = (message = '') => {
+                avatarCropStatus.textContent = message;
+            };
+
+            const openModal = () => {
+                avatarCropModal.classList.add('is-open');
+                avatarCropModal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                drawAvatarCanvas();
+            };
+
+            const closeModal = () => {
+                avatarCropModal.classList.remove('is-open');
+                avatarCropModal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+                state.isDragging = false;
+                resetStatus('');
+            };
+
+            const initializeImageState = (image, fileName) => {
+                state.image = image;
+                state.selectedName = fileName || 'avatar.jpg';
+
+                const size = getCanvasSize();
+                state.minScale = Math.max(size / image.width, size / image.height);
+                state.scale = state.minScale;
+                avatarZoomRange.min = String(state.minScale);
+                avatarZoomRange.max = String(Math.max(state.minScale + 2, state.minScale * 3));
+                avatarZoomRange.value = String(state.scale);
+                state.offsetX = (size - image.width * state.scale) / 2;
+                state.offsetY = (size - image.height * state.scale) / 2;
+                syncZoomLabel();
+                drawAvatarCanvas();
+                openModal();
+            };
+
+            const loadSelectedImage = (file) => {
+                if (!file || !file.type.startsWith('image/')) {
+                    resetStatus('Sélectionnez une image valide.');
+                    return;
+                }
+
+                revokeImageUrl();
+                state.imageUrl = URL.createObjectURL(file);
+                const image = new Image();
+                image.onload = () => {
+                    initializeImageState(image, file.name);
+                };
+                image.onerror = () => {
+                    resetStatus('Impossible de charger cette image.');
+                };
+                image.src = state.imageUrl;
+            };
+
+            const getPointerPosition = (event) => {
+                const rect = avatarCropCanvas.getBoundingClientRect();
+                const point = event.touches ? event.touches[0] : event;
+                return {
+                    x: point.clientX - rect.left,
+                    y: point.clientY - rect.top
+                };
+            };
+
+            const startDrag = (event) => {
+                if (!state.image) {
+                    return;
+                }
+                event.preventDefault();
+                const point = getPointerPosition(event);
+                state.isDragging = true;
+                state.dragStartX = point.x;
+                state.dragStartY = point.y;
+                state.startOffsetX = state.offsetX;
+                state.startOffsetY = state.offsetY;
+            };
+
+            const moveDrag = (event) => {
+                if (!state.isDragging || !state.image) {
+                    return;
+                }
+                event.preventDefault();
+                const point = getPointerPosition(event);
+                state.offsetX = state.startOffsetX + (point.x - state.dragStartX);
+                state.offsetY = state.startOffsetY + (point.y - state.dragStartY);
+                drawAvatarCanvas();
+            };
+
+            const endDrag = () => {
+                state.isDragging = false;
+            };
+
+            const submitCroppedAvatar = () => {
+                if (!state.image) {
+                    resetStatus('Commencez par choisir une image.');
+                    return;
+                }
+
+                resetStatus('Préparation de l’avatar…');
+                avatarCropCanvas.toBlob((blob) => {
+                    if (!blob) {
+                        resetStatus('Impossible de préparer l’image recadrée.');
+                        return;
+                    }
+
+                    const croppedFile = new File([blob], state.selectedName.replace(/\.[^.]+$/, '') + '-avatar.jpg', {
+                        type: 'image/jpeg'
+                    });
+                    const transfer = new DataTransfer();
+                    transfer.items.add(croppedFile);
+                    avatarFileInput.files = transfer.files;
+
+                    const previewUrl = URL.createObjectURL(blob);
+                    if (profileAvatarImage) {
+                        profileAvatarImage.src = previewUrl;
+                    }
+
+                    avatarUploadForm.submit();
+                }, 'image/jpeg', 0.92);
+            };
+
             avatarFileInput.addEventListener('change', () => {
                 if (avatarFileInput.files && avatarFileInput.files.length > 0) {
-                    avatarUploadForm.submit();
+                    resetStatus('');
+                    loadSelectedImage(avatarFileInput.files[0]);
+                }
+            });
+
+            avatarZoomRange.addEventListener('input', () => {
+                if (!state.image) {
+                    return;
+                }
+                const size = getCanvasSize();
+                const previousScale = state.scale;
+                const nextScale = Math.max(state.minScale, parseFloat(avatarZoomRange.value || state.minScale));
+                const centerX = (size / 2 - state.offsetX) / previousScale;
+                const centerY = (size / 2 - state.offsetY) / previousScale;
+                state.scale = nextScale;
+                state.offsetX = size / 2 - centerX * state.scale;
+                state.offsetY = size / 2 - centerY * state.scale;
+                syncZoomLabel();
+                drawAvatarCanvas();
+            });
+
+            avatarCropCanvas.addEventListener('mousedown', startDrag);
+            avatarCropCanvas.addEventListener('touchstart', startDrag, { passive: false });
+            window.addEventListener('mousemove', moveDrag);
+            window.addEventListener('touchmove', moveDrag, { passive: false });
+            window.addEventListener('mouseup', endDrag);
+            window.addEventListener('touchend', endDrag);
+            window.addEventListener('resize', drawAvatarCanvas);
+
+            avatarCancelButton.addEventListener('click', () => {
+                avatarFileInput.value = '';
+                closeModal();
+            });
+
+            avatarChooseOtherButton.addEventListener('click', () => {
+                avatarFileInput.click();
+            });
+
+            avatarSaveButton.addEventListener('click', submitCroppedAvatar);
+
+            avatarCropModal.addEventListener('click', (event) => {
+                if (event.target === avatarCropModal) {
+                    closeModal();
+                }
+            });
+
+            window.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && avatarCropModal.classList.contains('is-open')) {
+                    closeModal();
                 }
             });
         }
