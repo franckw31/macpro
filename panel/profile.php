@@ -689,8 +689,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             };
 
             const updatePreview = () => {
-                const dataUrl = avatarCropCanvas.toDataURL('image/jpeg', 0.92);
-                avatarPreviewImage.src = dataUrl;
+                // preview hidden / disabled for fixed center crop
             };
 
             const syncZoomLabel = () => {
@@ -789,39 +788,13 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             };
 
             const startDrag = (event) => {
-                if (!state.image) {
-                    return;
-                }
-                event.preventDefault();
-                // Ignore multi-touch pinches (zoom disabled)
-                if (event.touches && event.touches.length >= 2) {
-                    return;
-                }
-                const point = getPointerPosition(event);
-                state.isDragging = true;
-                state.isPinching = false;
-                state.dragStartX = point.x;
-                state.dragStartY = point.y;
-                state.startOffsetX = state.offsetX;
-                state.startOffsetY = state.offsetY;
+                // Drag disabled: do nothing (fixed centered crop)
+                return;
             };
 
             const moveDrag = (event) => {
-                if (!state.image) {
-                    return;
-                }
-                // Ignore multi-touch pinches (zoom disabled)
-                if (event.touches && event.touches.length >= 2) {
-                    return;
-                }
-                if (!state.isDragging) {
-                    return;
-                }
-                event.preventDefault();
-                const point = getPointerPosition(event);
-                state.offsetX = state.startOffsetX + (point.x - state.dragStartX);
-                state.offsetY = state.startOffsetY + (point.y - state.dragStartY);
-                drawAvatarCanvas();
+                // Drag disabled: ignore movement
+                return;
             };
 
             const endDrag = () => {
