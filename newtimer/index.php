@@ -465,6 +465,12 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         gap: 8px;
     }
 
+    .blind-input-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0;
+    }
+
     .blind-field-label {
         color: rgba(255,255,255,0.72);
         font-size: 12px;
@@ -475,6 +481,8 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     .blind-row input {
         width: 100%;
+        flex: 1 1 auto;
+        min-width: 0;
         min-height: 50px;
         padding: 0 14px;
         background: rgba(0,0,0,0.28);
@@ -489,6 +497,36 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         margin: 0;
         -moz-appearance: textfield;
         transition: all 0.2s ease;
+    }
+
+    .field-commit-btn {
+        width: 0;
+        min-width: 0;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+        margin-left: 0;
+        min-height: 42px;
+        padding: 0;
+        border-radius: 12px;
+        border: 0;
+        background: #18c4ff;
+        color: #061018;
+        font-size: 13px;
+        font-weight: 700;
+        white-space: nowrap;
+        transition: max-width 0.2s ease, margin-left 0.2s ease, opacity 0.16s ease, padding 0.2s ease;
+    }
+
+    .blind-field:focus-within .field-commit-btn {
+        width: auto;
+        min-width: 74px;
+        max-width: 74px;
+        opacity: 1;
+        pointer-events: auto;
+        margin-left: 8px;
+        padding: 0 12px;
     }
 
     .blind-row input:focus {
