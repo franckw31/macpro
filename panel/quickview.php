@@ -385,7 +385,7 @@ error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id(
 	}
 
 /* Header avatar sizing overrides (desktop + responsive) */
-.header .avatar { width: 48px !important; height: 48px !important; flex: 0 0 auto; border-radius: 6px; overflow: hidden; }
+.header .avatar { width: 48px !important; height: 48px !important; flex: 0 0 auto; border-radius: 6px; overflow: hidden; transform: translateX(-20px); }
 .header .avatar img { width:100%; height:100%; object-fit:cover; display:block; }
 @media (max-width: 600px) {
     .header .avatar { width: 40px !important; height: 40px !important; }
