@@ -335,106 +335,158 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     }
 
     /* Edit Panel */
-        .edit-panel, .load-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 20px;
-            z-index: 1000;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
+    .edit-panel, .load-panel {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        padding: 16px;
+        z-index: 1000;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
 
-        .edit-content, .load-content {
-            background: #1E1E1E;
-            padding: 20px;
-            border-radius: 15px;
-            max-width: 600px;
-            margin: 20px auto;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-            width: calc(100% - 40px);
-            box-sizing: border-box;
-        }
+    .edit-content, .load-content {
+        background: linear-gradient(180deg, rgba(23, 27, 36, 0.98), rgba(11, 14, 20, 0.98));
+        padding: 20px;
+        border-radius: 24px;
+        max-width: 760px;
+        margin: 12px auto;
+        box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+        width: min(100%, 760px);
+        box-sizing: border-box;
+        border: 1px solid rgba(255,255,255,0.08);
+    }
 
     .edit-header {
         position: sticky;
         top: 0;
         z-index: 25;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
-        gap: 12px;
-        margin: -20px -20px 14px;
-        padding: 16px 20px 12px;
-        background: linear-gradient(180deg, rgba(30,30,30,0.98), rgba(30,30,30,0.9));
-        border-radius: 15px 15px 0 0;
-        backdrop-filter: blur(10px);
+        gap: 16px;
+        margin: -20px -20px 18px;
+        padding: 18px 20px 14px;
+        background: linear-gradient(180deg, rgba(17, 22, 31, 0.98), rgba(17, 22, 31, 0.84));
+        border-radius: 24px 24px 0 0;
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .edit-title-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
     }
 
     .edit-title {
         margin: 0;
-        color: #90CAF9;
-        font-size: 24px;
-        line-height: 1.2;
+        color: #edf6ff;
+        font-size: 26px;
+        line-height: 1.15;
+        font-weight: 700;
     }
 
-    /* Blind Editor */
-    .blind-headers {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(80px, 1fr));
-        gap: 8px;
-        margin: 8px 0;
-        font-weight: bold;
-        color: #90CAF9;
-        padding: 0 8px;
+    .edit-subtitle {
+        color: rgba(255,255,255,0.62);
         font-size: 14px;
+        line-height: 1.4;
     }
 
     .blind-editor {
-        margin: 20px 0;
-        padding: 15px;
-        background: rgba(30, 30, 30, 0.9);
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.1);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+    }
+
+    .blind-grid {
+        display: grid;
+        gap: 14px;
     }
 
     .blind-row {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(80px, 1fr));
-        gap: 8px;
-        margin: 6px 0;
-        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 16px;
         position: relative;
-        align-items: center;
-        background: rgba(255,255,255,0.05);
-        border-radius: 6px;
-        transition: all 0.2s ease;
+        background: rgba(255,255,255,0.04);
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.08);
+        transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
         width: 100%;
         box-sizing: border-box;
     }
 
     .blind-row:hover {
-        background: rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.06);
+        border-color: rgba(144, 202, 249, 0.18);
+    }
+
+    .blind-row.highlighted {
+        background: rgba(33, 150, 243, 0.12);
+        border-color: rgba(80, 171, 255, 0.55);
+        box-shadow: 0 0 0 1px rgba(80,171,255,0.28), 0 14px 26px rgba(0,0,0,0.22);
+    }
+
+    .blind-row-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .blind-badge {
+        display: inline-flex;
+        align-items: center;
+        min-height: 32px;
+        padding: 0 12px;
+        border-radius: 999px;
+        background: rgba(24, 196, 255, 0.14);
+        color: #8edbff;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+    }
+
+    .blind-fields {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .blind-field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .blind-field-label {
+        color: rgba(255,255,255,0.72);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
     }
 
     .blind-row input {
         width: 100%;
-        padding: 8px;
-        background: rgba(0,0,0,0.3);
+        min-height: 50px;
+        padding: 0 14px;
+        background: rgba(0,0,0,0.28);
         border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 6px;
+        border-radius: 14px;
         color: white;
-        font-size: 14px;
+        font-size: 17px;
+        font-weight: 600;
         box-sizing: border-box;
         appearance: none;
         -webkit-appearance: none;
         margin: 0;
-        appearance: textfield;
         -moz-appearance: textfield;
         transition: all 0.2s ease;
     }
@@ -442,34 +494,32 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     .blind-row input:focus {
         outline: none;
         border-color: #2196F3;
-        box-shadow: 0 0 0 2px rgba(33,150,243,0.3);
-        background: rgba(0,0,0,0.5);
-    }
-
-    .blind-row input:focus {
-        outline: none;
-        border-color: #2196F3;
-        box-shadow: 0 0 0 2px rgba(33,150,243,0.2);
-    }
-
-    .blind-row.highlighted {
-        background-color: rgba(33, 150, 243, 0.2);
-        border-radius: 4px;
-        box-shadow: 0 0 0 2px rgba(33,150,243,0.5);
+        box-shadow: 0 0 0 3px rgba(33,150,243,0.22);
+        background: rgba(0,0,0,0.44);
     }
 
     .blind-row input.invalid {
         border-color: #ff6b6b;
-        box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.18);
+        box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.18);
         background: rgba(90, 18, 18, 0.35);
+    }
+
+    .edit-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 18px 0 14px;
+        flex-wrap: wrap;
     }
 
     .editor-validation-message {
         min-height: 22px;
-        margin-top: 10px;
+        margin: 0;
         color: rgba(255,255,255,0.72);
         font-size: 13px;
-        text-align: center;
+        text-align: left;
+        flex: 1;
     }
 
     .editor-validation-message.error {
@@ -480,84 +530,43 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         color: #7ee0a0;
     }
 
-    /* Remove Button */
-        .row-actions {
-            display: flex;
-            gap: 5px;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
+    .row-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
 
     .insert-btn, .remove-btn {
-        width: 32px;
-        height: 32px;
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        min-height: 42px;
         color: white;
         border-radius: 50%;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        font-size: 18px;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        min-width: 44px;
-        min-height: 44px;
+        font-size: 20px;
+        font-weight: 700;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
         border: none;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.22);
     }
 
-    .insert-btn:hover {
-        transform: scale(1.1);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-
+    .insert-btn:hover,
     .remove-btn:hover {
-        transform: scale(1.1);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transform: translateY(-1px);
+        box-shadow: 0 12px 22px rgba(0,0,0,0.3);
     }
 
     .insert-btn {
-        background-color: #4CAF50;
-    }
-
-    .insert-btn:hover {
-        background-color: #388E3C;
+        background: linear-gradient(180deg, #37d86c, #1faa4d);
     }
 
     .remove-btn {
-        background-color: #F44336;
-    }
-
-    .remove-btn:hover {
-        background: #D32F2F;
-        transform: scale(1.1);
-    }
-
-    .insert-btn {
-        background-color: #4CAF50;
-        width: 32px;
-        height: 32px;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 18px;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        min-width: 44px;
-        min-height: 44px;
-        border: none;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .insert-btn:hover {
-        background-color: #388E3C;
-        transform: scale(1.1);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        background: linear-gradient(180deg, #ff6969, #df3f3f);
     }
 
     /* Structure Items */
@@ -648,18 +657,18 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             flex-direction: column; 
         }
 
-        .blind-row {
-            grid-template-columns: 1fr;
-        }
-
         .edit-header {
-            margin: -20px -20px 12px;
-            padding: 14px 16px 10px;
-            align-items: flex-start;
+            margin: -20px -20px 14px;
+            padding: 14px 16px 12px;
+            gap: 10px;
         }
 
         .edit-title {
             font-size: 20px;
+        }
+
+        .edit-subtitle {
+            font-size: 13px;
         }
 
         .edit-done-btn {
@@ -668,15 +677,23 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             font-size: 14px;
         }
 
-        .remove-btn {
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
+        .edit-content, .load-content {
+            margin: 8px auto;
+            padding: 16px;
+            border-radius: 20px;
         }
 
-        .edit-content, .load-content {
-            margin: 10px;
-            padding: 15px;
+        .blind-fields {
+            grid-template-columns: 1fr;
+        }
+
+        .edit-toolbar {
+            align-items: stretch;
+        }
+
+        .editor-validation-message {
+            width: 100%;
+            order: 2;
         }
     }
 
@@ -693,107 +710,6 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         .structure-item:hover {
             background: rgba(255,255,255,0.12);
         }
-    }
-
-    .edit-panel {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.9);
-        padding: 20px;
-        z-index: 1000;
-    }
-
-    .edit-content {
-        background: #1E1E1E;
-        padding: 20px;
-        border-radius: 15px;
-        max-width: 600px;
-        margin: 20px auto;
-        max-height: 90vh;
-        overflow-y: auto;
-    }
-
-    .blind-editor {
-        margin: 20px 0;
-    }
-
-    .blind-row {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        margin: 10px 0;
-        position: relative;
-    }
-
-    .blind-row input {
-        width: 100%;
-        padding: 8px;
-        background: #333;
-        border: 1px solid #555;
-        border-radius: 4px;
-        color: white;
-    }
-
-    .remove-btn {
-        position: absolute;
-        right: -30px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 24px;
-        height: 24px;
-        background: #F44336;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    }
-
-    .blind-headers {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        margin-bottom: 15px;
-        color: #90CAF9;
-        font-weight: bold;
-    }
-
-    .blind-row {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        margin: 10px 0;
-        position: relative;
-    }
-
-    .blind-row input {
-        width: 100%;
-        padding: 8px;
-        background: #333;
-        border: 1px solid #555;
-        border-radius: 4px;
-        color: white;
-    }
-
-    .remove-btn {
-        position: absolute;
-        right: -30px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 24px;
-        height: 24px;
-        background: #F44336;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
     }
 
     .structure-controls {
