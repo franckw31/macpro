@@ -2491,7 +2491,7 @@ function addLevel() {
     
     if (editBtn) editBtn.addEventListener('click', showEditPanel);
     if (cancelEditBtn) cancelEditBtn.addEventListener('click', hideEditPanel);
-    if (closeEditBtn) closeEditBtn.addEventListener('click', hideEditPanel);
+    if (closeEditBtn) closeEditBtn.addEventListener('click', submitBlindEditorChanges);
     if (saveToDbBtn) saveToDbBtn.addEventListener('click', saveToDatabase);
     if (loadFromDbBtn) loadFromDbBtn.addEventListener('click', showLoadPanel);
     if (closeLoadBtn) closeLoadBtn.addEventListener('click', () => {
