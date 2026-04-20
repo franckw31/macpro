@@ -533,7 +533,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				<div style="margin-left:auto;display:flex;align-items:center;gap:12px">
 					<div id="offline-badge" class="offline-badge" aria-hidden="true"></div>
 					<a id="header-profile-link" href="/panel/profile.php<?php echo (!empty($serverActivity['id'])? '?uid=' . intval($serverActivity['id']): ''); ?>" role="link" title="Mon Profil" style="text-decoration:none;color:inherit;display:inline-flex;align-items:center;justify-content:center">
-					<div class="avatar" style="width:48px;height:48px;box-shadow:0 2px 8px rgba(0,0,0,0.15);border-radius:50%;border:3px solid #fff;outline:2px solid #1976d2;outline-offset:0;"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar" style="width:100%;height:100%;object-fit:cover"></div>
+					<div class="avatar" style="width:64px;height:64px;box-shadow:0 4px 16px rgba(0,0,0,0.18);border-radius:50%;border:4px solid #fff;outline:3px solid #1976d2;outline-offset:0;"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar" style="width:100%;height:100%;object-fit:cover"></div>
 					</a>
 				</div>
 			</div>
