@@ -135,16 +135,15 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         .stat{background:rgba(255,255,255,0.02);padding:10px;border-radius:10px;text-align:center}
         .stat .num{font-weight:800;font-size:18px}
         .stat .sub{color:#9aa6b1;font-size:12px}
-        /* Top actions */
         .top-actions{position:fixed;right:18px;top:18px;display:flex;gap:10px;z-index:20}
         .top-action{background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:20px;border:0;color:#ff9d3b;font-weight:700;backdrop-filter:blur(4px);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
-        .top-action.logout{color:#ff6b6b}
+        .profile-footer-action{display:flex;justify-content:center;margin-top:18px}
+        .profile-footer-action .top-action.logout{color:#ff6b6b;min-width:160px;justify-content:center}
     </style>
 </head>
 <body>
     <div class="top-actions">
         <button class="top-action" onclick="history.back();">Fermer</button>
-        <a class="top-action logout" href="/panel/logout.php">Déconnexion</a>
     </div>
     <div class="sheet">
         <div class="avatar"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar"></div>
@@ -208,6 +207,10 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 <div>Meilleur gain</div>
                 <div style="font-weight:800;color:#16a34a"><?php echo htmlspecialchars(number_format($stats['best_gain'],0,',',' ')) . ' €'; ?></div>
             </div>
+        </div>
+
+        <div class="profile-footer-action">
+            <a class="top-action logout" href="/panel/logout.php">Déconnexion</a>
         </div>
     </div>
 </body>
