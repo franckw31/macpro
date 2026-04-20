@@ -946,7 +946,13 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         }
 
         .structure-actions {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .structure-actions button {
+            min-height: 42px;
+            padding: 0 8px;
+            font-size: 12px;
         }
 
         .edit-content, .load-content {
