@@ -533,9 +533,8 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                         <label class="avatar-control"><span>Confirmer</span><input name="confirm_password" id="pwd_confirm" type="password" style="width:70%;max-width:320px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
                     </div>
                     <div id="pwdStatus" class="avatar-status"></div>
-                    <div class="avatar-modal-actions">
+                    <div class="avatar-modal-actions" style="display:flex;gap:10px;justify-content:flex-end">
                         <button type="button" id="pwdCancel" class="avatar-action ghost">Annuler</button>
-                        <div></div>
                         <button type="submit" id="pwdSave" class="avatar-action primary">Enregistrer</button>
                     </div>
                 </div>
