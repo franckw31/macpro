@@ -2658,6 +2658,7 @@ function addLevel() {
                                 <div class="structure-meta">
                                     <span class="structure-chip">${escapeHtml(formatStructureDate(structure.created_at))}</span>
                                     <span class="structure-chip">${escapeHtml(structure.level_count)} niveaux</span>
+                                    <span class="structure-chip">${escapeHtml(structure.saved_by || 'Utilisateur inconnu')}</span>
                                 </div>
                             </div>
                         </div>
