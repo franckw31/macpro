@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				<div style="margin-left:auto;display:flex;align-items:center;gap:12px">
 					<div id="offline-badge" class="offline-badge" aria-hidden="true"></div>
 					<a id="header-profile-link" href="/panel/profile.php<?php echo (!empty($serverActivity['id'])? '?uid=' . intval($serverActivity['id']): ''); ?>" role="link" title="Mon Profil" style="text-decoration:none;color:inherit;display:inline-flex;align-items:center;justify-content:center">
-					<div class="avatar" style="width:64px !important;height:64px !important;box-shadow:0 4px 16px rgba(0,0,0,0.18);border-radius:50%;border:4px solid #fff;outline:3px solid #1976d2;outline-offset:0;"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar" style="width:100%;height:100%;object-fit:cover"></div>
+					<div class="avatar header-avatar-override"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar" style="width:100%;height:100%;object-fit:cover"></div>
 					</a>
 				</div>
 			</div>
@@ -574,27 +574,31 @@ document.addEventListener('DOMContentLoaded', function() {
 				<!-- debug-info removed to prevent on-screen JSON debug output -->
 		</header>
 
-		<div class="container">
-				<section id="activity-card" class="card stroked">
-			<div class="section-title">Prochaine partie</div>
-			<hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
-			<!-- removed duplicate small label to avoid repeating the title -->
-			<div class="row" style="margin-top:6px">
-				<div style="flex:1">
-					<div id="activity-name" style="font-weight:800;font-size:18px"><?php echo !empty($serverActivity['title'])? htmlspecialchars($serverActivity['title']) : '—'; ?></div>
-					<div style="display:flex;align-items:center;gap:8px;margin-top:6px">
-						<div class="date-pill"><svg class="date-pill-icon" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12.5 8v5l3 1" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
-						<div id="activity-date" class="small" style="color:var(--gold);font-weight:700"><?php echo !empty($serverActivity['display_date'])? htmlspecialchars($serverActivity['display_date']) : (!empty($serverActivity['date'])? htmlspecialchars($serverActivity['date']) : '—'); ?></div>
-					</div>
-					<div style="margin-top:8px;display:flex;gap:1px;align-items:center">
-						<div class="pill" id="buyin-pill"><span><?php echo isset($serverActivity['buyin'])? htmlspecialchars($serverActivity['buyin']).' €':'—'; ?></span></div>
-						<div class="pill" id="rake-pill">
-							<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
-								<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
-								<path d="M9 6v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-								<path d="M10.5 6v6" stroke="currentColor" stroke-width="1.0" stroke-linecap="round"/>
-								<path d="M15 5l-1.5 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-							</svg>
+	/* Force header avatar size regardless of global .avatar rules */
+	.header-avatar-override {
+		width: 64px !important;
+		height: 64px !important;
+		min-width: 64px !important;
+		min-height: 64px !important;
+		max-width: 64px !important;
+		max-height: 64px !important;
+		border-radius: 50% !important;
+		box-shadow: 0 4px 16px rgba(0,0,0,0.18) !important;
+		border: 4px solid #fff !important;
+		outline: 3px solid #1976d2 !important;
+		outline-offset: 0 !important;
+		background: #fff !important;
+		display: inline-block !important;
+		overflow: hidden !important;
+		position: relative;
+	}
+	.header-avatar-override img {
+		width: 100% !important;
+		height: 100% !important;
+		object-fit: cover !important;
+		border-radius: 50% !important;
+		display: block;
+	}
 							<span><?php echo isset($serverActivity['rake'])? htmlspecialchars($serverActivity['rake']).' €':'—'; ?></span>
 						</div>
 						<div class="pill" id="recave-pill"><span><?php echo isset($serverActivity['recave'])? htmlspecialchars($serverActivity['recave']).' Rec':'—'; ?></span></div>
