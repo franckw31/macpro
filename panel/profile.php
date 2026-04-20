@@ -316,15 +316,15 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         body{background:rgba(0,0,0,0.85);font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;margin:0;padding:18px;color:#eef6fb}
         /* Centered sheet */
         .sheet{max-width:520px;margin:18px auto;background:#071019;color:#eef6fb;border-radius:18px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
-        .avatar{display:block;flex:none;width:44px;height:44px;border-radius:50%;overflow:hidden;margin:0 auto;line-height:0}
+        .avatar{display:block;flex:none;width:84px;height:84px;border-radius:50%;overflow:hidden;margin:0 auto;line-height:0}
         .avatar img{width:100%;height:100%;object-fit:cover}
         .avatar-upload-form{display:none}
         .avatar-trigger{display:flex;flex-direction:column;align-items:center;justify-content:center;width:-moz-fit-content;width:fit-content;max-width:100%;margin:6px auto 0;background:none;border:0;padding:0;color:inherit;cursor:pointer;text-align:center}
         .avatar-wrap{position:relative;display:inline-block}
-        .avatar-edit-badge{position:absolute;right:-4px;bottom:-4px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#08b0ff;color:#04131d;font-size:9px;font-weight:800;box-shadow:0 8px 18px rgba(0,0,0,0.35)}
+        .avatar-edit-badge{position:absolute;right:-4px;bottom:-4px;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#08b0ff;color:#04131d;font-size:12px;font-weight:800;box-shadow:0 8px 18px rgba(0,0,0,0.35)}
         .avatar-hint{margin-top:6px;color:#9aa6b1;font-size:11px}
-        .profile-identity{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px}
-        .profile-identity-text{display:flex;flex-direction:column;align-items:flex-start}
+        .profile-identity{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:12px}
+        .profile-identity-text{display:flex;flex-direction:column;align-items:center;text-align:center}
         .avatar-trigger:hover .avatar-edit-badge{transform:scale(1.05)}
         .avatar-modal{position:fixed;inset:0;background:rgba(1,8,15,0.88);display:none;align-items:center;justify-content:center;padding:12px;z-index:60}
         .avatar-modal.is-open{display:flex}
@@ -352,7 +352,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         .flash{margin:0 0 14px;padding:10px 12px;border-radius:12px;font-size:14px;font-weight:700}
         .flash.success{background:rgba(22,163,74,0.14);color:#7cf0a8;border:1px solid rgba(22,163,74,0.28)}
         .flash.error{background:rgba(255,77,77,0.12);color:#ff9c9c;border:1px solid rgba(255,77,77,0.24)}
-        .name{text-align:left;font-weight:800;font-size:20px;margin-top:0}
+        .name{text-align:center;font-weight:800;font-size:20px;margin-top:0}
         /* Cards use subtle contrast on dark sheet */
         .card{background:rgba(255,255,255,0.03);padding:12px;border-radius:12px;margin-top:12px;border:1px solid rgba(255,255,255,0.03)}
         .card-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
@@ -370,9 +370,9 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         @media (max-width: 480px){
             body{padding:12px}
             .sheet{margin:10px auto;padding:14px;border-radius:16px}
-            .avatar{width:40px;height:40px}
-            .avatar-edit-badge{width:16px;height:16px;font-size:8px}
-            .profile-identity{gap:10px;margin-bottom:8px}
+            .avatar{width:72px;height:72px}
+            .avatar-edit-badge{width:22px;height:22px;font-size:10px}
+            .profile-identity{gap:8px;margin-bottom:10px}
             .avatar-modal-card{width:min(100%,340px);padding:14px;border-radius:18px}
             .avatar-canvas-wrap{width:min(100%,208px)}
             .avatar-modal-subtitle,.avatar-helper,.avatar-status{font-size:12px}
