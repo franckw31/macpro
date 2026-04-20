@@ -235,18 +235,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'uploa
     exit;
 }
 
-// Handle password change from profile page
+// Handle password change from profile page (no current password required)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'change_password') {
     $redirect_uri = $_SERVER['REQUEST_URI'] ?? '/panel/profile.php';
     $set_flash = function(string $type, string $message) {
         $_SESSION['profile_avatar_flash'] = ['type' => $type, 'message' => $message];
     };
 
-    $current = isset($_POST['current_password']) ? trim((string)$_POST['current_password']) : '';
     $new = isset($_POST['new_password']) ? trim((string)$_POST['new_password']) : '';
     $confirm = isset($_POST['confirm_password']) ? trim((string)$_POST['confirm_password']) : '';
 
-    if ($current === '' || $new === '' || $confirm === '') {
+    if ($new === '' || $confirm === '') {
         $set_flash('error', 'Tous les champs sont requis.');
         header('Location: ' . $redirect_uri);
         exit;
@@ -258,32 +257,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'chang
     }
     if (strlen($new) < 6) {
         $set_flash('error', 'Le mot de passe doit contenir au moins 6 caractères.');
-        header('Location: ' . $redirect_uri);
-        exit;
-    }
-
-    // fetch current stored password(s)
-    $stored = null;
-    $stored_ext = null;
-    if ($stmt = @mysqli_prepare($con, "SELECT password, password_ext FROM membres WHERE `id-membre` = ? LIMIT 1")) {
-        mysqli_stmt_bind_param($stmt, 'i', $uid);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_bind_result($stmt, $stored, $stored_ext);
-        mysqli_stmt_fetch($stmt);
-        mysqli_stmt_close($stmt);
-    }
-
-    $stored = $stored ?? '';
-    $stored_ext = $stored_ext ?? '';
-
-    $current_ok = false;
-    // Accept exact match, md5 match, or match against password_ext
-    if ($current !== '' && ($current === $stored || md5($current) === $stored || $current === $stored_ext)) {
-        $current_ok = true;
-    }
-
-    if (!$current_ok) {
-        $set_flash('error', 'Mot de passe actuel incorrect.');
         header('Location: ' . $redirect_uri);
         exit;
     }
