@@ -2,6 +2,10 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
 // Database configuration
 $db_config = [
     'host' => 'localhost',
@@ -26,6 +30,39 @@ function getDbConnection($config) {
     }
 }
 
+function getCurrentBlindStructureUser(): string {
+    $sessionCandidates = [
+        $_SESSION['user'] ?? null,
+        $_SESSION['login'] ?? null,
+        $_SESSION['nom'] ?? null,
+    ];
+
+    foreach ($sessionCandidates as $candidate) {
+        $value = trim((string)($candidate ?? ''));
+        if ($value !== '') {
+            return $value;
+        }
+    }
+
+    return 'Utilisateur inconnu';
+}
+
+function ensureBlindStructureSavedByColumn(PDO $conn): void {
+    static $checked = false;
+
+    if ($checked) {
+        return;
+    }
+
+    $checked = true;
+    $stmt = $conn->query("SHOW COLUMNS FROM blind_structures LIKE 'saved_by'");
+    $exists = $stmt ? $stmt->fetch() : false;
+
+    if (!$exists) {
+        $conn->exec("ALTER TABLE blind_structures ADD COLUMN saved_by VARCHAR(255) NULL AFTER name");
+    }
+}
+
 // Handle AJAX requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
@@ -36,14 +73,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => false, 'error' => 'Database connection failed']);
         exit;
     }
+
+    ensureBlindStructureSavedByColumn($conn);
     
     switch ($data['action'] ?? '') {
         case 'save':
             try {
                 $conn->beginTransaction();
+                $savedBy = getCurrentBlindStructureUser();
                 
-                $stmt = $conn->prepare("INSERT INTO blind_structures (name) VALUES (?)");
-                if (!$stmt->execute([$data['name']])) {
+                $stmt = $conn->prepare("INSERT INTO blind_structures (name, saved_by) VALUES (?, ?)");
+                if (!$stmt->execute([$data['name'], $savedBy])) {
                     throw new Exception("Failed to save structure name");
                 }
                 $structureId = $conn->lastInsertId();
@@ -107,11 +147,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     SELECT 
                         bs.id,
                         bs.name,
+                        COALESCE(bs.saved_by, '') AS saved_by,
                         bs.created_at,
                         COUNT(bl.id) as level_count 
                     FROM blind_structures bs 
                     LEFT JOIN blind_levels bl ON bs.id = bl.structure_id 
-                    GROUP BY bs.id, bs.name, bs.created_at
+                    GROUP BY bs.id, bs.name, bs.saved_by, bs.created_at
                     ORDER BY bs.created_at DESC
                 ");
                 
