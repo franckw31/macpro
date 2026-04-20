@@ -1682,7 +1682,7 @@ function toggleStartPause() {
         speakAnnouncement('Pause du taimeur');
     } else {
         startTimer();
-        speakAnnouncement('Reprise du timer');
+        speakAnnouncement('Reprise du taimeur');
     }
     updateLevelButtons();
     saveTimerState();
