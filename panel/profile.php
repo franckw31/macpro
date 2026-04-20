@@ -577,37 +577,15 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             btn.addEventListener('click', function(e){ e.preventDefault(); open(); });
             pwdCancel.addEventListener('click', function(e){ e.preventDefault(); close(); });
 
-            pwdSave.addEventListener('click', function(e){
-                e.preventDefault();
+            // Validate on native form submit to ensure a single click submits
+            form.addEventListener('submit', function(e){
                 const n = (pwdNew.value || '').trim();
                 const c = (pwdConfirm.value || '').trim();
-                if (!n || !c) { pwdStatus.textContent = 'Tous les champs sont requis.'; return; }
+                if (!n || !c) { e.preventDefault(); pwdStatus.textContent = 'Tous les champs sont requis.'; return; }
                 // no minimum length enforced
-                if (n !== c) { pwdStatus.textContent = 'Les mots de passe ne correspondent pas.'; return; }
-
-                // Prepare submission
-                hidNew.value = n;
-                hidConfirm.value = c;
-                // Close modal and disable button to avoid double clicks
-                close();
-                try { pwdSave.disabled = true; pwdSave.textContent = 'Envoi…'; } catch(e){}
-                // Create and submit a temporary form to force single-click submission
-                try {
-                    const tmp = document.createElement('form');
-                    tmp.method = 'post';
-                    tmp.style.display = 'none';
-                    // action left empty -> same URL
-                    const a = document.createElement('input'); a.type = 'hidden'; a.name = 'action'; a.value = 'change_password'; tmp.appendChild(a);
-                    const nn = document.createElement('input'); nn.type = 'hidden'; nn.name = 'new_password'; nn.value = n; tmp.appendChild(nn);
-                    const cc = document.createElement('input'); cc.type = 'hidden'; cc.name = 'confirm_password'; cc.value = c; tmp.appendChild(cc);
-                    document.body.appendChild(tmp);
-                    tmp.submit();
-                    // remove after a tick
-                    setTimeout(()=>{ try{ document.body.removeChild(tmp); }catch(e){} }, 1000);
-                } catch(e) {
-                    // fallback
-                    try { form.requestSubmit ? form.requestSubmit() : form.submit(); } catch(_) { form.submit(); }
-                }
+                if (n !== c) { e.preventDefault(); pwdStatus.textContent = 'Les mots de passe ne correspondent pas.'; return; }
+                // allow native submit — close modal and show sending state
+                try { close(); pwdSave.disabled = true; pwdSave.textContent = 'Envoi…'; } catch(e){}
             });
 
             modal.addEventListener('click', function(ev){ if (ev.target === modal) close(); });
