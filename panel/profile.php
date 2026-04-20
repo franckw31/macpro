@@ -319,7 +319,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         .avatar{width:60px;height:60px;border-radius:50%;overflow:hidden;margin:0 auto}
         .avatar img{width:100%;height:100%;object-fit:cover}
         .avatar-upload-form{display:none}
-        .avatar-trigger{display:block;margin:6px auto 0;background:none;border:0;padding:0;color:inherit;cursor:pointer;text-align:center}
+        .avatar-trigger{display:flex;flex-direction:column;align-items:center;justify-content:center;width:-moz-fit-content;width:fit-content;max-width:100%;margin:6px auto 0;background:none;border:0;padding:0;color:inherit;cursor:pointer;text-align:center}
         .avatar-wrap{position:relative;display:inline-block}
         .avatar-edit-badge{position:absolute;right:-3px;bottom:-3px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#08b0ff;color:#04131d;font-size:11px;font-weight:800;box-shadow:0 8px 18px rgba(0,0,0,0.35)}
         .avatar-hint{margin-top:6px;color:#9aa6b1;font-size:11px}
