@@ -41,6 +41,110 @@ if ($uid <= 0) {
     exit;
 }
 
+$profile_flash = $_SESSION['profile_avatar_flash'] ?? null;
+unset($_SESSION['profile_avatar_flash']);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'upload_avatar') {
+    $redirect_uri = $_SERVER['REQUEST_URI'] ?? '/panel/profile.php';
+
+    $set_flash = function(string $type, string $message) {
+        $_SESSION['profile_avatar_flash'] = ['type' => $type, 'message' => $message];
+    };
+
+    $target_dir = __DIR__ . '/../images/faces/';
+    if (!is_dir($target_dir) && !mkdir($target_dir, 0755, true)) {
+        $set_flash('error', "Impossible de créer le dossier des avatars.");
+        header('Location: ' . $redirect_uri);
+        exit;
+    }
+
+    if (!is_writable($target_dir)) {
+        $set_flash('error', "Le dossier des avatars n'est pas accessible en écriture.");
+        header('Location: ' . $redirect_uri);
+        exit;
+    }
+
+    if (empty($_FILES['fileToUpload']) || !isset($_FILES['fileToUpload']['error'])) {
+        $set_flash('error', "Aucun fichier sélectionné.");
+        header('Location: ' . $redirect_uri);
+        exit;
+    }
+
+    if ((int)$_FILES['fileToUpload']['error'] !== UPLOAD_ERR_OK) {
+        $set_flash('error', "Le téléchargement a échoué.");
+        header('Location: ' . $redirect_uri);
+        exit;
+    }
+
+    $tmp_name = $_FILES['fileToUpload']['tmp_name'];
+    $file_size = (int)($_FILES['fileToUpload']['size'] ?? 0);
+    $extension = strtolower(pathinfo($_FILES['fileToUpload']['name'] ?? '', PATHINFO_EXTENSION));
+    $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+    if (!in_array($extension, $allowed_extensions, true)) {
+        $set_flash('error', "Seuls les fichiers JPG, JPEG, PNG, GIF et WEBP sont autorisés.");
+        header('Location: ' . $redirect_uri);
+        exit;
+    }
+
+    $image_info = @getimagesize($tmp_name);
+    if ($image_info === false) {
+        $set_flash('error', "Le fichier sélectionné n'est pas une image valide.");
+        header('Location: ' . $redirect_uri);
+        exit;
+    }
+
+    if ($file_size > 5 * 1024 * 1024) {
+        $set_flash('error', "L'image est trop volumineuse (max 5 Mo).");
+        header('Location: ' . $redirect_uri);
+        exit;
+    }
+
+    $new_filename = 'profile_' . $uid . '_' . time() . '.' . $extension;
+    $target_file = $target_dir . $new_filename;
+
+    $old_photo = '';
+    if ($stmt_old = @mysqli_prepare($con, "SELECT photo FROM membres WHERE `id-membre` = ? LIMIT 1")) {
+        mysqli_stmt_bind_param($stmt_old, 'i', $uid);
+        mysqli_stmt_execute($stmt_old);
+        mysqli_stmt_bind_result($stmt_old, $old_photo);
+        mysqli_stmt_fetch($stmt_old);
+        mysqli_stmt_close($stmt_old);
+    }
+
+    if (!move_uploaded_file($tmp_name, $target_file)) {
+        $set_flash('error', "Impossible d'enregistrer l'image téléchargée.");
+        header('Location: ' . $redirect_uri);
+        exit;
+    }
+
+    $updated = false;
+    if ($stmt_update = @mysqli_prepare($con, "UPDATE membres SET photo = ? WHERE `id-membre` = ?")) {
+        mysqli_stmt_bind_param($stmt_update, 'si', $new_filename, $uid);
+        $updated = mysqli_stmt_execute($stmt_update);
+        mysqli_stmt_close($stmt_update);
+    }
+
+    if (!$updated) {
+        @unlink($target_file);
+        $set_flash('error', "La mise à jour de la photo a échoué.");
+        header('Location: ' . $redirect_uri);
+        exit;
+    }
+
+    $old_photo = trim((string)$old_photo);
+    if ($old_photo !== '' && !in_array($old_photo, ['noprofil.jpg', 'man.png'], true)) {
+        $old_path = $target_dir . basename($old_photo);
+        if (is_file($old_path)) {
+            @unlink($old_path);
+        }
+    }
+
+    $set_flash('success', "Photo de profil mise à jour avec succès.");
+    header('Location: ' . $redirect_uri);
+    exit;
+}
+
 $user = ['pseudo' => 'Visiteur', 'photo' => 'noprofil.jpg'];
 $q = @mysqli_query($con, "SELECT * FROM membres WHERE `id-membre` = '" . intval($uid) . "' LIMIT 1");
 if ($q && ($r = mysqli_fetch_assoc($q))) {
@@ -122,8 +226,17 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         body{background:rgba(0,0,0,0.85);font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;margin:0;padding:18px;color:#eef6fb}
         /* Centered sheet */
         .sheet{max-width:520px;margin:18px auto;background:#071019;color:#eef6fb;border-radius:18px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
-        .avatar{width:96px;height:96px;border-radius:50%;overflow:hidden;margin:10px auto}
+        .avatar{width:96px;height:96px;border-radius:50%;overflow:hidden;margin:0 auto}
         .avatar img{width:100%;height:100%;object-fit:cover}
+        .avatar-upload-form{display:none}
+        .avatar-trigger{display:block;margin:10px auto 0;background:none;border:0;padding:0;color:inherit;cursor:pointer;text-align:center}
+        .avatar-wrap{position:relative;display:inline-block}
+        .avatar-edit-badge{position:absolute;right:-2px;bottom:-2px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#08b0ff;color:#04131d;font-size:14px;font-weight:800;box-shadow:0 8px 18px rgba(0,0,0,0.35)}
+        .avatar-hint{margin-top:8px;color:#9aa6b1;font-size:12px}
+        .avatar-trigger:hover .avatar-edit-badge{transform:scale(1.05)}
+        .flash{margin:0 0 14px;padding:10px 12px;border-radius:12px;font-size:14px;font-weight:700}
+        .flash.success{background:rgba(22,163,74,0.14);color:#7cf0a8;border:1px solid rgba(22,163,74,0.28)}
+        .flash.error{background:rgba(255,77,77,0.12);color:#ff9c9c;border:1px solid rgba(255,77,77,0.24)}
         .name{text-align:center;font-weight:800;font-size:20px;margin-top:6px}
         /* Cards use subtle contrast on dark sheet */
         .card{background:rgba(255,255,255,0.03);padding:12px;border-radius:12px;margin-top:12px;border:1px solid rgba(255,255,255,0.03)}
@@ -146,7 +259,22 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         <button class="top-action" onclick="history.back();">Fermer</button>
     </div>
     <div class="sheet">
-        <div class="avatar"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar"></div>
+        <?php if (!empty($profile_flash['message'])): ?>
+            <div class="flash <?php echo (($profile_flash['type'] ?? '') === 'success') ? 'success' : 'error'; ?>"><?php echo htmlspecialchars($profile_flash['message']); ?></div>
+        <?php endif; ?>
+
+        <form id="avatarUploadForm" class="avatar-upload-form" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="upload_avatar">
+            <input type="file" name="fileToUpload" id="avatarFileInput" accept="image/png,image/jpeg,image/gif,image/webp">
+        </form>
+
+        <button type="button" class="avatar-trigger" onclick="document.getElementById('avatarFileInput').click();">
+            <span class="avatar-wrap">
+                <span class="avatar"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar"></span>
+                <span class="avatar-edit-badge">📷</span>
+            </span>
+            <div class="avatar-hint">Cliquer pour changer la photo</div>
+        </button>
         <div class="name"><span style="color:#16a34a"><?php echo htmlspecialchars($user['pseudo']); ?></span></div>
 
         <div class="card">
@@ -213,5 +341,16 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             <a class="top-action logout" href="/panel/logout.php">Déconnexion</a>
         </div>
     </div>
+    <script>
+        const avatarFileInput = document.getElementById('avatarFileInput');
+        const avatarUploadForm = document.getElementById('avatarUploadForm');
+        if (avatarFileInput && avatarUploadForm) {
+            avatarFileInput.addEventListener('change', () => {
+                if (avatarFileInput.files && avatarFileInput.files.length > 0) {
+                    avatarUploadForm.submit();
+                }
+            });
+        }
+    </script>
 </body>
 </html>
