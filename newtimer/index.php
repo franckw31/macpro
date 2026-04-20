@@ -1633,8 +1633,10 @@ function loadTimerState() {
 function toggleStartPause() {
     if (isRunning) {
         stopTimer();
+        speakAnnouncement('Pause du timer');
     } else {
         startTimer();
+        speakAnnouncement('Reprise du timer');
     }
     updateLevelButtons();
     saveTimerState();
@@ -1648,9 +1650,11 @@ function handleLevelEnd() {
         updateDisplay();
         saveTimerState();
         playSound('levelSound'); // Garder le son uniquement pour le changement de niveau
+        speakAnnouncement(`Niveau ${blindLevels[currentLevel].level}`);
     } else {
         stopTimer();
         playSound('endSound'); // Garder le son pour la fin du tournoi
+        speakAnnouncement('Fin du tournoi');
         alert('Tournament finished!');
     }
 }
