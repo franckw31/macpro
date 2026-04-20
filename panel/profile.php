@@ -831,10 +831,11 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 }, 'image/jpeg', 0.92);
             };
 
+            // keep legacy handler for optional client cropping, but do not open modal
             avatarFileInput.addEventListener('change', () => {
                 if (avatarFileInput.files && avatarFileInput.files.length > 0) {
-                    resetStatus('');
-                    loadSelectedImage(avatarFileInput.files[0]);
+                    // submit directly to server; server will create centered square crop
+                    avatarUploadForm.submit();
                 }
             });
 
