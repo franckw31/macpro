@@ -1511,34 +1511,6 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             }
         }
 
-        // Timer functions
-        function updateDisplay() {
-            const minutes = Math.floor(Math.max(0, timeLeft) / 60);
-            const seconds = Math.max(0, timeLeft) % 60;
-            document.getElementById('cardevent').textContent = 
-                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            
-            const currentBlinds = blindLevels[currentLevel];
-            document.getElementById('level').textContent = currentBlinds.level;
-            document.getElementById('blinds').textContent = 
-                `${currentBlinds.small_blind}/${currentBlinds.big_blind}`;
-            document.getElementById('ante').textContent = currentBlinds.ante;
-            
-            if (currentLevel < blindLevels.length - 1) {
-                const nextBlinds = blindLevels[currentLevel + 1];
-                document.getElementById('next-blind').textContent = 
-                    `${nextBlinds.small_blind}/${nextBlinds.big_blind}`;
-            } else {
-                document.getElementById('next-blind').textContent = 'Tournament End';
-            }
-
-            // Update minute adjustment buttons state
-            document.getElementById('minusMinBtn').disabled = isRunning;
-            document.getElementById('plusMinBtn').disabled = isRunning;
-
-            updateLevelButtons();
-        }
-        
         function initAudio() {
     const sounds = ['levelSound', 'endSound'];
     sounds.forEach(soundId => {
@@ -1773,14 +1745,6 @@ function syncTimerState(state) {
         }
 
         // Structure management functions
-        function showEditPanel() {
-    const editPanel = document.getElementById('editPanel');
-    if (editPanel) {
-        renderBlindEditor();
-        editPanel.style.display = 'block';
-    }
-}
-
 function renderBlindEditor() {
     const blindEditor = document.getElementById('blindEditor');
     if (!blindEditor) return;
@@ -2252,66 +2216,6 @@ function showEditPanel() {
     }
 }
 
-        function renderBlindEditor() {
-            const blindEditor = document.getElementById('blindEditor');
-            if (!blindEditor) return;
-
-            // Add headers
-            const headers = `
-                <div class="blind-headers">
-                    <div>Small Blind</div>
-                    <div>Big Blind</div>
-                    <div>Ante</div>
-                    <div>Duration (min)</div>
-                </div>
-            `;
-
-            const rows = blindLevels.map((level, index) => `
-                <div class="blind-row" data-level="${index + 1}">
-                    <input type="number" value="${level.small_blind}" min="0" step="25" class="small-blind">
-                    <input type="number" value="${level.big_blind}" min="0" step="50" class="big-blind">
-                    <input type="number" value="${level.ante}" min="0" step="25" class="ante">
-                    <input type="number" value="${level.duration / 60}" min="1" max="60" class="duration">
-                    <div class="row-actions">
-                        <button class="insert-btn" onclick="insertLevelAt(${index})">+</button>
-                        ${index > 0 ? `<button class="remove-btn" onclick="removeLevel(${index})">×</button>` : ''}
-                    </div>
-                </div>
-            `).join('');
-
-            blindEditor.innerHTML = headers + rows;
-        }
-
-        function insertLevelAt(index) {
-            const prevLevel = blindLevels[index];
-            const nextLevel = blindLevels[index + 1];
-            
-            // Calculate new blind values based on adjacent levels
-            let smallBlind, bigBlind;
-            if (prevLevel && nextLevel) {
-                smallBlind = Math.round((prevLevel.small_blind + nextLevel.small_blind) / 2);
-                bigBlind = Math.round((prevLevel.big_blind + nextLevel.big_blind) / 2);
-            } else if (prevLevel) {
-                smallBlind = prevLevel.small_blind * 2;
-                bigBlind = prevLevel.big_blind * 2;
-            } else {
-                smallBlind = 25;
-                bigBlind = 50;
-            }
-
-            const newLevel = {
-                level: index + 1,
-                small_blind: smallBlind,
-                big_blind: bigBlind,
-                ante: prevLevel ? prevLevel.ante : 0,
-                duration: prevLevel ? prevLevel.duration : 900
-            };
-
-            blindLevels.splice(index + 1, 0, newLevel);
-            blindLevels.forEach((level, i) => level.level = i + 1);
-            renderBlindEditor();
-        }
-
 function updateClock() {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, '0');
@@ -2330,4 +2234,3 @@ updateClock(); // Exécution immédiate
     </script>
 </body>
 </html>
-oui
