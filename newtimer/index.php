@@ -2604,9 +2604,32 @@ function addLevel() {
         }
 
         // Database functions
+        function getCurrentStructureUserName() {
+            const readCookie = (cookieName) => {
+                const cookies = document.cookie ? document.cookie.split(';') : [];
+                for (const rawCookie of cookies) {
+                    const [name, ...rest] = rawCookie.trim().split('=');
+                    if (name === cookieName) {
+                        return decodeURIComponent(rest.join('='));
+                    }
+                }
+                return '';
+            };
+
+            const fromCookie = readCookie('uname').trim();
+            if (fromCookie) return fromCookie;
+
+            const fromUrl = new URLSearchParams(window.location.search).get('pseudo')?.trim();
+            if (fromUrl) return fromUrl;
+
+            return '';
+        }
+
         async function saveToDatabase() {
             const name = prompt("Enter a name for this blind structure:");
             if (!name) return;
+
+            const userName = getCurrentStructureUserName();
 
             try {
                 const response = await fetch(window.location.href, {
@@ -2616,6 +2639,7 @@ function addLevel() {
                     body: JSON.stringify({
                         action: 'save',
                         name: name,
+                        user_name: userName,
                         levels: blindLevels
                     })
                 });
@@ -2636,6 +2660,7 @@ function addLevel() {
             const loadPanel = document.getElementById('loadPanel');
             const structuresList = document.getElementById('structuresList');
             const loadSummaryBadge = document.getElementById('loadSummaryBadge');
+            const userName = getCurrentStructureUserName();
 
             const bindStructureActionButtons = () => {
                 structuresList.querySelectorAll('[data-structure-action]').forEach((actionButton) => {
@@ -2727,7 +2752,7 @@ function addLevel() {
                     method: 'POST',
                     credentials: 'same-origin',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({action: 'list'})
+                    body: JSON.stringify({action: 'list', user_name: userName})
                 });
 
                 const result = await response.json();
