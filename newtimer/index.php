@@ -1826,13 +1826,21 @@ function syncTimerState(state) {
         }
 
         function restartBlinds() {
-            // Garde le niveau actuel mais réinitialise le temps
-            timeLeft = blindLevels[currentLevel].duration;
-            if (isRunning) {
-                timerEndsAt = Date.now() + (timeLeft * 1000);
+            // Garde le niveau actuel, réinitialise le temps et relance le niveau
+            const wasRunning = isRunning;
+            if (wasRunning) {
+                stopTimer(false);
             }
+            timeLeft = blindLevels[currentLevel].duration;
+            timerEndsAt = null;
             updateDisplay();
-            saveTimerState();
+            speakAnnouncement(`Redémarrage du niveau ${blindLevels[currentLevel].level}`);
+
+            if (wasRunning) {
+                startTimer();
+            } else {
+                startTimer();
+            }
         }
 
         function changeLevel(direction) {
