@@ -2483,12 +2483,14 @@ function addLevel() {
     const addLevelBtn = document.getElementById('addLevelBtn');
     const saveEditBtn = document.getElementById('saveEditBtn');
     const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const closeEditBtn = document.getElementById('closeEditBtn');
     const blindEditor = document.getElementById('blindEditor');
     const blindEditorForm = document.getElementById('blindEditorForm');
     const commitFieldBtn = document.getElementById('commitFieldBtn');
     const editPanel = document.getElementById('editPanel');
     
-    if (editBtn) editBtn.addEventListener('click', showEditPanel);
+    if (cancelEditBtn) cancelEditBtn.addEventListener('click', hideEditPanel);
+    if (closeEditBtn) closeEditBtn.addEventListener('click', hideEditPanel);
     if (saveToDbBtn) saveToDbBtn.addEventListener('click', saveToDatabase);
     if (loadFromDbBtn) loadFromDbBtn.addEventListener('click', showLoadPanel);
     if (closeLoadBtn) closeLoadBtn.addEventListener('click', () => {
