@@ -2373,6 +2373,8 @@ function addLevel() {
     const saveEditBtn = document.getElementById('saveEditBtn');
     const cancelEditBtn = document.getElementById('cancelEditBtn');
     const blindEditor = document.getElementById('blindEditor');
+    const commitFieldBtn = document.getElementById('commitFieldBtn');
+    const editPanel = document.getElementById('editPanel');
     
     if (editBtn) editBtn.addEventListener('click', showEditPanel);
     if (saveToDbBtn) saveToDbBtn.addEventListener('click', saveToDatabase);
@@ -2391,6 +2393,10 @@ function addLevel() {
         });
         blindEditor.addEventListener('change', refreshEditorValidation);
         blindEditor.addEventListener('focusout', refreshEditorValidation);
+        blindEditor.addEventListener('focusin', updateEditDoneBarVisibility);
+        blindEditor.addEventListener('focusout', () => {
+            window.setTimeout(updateEditDoneBarVisibility, 0);
+        });
         blindEditor.addEventListener('keyup', (event) => {
             if (event.target instanceof HTMLInputElement) {
                 normalizeBlindEditorInput(event.target);
@@ -2403,6 +2409,27 @@ function addLevel() {
                 event.target.blur();
             }
         });
+    }
+    if (commitFieldBtn) {
+        commitFieldBtn.addEventListener('click', () => {
+            commitActiveBlindEditorField();
+            window.requestAnimationFrame(() => {
+                updateBlindEditorValidation();
+                updateEditDoneBarVisibility();
+            });
+        });
+    }
+    if (editPanel) {
+        editPanel.addEventListener('touchend', (event) => {
+            if (!(event.target instanceof HTMLElement)) return;
+            if (event.target.closest('.blind-row input, .row-actions, .edit-actions, #addLevelBtn, #commitFieldBtn')) return;
+
+            commitActiveBlindEditorField();
+            window.requestAnimationFrame(() => {
+                updateBlindEditorValidation();
+                updateEditDoneBarVisibility();
+            });
+        }, { passive: true });
     }
     
     if (saveEditBtn) {
