@@ -316,7 +316,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         body{background:rgba(0,0,0,0.85);font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;margin:0;padding:18px;color:#eef6fb}
         /* Centered sheet */
         .sheet{max-width:520px;margin:18px auto;background:#071019;color:#eef6fb;border-radius:18px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
-        .avatar{width:44px;height:44px;border-radius:50%;overflow:hidden;margin:0 auto}
+        .avatar{display:block;flex:none;width:44px;height:44px;border-radius:50%;overflow:hidden;margin:0 auto;line-height:0}
         .avatar img{width:100%;height:100%;object-fit:cover}
         .avatar-upload-form{display:none}
         .avatar-trigger{display:flex;flex-direction:column;align-items:center;justify-content:center;width:-moz-fit-content;width:fit-content;max-width:100%;margin:6px auto 0;background:none;border:0;padding:0;color:inherit;cursor:pointer;text-align:center}
