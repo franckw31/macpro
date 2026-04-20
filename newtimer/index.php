@@ -1543,6 +1543,23 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     }
 }
 
+function speakAnnouncement(message) {
+    const soundToggle = document.getElementById('soundToggle');
+    if (soundToggle && soundToggle.classList.contains('muted')) return;
+    if (!('speechSynthesis' in window) || !message) return;
+
+    try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(message);
+        utterance.lang = 'fr-FR';
+        utterance.rate = 0.95;
+        utterance.pitch = 1;
+        window.speechSynthesis.speak(utterance);
+    } catch (error) {
+        console.log('Speech synthesis error:', error);
+    }
+}
+
 // Add these functions to your JavaScript code
 function saveTimerState() {
     const timerState = {
@@ -1688,6 +1705,7 @@ function syncTimerState(state) {
                 timerEndsAt = null;
                 updateDisplay();
                 saveTimerState();
+                speakAnnouncement('Démarrage de la partie');
                 
                 // Reset button state
                 const startPauseBtn = document.getElementById('startPauseBtn');
