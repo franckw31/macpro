@@ -384,7 +384,19 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 </head>
 <body>
     <div class="top-actions">
-        <button class="top-action" onclick="history.back();">Fermer</button>
+        <button class="top-action" onclick="closeProfileOrModal();">Fermer</button>
+        <script>
+        function closeProfileOrModal() {
+            var modal = document.getElementById('avatarCropModal');
+            if (modal && modal.classList.contains('is-open')) {
+                // Appelle la fonction JS de fermeture du modal si elle existe
+                if (typeof closeModal === 'function') closeModal();
+                else modal.classList.remove('is-open');
+            } else {
+                history.back();
+            }
+        }
+        </script>
     </div>
     <div class="sheet">
         <?php if (!empty($profile_flash['message'])): ?>
