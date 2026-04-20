@@ -2618,7 +2618,6 @@ function addLevel() {
                                     <span class="structure-chip">${escapeHtml(formatStructureDate(structure.created_at))}</span>
                                     <span class="structure-chip">${escapeHtml(structure.level_count)} niveaux</span>
                                 </div>
-                                <div class="structure-preview">Recharge toute la progression de blindes à partir de cette structure enregistrée.</div>
                             </div>
                         </div>
                         <div class="structure-actions">
