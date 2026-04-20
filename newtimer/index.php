@@ -2489,6 +2489,7 @@ function addLevel() {
     const commitFieldBtn = document.getElementById('commitFieldBtn');
     const editPanel = document.getElementById('editPanel');
     
+    if (editBtn) editBtn.addEventListener('click', showEditPanel);
     if (cancelEditBtn) cancelEditBtn.addEventListener('click', hideEditPanel);
     if (closeEditBtn) closeEditBtn.addEventListener('click', hideEditPanel);
     if (saveToDbBtn) saveToDbBtn.addEventListener('click', saveToDatabase);
