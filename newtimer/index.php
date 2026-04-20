@@ -1937,15 +1937,27 @@ function syncTimerState(state) {
             return true;
         }
 
+        function parseBlindEditorInteger(value) {
+            if (typeof value !== 'string') return Number.NaN;
+            const normalizedValue = value.replace(/[^0-9]/g, '').trim();
+            if (!normalizedValue.length) return Number.NaN;
+            return Number.parseInt(normalizedValue, 10);
+        }
+
+        function normalizeBlindEditorInput(input) {
+            if (!(input instanceof HTMLInputElement)) return;
+            input.value = input.value.replace(/[^0-9]/g, '');
+        }
+
         function getEditedStructureFromEditor() {
             const rows = document.querySelectorAll('.blind-row');
 
             return Array.from(rows).map((row, index) => ({
                 level: index + 1,
-                small_blind: Number.parseInt(row.querySelector('.small-blind').value, 10),
-                big_blind: Number.parseInt(row.querySelector('.big-blind').value, 10),
-                ante: Number.parseInt(row.querySelector('.ante').value, 10),
-                duration: Number.parseInt(row.querySelector('.duration').value, 10) * 60
+                small_blind: parseBlindEditorInteger(row.querySelector('.small-blind').value),
+                big_blind: parseBlindEditorInteger(row.querySelector('.big-blind').value),
+                ante: parseBlindEditorInteger(row.querySelector('.ante').value),
+                duration: parseBlindEditorInteger(row.querySelector('.duration').value) * 60
             }));
         }
 
@@ -2035,10 +2047,10 @@ function renderBlindEditor() {
 
     const rows = blindLevels.map((level, index) => `
                 <div class="blind-row" data-level="${index + 1}">
-                    <input type="number" value="${level.small_blind}" min="0" step="25" inputmode="numeric" class="small-blind">
-                    <input type="number" value="${level.big_blind}" min="0" step="50" inputmode="numeric" class="big-blind">
-                    <input type="number" value="${level.ante}" min="0" step="25" inputmode="numeric" class="ante">
-                    <input type="number" value="${level.duration / 60}" min="0" max="60" inputmode="numeric" class="duration">
+                    <input type="text" value="${level.small_blind}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="small-blind">
+                    <input type="text" value="${level.big_blind}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="big-blind">
+                    <input type="text" value="${level.ante}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="ante">
+                    <input type="text" value="${level.duration / 60}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="duration">
                     <div class="row-actions">
                         <button class="insert-btn" onclick="insertLevelAt(${index})">+</button>
                         ${index > 0 ? `<button class="remove-btn" onclick="removeLevel(${index})">×</button>` : ''}
@@ -2332,12 +2344,24 @@ function addLevel() {
     if (addLevelBtn) addLevelBtn.addEventListener('click', addLevel);
     if (blindEditor) {
         const refreshEditorValidation = () => updateBlindEditorValidation();
-        blindEditor.addEventListener('input', refreshEditorValidation);
+        blindEditor.addEventListener('input', (event) => {
+            if (event.target instanceof HTMLInputElement) {
+                normalizeBlindEditorInput(event.target);
+            }
+            refreshEditorValidation();
+        });
         blindEditor.addEventListener('change', refreshEditorValidation);
         blindEditor.addEventListener('focusout', refreshEditorValidation);
         blindEditor.addEventListener('keyup', (event) => {
             if (event.target instanceof HTMLInputElement) {
+                normalizeBlindEditorInput(event.target);
                 refreshEditorValidation();
+            }
+        });
+        blindEditor.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && event.target instanceof HTMLInputElement) {
+                normalizeBlindEditorInput(event.target);
+                event.target.blur();
             }
         });
     }
