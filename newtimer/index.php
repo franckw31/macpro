@@ -436,6 +436,28 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         box-shadow: 0 0 0 2px rgba(33,150,243,0.5);
     }
 
+    .blind-row input.invalid {
+        border-color: #ff6b6b;
+        box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.18);
+        background: rgba(90, 18, 18, 0.35);
+    }
+
+    .editor-validation-message {
+        min-height: 22px;
+        margin-top: 10px;
+        color: rgba(255,255,255,0.72);
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .editor-validation-message.error {
+        color: #ff8b8b;
+    }
+
+    .editor-validation-message.success {
+        color: #7ee0a0;
+    }
+
     /* Remove Button */
         .row-actions {
             display: flex;
@@ -1307,6 +1329,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         <h2 style="color: #90CAF9;">Modifier les blindes</h2>
         <div class="blind-editor" id="blindEditor"></div>
         <button class="edit-btn" id="addLevelBtn">+ Ajouter un niveau</button>
+        <div class="editor-validation-message" id="editorValidationMessage"></div>
         <div class="edit-actions">
             <button class="start-btn" id="saveEditBtn">Enregistrer</button>
             <button class="reset-btn" id="cancelEditBtn">Annuler</button>
@@ -1863,10 +1886,9 @@ function syncTimerState(state) {
             }
         }
 
-        function validateStructure(structure) {
+        function getStructureValidationResult(structure) {
             if (!Array.isArray(structure) || structure.length === 0) {
-                alert('La structure de blindes est vide.');
-                return false;
+                return { valid: false, message: 'La structure de blindes est vide.' };
             }
 
             for (let index = 0; index < structure.length; index++) {
@@ -1874,28 +1896,23 @@ function syncTimerState(state) {
                 const levelNumber = index + 1;
 
                 if (!Number.isFinite(level.small_blind) || level.small_blind < 0) {
-                    alert(`Niveau ${levelNumber} : la petite blinde est invalide.`);
-                    return false;
+                    return { valid: false, message: `Niveau ${levelNumber} : la petite blinde est invalide.`, rowIndex: index, field: 'small-blind' };
                 }
 
                 if (!Number.isFinite(level.big_blind) || level.big_blind < 0) {
-                    alert(`Niveau ${levelNumber} : la grosse blinde est invalide.`);
-                    return false;
+                    return { valid: false, message: `Niveau ${levelNumber} : la grosse blinde est invalide.`, rowIndex: index, field: 'big-blind' };
                 }
 
                 if (level.big_blind > 0 && level.big_blind < level.small_blind) {
-                    alert(`Niveau ${levelNumber} : la grosse blinde doit être supérieure ou égale à la petite blinde.`);
-                    return false;
+                    return { valid: false, message: `Niveau ${levelNumber} : la grosse blinde doit être supérieure ou égale à la petite blinde.`, rowIndex: index, field: 'big-blind' };
                 }
 
                 if (!Number.isFinite(level.ante) || level.ante < 0) {
-                    alert(`Niveau ${levelNumber} : l'ante est invalide.`);
-                    return false;
+                    return { valid: false, message: `Niveau ${levelNumber} : l'ante est invalide.`, rowIndex: index, field: 'ante' };
                 }
 
                 if (!Number.isFinite(level.duration) || level.duration < 0) {
-                    alert(`Niveau ${levelNumber} : la durée est invalide.`);
-                    return false;
+                    return { valid: false, message: `Niveau ${levelNumber} : la durée est invalide.`, rowIndex: index, field: 'duration' };
                 }
 
                 if (level.small_blind === 0 && level.big_blind === 0 && level.duration === 0) {
@@ -1903,12 +1920,74 @@ function syncTimerState(state) {
                 }
 
                 if (level.duration <= 0) {
-                    alert(`Niveau ${levelNumber} : la durée doit être supérieure à 0.`);
-                    return false;
+                    return { valid: false, message: `Niveau ${levelNumber} : la durée doit être supérieure à 0.`, rowIndex: index, field: 'duration' };
                 }
             }
 
+            return { valid: true, message: 'Structure valide.' };
+        }
+
+        function validateStructure(structure) {
+            const result = getStructureValidationResult(structure);
+            if (!result.valid) {
+                alert(result.message);
+                return false;
+            }
+
             return true;
+        }
+
+        function getEditedStructureFromEditor() {
+            const rows = document.querySelectorAll('.blind-row');
+
+            return Array.from(rows).map((row, index) => ({
+                level: index + 1,
+                small_blind: Number.parseInt(row.querySelector('.small-blind').value, 10),
+                big_blind: Number.parseInt(row.querySelector('.big-blind').value, 10),
+                ante: Number.parseInt(row.querySelector('.ante').value, 10),
+                duration: Number.parseInt(row.querySelector('.duration').value, 10) * 60
+            }));
+        }
+
+        function updateBlindEditorValidation() {
+            const validationMessage = document.getElementById('editorValidationMessage');
+            const saveEditBtn = document.getElementById('saveEditBtn');
+            const rows = document.querySelectorAll('.blind-row');
+
+            rows.forEach((row) => {
+                row.querySelectorAll('input').forEach((input) => input.classList.remove('invalid'));
+            });
+
+            if (!rows.length) {
+                if (validationMessage) {
+                    validationMessage.textContent = '';
+                    validationMessage.className = 'editor-validation-message';
+                }
+                if (saveEditBtn) saveEditBtn.disabled = true;
+                return { valid: false };
+            }
+
+            const structure = getEditedStructureFromEditor();
+            const result = getStructureValidationResult(structure);
+
+            if (!result.valid && Number.isInteger(result.rowIndex)) {
+                const row = rows[result.rowIndex];
+                const input = row ? row.querySelector(`.${result.field}`) : null;
+                if (input) {
+                    input.classList.add('invalid');
+                }
+            }
+
+            if (validationMessage) {
+                validationMessage.textContent = result.message || '';
+                validationMessage.className = `editor-validation-message ${result.valid ? 'success' : 'error'}`.trim();
+            }
+
+            if (saveEditBtn) {
+                saveEditBtn.disabled = !result.valid;
+            }
+
+            return result;
         }
 
         function applyEditedStructure(newStructure) {
@@ -1947,10 +2026,10 @@ function renderBlindEditor() {
 
     const rows = blindLevels.map((level, index) => `
                 <div class="blind-row" data-level="${index + 1}">
-                    <input type="number" value="${level.small_blind}" min="0" step="25" class="small-blind">
-                    <input type="number" value="${level.big_blind}" min="0" step="50" class="big-blind">
-                    <input type="number" value="${level.ante}" min="0" step="25" class="ante">
-                    <input type="number" value="${level.duration / 60}" min="1" max="60" class="duration">
+                    <input type="number" value="${level.small_blind}" min="0" step="25" inputmode="numeric" class="small-blind">
+                    <input type="number" value="${level.big_blind}" min="0" step="50" inputmode="numeric" class="big-blind">
+                    <input type="number" value="${level.ante}" min="0" step="25" inputmode="numeric" class="ante">
+                    <input type="number" value="${level.duration / 60}" min="0" max="60" inputmode="numeric" class="duration">
                     <div class="row-actions">
                         <button class="insert-btn" onclick="insertLevelAt(${index})">+</button>
                         ${index > 0 ? `<button class="remove-btn" onclick="removeLevel(${index})">×</button>` : ''}
@@ -1959,6 +2038,7 @@ function renderBlindEditor() {
     `).join('');
 
     blindEditor.innerHTML = headers + rows;
+    updateBlindEditorValidation();
 }
 
 function addLevel() {
@@ -2232,6 +2312,7 @@ function addLevel() {
     const addLevelBtn = document.getElementById('addLevelBtn');
     const saveEditBtn = document.getElementById('saveEditBtn');
     const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const blindEditor = document.getElementById('blindEditor');
     
     if (editBtn) editBtn.addEventListener('click', showEditPanel);
     if (saveToDbBtn) saveToDbBtn.addEventListener('click', saveToDatabase);
@@ -2240,27 +2321,25 @@ function addLevel() {
         document.getElementById('loadPanel').style.display = 'none';
     });
     if (addLevelBtn) addLevelBtn.addEventListener('click', addLevel);
+    if (blindEditor) {
+        const refreshEditorValidation = () => updateBlindEditorValidation();
+        blindEditor.addEventListener('input', refreshEditorValidation);
+        blindEditor.addEventListener('change', refreshEditorValidation);
+    }
     
     if (saveEditBtn) {
         saveEditBtn.addEventListener('click', () => {
-            const rows = document.querySelectorAll('.blind-row');
-            const newStructure = Array.from(rows).map((row, index) => {
-                const smallBlind = parseInt(row.querySelector('.small-blind').value) || 0;
-                const bigBlind = parseInt(row.querySelector('.big-blind').value) || 0;
-                const ante = parseInt(row.querySelector('.ante').value) || 0;
-                const duration = (parseInt(row.querySelector('.duration').value) || 15) * 60;
+            const validationResult = updateBlindEditorValidation();
+            const newStructure = getEditedStructureFromEditor();
 
-                return {
-                    level: index + 1,
-                    small_blind: smallBlind,
-                    big_blind: bigBlind,
-                    ante: ante,
-                    duration: duration
-                };
-            });
-
-            if (validateStructure(newStructure)) {
+            if (validationResult.valid && validateStructure(newStructure)) {
                 applyEditedStructure(newStructure);
+            } else if (validationResult && Number.isInteger(validationResult.rowIndex)) {
+                const invalidRow = document.querySelectorAll('.blind-row')[validationResult.rowIndex];
+                const invalidField = invalidRow ? invalidRow.querySelector(`.${validationResult.field}`) : null;
+                if (invalidField) {
+                    invalidField.focus();
+                }
             }
         });
     }
