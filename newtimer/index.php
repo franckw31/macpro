@@ -1755,6 +1755,25 @@ function speakAnnouncement(message) {
     }
 }
 
+function announceBlindChange(levelIndex = currentLevel, delayMs = 0) {
+    const currentBlinds = blindLevels[levelIndex];
+    if (!currentBlinds) return;
+
+    if (blindAnnouncementTimeout) {
+        clearTimeout(blindAnnouncementTimeout);
+        blindAnnouncementTimeout = null;
+    }
+
+    const message = (currentBlinds.small_blind === 0 && currentBlinds.big_blind === 0)
+        ? 'Changement de blinde. Pause.'
+        : `Changement de blinde. Petite blinde ${currentBlinds.small_blind}, grosse blinde ${currentBlinds.big_blind}.`;
+
+    blindAnnouncementTimeout = setTimeout(() => {
+        blindAnnouncementTimeout = null;
+        speakAnnouncement(message);
+    }, Math.max(0, delayMs));
+}
+
 // Add these functions to your JavaScript code
 function saveTimerState() {
     const timerState = {
