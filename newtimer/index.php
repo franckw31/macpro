@@ -2065,6 +2065,19 @@ function syncTimerState(state) {
             }
         }
 
+        function commitBlindField(input) {
+            if (!(input instanceof HTMLInputElement)) return;
+
+            normalizeBlindEditorInput(input);
+            input.blur();
+            dismissVirtualKeyboard();
+
+            window.requestAnimationFrame(() => {
+                updateBlindEditorValidation();
+                updateEditDoneBarVisibility();
+            });
+        }
+
         function submitBlindEditorChanges() {
             commitActiveBlindEditorField();
 
@@ -2475,7 +2488,20 @@ function addLevel() {
             if (event.key === 'Enter' && event.target instanceof HTMLInputElement) {
                 normalizeBlindEditorInput(event.target);
                 event.preventDefault();
-                submitBlindEditorChanges();
+                commitBlindField(event.target);
+            }
+        });
+        blindEditor.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) return;
+
+            const commitButton = target.closest('.field-commit-btn');
+            if (!commitButton) return;
+
+            const field = commitButton.closest('.blind-field');
+            const input = field ? field.querySelector('input') : null;
+            if (input instanceof HTMLInputElement) {
+                commitBlindField(input);
             }
         });
     }
