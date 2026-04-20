@@ -393,7 +393,14 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 if (typeof closeModal === 'function') closeModal();
                 else modal.classList.remove('is-open');
             } else {
-                history.back();
+                // Redirige explicitement vers quickview.php avec l'uid si présent
+                var params = new URLSearchParams(window.location.search);
+                var uid = params.get('uid');
+                if (uid) {
+                    window.location.href = '/panel/quickview.php?uid=' + encodeURIComponent(uid);
+                } else {
+                    window.location.href = '/panel/quickview.php';
+                }
             }
         }
         </script>
