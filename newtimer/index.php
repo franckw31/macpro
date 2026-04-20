@@ -1990,6 +1990,15 @@ function syncTimerState(state) {
             return result;
         }
 
+        function commitActiveBlindEditorField() {
+            const blindEditor = document.getElementById('blindEditor');
+            const activeElement = document.activeElement;
+
+            if (blindEditor && activeElement instanceof HTMLElement && blindEditor.contains(activeElement)) {
+                activeElement.blur();
+            }
+        }
+
         function applyEditedStructure(newStructure) {
             const previousLevel = Math.min(currentLevel, newStructure.length - 1);
             blindLevels = newStructure;
@@ -2325,22 +2334,32 @@ function addLevel() {
         const refreshEditorValidation = () => updateBlindEditorValidation();
         blindEditor.addEventListener('input', refreshEditorValidation);
         blindEditor.addEventListener('change', refreshEditorValidation);
+        blindEditor.addEventListener('focusout', refreshEditorValidation);
+        blindEditor.addEventListener('keyup', (event) => {
+            if (event.target instanceof HTMLInputElement) {
+                refreshEditorValidation();
+            }
+        });
     }
     
     if (saveEditBtn) {
         saveEditBtn.addEventListener('click', () => {
-            const validationResult = updateBlindEditorValidation();
-            const newStructure = getEditedStructureFromEditor();
+            commitActiveBlindEditorField();
 
-            if (validationResult.valid && validateStructure(newStructure)) {
-                applyEditedStructure(newStructure);
-            } else if (validationResult && Number.isInteger(validationResult.rowIndex)) {
-                const invalidRow = document.querySelectorAll('.blind-row')[validationResult.rowIndex];
-                const invalidField = invalidRow ? invalidRow.querySelector(`.${validationResult.field}`) : null;
-                if (invalidField) {
-                    invalidField.focus();
+            window.requestAnimationFrame(() => {
+                const validationResult = updateBlindEditorValidation();
+                const newStructure = getEditedStructureFromEditor();
+
+                if (validationResult.valid && validateStructure(newStructure)) {
+                    applyEditedStructure(newStructure);
+                } else if (validationResult && Number.isInteger(validationResult.rowIndex)) {
+                    const invalidRow = document.querySelectorAll('.blind-row')[validationResult.rowIndex];
+                    const invalidField = invalidRow ? invalidRow.querySelector(`.${validationResult.field}`) : null;
+                    if (invalidField) {
+                        invalidField.focus();
+                    }
                 }
-            }
+            });
         });
     }
     
