@@ -194,20 +194,25 @@ $asset_ver = @filemtime(__DIR__ . '/timer_web/public/style.variantA.css') ?: @fi
 // Use the same avatar resolution logic as /panel/include/header.php:
 // prefer session id -> query `membres` and serve public URLs under https://viendez.com/images/faces/
 // Default fallback uses the public no-profile image on viendez.com.
+
+// Avatar : utiliser l’uid de l’URL si présent, sinon fallback session
 $avatar_url = 'https://viendez.com/images/noprofil.jpg';
 try{
-	if(!empty($con) && !empty($_SESSION['id'])){
+	$uid = null;
+	if (isset($_GET['uid']) && is_numeric($_GET['uid'])) {
+		$uid = intval($_GET['uid']);
+	} elseif (!empty($_SESSION['id'])) {
 		$uid = (int)$_SESSION['id'];
+	}
+	if(!empty($con) && $uid) {
 		$r = mysqli_query($con, "SELECT photo FROM membres WHERE `id-membre` = '" . $uid . "' LIMIT 1");
 		if($r && ($row = mysqli_fetch_assoc($r)) && !empty($row['photo'])){
 			$photo = trim($row['photo']);
-			// Always serve the public viendez.com URL path for member photos
 			$avatar_url = 'https://viendez.com/images/faces/' . rawurlencode(basename($photo));
 			$facePath = __DIR__ . '/images/faces/' . $photo;
 			if(file_exists($facePath)){
 				error_log("Avatar: local file exists {$facePath} — serving public URL {$avatar_url} for user_id={$uid}");
 			} else {
-				// Log missing local file but still serve the public URL (filename comes from DB)
 				error_log("Avatar: membres.photo='{$photo}' set but local file missing (checked: {$facePath}); serving public URL {$avatar_url} for user_id={$uid}");
 			}
 		} else {
@@ -215,7 +220,6 @@ try{
 		}
 	}
 }catch(Exception $e){ error_log('Avatar lookup error (header logic): ' . $e->getMessage()); }
-// Log final resolved avatar for easier debugging
 error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id());
 ?>
 <!doctype html>
