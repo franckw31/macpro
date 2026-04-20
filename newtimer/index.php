@@ -360,6 +360,28 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             box-sizing: border-box;
         }
 
+    .edit-header {
+        position: sticky;
+        top: 0;
+        z-index: 25;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: -20px -20px 14px;
+        padding: 16px 20px 12px;
+        background: linear-gradient(180deg, rgba(30,30,30,0.98), rgba(30,30,30,0.9));
+        border-radius: 15px 15px 0 0;
+        backdrop-filter: blur(10px);
+    }
+
+    .edit-title {
+        margin: 0;
+        color: #90CAF9;
+        font-size: 24px;
+        line-height: 1.2;
+    }
+
     /* Blind Editor */
     .blind-headers {
         display: grid;
@@ -585,24 +607,23 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     .edit-done-bar {
         display: none;
-        position: sticky;
-        bottom: 0;
-        z-index: 20;
-        margin-top: 12px;
-        padding-top: 8px;
-        background: linear-gradient(180deg, rgba(30,30,30,0), rgba(30,30,30,0.96) 36%);
+        flex-shrink: 0;
     }
 
     .edit-done-bar.visible {
-        display: block;
+        display: inline-flex;
     }
 
     .edit-done-btn {
-        width: 100%;
-        margin-top: 0;
+        width: auto;
+        min-height: 46px;
+        margin: 0;
+        padding: 0 16px;
+        border-radius: 999px;
         background: #18c4ff;
         color: #061018;
         font-weight: 700;
+        white-space: nowrap;
     }
 
     /* Responsive Design */
@@ -629,6 +650,22 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
         .blind-row {
             grid-template-columns: 1fr;
+        }
+
+        .edit-header {
+            margin: -20px -20px 12px;
+            padding: 14px 16px 10px;
+            align-items: flex-start;
+        }
+
+        .edit-title {
+            font-size: 20px;
+        }
+
+        .edit-done-btn {
+            min-height: 42px;
+            padding: 0 14px;
+            font-size: 14px;
         }
 
         .remove-btn {
