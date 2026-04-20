@@ -178,7 +178,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
     <title>Poker Timer</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://code.responsivevoice.org/responsivevoice.js?key=RTEc1M0w" onload="try{ responsiveVoice.setDefaultVoice('French Female'); }catch(e){ console.warn('responsiveVoice load onload', e); }"></script>
@@ -195,6 +195,10 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             margin: 0;
             padding: 20px;
             min-height: 100vh;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
         }
 
         /* Update container style to ensure content remains readable */
@@ -340,10 +344,11 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.9);
-        padding: 16px;
+        padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
         z-index: 1000;
         overflow-y: auto;
         overflow-x: hidden;
+        overscroll-behavior: contain;
     }
 
     .edit-content, .load-content {
@@ -490,6 +495,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         border-radius: 14px;
         color: white;
         font-size: 17px;
+        line-height: 1.2;
         font-weight: 600;
         box-sizing: border-box;
         appearance: none;
@@ -731,10 +737,17 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             margin: 8px auto;
             padding: 16px;
             border-radius: 20px;
+            max-height: calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+            overflow-y: auto;
         }
 
         .blind-fields {
             grid-template-columns: 1fr;
+        }
+
+        .blind-row input {
+            min-height: 52px;
+            font-size: 16px;
         }
 
         .edit-toolbar {
@@ -841,22 +854,12 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         .edit-content {
             margin: 10px;
             padding: 10px;
-            max-height: 80vh;
-        }
-
-        .blind-row {
-            grid-template-columns: 1fr 1fr; /* 2 columns instead of 4 */
-            gap: 5px;
-        }
-
-        .blind-headers {
-            grid-template-columns: 1fr 1fr;
-            font-size: 14px;
+            max-height: calc(100dvh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
         }
 
         .blind-row input {
-            padding: 6px;
-            font-size: 14px;
+            padding: 0 12px;
+            font-size: 16px;
         }
 
         .remove-btn {
