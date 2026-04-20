@@ -1655,7 +1655,7 @@ function handleLevelEnd() {
         stopTimer();
         playSound('endSound'); // Garder le son pour la fin du tournoi
         speakAnnouncement('Fin du tournoi');
-        alert('Tournament finished!');
+        alert('Tournoi terminé !');
     }
 }
 
