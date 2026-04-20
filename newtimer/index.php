@@ -35,6 +35,8 @@ function getCurrentBlindStructureUser(): string {
         $_SESSION['user'] ?? null,
         $_SESSION['login'] ?? null,
         $_SESSION['nom'] ?? null,
+        $_COOKIE['uname'] ?? null,
+        $_GET['pseudo'] ?? null,
     ];
 
     foreach ($sessionCandidates as $candidate) {
