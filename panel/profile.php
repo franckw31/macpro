@@ -594,11 +594,22 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 // Close modal and disable button to avoid double clicks
                 close();
                 try { pwdSave.disabled = true; pwdSave.textContent = 'Envoi…'; } catch(e){}
-                // Use requestSubmit when available (keeps submit event semantics)
-                if (typeof form.requestSubmit === 'function') {
-                    form.requestSubmit();
-                } else {
-                    form.submit();
+                // Create and submit a temporary form to force single-click submission
+                try {
+                    const tmp = document.createElement('form');
+                    tmp.method = 'post';
+                    tmp.style.display = 'none';
+                    // action left empty -> same URL
+                    const a = document.createElement('input'); a.type = 'hidden'; a.name = 'action'; a.value = 'change_password'; tmp.appendChild(a);
+                    const nn = document.createElement('input'); nn.type = 'hidden'; nn.name = 'new_password'; nn.value = n; tmp.appendChild(nn);
+                    const cc = document.createElement('input'); cc.type = 'hidden'; cc.name = 'confirm_password'; cc.value = c; tmp.appendChild(cc);
+                    document.body.appendChild(tmp);
+                    tmp.submit();
+                    // remove after a tick
+                    setTimeout(()=>{ try{ document.body.removeChild(tmp); }catch(e){} }, 1000);
+                } catch(e) {
+                    // fallback
+                    try { form.requestSubmit ? form.requestSubmit() : form.submit(); } catch(_) { form.submit(); }
                 }
             });
 
