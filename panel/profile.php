@@ -520,8 +520,8 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 const wrapRect = avatarCanvasWrap.getBoundingClientRect();
                 const size = Math.max(240, Math.round(Math.min(wrapRect.width || 280, 320)));
                 if (avatarCropCanvas.width !== size || avatarCropCanvas.height !== size) {
-                    avatarCropCanvas.width = size * 2;
-                    avatarCropCanvas.height = size * 2;
+                    avatarCropCanvas.width = size;
+                    avatarCropCanvas.height = size;
                     avatarCropCanvas.style.width = size + 'px';
                     avatarCropCanvas.style.height = size + 'px';
                 }
