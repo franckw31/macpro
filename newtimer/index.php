@@ -1735,7 +1735,7 @@ function loadTimerState() {
 function toggleStartPause() {
     if (isRunning) {
         stopTimer();
-        speakAnnouncement('Pause du tailmeur');
+        speakAnnouncement('Pause du taymeur');
     } else {
         startTimer();
         speakAnnouncement('Reprise du tailmeur');
