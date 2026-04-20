@@ -1412,58 +1412,6 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             }
         }
 
-        function initWebSocket() {
-            ws = new WebSocket(WS_HOST);
-            
-            ws.onopen = function() {
-                console.log('Connected to WebSocket server');
-            };
-            
-            ws.onmessage = function(event) {
-                const message = JSON.parse(event.data);
-                if (message.type === 'sync') {
-                    syncTimerState(message.data);
-                }
-            };
-            
-            ws.onclose = function() {
-                console.log('Disconnected from WebSocket server');
-                // Try to reconnect in 5 seconds
-                setTimeout(initWebSocket, 5000);
-            };
-        }
-
-        function syncTimerState(state) {
-            if (!isLocalUpdate) {
-                clearInterval(timerInterval);
-                currentLevel = state.currentLevel;
-                timeLeft = state.timeLeft;
-                isRunning = state.isRunning;
-                
-                if (isRunning) {
-                    startTimer(false); // false means don't broadcast
-                }
-                
-                updateDisplay();
-            }
-            isLocalUpdate = false;
-        }
-
-        function saveTimerState() {
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                isLocalUpdate = true;
-                ws.send(JSON.stringify({
-                    type: 'update',
-                    data: {
-                        currentLevel,
-                        timeLeft,
-                        isRunning,
-                        blindLevels
-                    }
-                }));
-            }
-        }
-
         function startTimer(broadcast = true) {
             isRunning = true;
             normalizeRunningTimerState();
@@ -1693,18 +1641,6 @@ function syncTimerState(state) {
         }
     }
 }
-
-        // Ajouter cette fonction pour basculer l'état et l'apparence du bouton
-        function toggleStartPause() {
-            const startPauseBtn = document.getElementById('startPauseBtn');
-            if (isRunning) {
-                stopTimer();
-            } else {
-                startTimer();
-            }
-            updateLevelButtons();
-            saveTimerState();
-        }
 
         // Modifier la fonction resetTimer pour mettre à jour le bouton
         function resetTimer() {
