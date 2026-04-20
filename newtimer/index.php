@@ -1534,22 +1534,29 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         }
 
         function normalizeRunningTimerState(referenceNow = Date.now()) {
-            if (!isRunning) return;
+            let advancedLevels = 0;
+
+            if (!isRunning) {
+                return { advancedLevels, reachedTournamentEnd: false };
+            }
             if (!timerEndsAt && timeLeft > 0) {
                 timerEndsAt = referenceNow + (timeLeft * 1000);
             }
             while (timerEndsAt && currentLevel < blindLevels.length - 1 && timerEndsAt <= referenceNow) {
                 currentLevel += 1;
+                advancedLevels += 1;
                 timerEndsAt += blindLevels[currentLevel].duration * 1000;
             }
             if (timerEndsAt && timerEndsAt <= referenceNow && currentLevel >= blindLevels.length - 1) {
                 timeLeft = 0;
                 stopTimer(false);
-                return;
+                return { advancedLevels, reachedTournamentEnd: true };
             }
             if (timerEndsAt) {
                 timeLeft = Math.max(0, Math.ceil((timerEndsAt - referenceNow) / 1000));
             }
+
+            return { advancedLevels, reachedTournamentEnd: false };
         }
 
         function startTimer(broadcast = true) {
@@ -1564,10 +1571,16 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 const previousTimeLeft = timeLeft;
-                normalizeRunningTimerState();
+                const transitionState = normalizeRunningTimerState();
+                const advancedLevels = transitionState?.advancedLevels || 0;
                 if (timeLeft > 0) {
                     updateDisplay();
                     if (broadcast) saveTimerState();
+                    if (advancedLevels > 0) {
+                        playSound('levelSound');
+                        announceBlindChange(currentLevel, 450);
+                        return;
+                    }
                     if (previousTimeLeft > 30 && timeLeft <= 30) {
                         playSound('endSound');
                     }
