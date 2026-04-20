@@ -1313,26 +1313,29 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
     <div class="edit-panel" id="editPanel">
     <div class="edit-content">
-        <div class="edit-header">
-            <div class="edit-title-stack">
-                <h2 class="edit-title">Modifier les blindes</h2>
-                <div class="edit-subtitle">Ajuste chaque niveau, valide rapidement la saisie, puis enregistre la nouvelle structure.</div>
+        <form id="blindEditorForm" novalidate>
+            <div class="edit-header">
+                <div class="edit-title-stack">
+                    <h2 class="edit-title">Modifier les blindes</h2>
+                    <div class="edit-subtitle">Ajuste chaque niveau, valide rapidement la saisie, puis enregistre la nouvelle structure.</div>
+                </div>
+                <div class="edit-done-bar" id="editDoneBar">
+                    <button class="edit-done-btn" id="commitFieldBtn" type="button">Terminer</button>
+                </div>
             </div>
-            <div class="edit-done-bar" id="editDoneBar">
-                <button class="edit-done-btn" id="commitFieldBtn" type="button">Terminer</button>
+            <div class="blind-editor" id="blindEditor"></div>
+            <div class="edit-toolbar">
+                <button class="edit-btn" id="addLevelBtn" type="button">+ Ajouter un niveau</button>
+                <div class="editor-validation-message" id="editorValidationMessage"></div>
             </div>
-        </div>
-        <div class="blind-editor" id="blindEditor"></div>
-        <div class="edit-toolbar">
-            <button class="edit-btn" id="addLevelBtn">+ Ajouter un niveau</button>
-            <div class="editor-validation-message" id="editorValidationMessage"></div>
-        </div>
-        <div class="edit-actions">
-            <button class="start-btn" id="saveEditBtn">Enregistrer</button>
-            <button class="reset-btn" id="cancelEditBtn">Annuler</button>
-        </div>
+            <div class="edit-actions">
+                <button class="start-btn" id="saveEditBtn" type="submit">Enregistrer</button>
+                <button class="reset-btn" id="cancelEditBtn" type="button">Annuler</button>
+            </div>
+        </form>
     </div>
 </div>
+    <input id="keyboardDismissInput" class="keyboard-dismiss-input" type="text" readonly aria-hidden="true" tabindex="-1">
 
     <div class="load-panel" id="loadPanel">
         <div class="load-content">
