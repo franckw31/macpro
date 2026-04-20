@@ -570,10 +570,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						<div class="date-pill"><svg class="date-pill-icon" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12.5 8v5l3 1" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
 						<div id="activity-date" class="small" style="color:var(--gold);font-weight:700"><?php echo !empty($serverActivity['display_date'])? htmlspecialchars($serverActivity['display_date']) : (!empty($serverActivity['date'])? htmlspecialchars($serverActivity['date']) : '—'); ?></div>
 					</div>
-					<!-- Profile avatar moved left near the logo -->
-					<a id="header-profile-link" href="/panel/profile.php<?php echo (!empty($serverActivity['id'])? '?uid=' . intval($serverActivity['id']): ''); ?>" role="link" title="Mon Profil" style="text-decoration:none;color:inherit;display:inline-flex;align-items:center;justify-content:center;margin-left:8px">
-						<div class="avatar" style="width:48px;height:48px"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
-					</a>
+                    
 					<div style="margin-top:8px;display:flex;gap:1px;align-items:center">
 						<div class="pill" id="buyin-pill"><span><?php echo isset($serverActivity['buyin'])? htmlspecialchars($serverActivity['buyin']).' €':'—'; ?></span></div>
 						<div class="pill" id="rake-pill">
