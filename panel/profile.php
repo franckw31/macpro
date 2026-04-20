@@ -757,7 +757,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 state.offsetY = (size - image.height * state.scale) / 2;
                 syncZoomLabel();
                 drawAvatarCanvas();
-                openModal();
+                // Do not open modal: upload will be performed directly and server will crop to center
             };
 
             const loadSelectedImage = (file) => {
