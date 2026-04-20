@@ -383,6 +383,17 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
     </style>
 </head>
 <body>
+    <script>
+    // Si on est sur profile.php avec un uid, on remplace l'entrée d'historique par quickview.php?uid=xxx
+    (function(){
+        var params = new URLSearchParams(window.location.search);
+        var uid = params.get('uid');
+        if (uid && window.location.pathname.endsWith('/profile.php')) {
+            var quickviewUrl = '/panel/quickview.php?uid=' + encodeURIComponent(uid);
+            history.replaceState({}, '', quickviewUrl);
+        }
+    })();
+    </script>
     <div class="top-actions">
         <button class="top-action" onclick="closeProfileOrModal();">Fermer</button>
         <script>
