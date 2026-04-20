@@ -2009,6 +2009,41 @@ function syncTimerState(state) {
             if (blindEditor && activeElement instanceof HTMLElement && blindEditor.contains(activeElement)) {
                 activeElement.blur();
             }
+
+            dismissVirtualKeyboard();
+        }
+
+        function dismissVirtualKeyboard() {
+            const keyboardDismissInput = document.getElementById('keyboardDismissInput');
+            if (!(keyboardDismissInput instanceof HTMLInputElement)) return;
+
+            try {
+                keyboardDismissInput.removeAttribute('readonly');
+                keyboardDismissInput.focus({ preventScroll: true });
+                keyboardDismissInput.blur();
+                keyboardDismissInput.setAttribute('readonly', 'readonly');
+            } catch (error) {
+                console.log('Keyboard dismiss error:', error);
+            }
+        }
+
+        function submitBlindEditorChanges() {
+            commitActiveBlindEditorField();
+
+            window.requestAnimationFrame(() => {
+                const validationResult = updateBlindEditorValidation();
+                const newStructure = getEditedStructureFromEditor();
+
+                if (validationResult.valid && validateStructure(newStructure)) {
+                    applyEditedStructure(newStructure);
+                } else if (validationResult && Number.isInteger(validationResult.rowIndex)) {
+                    const invalidRow = document.querySelectorAll('.blind-row')[validationResult.rowIndex];
+                    const invalidField = invalidRow ? invalidRow.querySelector(`.${validationResult.field}`) : null;
+                    if (invalidField) {
+                        invalidField.focus();
+                    }
+                }
+            });
         }
 
         function updateEditDoneBarVisibility() {
@@ -2355,6 +2390,7 @@ function addLevel() {
     const saveEditBtn = document.getElementById('saveEditBtn');
     const cancelEditBtn = document.getElementById('cancelEditBtn');
     const blindEditor = document.getElementById('blindEditor');
+    const blindEditorForm = document.getElementById('blindEditorForm');
     const commitFieldBtn = document.getElementById('commitFieldBtn');
     const editPanel = document.getElementById('editPanel');
     
@@ -2388,8 +2424,15 @@ function addLevel() {
         blindEditor.addEventListener('keydown', (event) => {
             if (event.key === 'Enter' && event.target instanceof HTMLInputElement) {
                 normalizeBlindEditorInput(event.target);
-                event.target.blur();
+                event.preventDefault();
+                submitBlindEditorChanges();
             }
+        });
+    }
+    if (blindEditorForm) {
+        blindEditorForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            submitBlindEditorChanges();
         });
     }
     if (commitFieldBtn) {
@@ -2412,27 +2455,6 @@ function addLevel() {
                 updateEditDoneBarVisibility();
             });
         }, { passive: true });
-    }
-    
-    if (saveEditBtn) {
-        saveEditBtn.addEventListener('click', () => {
-            commitActiveBlindEditorField();
-
-            window.requestAnimationFrame(() => {
-                const validationResult = updateBlindEditorValidation();
-                const newStructure = getEditedStructureFromEditor();
-
-                if (validationResult.valid && validateStructure(newStructure)) {
-                    applyEditedStructure(newStructure);
-                } else if (validationResult && Number.isInteger(validationResult.rowIndex)) {
-                    const invalidRow = document.querySelectorAll('.blind-row')[validationResult.rowIndex];
-                    const invalidField = invalidRow ? invalidRow.querySelector(`.${validationResult.field}`) : null;
-                    if (invalidField) {
-                        invalidField.focus();
-                    }
-                }
-            });
-        });
     }
     
     if (cancelEditBtn) cancelEditBtn.addEventListener('click', hideEditPanel);
