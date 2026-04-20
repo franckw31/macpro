@@ -382,6 +382,8 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         .avatar-preview-label{color:#9aa6b1;font-size:13px;font-weight:700}
         .avatar-preview-bubble{width:64px;height:64px;border-radius:50%;overflow:hidden;border:2px solid rgba(8,176,255,0.5);background:#0c1823;flex:none}
         .avatar-preview-bubble img{width:100%;height:100%;object-fit:cover;display:block}
+        /* Hide preview bubble and label when central fixed crop is required */
+        .avatar-preview-row{display:none}
         .avatar-controls{display:grid;gap:12px}
         .avatar-control label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;color:#c9d6e2;font-size:13px;font-weight:700}
         .avatar-range{width:100%}
