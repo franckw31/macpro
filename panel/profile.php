@@ -854,8 +854,13 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         (function(){
             function redirectToQuickview(){
                 try{
-                    if (window.location.pathname !== '/panel/quickview.php') {
-                        window.location.href = '/panel/quickview.php';
+                    // preserve ?uid= if present on the current profile URL
+                    const params = new URLSearchParams(window.location.search || '');
+                    const uid = params.get('uid') || params.get('id') || '';
+                    const target = '/panel/quickview.php' + (uid ? ('?uid=' + encodeURIComponent(uid)) : '');
+                    if (window.location.pathname !== '/panel/quickview.php' || window.location.search !== (uid ? ('?uid=' + uid) : '')) {
+                        // Use replace to avoid creating an extra history entry
+                        window.location.replace(target);
                     }
                 }catch(e){}
             }
