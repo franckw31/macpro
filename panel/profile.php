@@ -588,9 +588,18 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 // no minimum length enforced
                 if (n !== c) { pwdStatus.textContent = 'Les mots de passe ne correspondent pas.'; return; }
 
+                // Prepare submission
                 hidNew.value = n;
                 hidConfirm.value = c;
-                form.submit();
+                // Close modal and disable button to avoid double clicks
+                close();
+                try { pwdSave.disabled = true; pwdSave.textContent = 'Envoi…'; } catch(e){}
+                // Use requestSubmit when available (keeps submit event semantics)
+                if (typeof form.requestSubmit === 'function') {
+                    form.requestSubmit();
+                } else {
+                    form.submit();
+                }
             });
 
             modal.addEventListener('click', function(ev){ if (ev.target === modal) close(); });
