@@ -886,10 +886,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			   <hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
 						 <div style="display:flex;align-items:center;justify-content:space-between">
 							 <div id="reg-text" style="font-weight:600;font-size:14px">Votre Inscription : </div>
-							 <div>
-								<button id="reg-action" class="button primary" style="margin-left:auto;padding:8px 12px;border-radius:10px;font-weight:700"><?php echo (!empty($serverParticipation) && isset($serverParticipation['status']) && !in_array($serverParticipation['status'], array('None','Desinscrit'))) ? 'Modifier' : 'S Inscrire'; ?></button>
-							 </div>
-						 <div>
+							 <button id="reg-action" class="button primary" style="padding:8px 12px;border-radius:10px;font-weight:700"><?php echo (!empty($serverParticipation) && isset($serverParticipation['status']) && !in_array($serverParticipation['status'], array('None','Desinscrit'))) ? 'Modifier' : 'S Inscrire'; ?></button>
+						 </div>
 
 				<!-- Partie Detail modal -->
 				<div id="partie-modal" class="modal-overlay" aria-hidden="true">
