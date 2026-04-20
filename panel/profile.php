@@ -848,5 +848,20 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             });
         }
     </script>
+    <script>
+        // If the user navigates back to this page via browser back button,
+        // force a navigation to quickview to avoid stale UI/state issues.
+        (function(){
+            function redirectToQuickview(){
+                try{
+                    if (window.location.pathname !== '/panel/quickview.php') {
+                        window.location.href = '/panel/quickview.php';
+                    }
+                }catch(e){}
+            }
+            window.addEventListener('popstate', function(){ redirectToQuickview(); });
+            window.addEventListener('pageshow', function(ev){ if (ev.persisted) redirectToQuickview(); });
+        })();
+    </script>
 </body>
 </html>
