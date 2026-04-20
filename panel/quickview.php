@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				<div style="margin-left:auto;display:flex;align-items:center;gap:12px">
 					<div id="offline-badge" class="offline-badge" aria-hidden="true"></div>
 					<a id="header-profile-link" href="/panel/profile.php<?php echo (!empty($serverActivity['id'])? '?uid=' . intval($serverActivity['id']): ''); ?>" role="link" title="Mon Profil" style="text-decoration:none;color:inherit;display:inline-flex;align-items:center;justify-content:center">
-					<div class="avatar header-avatar-override"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar" style="width:100%;height:100%;object-fit:cover"></div>
+					<div class="avatar header-avatar-override" style="width:96px;height:96px;"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar" style="width:100%;height:100%;object-fit:cover"></div>
 					</a>
 				</div>
 			</div>
@@ -576,12 +576,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	/* Force header avatar size regardless of global .avatar rules */
 	.header-avatar-override {
-		width: 64px !important;
-		height: 64px !important;
-		min-width: 64px !important;
-		min-height: 64px !important;
-		max-width: 64px !important;
-		max-height: 64px !important;
+		width: 96px !important;
+		height: 96px !important;
+		min-width: 96px !important;
+		min-height: 96px !important;
+		max-width: 96px !important;
+		max-height: 96px !important;
 		border-radius: 50% !important;
 		box-shadow: 0 4px 16px rgba(0,0,0,0.18) !important;
 		border: 4px solid #fff !important;
