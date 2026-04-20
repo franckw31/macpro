@@ -927,24 +927,22 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         }
     </script>
     <script>
-        // Change password modal handling
+        // Change password modal handling (no current password required)
         (function(){
             const btn = document.getElementById('changePasswordBtn');
             const modal = document.getElementById('passwordModal');
             const pwdCancel = document.getElementById('pwdCancel');
             const pwdSave = document.getElementById('pwdSave');
-            const pwdCurrent = document.getElementById('pwd_current');
             const pwdNew = document.getElementById('pwd_new');
             const pwdConfirm = document.getElementById('pwd_confirm');
             const pwdStatus = document.getElementById('pwdStatus');
             const form = document.getElementById('changePasswordForm');
-            const hidCurrent = document.getElementById('cp_current');
             const hidNew = document.getElementById('cp_new');
             const hidConfirm = document.getElementById('cp_confirm');
 
             if (!btn || !modal) return;
 
-            const open = function(){ modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; pwdStatus.textContent=''; pwdCurrent.value=''; pwdNew.value=''; pwdConfirm.value=''; pwdCurrent.focus(); };
+            const open = function(){ modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; pwdStatus.textContent=''; pwdNew.value=''; pwdConfirm.value=''; pwdNew.focus(); };
             const close = function(){ modal.classList.remove('is-open'); modal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; };
 
             btn.addEventListener('click', function(e){ e.preventDefault(); open(); });
@@ -952,14 +950,12 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 
             pwdSave.addEventListener('click', function(e){
                 e.preventDefault();
-                const cur = (pwdCurrent.value || '').trim();
                 const n = (pwdNew.value || '').trim();
                 const c = (pwdConfirm.value || '').trim();
-                if (!cur || !n || !c) { pwdStatus.textContent = 'Tous les champs sont requis.'; return; }
+                if (!n || !c) { pwdStatus.textContent = 'Tous les champs sont requis.'; return; }
                 if (n.length < 6) { pwdStatus.textContent = 'Le mot de passe doit contenir au moins 6 caractères.'; return; }
                 if (n !== c) { pwdStatus.textContent = 'Les mots de passe ne correspondent pas.'; return; }
 
-                hidCurrent.value = cur;
                 hidNew.value = n;
                 hidConfirm.value = c;
                 form.submit();
