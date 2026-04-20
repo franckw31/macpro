@@ -635,6 +635,18 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         white-space: nowrap;
     }
 
+    .keyboard-dismiss-input {
+        position: fixed;
+        opacity: 0;
+        pointer-events: none;
+        width: 1px;
+        height: 1px;
+        bottom: 0;
+        left: 0;
+        border: 0;
+        padding: 0;
+    }
+
     /* Responsive Design */
     @media (max-width: 480px) {
         body {
