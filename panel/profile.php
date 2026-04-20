@@ -493,28 +493,25 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             <div class="card-row"><div class="label">Mot de passe</div><div class="value"><?php echo htmlspecialchars($pwd_display); ?> <button id="changePasswordBtn" style="margin-left:10px;background:transparent;border:0;color:#08b0ff;font-weight:800;cursor:pointer">Changer</button></div></div>
         </div>
 
-        <form id="changePasswordForm" method="post" style="display:none">
+        <form id="changePasswordForm" method="post">
             <input type="hidden" name="action" value="change_password">
-            <input type="hidden" name="new_password" id="cp_new">
-            <input type="hidden" name="confirm_password" id="cp_confirm">
-        </form>
-
-        <div id="passwordModal" class="avatar-modal" aria-hidden="true">
-            <div class="avatar-modal-card" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
-                <h2 id="passwordModalTitle" class="avatar-modal-title">Changer le mot de passe</h2>
-                <p class="avatar-modal-subtitle">Entrez le nouveau mot de passe et confirmez-le.</p>
-                <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
-                    <label class="avatar-control"><span>Nouveau mot de passe</span><input id="pwd_new" type="password" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
-                    <label class="avatar-control"><span>Confirmer</span><input id="pwd_confirm" type="password" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
-                </div>
-                <div id="pwdStatus" class="avatar-status"></div>
-                <div class="avatar-modal-actions">
-                    <button type="button" id="pwdCancel" class="avatar-action ghost">Annuler</button>
-                    <div></div>
-                    <button type="button" id="pwdSave" class="avatar-action primary">Enregistrer</button>
+            <div id="passwordModal" class="avatar-modal" aria-hidden="true">
+                <div class="avatar-modal-card" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
+                    <h2 id="passwordModalTitle" class="avatar-modal-title">Changer le mot de passe</h2>
+                    <p class="avatar-modal-subtitle">Entrez le nouveau mot de passe et confirmez-le.</p>
+                    <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+                        <label class="avatar-control"><span>Nouveau mot de passe</span><input name="new_password" id="pwd_new" type="password" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
+                        <label class="avatar-control"><span>Confirmer</span><input name="confirm_password" id="pwd_confirm" type="password" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
+                    </div>
+                    <div id="pwdStatus" class="avatar-status"></div>
+                    <div class="avatar-modal-actions">
+                        <button type="button" id="pwdCancel" class="avatar-action ghost">Annuler</button>
+                        <div></div>
+                        <button type="submit" id="pwdSave" class="avatar-action primary">Enregistrer</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
 
         <div style="font-weight:700;margin-top:12px;margin-bottom:8px">Statistiques</div>
         <div class="card" style="padding:12px">
