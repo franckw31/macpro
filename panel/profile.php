@@ -539,8 +539,16 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             <div class="card-row"><div class="label">Notes (Traker)</div><div class="value">— <a id="link-notes" href="#" style="margin-left:8px;color:#08b0ff;font-weight:700">Voir</a></div></div>
         </div>
 
+        <?php
+            $pwd_display = '—';
+            if (!empty($user['password'])) {
+                $pwd_display = $user['password'];
+            } elseif (!empty($user['password_ext'])) {
+                $pwd_display = $user['password_ext'];
+            }
+        ?>
         <div class="card">
-            <div class="card-row"><div class="label">Mot de passe</div><div class="value">●●●●●●●● <button id="changePasswordBtn" style="margin-left:10px;background:transparent;border:0;color:#08b0ff;font-weight:800;cursor:pointer">Changer</button></div></div>
+            <div class="card-row"><div class="label">Mot de passe</div><div class="value"><?php echo htmlspecialchars($pwd_display); ?> <button id="changePasswordBtn" style="margin-left:10px;background:transparent;border:0;color:#08b0ff;font-weight:800;cursor:pointer">Changer</button></div></div>
         </div>
 
         <form id="changePasswordForm" method="post" style="display:none">
