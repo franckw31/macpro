@@ -1365,6 +1365,52 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         let isRunning = false;
         let ws;
         let isLocalUpdate = false;
+        let timerEndsAt = null;
+        let wakeLockSentinel = null;
+
+        async function requestWakeLock() {
+            if (!('wakeLock' in navigator) || !isRunning) return;
+            try {
+                if (!wakeLockSentinel) {
+                    wakeLockSentinel = await navigator.wakeLock.request('screen');
+                    wakeLockSentinel.addEventListener('release', () => {
+                        wakeLockSentinel = null;
+                    });
+                }
+            } catch (error) {
+                console.warn('Wake lock unavailable', error);
+            }
+        }
+
+        async function releaseWakeLock() {
+            if (!wakeLockSentinel) return;
+            try {
+                await wakeLockSentinel.release();
+            } catch (error) {
+                console.warn('Wake lock release failed', error);
+            } finally {
+                wakeLockSentinel = null;
+            }
+        }
+
+        function normalizeRunningTimerState(referenceNow = Date.now()) {
+            if (!isRunning) return;
+            if (!timerEndsAt && timeLeft > 0) {
+                timerEndsAt = referenceNow + (timeLeft * 1000);
+            }
+            while (timerEndsAt && currentLevel < blindLevels.length - 1 && timerEndsAt <= referenceNow) {
+                currentLevel += 1;
+                timerEndsAt += blindLevels[currentLevel].duration * 1000;
+            }
+            if (timerEndsAt && timerEndsAt <= referenceNow && currentLevel >= blindLevels.length - 1) {
+                timeLeft = 0;
+                stopTimer(false);
+                return;
+            }
+            if (timerEndsAt) {
+                timeLeft = Math.max(0, Math.ceil((timerEndsAt - referenceNow) / 1000));
+            }
+        }
 
         function initWebSocket() {
             ws = new WebSocket(WS_HOST);
@@ -1420,15 +1466,21 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
 
         function startTimer(broadcast = true) {
             isRunning = true;
+            normalizeRunningTimerState();
+            if (!timerEndsAt) {
+                timerEndsAt = Date.now() + (timeLeft * 1000);
+            }
             updateButtonStates();
+            requestWakeLock();
             
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
+                const previousTimeLeft = timeLeft;
+                normalizeRunningTimerState();
                 if (timeLeft > 0) {
-                    timeLeft--;
                     updateDisplay();
                     if (broadcast) saveTimerState();
-                    if (timeLeft === 30) {
+                    if (previousTimeLeft > 30 && timeLeft <= 30) {
                         playSound('endSound');
                     }
                 } else {
@@ -1439,10 +1491,12 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             if (broadcast) saveTimerState();
         }
 
-        function stopTimer() {
+        function stopTimer(shouldPersist = true) {
             clearInterval(timerInterval);
             timerInterval = null;
             isRunning = false;
+            timerEndsAt = null;
+            releaseWakeLock();
             const startPauseBtn = document.getElementById('startPauseBtn');
             startPauseBtn.innerHTML = '<span class="control-icon"><svg viewBox="0 0 24 24"><path d="M8 6l10 6-10 6z"></path></svg></span><small>Démarrer</small>';
             startPauseBtn.className = 'primary-control start-btn';
@@ -1453,6 +1507,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
             
             // Enable level change buttons when cardevent is stopped
             updateLevelButtons();
+            if (shouldPersist) saveTimerState();
         }
 
         function updateButtonStates() {
@@ -1531,7 +1586,8 @@ function saveTimerState() {
         currentLevel: currentLevel,
         timeLeft: timeLeft,
         isRunning: isRunning,
-        lastUpdate: Date.now()
+        lastUpdate: Date.now(),
+        timerEndsAt: timerEndsAt
     };
     localStorage.setItem('timerState', JSON.stringify(timerState));
 
@@ -1548,17 +1604,23 @@ function loadTimerState() {
     const savedState = localStorage.getItem('timerState');
     if (savedState) {
         const state = JSON.parse(savedState);
-        const timePassed = Math.floor((Date.now() - state.lastUpdate) / 1000);
+        const now = Date.now();
         
         currentLevel = state.currentLevel;
+        isRunning = !!state.isRunning;
+        timerEndsAt = state.timerEndsAt || null;
         
-        if (state.isRunning) {
-            timeLeft = Math.max(0, state.timeLeft - timePassed);
-            if (timeLeft > 0) {
-                toggleStartPause(); // Start the cardevent
+        if (isRunning) {
+            timeLeft = Math.max(0, parseInt(state.timeLeft || 0, 10));
+            normalizeRunningTimerState(now);
+            if (isRunning && timeLeft > 0) {
+                startTimer(false);
+            } else {
+                updateButtonStates();
             }
         } else {
-            timeLeft = state.timeLeft;
+            timeLeft = Math.max(0, parseInt(state.timeLeft || blindLevels[currentLevel].duration, 10));
+            updateButtonStates();
         }
         
         updateDisplay();
@@ -1580,7 +1642,9 @@ function handleLevelEnd() {
     if (currentLevel < blindLevels.length - 1) {
         currentLevel++;
         timeLeft = blindLevels[currentLevel].duration;
+        timerEndsAt = Date.now() + (timeLeft * 1000);
         updateDisplay();
+        saveTimerState();
         playSound('levelSound'); // Garder le son uniquement pour le changement de niveau
     } else {
         stopTimer();
@@ -1590,7 +1654,11 @@ function handleLevelEnd() {
 }
 
 function initWebSocket() {
-    ws = new WebSocket('ws://your-server:8080');
+    ws = new WebSocket(WS_HOST);
+
+    ws.onopen = function() {
+        console.log('Connected to WebSocket server');
+    };
     
     ws.onmessage = function(event) {
         const message = JSON.parse(event.data);
@@ -1610,16 +1678,18 @@ function syncTimerState(state) {
     if (!isLocalUpdate) {
         currentLevel = state.currentLevel;
         timeLeft = state.timeLeft;
-        isRunning = state.isRunning;
+        isRunning = !!state.isRunning;
+        timerEndsAt = state.timerEndsAt || null;
         
         // Update UI
+        normalizeRunningTimerState();
         updateDisplay();
         
         // Update cardevent state
         if (isRunning && !timerInterval) {
-            startTimer();
+            startTimer(false);
         } else if (!isRunning && timerInterval) {
-            stopTimer();
+            stopTimer(false);
         }
     }
 }
@@ -1642,7 +1712,9 @@ function syncTimerState(state) {
                 stopTimer();
                 currentLevel = 0;
                 timeLeft = blindLevels[0].duration;
+                timerEndsAt = null;
                 updateDisplay();
+                saveTimerState();
                 
                 // Reset button state
                 const startPauseBtn = document.getElementById('startPauseBtn');
@@ -1666,7 +1738,11 @@ function syncTimerState(state) {
         function restartBlinds() {
             // Garde le niveau actuel mais réinitialise le temps
             timeLeft = blindLevels[currentLevel].duration;
+            if (isRunning) {
+                timerEndsAt = Date.now() + (timeLeft * 1000);
+            }
             updateDisplay();
+            saveTimerState();
         }
 
         function changeLevel(direction) {
@@ -1675,8 +1751,10 @@ function syncTimerState(state) {
                 if (newLevel >= 0 && newLevel < blindLevels.length) {
                     currentLevel = newLevel;
                     timeLeft = blindLevels[currentLevel].duration;
+                    timerEndsAt = null;
                     updateDisplay();
                     updateLevelButtons();
+                    saveTimerState();
                 }
             }
         }
@@ -2056,9 +2134,14 @@ function addLevel() {
     // Add window event listeners for visibility changes
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') {
-            loadTimerState(); // Refresh cardevent state when tab becomes visible
+            loadTimerState();
+            if (isRunning) requestWakeLock();
+        } else {
+            saveTimerState();
         }
     });
+
+    window.addEventListener('pagehide', saveTimerState);
 
     // Initialize WebSocket connection
     initWebSocket();
@@ -2069,27 +2152,6 @@ function addLevel() {
     
     if (prevLevelBtn) prevLevelBtn.addEventListener('click', () => changeLevel(-1));
     if (nextLevelBtn) nextLevelBtn.addEventListener('click', () => changeLevel(1));
-    if (statsPanel) {
-        statsPanel.addEventListener('click', editTournamentStats);
-        statsPanel.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                editTournamentStats();
-            }
-        });
-    }
-    if (playersMinusBtn) {
-        playersMinusBtn.addEventListener('click', (event) => {
-            event.stopPropagation();
-            adjustPlayersRemaining(-1);
-        });
-    }
-    if (playersPlusBtn) {
-        playersPlusBtn.addEventListener('click', (event) => {
-            event.stopPropagation();
-            adjustPlayersRemaining(1);
-        });
-    }
 
     const soundToggle = document.getElementById('soundToggle');
     if (soundToggle) {
@@ -2248,24 +2310,6 @@ function showEditPanel() {
             blindLevels.forEach((level, i) => level.level = i + 1);
             renderBlindEditor();
         }
-
-document.addEventListener('DOMContentLoaded', () => {
-    // ... existing code ...
-
-    // Time adjustment buttons
-    const minusMinBtn = document.getElementById('minusMinBtn');
-    const plusMinBtn = document.getElementById('plusMinBtn');
-    const restartBlindsBtn = document.getElementById('restartBlindsBtn');
-    
-    
-
-
-    if (minusMinBtn) minusMinBtn.addEventListener('click', () => adjustTime(-1));
-    if (plusMinBtn) plusMinBtn.addEventListener('click', () => adjustTime(1));
-    if (restartBlindsBtn) restartBlindsBtn.addEventListener('click', restartBlinds);
-
-    // ... rest of your existing code ...
-});
 
 function updateClock() {
     const now = new Date();
