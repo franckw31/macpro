@@ -384,6 +384,16 @@ error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id(
 		.detail-value { font-size: 13px; }
 	}
 
+/* Header avatar sizing overrides (desktop + responsive) */
+.header .avatar { width: 48px !important; height: 48px !important; flex: 0 0 auto; border-radius: 6px; overflow: hidden; }
+.header .avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+@media (max-width: 600px) {
+    .header .avatar { width: 40px !important; height: 40px !important; }
+}
+@media (max-width: 400px) {
+    .header .avatar { width: 36px !important; height: 36px !important; }
+}
+
 	/* Disable fixed bottom navigation on small screens to avoid overlap */
 	@media (max-width: 600px) {
 		.bottom-nav, .bottom-nav-backdrop {
