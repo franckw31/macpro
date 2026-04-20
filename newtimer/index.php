@@ -72,7 +72,7 @@ function backfillBlindStructureSavedBy(PDO $conn, string $savedBy): void {
         return;
     }
 
-    $stmt = $conn->prepare("UPDATE blind_structures SET saved_by = ? WHERE saved_by IS NULL OR TRIM(saved_by) = ''");
+    $stmt = $conn->prepare("UPDATE blind_structures SET saved_by = ? WHERE saved_by IS NULL OR TRIM(saved_by) = '' OR TRIM(saved_by) = 'Utilisateur inconnu'");
     $stmt->execute([$savedBy]);
 }
 
@@ -2607,6 +2607,7 @@ function addLevel() {
             try {
                 const response = await fetch(window.location.href, {
                     method: 'POST',
+                    credentials: 'same-origin',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         action: 'save',
@@ -2698,6 +2699,7 @@ function addLevel() {
             try {
                 const response = await fetch(window.location.href, {
                     method: 'POST',
+                    credentials: 'same-origin',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({action: 'list'})
                 });
@@ -2727,6 +2729,7 @@ function addLevel() {
             try {
                 const response = await fetch(window.location.href, {
                     method: 'POST',
+                    credentials: 'same-origin',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({action: 'load', id: id})
                 });
@@ -2755,6 +2758,7 @@ function addLevel() {
             try {
                 const response = await fetch(window.location.href, {
                     method: 'POST',
+                    credentials: 'same-origin',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({action: 'delete', id: id})
                 });
