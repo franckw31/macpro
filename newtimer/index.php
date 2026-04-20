@@ -1805,20 +1805,13 @@ function syncTimerState(state) {
         // Modifier la fonction resetTimer pour mettre à jour le bouton
         function resetTimer() {
             if (confirm("Êtes-vous sûr de vouloir réinitialiser le cardevent ?")) {
-                stopTimer();
+                stopTimer(false);
                 currentLevel = 0;
                 timeLeft = blindLevels[0].duration;
                 timerEndsAt = null;
                 updateDisplay();
-                saveTimerState();
                 speakAnnouncement('Démarrage de la partie');
-                
-                // Reset button state
-                const startPauseBtn = document.getElementById('startPauseBtn');
-                if (startPauseBtn) {
-                    startPauseBtn.innerHTML = '<span class="control-icon"><svg viewBox="0 0 24 24"><path d="M8 6l10 6-10 6z"></path></svg></span><small>Démarrer</small>';
-                    startPauseBtn.className = 'primary-control start-btn';
-                }
+                startTimer();
             }
         }
 
