@@ -1385,8 +1385,11 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
                     <h2 class="edit-title">Modifier les blindes</h2>
                     <div class="edit-subtitle">Ajuste chaque niveau, valide rapidement la saisie, puis enregistre la nouvelle structure.</div>
                 </div>
-                <div class="edit-done-bar" id="editDoneBar">
-                    <button class="edit-done-btn" id="commitFieldBtn" type="button">Terminer</button>
+                <div class="edit-header-actions">
+                    <div class="edit-done-bar" id="editDoneBar">
+                        <button class="edit-done-btn" id="commitFieldBtn" type="button">Terminer</button>
+                    </div>
+                    <button class="edit-close-btn" id="closeEditBtn" type="button">Fermer</button>
                 </div>
             </div>
             <div class="blind-editor" id="blindEditor"></div>
