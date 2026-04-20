@@ -181,6 +181,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Poker Timer</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=RTEc1M0w" onload="try{ responsiveVoice.setDefaultVoice('French Female'); }catch(e){ console.warn('responsiveVoice load onload', e); }"></script>
     <style>
         /* Update the body style */
         body {
@@ -1396,6 +1397,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         let resumeIndicatorTimeout = null;
         let speechVoice = null;
         let speechUnlocked = false;
+        let responsiveVoiceName = 'French Female';
 
         function showResumeIndicator(message = 'Timer recalé après veille') {
             const indicator = document.getElementById('resume-indicator');
@@ -1542,6 +1544,53 @@ function getPreferredSpeechVoice() {
         || null;
 }
 
+function getPreferredResponsiveVoice() {
+    if (typeof responsiveVoice === 'undefined' || typeof responsiveVoice.getVoices !== 'function') {
+        return 'French Female';
+    }
+
+    const voices = responsiveVoice.getVoices() || [];
+    if (!voices.length) return 'French Female';
+
+    const normalizedVoices = voices.map((voice) => typeof voice === 'string' ? { name: voice, lang: '' } : voice);
+    const foundFemale = normalizedVoices.find((voice) => voice.name === 'French Female');
+    const foundAmelie = normalizedVoices.find((voice) => (voice.name || '').includes('Amelie'));
+    const foundFrench = normalizedVoices.find((voice) => {
+        const name = (voice.name || '').toLowerCase();
+        const lang = (voice.lang || '').toLowerCase();
+        return lang.startsWith('fr') || name.includes('french');
+    });
+    const foundThomas = normalizedVoices.find((voice) => (voice.name || '').includes('Thomas'));
+
+    return (foundFemale && foundFemale.name)
+        || (foundAmelie && foundAmelie.name)
+        || (foundFrench && foundFrench.name)
+        || (foundThomas && foundThomas.name)
+        || (normalizedVoices[0] && normalizedVoices[0].name)
+        || 'French Female';
+}
+
+function speakWithResponsiveVoice(message) {
+    if (typeof responsiveVoice === 'undefined' || typeof responsiveVoice.speak !== 'function') {
+        return false;
+    }
+
+    try {
+        responsiveVoiceName = getPreferredResponsiveVoice();
+        responsiveVoice.setDefaultVoice(responsiveVoiceName);
+        responsiveVoice.cancel();
+        responsiveVoice.speak(message, responsiveVoiceName, {
+            rate: 0.95,
+            pitch: 1,
+            volume: 1
+        });
+        return true;
+    } catch (error) {
+        console.log('ResponsiveVoice error:', error);
+        return false;
+    }
+}
+
 function unlockSpeechSynthesis() {
     if (speechUnlocked || !('speechSynthesis' in window)) return;
 
@@ -1584,7 +1633,14 @@ function unlockSpeechSynthesis() {
 function speakAnnouncement(message) {
     const soundToggle = document.getElementById('soundToggle');
     if (soundToggle && soundToggle.classList.contains('muted')) return;
-    if (!('speechSynthesis' in window) || !message) return;
+    if (!message) return;
+
+    if (speakWithResponsiveVoice(message)) {
+        speechUnlocked = true;
+        return;
+    }
+
+    if (!('speechSynthesis' in window)) return;
 
     try {
         if (!speechUnlocked) {
@@ -2216,6 +2272,15 @@ function addLevel() {
     
     if (cancelEditBtn) cancelEditBtn.addEventListener('click', hideEditPanel);
 
+    if (typeof responsiveVoice !== 'undefined') {
+        responsiveVoiceName = getPreferredResponsiveVoice();
+        try {
+            responsiveVoice.setDefaultVoice(responsiveVoiceName);
+        } catch (error) {
+            console.log('ResponsiveVoice init error:', error);
+        }
+    }
+
     if ('speechSynthesis' in window) {
         window.speechSynthesis.onvoiceschanged = () => {
             speechVoice = getPreferredSpeechVoice();
@@ -2226,6 +2291,14 @@ function addLevel() {
     // Initialiser l'audio et déverrouiller la voix au premier geste utilisateur, surtout sur iPhone/Safari
     const unlockAudioAndSpeech = () => {
         initAudio();
+        if (typeof responsiveVoice !== 'undefined') {
+            try {
+                responsiveVoiceName = getPreferredResponsiveVoice();
+                responsiveVoice.setDefaultVoice(responsiveVoiceName);
+            } catch (error) {
+                console.log('ResponsiveVoice unlock error:', error);
+            }
+        }
         unlockSpeechSynthesis();
     };
     document.addEventListener('touchstart', unlockAudioAndSpeech, { once: true, passive: true });
