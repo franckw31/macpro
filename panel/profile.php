@@ -236,8 +236,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'uploa
         }
     }
 
+    // Debug: log saved filename and file existence
+    error_log("Avatar upload: new_filename={$new_filename}, target_file={$target_file}, exists=" . (is_file($target_file) ? '1' : '0'));
     $set_flash('success', "Photo de profil mise à jour avec succès.");
-    header('Location: ' . $redirect_uri);
+    // Ajoute un paramètre ts pour forcer le rechargement (anti-cache)
+    $sep = (strpos($redirect_uri, '?') === false) ? '?' : '&';
+    header('Location: ' . $redirect_uri . $sep . 'ts=' . time());
     exit;
 }
 
