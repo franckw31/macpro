@@ -679,6 +679,25 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         white-space: nowrap;
     }
 
+    .edit-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+
+    .edit-close-btn {
+        min-height: 46px;
+        padding: 0 16px;
+        border: 0;
+        border-radius: 999px;
+        background: #18c4ff;
+        color: #061018;
+        font-size: 14px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
     .keyboard-dismiss-input {
         position: fixed;
         opacity: 0;
@@ -728,6 +747,12 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         }
 
         .edit-done-btn {
+            min-height: 42px;
+            padding: 0 14px;
+            font-size: 14px;
+        }
+
+        .edit-close-btn {
             min-height: 42px;
             padding: 0 14px;
             font-size: 14px;
