@@ -255,11 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'chang
         header('Location: ' . $redirect_uri);
         exit;
     }
-    if (strlen($new) < 6) {
-        $set_flash('error', 'Le mot de passe doit contenir au moins 6 caractères.');
-        header('Location: ' . $redirect_uri);
-        exit;
-    }
+    // no minimum length enforced
 
     // Update password (store raw string to remain compatible with existing auth checks)
     $updated = false;
