@@ -1865,11 +1865,10 @@ function handleLevelEnd() {
         currentLevel++;
         timeLeft = blindLevels[currentLevel].duration;
         timerEndsAt = Date.now() + (timeLeft * 1000);
-        const currentBlinds = blindLevels[currentLevel];
         updateDisplay();
         saveTimerState();
         playSound('levelSound'); // Garder le son uniquement pour le changement de niveau
-        speakAnnouncement(`Changement de blinde. Petite blinde ${currentBlinds.small_blind}, grosse blinde ${currentBlinds.big_blind}.`);
+        announceBlindChange(currentLevel, 450);
     } else {
         stopTimer();
         playSound('endSound'); // Garder le son pour la fin du tournoi
