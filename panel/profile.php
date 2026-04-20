@@ -323,6 +323,8 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         .avatar-wrap{position:relative;display:inline-block}
         .avatar-edit-badge{position:absolute;right:-3px;bottom:-3px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#08b0ff;color:#04131d;font-size:11px;font-weight:800;box-shadow:0 8px 18px rgba(0,0,0,0.35)}
         .avatar-hint{margin-top:6px;color:#9aa6b1;font-size:11px}
+        .profile-identity{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px}
+        .profile-identity-text{display:flex;flex-direction:column;align-items:flex-start}
         .avatar-trigger:hover .avatar-edit-badge{transform:scale(1.05)}
         .avatar-modal{position:fixed;inset:0;background:rgba(1,8,15,0.88);display:none;align-items:center;justify-content:center;padding:12px;z-index:60}
         .avatar-modal.is-open{display:flex}
@@ -350,7 +352,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         .flash{margin:0 0 14px;padding:10px 12px;border-radius:12px;font-size:14px;font-weight:700}
         .flash.success{background:rgba(22,163,74,0.14);color:#7cf0a8;border:1px solid rgba(22,163,74,0.28)}
         .flash.error{background:rgba(255,77,77,0.12);color:#ff9c9c;border:1px solid rgba(255,77,77,0.24)}
-        .name{text-align:center;font-weight:800;font-size:20px;margin-top:4px}
+        .name{text-align:left;font-weight:800;font-size:20px;margin-top:0}
         /* Cards use subtle contrast on dark sheet */
         .card{background:rgba(255,255,255,0.03);padding:12px;border-radius:12px;margin-top:12px;border:1px solid rgba(255,255,255,0.03)}
         .card-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
@@ -370,6 +372,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             .sheet{margin:10px auto;padding:14px;border-radius:16px}
             .avatar{width:54px;height:54px}
             .avatar-edit-badge{width:20px;height:20px;font-size:10px}
+            .profile-identity{gap:10px;margin-bottom:8px}
             .avatar-modal-card{width:min(100%,340px);padding:14px;border-radius:18px}
             .avatar-canvas-wrap{width:min(100%,208px)}
             .avatar-modal-subtitle,.avatar-helper,.avatar-status{font-size:12px}
@@ -393,13 +396,18 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             <input type="file" name="fileToUpload" id="avatarFileInput" accept="image/png,image/jpeg,image/gif,image/webp">
         </form>
 
-        <button type="button" class="avatar-trigger" onclick="document.getElementById('avatarFileInput').click();">
-            <span class="avatar-wrap">
-                <span class="avatar"><img id="profileAvatarImage" src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar"></span>
-                <span class="avatar-edit-badge">📷</span>
-            </span>
-            <div class="avatar-hint">Cliquer pour changer la photo, la prévisualiser et la recadrer</div>
-        </button>
+        <div class="profile-identity">
+            <button type="button" class="avatar-trigger" onclick="document.getElementById('avatarFileInput').click();">
+                <span class="avatar-wrap">
+                    <span class="avatar"><img id="profileAvatarImage" src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar"></span>
+                    <span class="avatar-edit-badge">📷</span>
+                </span>
+            </button>
+            <div class="profile-identity-text">
+                <div class="name"><span style="color:#16a34a"><?php echo htmlspecialchars($user['pseudo']); ?></span></div>
+                <div class="avatar-hint">Touchez la photo pour la changer</div>
+            </div>
+        </div>
         <div id="avatarCropModal" class="avatar-modal" aria-hidden="true">
             <div class="avatar-modal-card" role="dialog" aria-modal="true" aria-labelledby="avatarCropTitle">
                 <h2 id="avatarCropTitle" class="avatar-modal-title">Ajuster votre photo</h2>
@@ -430,8 +438,6 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 </div>
             </div>
         </div>
-        <div class="name"><span style="color:#16a34a"><?php echo htmlspecialchars($user['pseudo']); ?></span></div>
-
         <div class="card">
             <div style="font-weight:700;margin-bottom:8px"><?php echo !empty($activity_title) ? htmlspecialchars($activity_title) : ((!empty($last_insc))? fmt_fr_date($last_insc, 'EEEE d MMM (dd/MM)') : '—'); ?></div>
             <div class="card-row"><div class="label">Inscription</div><div class="value"><?php echo $last_insc ? fmt_fr_date($last_insc, 'd MMM HH:mm') : '—'; ?><?php $bi = intval(isset($stats['bonus_ins']) ? $stats['bonus_ins'] : 0); if ($bi > 0) { echo ' (<span style="color:#ffd100">+'.intval(min($bi, 5000)).'</span>)'; } ?></div></div>
