@@ -2134,19 +2134,31 @@ function renderBlindEditor() {
                     <div class="blind-fields">
                         <label class="blind-field">
                             <span class="blind-field-label">Petite blinde</span>
-                            <input type="text" value="${level.small_blind}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="small-blind">
+                            <div class="blind-input-wrap">
+                                <input type="text" value="${level.small_blind}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="small-blind">
+                                <button class="field-commit-btn" type="button">Valider</button>
+                            </div>
                         </label>
                         <label class="blind-field">
                             <span class="blind-field-label">Grosse blinde</span>
-                            <input type="text" value="${level.big_blind}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="big-blind">
+                            <div class="blind-input-wrap">
+                                <input type="text" value="${level.big_blind}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="big-blind">
+                                <button class="field-commit-btn" type="button">Valider</button>
+                            </div>
                         </label>
                         <label class="blind-field">
                             <span class="blind-field-label">Ante</span>
-                            <input type="text" value="${level.ante}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="ante">
+                            <div class="blind-input-wrap">
+                                <input type="text" value="${level.ante}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="ante">
+                                <button class="field-commit-btn" type="button">Valider</button>
+                            </div>
                         </label>
                         <label class="blind-field">
                             <span class="blind-field-label">Durée (min)</span>
-                            <input type="text" value="${level.duration / 60}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="duration">
+                            <div class="blind-input-wrap">
+                                <input type="text" value="${level.duration / 60}" inputmode="numeric" enterkeyhint="done" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="duration">
+                                <button class="field-commit-btn" type="button">Valider</button>
+                            </div>
                         </label>
                     </div>
                 </div>
