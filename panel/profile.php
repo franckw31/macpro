@@ -585,7 +585,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 const n = (pwdNew.value || '').trim();
                 const c = (pwdConfirm.value || '').trim();
                 if (!n || !c) { pwdStatus.textContent = 'Tous les champs sont requis.'; return; }
-                if (n.length < 6) { pwdStatus.textContent = 'Le mot de passe doit contenir au moins 6 caractères.'; return; }
+                // no minimum length enforced
                 if (n !== c) { pwdStatus.textContent = 'Les mots de passe ne correspondent pas.'; return; }
 
                 hidNew.value = n;
