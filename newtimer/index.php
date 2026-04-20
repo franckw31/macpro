@@ -1582,6 +1582,10 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         function stopTimer(shouldPersist = true) {
             clearInterval(timerInterval);
             timerInterval = null;
+            if (blindAnnouncementTimeout) {
+                clearTimeout(blindAnnouncementTimeout);
+                blindAnnouncementTimeout = null;
+            }
             isRunning = false;
             timerEndsAt = null;
             releaseWakeLock();
