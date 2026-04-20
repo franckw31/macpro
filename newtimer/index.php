@@ -1490,6 +1490,7 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         let speechVoice = null;
         let speechUnlocked = false;
         let responsiveVoiceName = 'French Female';
+        let blindAnnouncementTimeout = null;
 
         function showResumeIndicator(message = 'Timer recalé après veille') {
             const indicator = document.getElementById('resume-indicator');
