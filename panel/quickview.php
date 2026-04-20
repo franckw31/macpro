@@ -502,29 +502,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	</script>
 </head>
 <body>
-<style>
-	/* Force header avatar size regardless of global .avatar rules */
-	header .avatar {
-		width: 64px !important;
-		height: 64px !important;
-		min-width: 64px !important;
-		min-height: 64px !important;
-		max-width: 64px !important;
-		max-height: 64px !important;
-		border-radius: 50% !important;
-		box-shadow: 0 4px 16px rgba(0,0,0,0.18) !important;
-		border: 4px solid #fff !important;
-		outline: 3px solid #1976d2 !important;
-		outline-offset: 0 !important;
-		background: #fff !important;
-	}
-	header .avatar img {
-		width: 100% !important;
-		height: 100% !important;
-		object-fit: cover !important;
-		border-radius: 50% !important;
-	}
-</style>
 
 <?php if(isset($_GET['debug']) && $_GET['debug'] === '1'){
 	$dbgUser = 'Visiteur';
@@ -547,45 +524,54 @@ document.addEventListener('DOMContentLoaded', function() {
 				  $displayUser = htmlspecialchars($displayUser);
 				?>
 				<div style="display:flex;flex-direction:column;justify-content:center">
-					   <!-- Title and greeting removed for clean header -->
+					<div class="title"><svg class="title-spade" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="As de pique"><!-- spade filled (currentColor) + small A mark -->
+						<path d="M16 2 C11 8 8 11 8 15 C8 19 12 21 15 21 L15 26 C15 27.2 16.2 28 17.2 28 C18.2 28 19.4 27.2 19.4 26 L19.4 21 C22.4 21 26 19 26 15 C26 11 23 8 16 2 Z" fill="currentColor"/>
+						<text x="5" y="10" font-family="Helvetica, Arial, sans-serif" font-size="8" font-weight="800" fill="#ffffff">A</text>
+					</svg> CardEvent <span class="small">v<?php echo htmlspecialchars(getenv('CFBundleShortVersionString')?:'2.0'); ?></span></div>
+					<div class="greeting">Bonjour, <span id="user-name"><?php echo $displayUser; ?></span> <span style="color:var(--cyan);margin-left:6px">›</span></div>
 				</div>
 				<div style="margin-left:auto;display:flex;align-items:center;gap:12px">
 					<div id="offline-badge" class="offline-badge" aria-hidden="true"></div>
 					<a id="header-profile-link" href="/panel/profile.php<?php echo (!empty($serverActivity['id'])? '?uid=' . intval($serverActivity['id']): ''); ?>" role="link" title="Mon Profil" style="text-decoration:none;color:inherit;display:inline-flex;align-items:center;justify-content:center">
-					<div class="avatar header-avatar-override" style="width:96px;height:96px;"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar" style="width:100%;height:100%;object-fit:cover"></div>
+						<div class="avatar" style="width:32px;height:32px"><img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar" style="width:100%;height:100%;object-fit:cover"></div>
 					</a>
 				</div>
 			</div>
 			</div>
-						   <!-- Token prompt removed for clean header -->
+						<!-- Token prompt (hidden by default) -->
+						<div id="token-prompt" class="token-prompt" style="display:none">
+							<div style="font-weight:700;margin-bottom:6px">Connexion API</div>
+							<input id="api-token-input" placeholder="Collez le token API" />
+							<div style="display:flex;gap:8px;margin-top:8px">
+								<button id="save-api-token" class="button primary">Enregistrer</button>
+								<button id="clear-api-token" class="button">Effacer</button>
+							</div>
+							<div class="small" style="margin-top:8px;color:var(--muted)">Le token est stocké en local</div>
+						</div>
 				<!-- debug-info removed to prevent on-screen JSON debug output -->
 		</header>
 
-	/* Force header avatar size regardless of global .avatar rules */
-	.header-avatar-override {
-		width: 96px !important;
-		height: 96px !important;
-		min-width: 96px !important;
-		min-height: 96px !important;
-		max-width: 96px !important;
-		max-height: 96px !important;
-		border-radius: 50% !important;
-		box-shadow: 0 4px 16px rgba(0,0,0,0.18) !important;
-		border: 4px solid #fff !important;
-		outline: 3px solid #1976d2 !important;
-		outline-offset: 0 !important;
-		background: #fff !important;
-		display: inline-block !important;
-		overflow: hidden !important;
-		position: relative;
-	}
-	.header-avatar-override img {
-		width: 100% !important;
-		height: 100% !important;
-		object-fit: cover !important;
-		border-radius: 50% !important;
-		display: block;
-	}
+		<div class="container">
+				<section id="activity-card" class="card stroked">
+			<div class="section-title">Prochaine partie</div>
+			<hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
+			<!-- removed duplicate small label to avoid repeating the title -->
+			<div class="row" style="margin-top:6px">
+				<div style="flex:1">
+					<div id="activity-name" style="font-weight:800;font-size:18px"><?php echo !empty($serverActivity['title'])? htmlspecialchars($serverActivity['title']) : '—'; ?></div>
+					<div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+						<div class="date-pill"><svg class="date-pill-icon" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12.5 8v5l3 1" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+						<div id="activity-date" class="small" style="color:var(--gold);font-weight:700"><?php echo !empty($serverActivity['display_date'])? htmlspecialchars($serverActivity['display_date']) : (!empty($serverActivity['date'])? htmlspecialchars($serverActivity['date']) : '—'); ?></div>
+					</div>
+					<div style="margin-top:8px;display:flex;gap:1px;align-items:center">
+						<div class="pill" id="buyin-pill"><span><?php echo isset($serverActivity['buyin'])? htmlspecialchars($serverActivity['buyin']).' €':'—'; ?></span></div>
+						<div class="pill" id="rake-pill">
+							<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
+								<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
+								<path d="M9 6v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+								<path d="M10.5 6v6" stroke="currentColor" stroke-width="1.0" stroke-linecap="round"/>
+								<path d="M15 5l-1.5 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+							</svg>
 							<span><?php echo isset($serverActivity['rake'])? htmlspecialchars($serverActivity['rake']).' €':'—'; ?></span>
 						</div>
 						<div class="pill" id="recave-pill"><span><?php echo isset($serverActivity['recave'])? htmlspecialchars($serverActivity['recave']).' Rec':'—'; ?></span></div>
