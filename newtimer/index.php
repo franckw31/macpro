@@ -65,6 +65,17 @@ function ensureBlindStructureSavedByColumn(PDO $conn): void {
     }
 }
 
+function backfillBlindStructureSavedBy(PDO $conn, string $savedBy): void {
+    $savedBy = trim($savedBy);
+
+    if ($savedBy === '' || $savedBy === 'Utilisateur inconnu') {
+        return;
+    }
+
+    $stmt = $conn->prepare("UPDATE blind_structures SET saved_by = ? WHERE saved_by IS NULL OR TRIM(saved_by) = ''");
+    $stmt->execute([$savedBy]);
+}
+
 // Handle AJAX requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
@@ -77,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     ensureBlindStructureSavedByColumn($conn);
+    backfillBlindStructureSavedBy($conn, getCurrentBlindStructureUser());
     
     switch ($data['action'] ?? '') {
         case 'save':
