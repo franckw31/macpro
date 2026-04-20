@@ -1679,10 +1679,10 @@ function loadTimerState() {
 function toggleStartPause() {
     if (isRunning) {
         stopTimer();
-        speakAnnouncement('Pause du taimeur');
+        speakAnnouncement('Pause du tailmeur');
     } else {
         startTimer();
-        speakAnnouncement('Reprise du taimeur');
+        speakAnnouncement('Reprise du tailmeur');
     }
     updateLevelButtons();
     saveTimerState();
