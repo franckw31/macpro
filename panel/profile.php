@@ -526,7 +526,6 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 
         <form id="changePasswordForm" method="post" style="display:none">
             <input type="hidden" name="action" value="change_password">
-            <input type="hidden" name="current_password" id="cp_current">
             <input type="hidden" name="new_password" id="cp_new">
             <input type="hidden" name="confirm_password" id="cp_confirm">
         </form>
@@ -534,9 +533,8 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         <div id="passwordModal" class="avatar-modal" aria-hidden="true">
             <div class="avatar-modal-card" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
                 <h2 id="passwordModalTitle" class="avatar-modal-title">Changer le mot de passe</h2>
-                <p class="avatar-modal-subtitle">Entrez votre mot de passe actuel puis le nouveau.</p>
+                <p class="avatar-modal-subtitle">Entrez le nouveau mot de passe et confirmez-le.</p>
                 <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
-                    <label class="avatar-control"><span>Mot de passe actuel</span><input id="pwd_current" type="password" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
                     <label class="avatar-control"><span>Nouveau mot de passe</span><input id="pwd_new" type="password" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
                     <label class="avatar-control"><span>Confirmer</span><input id="pwd_confirm" type="password" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
                 </div>
