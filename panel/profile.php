@@ -588,8 +588,11 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         const avatarCropCanvas = document.getElementById('avatarCropCanvas');
         const avatarPreviewImage = document.getElementById('avatarPreviewImage');
         const profileAvatarImage = document.getElementById('profileAvatarImage');
-        const avatarZoomRange = document.getElementById('avatarZoomRange');
-        const avatarZoomValue = document.getElementById('avatarZoomValue');
+            const avatarZoomRange = document.getElementById('avatarZoomRange');
+            const avatarZoomValue = document.getElementById('avatarZoomValue');
+            // Zoom disabled: hide controls
+            if (avatarZoomRange) avatarZoomRange.style.display = 'none';
+            if (avatarZoomValue) avatarZoomValue.style.display = 'none';
         const avatarCropStatus = document.getElementById('avatarCropStatus');
         const avatarCancelButton = document.getElementById('avatarCancelButton');
         const avatarChooseOtherButton = document.getElementById('avatarChooseOtherButton');
@@ -732,14 +735,9 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             };
 
             const setScaleAroundPoint = (nextScale, anchorX, anchorY) => {
-                const clampedScale = Math.max(state.minScale, Math.min(parseFloat(avatarZoomRange.max || nextScale), nextScale));
-                const previousScale = state.scale || clampedScale;
-                const imagePointX = (anchorX - state.offsetX) / previousScale;
-                const imagePointY = (anchorY - state.offsetY) / previousScale;
-                state.scale = clampedScale;
-                state.offsetX = anchorX - imagePointX * state.scale;
-                state.offsetY = anchorY - imagePointY * state.scale;
-                avatarZoomRange.value = String(state.scale);
+                // Zoom disabled — keep minimal scale and do not modify offsets by scaling
+                state.scale = state.minScale;
+                if (avatarZoomRange) avatarZoomRange.value = String(state.scale);
                 syncZoomLabel();
                 drawAvatarCanvas();
             };
@@ -793,14 +791,8 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                     return;
                 }
                 event.preventDefault();
-                if (event.touches && event.touches.length === 2) {
-                    state.isDragging = false;
-                    state.isPinching = true;
-                    state.pinchStartDistance = getTouchDistance(event);
-                    state.pinchStartScale = state.scale;
-                    const center = getTouchCenter(event);
-                    state.pinchAnchorX = center.x;
-                    state.pinchAnchorY = center.y;
+                // Ignore multi-touch pinches (zoom disabled)
+                if (event.touches && event.touches.length >= 2) {
                     return;
                 }
                 const point = getPointerPosition(event);
@@ -816,22 +808,8 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 if (!state.image) {
                     return;
                 }
-                if (event.touches && event.touches.length === 2) {
-                    event.preventDefault();
-                    if (!state.isPinching) {
-                        state.isDragging = false;
-                        state.isPinching = true;
-                        state.pinchStartDistance = getTouchDistance(event);
-                        state.pinchStartScale = state.scale;
-                        const center = getTouchCenter(event);
-                        state.pinchAnchorX = center.x;
-                        state.pinchAnchorY = center.y;
-                    }
-                    const pinchDistance = getTouchDistance(event);
-                    if (state.pinchStartDistance > 0 && pinchDistance > 0) {
-                        const ratio = pinchDistance / state.pinchStartDistance;
-                        setScaleAroundPoint(state.pinchStartScale * ratio, state.pinchAnchorX, state.pinchAnchorY);
-                    }
+                // Ignore multi-touch pinches (zoom disabled)
+                if (event.touches && event.touches.length >= 2) {
                     return;
                 }
                 if (!state.isDragging) {
@@ -885,14 +863,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 }
             });
 
-            avatarZoomRange.addEventListener('input', () => {
-                if (!state.image) {
-                    return;
-                }
-                const size = getCanvasSize();
-                const nextScale = Math.max(state.minScale, parseFloat(avatarZoomRange.value || state.minScale));
-                setScaleAroundPoint(nextScale, size / 2, size / 2);
-            });
+            // avatarZoomRange disabled — no zoom interaction
 
             avatarCropCanvas.addEventListener('mousedown', startDrag);
             avatarCropCanvas.addEventListener('touchstart', startDrag, { passive: false });
