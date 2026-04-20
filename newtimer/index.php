@@ -2567,6 +2567,73 @@ function addLevel() {
         }
 
         async function showLoadPanel() {
+            const loadPanel = document.getElementById('loadPanel');
+            const structuresList = document.getElementById('structuresList');
+            const loadSummaryBadge = document.getElementById('loadSummaryBadge');
+
+            const escapeHtml = (value) => String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+
+            const formatStructureDate = (dateValue) => {
+                const date = new Date(dateValue);
+                return Number.isNaN(date.getTime())
+                    ? 'Date inconnue'
+                    : date.toLocaleDateString('fr-FR', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+            };
+
+            const renderStructureList = (structures) => {
+                if (!structures.length) {
+                    structuresList.innerHTML = `
+                        <div class="structure-item empty">
+                            <div class="structure-empty-icon">⏱</div>
+                            <div class="structure-empty-title">Aucune structure enregistrée</div>
+                            <div class="structure-empty-text">Enregistre d'abord une structure avec le bouton Enreg. pour la retrouver ici.</div>
+                        </div>
+                    `;
+                    loadSummaryBadge.textContent = '0 structure';
+                    return;
+                }
+
+                loadSummaryBadge.textContent = `${structures.length} structure${structures.length > 1 ? 's' : ''}`;
+                structuresList.innerHTML = structures.map((structure) => `
+                    <article class="structure-item">
+                        <div class="structure-main">
+                            <div class="structure-info">
+                                <div class="structure-name">${escapeHtml(structure.name)}</div>
+                                <div class="structure-meta">
+                                    <span class="structure-chip">${escapeHtml(formatStructureDate(structure.created_at))}</span>
+                                    <span class="structure-chip">${escapeHtml(structure.level_count)} niveaux</span>
+                                </div>
+                                <div class="structure-preview">Recharge toute la progression de blindes à partir de cette structure enregistrée.</div>
+                            </div>
+                        </div>
+                        <div class="structure-actions">
+                            <button class="start-btn" type="button" data-structure-action="load" data-structure-id="${structure.id}">Charger</button>
+                            <button class="edit-btn" type="button" data-structure-action="rename" data-structure-id="${structure.id}" data-structure-name="${escapeHtml(structure.name)}">Renommer</button>
+                            <button class="reset-btn" type="button" data-structure-action="delete" data-structure-id="${structure.id}" data-structure-name="${escapeHtml(structure.name)}">Supprimer</button>
+                        </div>
+                    </article>
+                `).join('');
+            };
+
+            loadPanel.style.display = 'block';
+            loadSummaryBadge.textContent = 'Chargement…';
+            structuresList.innerHTML = `
+                <div class="structure-item loading">
+                    <div class="structure-empty-icon">…</div>
+                    <div class="structure-empty-title">Chargement des structures</div>
+                    <div class="structure-empty-text">Récupération des structures enregistrées en cours.</div>
+                </div>
+            `;
+
             try {
                 const response = await fetch(window.location.href, {
                     method: 'POST',
@@ -2580,26 +2647,18 @@ function addLevel() {
                 }
 
                 const structures = result.structures || [];
-                const html = structures.map(s => `
-                    <div class="structure-item">
-                        <div class="structure-info">
-                            ${s.name} (${new Date(s.created_at).toLocaleDateString()})
-                            <div>Levels: ${s.level_count}</div>
-                        </div>
-                        <div class="actions">
-                            <button class="edit-btn" onclick="loadStructure(${s.id})">Load</button>
-                            <button class="edit-btn" onclick="renameStructure(${s.id}, '${s.name}')">Rename</button>
-                            <button class="reset-btn" onclick="deleteStructure(${s.id}, '${s.name}')">Delete</button>
-                        </div>
-                    </div>
-                `).join('');
-
-                document.getElementById('structuresList').innerHTML = 
-                    structures.length ? html : '<div class="structure-item">No saved structures</div>';
-                document.getElementById('loadPanel').style.display = 'block';
+                renderStructureList(structures);
             } catch (error) {
                 console.error('Load error:', error);
-                alert('Error loading structures: ' + error.message);
+                loadSummaryBadge.textContent = 'Erreur';
+                structuresList.innerHTML = `
+                    <div class="structure-item empty">
+                        <div class="structure-empty-icon">!</div>
+                        <div class="structure-empty-title">Impossible de charger les structures</div>
+                        <div class="structure-empty-text">${escapeHtml(error.message)}</div>
+                    </div>
+                `;
+                alert('Erreur lors du chargement des structures : ' + error.message);
             }
         }
 
@@ -2623,12 +2682,12 @@ function addLevel() {
                 document.getElementById('loadPanel').style.display = 'none';
             } catch (error) {
                 console.error('Load error:', error);
-                alert('Error loading structure: ' + error.message);
+                alert('Erreur lors du chargement de la structure : ' + error.message);
             }
         }
 
         async function deleteStructure(id, name) {
-            if (!confirm(`Are you sure you want to delete "${name}"?`)) {
+            if (!confirm(`Supprimer la structure "${name}" ?`)) {
                 return;
             }
 
@@ -2641,19 +2700,19 @@ function addLevel() {
 
                 const result = await response.json();
                 if (result.success) {
-                    alert('Structure deleted successfully!');
+                    alert('Structure supprimée avec succès !');
                     showLoadPanel();
                 } else {
                     throw new Error(result.error);
                 }
             } catch (error) {
                 console.error('Delete error:', error);
-                alert('Error deleting structure: ' + error.message);
+                alert('Erreur lors de la suppression : ' + error.message);
             }
         }
 
         async function renameStructure(id, oldName) {
-            const newName = prompt("Enter new name:", oldName);
+            const newName = prompt('Nouveau nom de la structure :', oldName);
             if (!newName || newName === oldName) return;
 
             try {
@@ -2669,14 +2728,14 @@ function addLevel() {
 
                 const result = await response.json();
                 if (result.success) {
-                    alert('Structure renamed successfully!');
+                    alert('Structure renommée avec succès !');
                     showLoadPanel();
                 } else {
                     throw new Error(result.error);
                 }
             } catch (error) {
                 console.error('Rename error:', error);
-                alert('Error renaming structure: ' + error.message);
+                alert('Erreur lors du renommage : ' + error.message);
             }
         }
 
