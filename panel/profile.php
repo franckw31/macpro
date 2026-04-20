@@ -529,8 +529,8 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                     <h2 id="passwordModalTitle" class="avatar-modal-title">Changer le mot de passe</h2>
                     <p class="avatar-modal-subtitle">Entrez le nouveau mot de passe et confirmez-le.</p>
                     <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
-                        <label class="avatar-control"><span>Nouveau mot de passe</span><input name="new_password" id="pwd_new" type="password" style="width:70%;max-width:320px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
-                        <label class="avatar-control"><span>Confirmer</span><input name="confirm_password" id="pwd_confirm" type="password" style="width:70%;max-width:320px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
+                        <label class="avatar-control" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px"><span>Nouveau mot de passe</span><input name="new_password" id="pwd_new" type="password" style="width:70%;max-width:320px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
+                        <label class="avatar-control" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px"><span>Confirmer</span><input name="confirm_password" id="pwd_confirm" type="password" style="width:70%;max-width:320px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
                     </div>
                     <div id="pwdStatus" class="avatar-status"></div>
                     <div class="avatar-modal-actions" style="display:flex;gap:10px;justify-content:flex-end">
