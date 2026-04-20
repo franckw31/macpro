@@ -583,6 +583,28 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         margin-top: 20px;
     }
 
+    .edit-done-bar {
+        display: none;
+        position: sticky;
+        bottom: 0;
+        z-index: 20;
+        margin-top: 12px;
+        padding-top: 8px;
+        background: linear-gradient(180deg, rgba(30,30,30,0), rgba(30,30,30,0.96) 36%);
+    }
+
+    .edit-done-bar.visible {
+        display: block;
+    }
+
+    .edit-done-btn {
+        width: 100%;
+        margin-top: 0;
+        background: #18c4ff;
+        color: #061018;
+        font-weight: 700;
+    }
+
     /* Responsive Design */
     @media (max-width: 480px) {
         body {
@@ -1330,6 +1352,9 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         <div class="blind-editor" id="blindEditor"></div>
         <button class="edit-btn" id="addLevelBtn">+ Ajouter un niveau</button>
         <div class="editor-validation-message" id="editorValidationMessage"></div>
+        <div class="edit-done-bar" id="editDoneBar">
+            <button class="edit-done-btn" id="commitFieldBtn" type="button">Terminer la saisie</button>
+        </div>
         <div class="edit-actions">
             <button class="start-btn" id="saveEditBtn">Enregistrer</button>
             <button class="reset-btn" id="cancelEditBtn">Annuler</button>
@@ -2011,6 +2036,20 @@ function syncTimerState(state) {
             }
         }
 
+        function updateEditDoneBarVisibility() {
+            const blindEditor = document.getElementById('blindEditor');
+            const editDoneBar = document.getElementById('editDoneBar');
+            const activeElement = document.activeElement;
+
+            if (!blindEditor || !editDoneBar) return;
+
+            const shouldShow = activeElement instanceof HTMLElement
+                && activeElement.tagName === 'INPUT'
+                && blindEditor.contains(activeElement);
+
+            editDoneBar.classList.toggle('visible', shouldShow);
+        }
+
         function applyEditedStructure(newStructure) {
             const previousLevel = Math.min(currentLevel, newStructure.length - 1);
             blindLevels = newStructure;
@@ -2534,6 +2573,7 @@ function hideEditPanel() {
     if (editPanel) {
         editPanel.style.display = 'none';
     }
+    updateEditDoneBarVisibility();
 }
 
 function showEditPanel() {
@@ -2542,6 +2582,7 @@ function showEditPanel() {
         renderBlindEditor();
         editPanel.style.display = 'block';
     }
+    updateEditDoneBarVisibility();
 }
 
 function updateClock() {
