@@ -1394,6 +1394,8 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
         let timerEndsAt = null;
         let wakeLockSentinel = null;
         let resumeIndicatorTimeout = null;
+        let speechVoice = null;
+        let speechUnlocked = false;
 
         function showResumeIndicator(message = 'Timer recalé après veille') {
             const indicator = document.getElementById('resume-indicator');
@@ -1527,6 +1529,42 @@ echo "<script>const WS_HOST = '$wsHost';</script>";
     });
 }
 
+function getPreferredSpeechVoice() {
+    if (!('speechSynthesis' in window)) return null;
+
+    const voices = window.speechSynthesis.getVoices();
+    if (!voices.length) return null;
+
+    return voices.find((voice) => voice.lang && voice.lang.toLowerCase().startsWith('fr-fr'))
+        || voices.find((voice) => voice.lang && voice.lang.toLowerCase().startsWith('fr'))
+        || voices.find((voice) => voice.default)
+        || voices[0]
+        || null;
+}
+
+function unlockSpeechSynthesis() {
+    if (speechUnlocked || !('speechSynthesis' in window)) return;
+
+    try {
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.resume();
+        speechVoice = getPreferredSpeechVoice();
+
+        const primer = new SpeechSynthesisUtterance(' ');
+        primer.lang = speechVoice?.lang || 'fr-FR';
+        primer.voice = speechVoice;
+        primer.volume = 0.01;
+        primer.rate = 1;
+        primer.pitch = 1;
+
+        window.speechSynthesis.speak(primer);
+        window.speechSynthesis.cancel();
+        speechUnlocked = true;
+    } catch (error) {
+        console.log('Speech unlock error:', error);
+    }
+}
+
         function playSound(soundId) {
     // Ne jouer le son que pour 'levelSound' (30 secondes restantes et changement de niveau) 
     // et 'endSound' (fin du tournoi)
@@ -1549,9 +1587,17 @@ function speakAnnouncement(message) {
     if (!('speechSynthesis' in window) || !message) return;
 
     try {
+        if (!speechUnlocked) {
+            unlockSpeechSynthesis();
+        }
+
+        speechVoice = speechVoice || getPreferredSpeechVoice();
         window.speechSynthesis.cancel();
+        window.speechSynthesis.resume();
         const utterance = new SpeechSynthesisUtterance(message);
-        utterance.lang = 'fr-FR';
+        utterance.lang = speechVoice?.lang || 'fr-FR';
+        utterance.voice = speechVoice;
+        utterance.volume = 1;
         utterance.rate = 0.95;
         utterance.pitch = 1;
         window.speechSynthesis.speak(utterance);
@@ -2170,13 +2216,20 @@ function addLevel() {
     
     if (cancelEditBtn) cancelEditBtn.addEventListener('click', hideEditPanel);
 
-    // Initialiser l'audio uniquement pour les sons de niveau et de fin
-    document.addEventListener('click', () => {
-        const levelSound = document.getElementById('levelSound');
-        const endSound = document.getElementById('endSound');
-        if (levelSound) levelSound.load();
-        if (endSound) endSound.load();
-    }, { once: true });
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = () => {
+            speechVoice = getPreferredSpeechVoice();
+        };
+        speechVoice = getPreferredSpeechVoice();
+    }
+
+    // Initialiser l'audio et déverrouiller la voix au premier geste utilisateur, surtout sur iPhone/Safari
+    const unlockAudioAndSpeech = () => {
+        initAudio();
+        unlockSpeechSynthesis();
+    };
+    document.addEventListener('touchstart', unlockAudioAndSpeech, { once: true, passive: true });
+    document.addEventListener('click', unlockAudioAndSpeech, { once: true });
 
     // Load saved cardevent state when page loads
     loadTimerState();
