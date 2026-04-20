@@ -1963,6 +1963,7 @@ function syncTimerState(state) {
                     updateDisplay();
                     updateLevelButtons();
                     saveTimerState();
+                    announceBlindChange(currentLevel, 120);
                 }
             }
         }
