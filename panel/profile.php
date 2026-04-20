@@ -576,12 +576,131 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         </div>
     </div>
     <script>
-        // Direct upload: submit form as soon as a file is selected
+        // Client-side cropper + client compression for large files
         (function(){
-            const fi = document.getElementById('avatarFileInput');
-            const form = document.getElementById('avatarUploadForm');
-            if (!fi || !form) return;
-            fi.addEventListener('change', function(){ if (fi.files && fi.files.length > 0) form.submit(); });
+            const avatarFileInput = document.getElementById('avatarFileInput');
+            const avatarUploadForm = document.getElementById('avatarUploadForm');
+            const avatarCropModal = document.getElementById('avatarCropModal');
+            const avatarCanvasWrap = document.getElementById('avatarCanvasWrap');
+            const avatarCropCanvas = document.getElementById('avatarCropCanvas');
+            const avatarPreviewImage = document.getElementById('avatarPreviewImage');
+            const profileAvatarImage = document.getElementById('profileAvatarImage');
+            const avatarZoomRange = document.getElementById('avatarZoomRange');
+            const avatarZoomValue = document.getElementById('avatarZoomValue');
+            const avatarCropStatus = document.getElementById('avatarCropStatus');
+            const avatarCancelButton = document.getElementById('avatarCancelButton');
+            const avatarChooseOtherButton = document.getElementById('avatarChooseOtherButton');
+            const avatarSaveButton = document.getElementById('avatarSaveButton');
+
+            if (!avatarFileInput || !avatarUploadForm) return;
+
+            // Utility: downscale/compress large images on client to keep under server 5MB limit
+            function compressImageFile(file, maxBytes = 5 * 1024 * 1024) {
+                return new Promise((resolve, reject) => {
+                    if (!file.type.startsWith('image/') ) return resolve(file);
+                    if (file.size <= maxBytes) return resolve(file);
+                    const img = new Image();
+                    const url = URL.createObjectURL(file);
+                    img.onload = () => {
+                        const maxDim = Math.max(img.width, img.height);
+                        const scale = Math.min(1, Math.sqrt((maxBytes / file.size)) * 0.95);
+                        const canvas = document.createElement('canvas');
+                        canvas.width = Math.round(img.width * scale);
+                        canvas.height = Math.round(img.height * scale);
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        canvas.toBlob((blob) => {
+                            URL.revokeObjectURL(url);
+                            if (!blob) return resolve(file);
+                            resolve(new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' }));
+                        }, 'image/jpeg', 0.85);
+                    };
+                    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+                    img.src = url;
+                });
+            }
+
+            // Basic cropper state (simple drag+zoom)
+            const canvasContext = avatarCropCanvas ? avatarCropCanvas.getContext('2d') : null;
+            const state = { image: null, imageUrl: '', scale: 1, minScale: 1, offsetX: 0, offsetY: 0, isDragging: false, dragStartX:0, dragStartY:0, startOffsetX:0, startOffsetY:0, selectedName: 'avatar.jpg' };
+
+            function getCanvasSize(){
+                if (!avatarCanvasWrap || !avatarCropCanvas) return 256;
+                const wrapRect = avatarCanvasWrap.getBoundingClientRect();
+                const size = Math.max(208, Math.round(Math.min(wrapRect.width || 248, 280)));
+                if (avatarCropCanvas.width !== size || avatarCropCanvas.height !== size) {
+                    avatarCropCanvas.width = size; avatarCropCanvas.height = size; avatarCropCanvas.style.width = size + 'px'; avatarCropCanvas.style.height = size + 'px';
+                }
+                return avatarCropCanvas.width;
+            }
+
+            function drawAvatarCanvas(){
+                if (!canvasContext || !state.image) return;
+                const size = getCanvasSize();
+                canvasContext.clearRect(0,0,size,size);
+                canvasContext.fillStyle = '#0a1722'; canvasContext.fillRect(0,0,size,size);
+                // clamp offsets
+                const drawW = state.image.width * state.scale; const drawH = state.image.height * state.scale;
+                if (drawW <= size) state.offsetX = (size - drawW)/2; else state.offsetX = Math.min(0, Math.max(size - drawW, state.offsetX));
+                if (drawH <= size) state.offsetY = (size - drawH)/2; else state.offsetY = Math.min(0, Math.max(size - drawH, state.offsetY));
+                canvasContext.drawImage(state.image, state.offsetX, state.offsetY, drawW, drawH);
+                if (avatarPreviewImage) avatarPreviewImage.src = avatarCropCanvas.toDataURL('image/jpeg', 0.92);
+            }
+
+            function initializeImageState(image, fileName){
+                state.image = image; state.selectedName = fileName || 'avatar.jpg';
+                const size = getCanvasSize();
+                state.minScale = Math.max(size / image.width, size / image.height); state.scale = state.minScale;
+                state.offsetX = (size - image.width * state.scale)/2; state.offsetY = (size - image.height * state.scale)/2;
+                if (avatarZoomRange) { avatarZoomRange.min = String(state.minScale); avatarZoomRange.max = String(Math.max(state.minScale + 2, state.minScale * 3)); avatarZoomRange.value = String(state.scale); }
+                drawAvatarCanvas();
+                openModal();
+            }
+
+            function revokeImageUrl(){ if(state.imageUrl){ URL.revokeObjectURL(state.imageUrl); state.imageUrl=''; } }
+
+            function openModal(){ if (!avatarCropModal) return; avatarCropModal.classList.add('is-open'); avatarCropModal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+            function closeModal(){ if (!avatarCropModal) return; avatarCropModal.classList.remove('is-open'); avatarCropModal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+
+            avatarFileInput.addEventListener('change', async () => {
+                if (!avatarFileInput.files || avatarFileInput.files.length === 0) return;
+                let file = avatarFileInput.files[0];
+                // If file too large, compress client-side first
+                file = await compressImageFile(file, 5 * 1024 * 1024);
+                // Load into image for cropper
+                revokeImageUrl(); state.imageUrl = URL.createObjectURL(file);
+                const img = new Image();
+                img.onload = () => { initializeImageState(img, file.name); };
+                img.onerror = () => { /* fallback: submit original file */ avatarUploadForm.submit(); };
+                img.src = state.imageUrl;
+            });
+
+            // canvas interaction
+            if (avatarCropCanvas){
+                avatarCropCanvas.addEventListener('mousedown', (e)=>{ if(!state.image) return; state.isDragging=true; const rect=avatarCropCanvas.getBoundingClientRect(); state.dragStartX = e.clientX - rect.left; state.dragStartY = e.clientY - rect.top; state.startOffsetX = state.offsetX; state.startOffsetY = state.offsetY; });
+                window.addEventListener('mousemove', (e)=>{ if(!state.isDragging) return; const rect=avatarCropCanvas.getBoundingClientRect(); const x = e.clientX - rect.left; const y = e.clientY - rect.top; state.offsetX = state.startOffsetX + (x - state.dragStartX); state.offsetY = state.startOffsetY + (y - state.dragStartY); drawAvatarCanvas(); });
+                window.addEventListener('mouseup', ()=>{ state.isDragging=false; });
+                avatarCropCanvas.addEventListener('touchstart', (ev)=>{ if(!state.image) return; if(ev.touches.length===1){ const rect=avatarCropCanvas.getBoundingClientRect(); const pt=ev.touches[0]; state.isDragging=true; state.dragStartX = pt.clientX - rect.left; state.dragStartY = pt.clientY - rect.top; state.startOffsetX = state.offsetX; state.startOffsetY = state.offsetY; } }, { passive:false });
+                window.addEventListener('touchmove', (ev)=>{ if(!state.isDragging) return; if(ev.touches.length!==1) return; ev.preventDefault(); const rect=avatarCropCanvas.getBoundingClientRect(); const pt=ev.touches[0]; const x = pt.clientX - rect.left; const y = pt.clientY - rect.top; state.offsetX = state.startOffsetX + (x - state.dragStartX); state.offsetY = state.startOffsetY + (y - state.dragStartY); drawAvatarCanvas(); }, { passive:false });
+                window.addEventListener('touchend', ()=>{ state.isDragging=false; });
+            }
+
+            if (avatarZoomRange){ avatarZoomRange.addEventListener('input', ()=>{ if(!state.image) return; const val = Math.max(state.minScale, parseFloat(avatarZoomRange.value || state.minScale)); state.scale = val; avatarZoomValue.textContent = Math.round(state.scale * 100) + '%'; drawAvatarCanvas(); }); }
+
+            if (avatarCancelButton) avatarCancelButton.addEventListener('click', ()=>{ revokeImageUrl(); avatarFileInput.value=''; closeModal(); });
+            if (avatarChooseOtherButton) avatarChooseOtherButton.addEventListener('click', ()=>{ avatarFileInput.click(); });
+
+            if (avatarSaveButton) avatarSaveButton.addEventListener('click', ()=>{
+                if (!state.image) return;
+                avatarCropStatus.textContent = 'Préparation de l’avatar…';
+                avatarCropCanvas.toBlob((blob)=>{
+                    if (!blob) { avatarCropStatus.textContent='Impossible de préparer l’image.'; return; }
+                    const croppedFile = new File([blob], state.selectedName.replace(/\.[^.]+$/,'' ) + '-avatar.jpg', { type: 'image/jpeg' });
+                    const transfer = new DataTransfer(); transfer.items.add(croppedFile); avatarFileInput.files = transfer.files; // submit
+                    if (profileAvatarImage) profileAvatarImage.src = URL.createObjectURL(blob);
+                    avatarUploadForm.submit();
+                }, 'image/jpeg', 0.92);
+            });
         })();
     </script>
     <script>
