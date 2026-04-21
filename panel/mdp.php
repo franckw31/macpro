@@ -92,7 +92,7 @@ $qres = @mysqli_query($con, $sql);
         <button type="submit" style="margin-left:8px;padding:8px 12px;border-radius:8px;border:0;background:#08b0ff;color:#04131d;font-weight:700">Rechercher</button>
     </form>
 
-    <div style="margin-bottom:8px;color:#9aa6b1">Affichage <?php echo min($total, $per_page); ?> / <?php echo $total; ?> joueurs — Page <?php echo $page; ?> / <?php echo $total_pages; ?></div>
+    <div style="margin-bottom:8px;color:#9aa6b1">Total <?php echo $total; ?> joueurs</div>
 
     <table>
         <thead>
@@ -138,19 +138,7 @@ $qres = @mysqli_query($con, $sql);
         </tbody>
     </table>
 
-    <div style="margin-top:12px;display:flex;gap:12px;align-items:center">
-        <?php
-            $base = '/panel/mdp.php';
-            if ($q !== '') { $base .= '?q=' . urlencode($q); }
-        ?>
-        <?php if ($page > 1): ?>
-            <a href="<?php echo $base . ((strpos($base,'?')===false)?'?':'&') . 'page=' . ($page-1); ?>" style="color:#08b0ff">← Préc</a>
-        <?php endif; ?>
-        <span style="color:#9aa6b1">Page <?php echo $page; ?> / <?php echo $total_pages; ?></span>
-        <?php if ($page < $total_pages): ?>
-            <a href="<?php echo $base . ((strpos($base,'?')===false)?'?':'&') . 'page=' . ($page+1); ?>" style="color:#08b0ff">Suiv →</a>
-        <?php endif; ?>
-    </div>
+    
 
 </body>
 </html>
