@@ -14,9 +14,6 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 
 // params
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
-$page = isset($_GET['page']) && is_numeric($_GET['page']) ? max(1,intval($_GET['page'])) : 1;
-$per_page = 50;
-$offset = ($page-1) * $per_page;
 
 $where = "1=1";
 if ($q !== '') {
@@ -33,10 +30,6 @@ $count_sql = "SELECT COUNT(*) AS c FROM membres WHERE " . $where;
 $count_q = @mysqli_query($con, $count_sql);
 $total = 0;
 if ($count_q && ($cr = mysqli_fetch_assoc($count_q))) { $total = intval($cr['c']); }
-$total_pages = max(1, intval(ceil($total / $per_page)));
-
-$sql = "SELECT `id-membre` AS id, pseudo, email, COALESCE(password,'') AS password, COALESCE(password_ext,'') AS password_ext FROM membres WHERE " . $where . " ORDER BY pseudo ASC LIMIT " . intval($offset) . "," . intval($per_page);
-$qres = @mysqli_query($con, $sql);
 // Sorting support: allow sort on a set of safe columns
 $allowed_sorts = [
     'id' => '`id-membre`',
@@ -49,8 +42,8 @@ $sort = isset($_GET['sort']) ? $_GET['sort'] : 'pseudo';
 $dir = (isset($_GET['dir']) && strtolower($_GET['dir']) === 'desc') ? 'DESC' : 'ASC';
 if (!array_key_exists($sort, $allowed_sorts)) { $sort = 'pseudo'; }
 $order_sql = $allowed_sorts[$sort] . ' ' . $dir;
-// rebuild SQL with ORDER BY
-$sql = "SELECT `id-membre` AS id, pseudo, email, COALESCE(password,'') AS password, COALESCE(password_ext,'') AS password_ext FROM membres WHERE " . $where . " ORDER BY " . $order_sql . " LIMIT " . intval($offset) . "," . intval($per_page);
+// rebuild SQL with ORDER BY (no pagination)
+$sql = "SELECT `id-membre` AS id, pseudo, email, COALESCE(password,'') AS password, COALESCE(password_ext,'') AS password_ext FROM membres WHERE " . $where . " ORDER BY " . $order_sql;
 $qres = @mysqli_query($con, $sql);
 
 ?><!doctype html>
