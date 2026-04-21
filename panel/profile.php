@@ -578,7 +578,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             </div>
         </form>
 
-        <div style="font-weight:700;margin-top:12px;margin-bottom:8px">Statistiques (Cliquables)</div>
+        <div style="font-weight:700;margin-top:12px;margin-bottom:8px">Statistiques ( Cliquables )</div>
         <div class="card" style="padding:12px">
             <div style="display:flex;gap:12px">
                 <div style="flex:1;text-align:center">
