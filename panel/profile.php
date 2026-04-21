@@ -602,7 +602,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             </div>
 
             <div style="border-top:1px solid rgba(0,0,0,0.06);margin-top:12px;padding-top:10px;display:flex;align-items:center;gap:12px">
-                <div style="font-weight:700">Meilleur gain</div>
+                <div style="font-weight:700">Meilleur gain :</div>
                 <div style="font-weight:800;color:#16a34a;font-size:16px"><?php echo htmlspecialchars(number_format($stats['best_gain'],0,',',' ')) . ' €'; ?></div>
                 <div style="margin-left:auto;font-weight:800;font-size:14px">
                     <a href="/panel/activities_rake.php?uid=<?php echo intval($uid_int); ?>" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">
