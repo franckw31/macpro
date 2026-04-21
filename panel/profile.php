@@ -569,12 +569,10 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 <div style="text-align:center"><div class="num" style="color:#08b0ff"><?php echo intval($stats['recaves']); ?></div><div class="sub">Recaves <span style="font-size:11px;color:#9aa6b1">(<?php echo $recave_pct; ?>%)</span></div></div>
             </div>
 
-            <div style="border-top:1px solid rgba(0,0,0,0.06);margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;align-items:center">
-                <div>Meilleur gain</div>
-                <div style="text-align:right">
-                    <span style="font-weight:800;color:#16a34a;font-size:16px"><?php echo htmlspecialchars(number_format($stats['best_gain'],0,',',' ')) . ' €'; ?></span>
-                    <span style="margin-left:12px;color:#ff4d4d;font-weight:800;font-size:14px">Rake: <?php echo htmlspecialchars(number_format(isset($rake_sum)?$rake_sum:0,0,',',' ')) . ' €'; ?></span>
-                </div>
+            <div style="border-top:1px solid rgba(0,0,0,0.06);margin-top:12px;padding-top:10px;display:flex;align-items:center;gap:12px">
+                <div style="font-weight:700">Meilleur gain</div>
+                <div style="font-weight:800;color:#16a34a;font-size:16px"><?php echo htmlspecialchars(number_format($stats['best_gain'],0,',',' ')) . ' €'; ?></div>
+                <div style="margin-left:auto;color:#ff4d4d;font-weight:800;font-size:14px">Rake: <?php echo htmlspecialchars(number_format(isset($rake_sum)?$rake_sum:0,0,',',' ')) . ' €'; ?></div>
             </div>
         </div>
 
