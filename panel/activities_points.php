@@ -95,12 +95,18 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
         } ?></tbody>
     </table>
     <div style="margin-top:12px;display:flex;gap:12px;align-items:center">
+        <?php
+            // build base pagination URL preserving filters
+            $page_base = '/panel/activities_points.php?uid=' . intval($mid);
+            if ($activity_aid) { $page_base .= '&aid=' . intval($activity_aid); }
+            if ($provided_challenge) { $page_base .= '&challenge=' . intval($provided_challenge) . '&challenge_col=' . urlencode($provided_challenge_col); }
+        ?>
         <?php if ($page > 1): ?>
-            <a href="/panel/activities_points.php?uid=<?php echo intval($mid); ?>&page=<?php echo $page-1; ?>" style="color:#08b0ff">← Préc</a>
+            <a href="<?php echo $page_base; ?>&page=<?php echo $page-1; ?>" style="color:#08b0ff">← Préc</a>
         <?php endif; ?>
         <span style="color:#9aa6b1">Page <?php echo $page; ?> / <?php echo $total_pages; ?></span>
         <?php if ($page < $total_pages): ?>
-            <a href="/panel/activities_points.php?uid=<?php echo intval($mid); ?>&page=<?php echo $page+1; ?>" style="color:#08b0ff">Suiv →</a>
+            <a href="<?php echo $page_base; ?>&page=<?php echo $page+1; ?>" style="color:#08b0ff">Suiv →</a>
         <?php endif; ?>
     </div>
 </body>
