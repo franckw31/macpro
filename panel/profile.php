@@ -330,7 +330,9 @@ if ($qr && ($rr = mysqli_fetch_assoc($qr))) { $rake_sum = intval(round(floatval(
 // compute net = total gains sum - total buyins
 $gsum = isset($stats['gains_sum']) ? floatval($stats['gains_sum']) : 0;
 $buyins_total = isset($stats['buyins']) ? floatval($stats['buyins']) : 0;
-$stats['net'] = intval(round($gsum - $buyins_total));
+// Compute NET excluding rake: remove total rake from buyins before subtracting
+$rake_for_net = isset($rake_sum) ? floatval($rake_sum) : 0;
+$stats['net'] = intval(round($gsum - ($buyins_total - $rake_for_net)));
 
 // percentages relative to played parts
 $parts_total = max(0, intval($stats['parts']));
