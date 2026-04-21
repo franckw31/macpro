@@ -622,8 +622,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				   /* Force uniform tile sizing and alignment */
 				   .shortcuts-grid { align-items:stretch; }
 				   .shortcuts-grid .tile { height:70px !important; display:flex !important; flex-direction:column !important; justify-content:space-between !important; align-items:center !important; box-sizing:border-box !important; }
-				   .shortcuts-grid .tile-top{height:auto;flex:1 1 auto;display:flex;align-items:center;justify-content:center;padding:6px 0}
-				   .shortcuts-grid .tile-bottom{height:20px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding-bottom:6px;width:100%;box-sizing:border-box}
+				   /* Fixed zones so tops and bottoms align across tiles */
+				   .shortcuts-grid .tile-top{height:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:center;padding:0;margin:0}
+				   .shortcuts-grid .tile-bottom{height:26px;flex:0 0 26px;display:flex;align-items:center;justify-content:center;padding:0;margin:0;width:100%;box-sizing:border-box}
+				   /* Ensure icons are vertically centered inside the top zone */
+				   .shortcuts-grid .tile .icon-circle, .shortcuts-grid .timer-circle-container{margin:0;align-self:center}
 				   .shortcuts-grid .tile .icon-circle{margin:0}
 				   .shortcuts-grid .timer-circle-container{margin:0;}
 			   </style>
