@@ -618,6 +618,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		<section id="shortcuts-card" class="card stroked">
 			   <div class="section-title">Raccourcis</div>
 			   <hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
+			   <style>
+				   /* Ensure tile tops share the same height so bottoms align */
+				   .shortcuts-grid .tile-top{height:56px;display:flex;align-items:center;justify-content:center}
+				   .shortcuts-grid .tile-bottom{height:20px;display:flex;align-items:center;justify-content:center}
+				   .shortcuts-grid .tile .icon-circle{margin:0 auto}
+			   </style>
 			   <div class="shortcuts-grid">
 	<?php
 	// --- ADVANCED TIMER LOGIC (fullscreen-timer.php style, with JS sync) ---
