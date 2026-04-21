@@ -212,7 +212,7 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
                     $link_params = '/panel/activities_points.php?uid=' . intval($r['mid']);
                     if (!empty($filter_uid)) { $link_params .= '&aid=' . intval($filter_uid); }
                     if (!empty($provided_challenge)) { $link_params .= '&challenge=' . intval($provided_challenge) . '&challenge_col=' . urlencode($provided_challenge_col); }
-                    echo '<div class="pts"><a href="'. esc($link_params) .'" style="color:#ffffff;text-decoration:none">'.number_format(intval($r['pts']),0,',',' ').'</a> </div>';
+                    echo '<div class="pts"><a href="'. esc($link_params) .'" style="color:#ffffff;text-decoration:underline;text-decoration-color:#3CA6FF">'.number_format(intval($r['pts']),0,',',' ').'</a> </div>';
                     echo '<div class="smallcol">'.intval($r['itm']).'</div>';
                     echo '<div class="smallcol">'.intval($r['vic']).'</div>';
                     echo '<div class="smallcol">'.intval($r['parts']).'</div>';
