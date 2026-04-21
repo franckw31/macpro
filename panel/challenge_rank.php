@@ -104,8 +104,18 @@ if (!empty($con)) {
         if ($activity_challenge_col) {
             $where_activity = "(a.`" . $activity_challenge_col . "` = " . $provided_challenge . ") AND a.date_depart < '" . $today . "'";
         } else {
-            $where_activity = '0=1';
-            $detected_challenge_msg .= ' — aucune colonne id_challenge détectée sur activite';
+            // Fallback: if activite has no explicit challenge id column, restrict by the challenge date range
+            $pc = intval($provided_challenge);
+            $cres = @mysqli_query($con, "SELECT chal_deb, chal_fin FROM challenge WHERE id_challenge = " . $pc . " LIMIT 1");
+            if ($cres && ($crow2 = mysqli_fetch_assoc($cres)) && !empty($crow2['chal_deb']) && !empty($crow2['chal_fin'])) {
+                $deb = mysqli_real_escape_string($con, $crow2['chal_deb']);
+                $fin = mysqli_real_escape_string($con, $crow2['chal_fin']);
+                $where_activity = "(a.date_depart BETWEEN '" . $deb . "' AND '" . $fin . "') AND a.date_depart < '" . $today . "'";
+                $detected_challenge_msg .= ' — Filtre appliqué par date: ' . $deb . ' → ' . $fin;
+            } else {
+                $where_activity = '0=1';
+                $detected_challenge_msg .= ' — aucune colonne id_challenge détectée sur activite et date challenge introuvable';
+            }
         }
     }
     else {
