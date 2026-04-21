@@ -323,10 +323,31 @@ $q5 = @mysqli_query($con, "SELECT COALESCE(SUM(COALESCE(p.recave,0)),0) AS recav
 if ($q5 && ($r5 = mysqli_fetch_assoc($q5))) { $stats['recaves'] = intval($r5['recaves']); }
 
 // Sum of rake for this member (sum of activite.rake across their participations, exclude Desinscrit/None)
-// Exclude activities where the member is the organizer (check common organizer column names)
 $rake_sum = 0;
 $uid_int = intval($uid);
-$qr_sql = "SELECT COALESCE(SUM(COALESCE(a.rake,0)),0) AS rake_sum FROM participation p LEFT JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE p.`id-membre` = '". $uid_int ."' AND COALESCE(p.`option`, 'None') NOT IN ('Desinscrit', 'None') AND NOT ( (a.`id-membre` = '". $uid_int ."') OR (a.`id_membre` = '". $uid_int ."') OR (a.`id_membres` = '". $uid_int ."') OR (a.`id_membre_organisateur` = '". $uid_int ."') OR (a.`organisateur` = '". $uid_int ."') )";
+
+// Determine which possible organizer columns actually exist in `activite` to avoid SQL errors
+$existing_cols = [];
+$col_q = @mysqli_query($con, "SHOW COLUMNS FROM activite");
+if ($col_q) {
+    while ($c = mysqli_fetch_assoc($col_q)) {
+        $existing_cols[] = $c['Field'];
+    }
+}
+$candidates = ['id-membre', 'id_membre', 'id_membres', 'id_membre_organisateur', 'organisateur'];
+$used = array_values(array_intersect($candidates, $existing_cols));
+
+// Build organizer-exclusion clause only for existing columns
+$exclude_clause = '';
+if (!empty($used)) {
+    $parts = [];
+    foreach ($used as $col) {
+        $parts[] = "a.`" . $col . "` = '" . $uid_int . "'";
+    }
+    $exclude_clause = ' AND NOT (' . implode(' OR ', $parts) . ')';
+}
+
+$qr_sql = "SELECT COALESCE(SUM(COALESCE(a.rake,0)),0) AS rake_sum FROM participation p LEFT JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE p.`id-membre` = '". $uid_int ."' AND COALESCE(p.`option`, 'None') NOT IN ('Desinscrit', 'None')" . $exclude_clause;
 $qr = @mysqli_query($con, $qr_sql);
 if ($qr && ($rr = mysqli_fetch_assoc($qr))) {
     $rake_sum = intval(round(floatval($rr['rake_sum'])));
