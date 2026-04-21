@@ -597,7 +597,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px">
                 <div style="text-align:center"><div class="num" style="color:#ffd100"><?php echo intval($stats['victories']); ?></div><div class="sub">Victoires <span style="font-size:11px;color:#9aa6b1">(<?php echo $victory_pct; ?>%)</span></div></div>
-                <div style="text-align:center"><div class="num" style="color:#ff9d3b"><?php echo intval($stats['podiums']); ?></div><div class="sub">ITM <span style="font-size:11px;color:#9aa6b1">(<?php echo $podium_pct; ?>%)</span></div></div>
+                <div style="text-align:center"><div class="num" style="color:#ff9d3b"><a href="/panel/activities_itm.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:none"><?php echo intval($stats['podiums']); ?></a></div><div class="sub">ITM <span style="font-size:11px;color:#9aa6b1">(<?php echo $podium_pct; ?>%)</span></div></div>
                 <div style="text-align:center"><div class="num" style="color:#08b0ff"><?php echo intval($stats['recaves']); ?></div><div class="sub">Recaves <span style="font-size:11px;color:#9aa6b1">(<?php echo $recave_pct; ?>%)</span></div></div>
             </div>
 
