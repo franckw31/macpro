@@ -10,8 +10,23 @@ if ($uid <= 0) {
     exit;
 }
 
-// Query activities where this member participated and had gain > 0
-$sql = "SELECT a.`id-activite` AS aid, COALESCE(a.`titre-activite`, '') AS title, a.`date_depart` AS dt, COALESCE(p.gain,0) AS gain, COALESCE(a.buyin,0) AS buyin FROM participation p JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE p.`id-membre` = '".intval($uid)."' AND COALESCE(p.`option`,'None') NOT IN ('Desinscrit','None') AND COALESCE(p.gain,0) > 0 ORDER BY a.`date_depart` DESC LIMIT 500";
+// Pagination params
+$per_page = 25;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$offset = ($page - 1) * $per_page;
+
+// Base WHERE clause for reuse
+$base_where = "p.`id-membre` = '" . intval($uid) . "' AND COALESCE(p.`option`,'None') NOT IN ('Desinscrit','None') AND COALESCE(p.gain,0) > 0";
+
+// total count for pagination
+$count_sql = "SELECT COUNT(*) AS c FROM participation p JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE " . $base_where;
+$count_q = @mysqli_query($con, $count_sql);
+$total = 0;
+if ($count_q && ($cr = mysqli_fetch_assoc($count_q))) { $total = intval($cr['c']); }
+$total_pages = max(1, intval(ceil($total / $per_page)));
+
+// Query activities where this member participated and had gain > 0 (paginated)
+$sql = "SELECT a.`id-activite` AS aid, COALESCE(a.`titre-activite`, '') AS title, a.`date_depart` AS dt, COALESCE(p.gain,0) AS gain, COALESCE(a.buyin,0) AS buyin FROM participation p JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE " . $base_where . " ORDER BY a.`date_depart` DESC LIMIT " . intval($offset) . "," . intval($per_page);
 $q = @mysqli_query($con, $sql);
 
 ?><!doctype html>
