@@ -58,5 +58,14 @@ $q = @mysqli_query($con, $sql);
             echo '<tr><td colspan="6">Aucune activité trouvée.</td></tr>';
         } ?></tbody>
     </table>
+    <div style="margin-top:12px;display:flex;gap:12px;align-items:center">
+        <?php if ($page > 1): ?>
+            <a href="/panel/activities_wins.php?uid=<?php echo intval($uid); ?>&page=<?php echo $page-1; ?>" style="color:#08b0ff">← Préc</a>
+        <?php endif; ?>
+        <span style="color:#9aa6b1">Page <?php echo $page; ?> / <?php echo $total_pages; ?></span>
+        <?php if ($page < $total_pages): ?>
+            <a href="/panel/activities_wins.php?uid=<?php echo intval($uid); ?>&page=<?php echo $page+1; ?>" style="color:#08b0ff">Suiv →</a>
+        <?php endif; ?>
+    </div>
 </body>
 </html>
