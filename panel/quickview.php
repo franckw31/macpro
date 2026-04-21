@@ -362,7 +362,7 @@ error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id(
 	<style>
 	/* Responsive overrides for small screens */
 	@media (max-width: 480px) {
-		.timer-circle-container { width: 60px !important; height: 60px !important; }
+		.timer-circle-container { width: 48px !important; height: 48px !important; }
 		.timer-content #live-timer-display { font-size: 16px !important; }
 		.timer-content #live-timer-level, .timer-content #live-timer-blinds { font-size: 10px !important; }
 		/* Allow the action column to shrink instead of forcing 52px */
@@ -378,7 +378,7 @@ error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id(
 	}
 	/* Extra-small phones */
 	@media (max-width: 360px) {
-		.timer-circle-container { width: 52px !important; height: 52px !important; }
+		.timer-circle-container { width: 40px !important; height: 40px !important; }
 		.chev { width: 36px; height: 36px; font-size: 16px; }
 		.timer-content #live-timer-display { font-size: 14px !important; }
 		.detail-value { font-size: 13px; }
