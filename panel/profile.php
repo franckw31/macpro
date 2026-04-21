@@ -369,6 +369,8 @@ $parts_total = max(0, intval($stats['parts']));
 $victory_pct = $parts_total > 0 ? round(intval($stats['victories']) / $parts_total * 100, 1) : 0;
 $podium_pct = $parts_total > 0 ? round(intval($stats['podiums']) / $parts_total * 100, 1) : 0;
 $recave_pct = $parts_total > 0 ? round(intval($stats['recaves']) / $parts_total * 100, 1) : 0;
+// ITM percentage: participations with gain > 0 over total parts
+$itm_pct = $parts_total > 0 ? round(intval($stats['gains']) / $parts_total * 100, 1) : 0;
 
 // bonus inscription tokens: sum participation.jetons_bonus_ins (exclude Desinscrit/None)
 $q_bonus = @mysqli_query($con, "SELECT COALESCE(SUM(COALESCE(p.jetons_bonus_ins,0)),0) AS bonus_ins FROM participation p WHERE p.`id-membre` = '".intval($uid)."' AND COALESCE(p.`option`, 'None') NOT IN ('Desinscrit', 'None')");
