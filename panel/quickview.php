@@ -679,10 +679,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	</div>
 	<script>
 	(function(){
-	       var display = document.getElementById('live-timer-display');
-	       var progressCircle = document.getElementById('live-timer-progress');
-	       var levelEl = document.getElementById('live-timer-level');
-	       var blindsEl = document.getElementById('live-timer-blinds');
+		var display = document.getElementById('live-timer-display');
+		var progressCircle = document.getElementById('live-timer-progress');
+		var levelEl = document.getElementById('live-timer-level');
+		var blindsEl = document.getElementById('live-timer-blinds');
+		var titleEl = document.getElementById('live-timer-title');
 	       var seconds = 0;
 	       var total = 0;
 	       var timerPaused = false;
@@ -715,17 +716,20 @@ document.addEventListener('DOMContentLoaded', function() {
 					       }
 					   }
 				       }
-				       if(showCountdown) {
-					   display.textContent = countdownText;
-					   display.style.color = '#00d2ff';
-					   progressCircle.style.strokeDashoffset = 0;
-					   progressCircle.style.stroke = '#00d2ff';
-					   progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
-					   if(statusEl) statusEl.textContent = 'A venir';
-					   if(levelEl) levelEl.textContent = '';
-					   if(blindsEl) blindsEl.textContent = '';
-					   return;
-				       }
+                       if(showCountdown) {
+                       	display.textContent = countdownText;
+                       	display.style.color = '#00d2ff';
+                       	progressCircle.style.strokeDashoffset = 0;
+                       	progressCircle.style.stroke = '#00d2ff';
+                       	progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
+                       	if(statusEl) statusEl.textContent = 'A venir';
+                       	if(levelEl) levelEl.textContent = '';
+                       	if(blindsEl) blindsEl.textContent = '';
+                       	if(titleEl) titleEl.textContent = 'Démarre dans';
+                       	return;
+                       } else {
+                       	if(titleEl) titleEl.textContent = '';
+                       }
 				       var m = Math.floor(seconds/60).toString().padStart(2,'0');
 				       var s = (seconds%60).toString().padStart(2,'0');
 				       display.textContent = m+':'+s;
