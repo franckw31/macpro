@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		<section id="shortcuts-card" class="card stroked">
 			   <div class="section-title">Raccourcis</div>
 			   <hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
-			   <div class="shortcuts-grid">
+			   <div class="shortcuts-grid" style="align-items:start;align-content:start;">
 	<?php
 	// --- ADVANCED TIMER LOGIC (fullscreen-timer.php style, with JS sync) ---
 	$timer_level = '--';
