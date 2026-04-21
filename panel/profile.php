@@ -571,10 +571,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 
             <div style="border-top:1px solid rgba(0,0,0,0.06);margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;align-items:center">
                 <div>Meilleur gain</div>
-                <div style="text-align:right">
-                    <div style="font-weight:800;color:#16a34a"><?php echo htmlspecialchars(number_format($stats['best_gain'],0,',',' ')) . ' €'; ?></div>
-                    <div style="font-size:12px;color:#9aa6b1;margin-top:4px">Somme des rake : <?php echo htmlspecialchars(number_format(isset($rake_sum)?$rake_sum:0,0,',',' ')) . ' €'; ?></div>
-                </div>
+                <div style="font-weight:800;color:#ff4d4d"><?php echo htmlspecialchars(number_format($stats['best_gain'],0,',',' ')) . ' €'; ?></div>
             </div>
         </div>
 
