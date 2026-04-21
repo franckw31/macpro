@@ -11,7 +11,7 @@ if ($uid <= 0) {
 }
 
 // Pagination params
-$per_page = 6;
+$per_page = 7;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($page - 1) * $per_page;
 
