@@ -322,6 +322,11 @@ if ($qg && ($rg = mysqli_fetch_assoc($qg))) {
 $q5 = @mysqli_query($con, "SELECT COALESCE(SUM(COALESCE(p.recave,0)),0) AS recaves FROM participation p WHERE p.`id-membre` = '".intval($uid)."'");
 if ($q5 && ($r5 = mysqli_fetch_assoc($q5))) { $stats['recaves'] = intval($r5['recaves']); }
 
+// Sum of rake for this member (sum of activite.rake across their participations, exclude Desinscrit/None)
+$rake_sum = 0;
+$qr = @mysqli_query($con, "SELECT COALESCE(SUM(COALESCE(a.rake,0)),0) AS rake_sum FROM participation p LEFT JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE p.`id-membre` = '".intval($uid)."' AND COALESCE(p.`option`, 'None') NOT IN ('Desinscrit', 'None')");
+if ($qr && ($rr = mysqli_fetch_assoc($qr))) { $rake_sum = intval(round(floatval($rr['rake_sum']))); }
+
 // compute net = total gains sum - total buyins
 $gsum = isset($stats['gains_sum']) ? floatval($stats['gains_sum']) : 0;
 $buyins_total = isset($stats['buyins']) ? floatval($stats['buyins']) : 0;
