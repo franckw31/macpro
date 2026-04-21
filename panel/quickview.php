@@ -671,7 +671,7 @@ document.addEventListener('DOMContentLoaded', function() {
 									   <div id="live-timer-display" style="font-size:18px;font-weight:900;color:#00d2ff;line-height:1;">--:--</div>
 									   <div id="live-timer-blinds" style="font-size:10px;color:#ffc107;font-weight:700;margin-top:2px;"></div>
 				       </div>
-					   <div class="tile-bottom" id="live-timer-title"></div>
+					   <div class="tile-bottom" id="live-timer-title"><?php echo (isset($serverActivity['date']) && @strtotime($serverActivity['date']) !== false && strtotime($serverActivity['date']) > time()) ? 'Démarre dans' : ''; ?></div>
 			       </div>
 					   <!-- <div class="count-label" id="live-timer-label" style="margin-top:8px;">Live Timer</div> -->
 		</div>
