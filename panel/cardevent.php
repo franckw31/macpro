@@ -583,7 +583,7 @@ document.addEventListener('DOMContentLoaded', function(){
 					<div class="title"><svg class="title-spade" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="As de pique"><!-- spade filled (currentColor) + small A mark -->
 						<path d="M16 2 C11 8 8 11 8 15 C8 19 12 21 15 21 L15 26 C15 27.2 16.2 28 17.2 28 C18.2 28 19.4 27.2 19.4 26 L19.4 21 C22.4 21 26 19 26 15 C26 11 23 8 16 2 Z" fill="currentColor"/>
 						<text x="5" y="10" font-family="Helvetica, Arial, sans-serif" font-size="8" font-weight="800" fill="#ffffff">A</text>
-					</svg> CardEvent <span class="small">v<?php echo htmlspecialchars(getenv('CFBundleShortVersionString')?:'2.0'); ?></span></div>
+					</svg> CardEvent <span class="small">v<?php echo htmlspecialchars(getenv('CFBundleShortVersionString')?:'2.1'); ?></span></div>
 					<div class="greeting">Bonjour, <span id="user-name"><?php echo $displayUser; ?></span> <span style="color:var(--cyan);margin-left:6px">›</span></div>
 				</div>
 				<div style="margin-left:auto;display:flex;align-items:center;gap:12px">
