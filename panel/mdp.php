@@ -59,7 +59,36 @@ $qres = @mysqli_query($con, $sql);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Liste MDP</title>
-    <style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#071019;color:#eef6fb;padding:16px}table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:left}th{color:#9aa6b1;font-weight:700}a{color:#08b0ff}input[type=text]{width:320px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}</style>
+    <style>
+        body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#071019;color:#eef6fb;padding:16px}
+        .container{max-width:1100px;margin:0 auto}
+        .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+        input[type=text]{width:320px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+        button{padding:8px 12px;border-radius:8px;border:0;background:#08b0ff;color:#04131d;font-weight:700;cursor:pointer}
+        .table-wrap{overflow-x:auto}
+        table{width:100%;border-collapse:collapse;min-width:720px}
+        th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:left}
+        th{color:#9aa6b1;font-weight:700;white-space:nowrap}
+        td{vertical-align:top}
+        a{color:#08b0ff}
+
+        @media (max-width:800px){
+            input[type=text]{width:100%}
+            .toolbar{flex-direction:column;align-items:stretch}
+            table{min-width:600px}
+        }
+
+        /* Small screens: stack rows into cards and show labels via data-label */
+        @media (max-width:480px){
+            .table-wrap{overflow:auto}
+            table, thead, tbody, th, td, tr{display:block}
+            thead tr{display:none}
+            tbody tr{margin:0 0 12px;padding:12px;background:rgba(255,255,255,0.02);border-radius:8px}
+            tbody td{padding:6px 8px;display:flex;justify-content:space-between;align-items:center}
+            tbody td::before{content:attr(data-label);color:#9aa6b1;margin-right:12px;flex:0 0 40%;font-weight:700}
+            tbody td[data-label="ID"]{font-weight:800}
+        }
+    </style>
 </head>
 <body>
     <h2 style="margin:0 0 12px">Liste des joueurs — Mots de passe</h2>
