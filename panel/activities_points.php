@@ -20,10 +20,22 @@ $offset = ($page-1) * $per_page;
 $where_scope = "p.`id-membre` = '" . intval($mid) . "' AND COALESCE(p.`option`,'None') NOT IN ('Desinscrit','None') AND COALESCE(p.points,0) > 0";
 
 if ($provided_challenge && $provided_challenge_col) {
-    // sanitize provided column name to avoid injection (allow only letters, numbers, underscore and dash)
-    if (preg_match('/^[a-zA-Z0-9_\-]+$/', $provided_challenge_col)) {
-        $col = $provided_challenge_col;
-        $where_scope .= " AND EXISTS (SELECT 1 FROM activite a2 WHERE a2.`id-activite` = p.`id-activite` AND COALESCE(a2.`".$col."`,0) = " . intval($provided_challenge) . ")";
+    // support two modes:
+    // - provided_challenge_col is a real column name on activite: filter by that column
+    // - provided_challenge_col == 'chal_dates': filter activities whose date_depart falls inside the challenge dates
+    if ($provided_challenge_col === 'chal_dates') {
+        $cres2 = @mysqli_query($con, "SELECT chal_deb, chal_fin FROM challenge WHERE id_challenge = " . intval($provided_challenge) . " LIMIT 1");
+        if ($cres2 && ($crowc = mysqli_fetch_assoc($cres2)) && !empty($crowc['chal_deb']) && !empty($crowc['chal_fin'])) {
+            $deb = mysqli_real_escape_string($con, $crowc['chal_deb']);
+            $fin = mysqli_real_escape_string($con, $crowc['chal_fin']);
+            $where_scope .= " AND EXISTS (SELECT 1 FROM activite a2 WHERE a2.`id-activite` = p.`id-activite` AND a2.date_depart BETWEEN '" . $deb . "' AND '" . $fin . "')";
+        }
+    } else {
+        // sanitize provided column name to avoid injection (allow only letters, numbers, underscore and dash)
+        if (preg_match('/^[a-zA-Z0-9_\-]+$/', $provided_challenge_col)) {
+            $col = $provided_challenge_col;
+            $where_scope .= " AND EXISTS (SELECT 1 FROM activite a2 WHERE a2.`id-activite` = p.`id-activite` AND COALESCE(a2.`".$col."`,0) = " . intval($provided_challenge) . ")";
+        }
     }
 } elseif ($activity_aid) {
     // try to detect the challenge column from the activity row and filter by it
