@@ -589,7 +589,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 </div>
                 <div style="flex:1;text-align:center">
                     <div class="num" style="font-weight:800;color:#16a34a"><a href="/panel/activities_wins.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:underline;text-decoration-color:#08b0ff"><?php echo htmlspecialchars(number_format(isset($stats['gains_sum']) ? $stats['gains_sum'] : 0,0,',',' ')); ?> €</a></div>
-                    <div class="sub"><?php echo intval(isset($stats['gains']) ? $stats['gains'] : 0); ?> fois</div>
+                    <div class="sub"><?php echo intval(isset($stats['gains']) ? $stats['gains'] : 0); ?> Gains</div>
                 </div>
                 <div style="flex:1;text-align:center">
                     <div class="num" style="font-weight:800;color:<?php echo ($stats['net'] < 0) ? '#ff4d4d' : '#16a34a'; ?>"><?php echo htmlspecialchars(number_format($stats['net'],0,',',' ')); ?> €</div>
