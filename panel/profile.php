@@ -582,11 +582,11 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         <div class="card" style="padding:12px">
             <div style="display:flex;gap:12px">
                 <div style="flex:1;text-align:center">
-                    <div class="num" style="font-weight:800;color:#9aa6b1"><a href="/panel/activities_buyins.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:none"><?php echo htmlspecialchars(number_format($stats['buyins'],0,',',' ')); ?> €</a></div>
+                    <div class="num" style="font-weight:800;color:#9aa6b1"><a href="/panel/activities_buyins.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:underline;text-decoration-color:#08b0ff"><?php echo htmlspecialchars(number_format($stats['buyins'],0,',',' ')); ?> €</a></div>
                     <div class="sub"><?php echo intval($stats['parts']); ?> parties</div>
                 </div>
                 <div style="flex:1;text-align:center">
-                    <div class="num" style="font-weight:800;color:#16a34a"><a href="/panel/activities_wins.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:none"><?php echo htmlspecialchars(number_format(isset($stats['gains_sum']) ? $stats['gains_sum'] : 0,0,',',' ')); ?> €</a></div>
+                    <div class="num" style="font-weight:800;color:#16a34a"><a href="/panel/activities_wins.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:underline;text-decoration-color:#08b0ff"><?php echo htmlspecialchars(number_format(isset($stats['gains_sum']) ? $stats['gains_sum'] : 0,0,',',' ')); ?> €</a></div>
                     <div class="sub"><?php echo intval(isset($stats['gains']) ? $stats['gains'] : 0); ?> fois</div>
                 </div>
                 <div style="flex:1;text-align:center">
@@ -596,9 +596,9 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             </div>
 
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px">
-                <div style="text-align:center"><div class="num" style="color:#ffd100"><a href="/panel/activities_victories.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:none"><?php echo intval($stats['victories']); ?></a></div><div class="sub">Victoires <span style="font-size:11px;color:#9aa6b1">(<?php echo $victory_pct; ?>%)</span></div></div>
-                <div style="text-align:center"><div class="num" style="color:#ff9d3b"><a href="/panel/activities_wins.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:none"><?php echo intval($stats['podiums']); ?></a></div><div class="sub">ITM <span style="font-size:11px;color:#9aa6b1">(<?php echo $podium_pct; ?>%)</span></div></div>
-                <div style="text-align:center"><div class="num" style="color:#08b0ff"><a href="/panel/activities_recaves.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:none"><?php echo intval($stats['recaves']); ?></a></div><div class="sub">Recaves <span style="font-size:11px;color:#9aa6b1">(<?php echo $recave_pct; ?>%)</span></div></div>
+                <div style="text-align:center"><div class="num" style="color:#ffd100"><a href="/panel/activities_victories.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:underline;text-decoration-color:#08b0ff"><?php echo intval($stats['victories']); ?></a></div><div class="sub">Victoires <span style="font-size:11px;color:#9aa6b1">(<?php echo $victory_pct; ?>%)</span></div></div>
+                <div style="text-align:center"><div class="num" style="color:#ff9d3b"><a href="/panel/activities_wins.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:underline;text-decoration-color:#08b0ff"><?php echo intval($stats['podiums']); ?></a></div><div class="sub">ITM <span style="font-size:11px;color:#9aa6b1">(<?php echo $podium_pct; ?>%)</span></div></div>
+                <div style="text-align:center"><div class="num" style="color:#08b0ff"><a href="/panel/activities_recaves.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:underline;text-decoration-color:#08b0ff"><?php echo intval($stats['recaves']); ?></a></div><div class="sub">Recaves <span style="font-size:11px;color:#9aa6b1">(<?php echo $recave_pct; ?>%)</span></div></div>
             </div>
 
             <div style="border-top:1px solid rgba(0,0,0,0.06);margin-top:12px;padding-top:10px;display:flex;align-items:center;gap:12px">
