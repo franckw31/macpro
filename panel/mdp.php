@@ -37,6 +37,21 @@ $total_pages = max(1, intval(ceil($total / $per_page)));
 
 $sql = "SELECT `id-membre` AS id, pseudo, email, COALESCE(password,'') AS password, COALESCE(password_ext,'') AS password_ext FROM membres WHERE " . $where . " ORDER BY pseudo ASC LIMIT " . intval($offset) . "," . intval($per_page);
 $qres = @mysqli_query($con, $sql);
+// Sorting support: allow sort on a set of safe columns
+$allowed_sorts = [
+    'id' => '`id-membre`',
+    'pseudo' => 'pseudo',
+    'email' => 'email',
+    'password' => 'password',
+    'password_ext' => 'password_ext',
+];
+$sort = isset($_GET['sort']) ? $_GET['sort'] : 'pseudo';
+$dir = (isset($_GET['dir']) && strtolower($_GET['dir']) === 'desc') ? 'DESC' : 'ASC';
+if (!array_key_exists($sort, $allowed_sorts)) { $sort = 'pseudo'; }
+$order_sql = $allowed_sorts[$sort] . ' ' . $dir;
+// rebuild SQL with ORDER BY
+$sql = "SELECT `id-membre` AS id, pseudo, email, COALESCE(password,'') AS password, COALESCE(password_ext,'') AS password_ext FROM membres WHERE " . $where . " ORDER BY " . $order_sql . " LIMIT " . intval($offset) . "," . intval($per_page);
+$qres = @mysqli_query($con, $sql);
 
 ?><!doctype html>
 <html lang="fr">
