@@ -659,7 +659,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 	?>
-		<div class="tile" id="live-timer-tile" style="height:70px;display:flex;flex-direction:column;justify-content:center;">
+		<div class="tile" id="live-timer-tile" style="height:70px;display:flex;flex-direction:column;justify-content:space-between;">
 		       <div class="tile-top" style="padding-top:0;">
 				   <div class="timer-circle-container" style="width:56px;height:56px;position:relative;margin:0 auto;">
 					       <svg class="timer-svg" viewBox="0 0 80 80" style="width:100%;height:100%;position:absolute;top:0;left:0;">
@@ -852,11 +852,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	?>
 	</script>
-				<div class="tile" id="details-tile" role="button" tabindex="0" style="cursor:pointer;height:70px;display:flex;flex-direction:column;justify-content:center;">
+				<div class="tile" id="details-tile" role="button" tabindex="0" style="cursor:pointer;height:70px;display:flex;flex-direction:column;justify-content:space-between;">
 					<div class="tile-top"><div class="icon-circle info">i</div></div>
 					<div class="tile-bottom">Détails Partie</div>
 				</div>
-				<a id="profile-tile" class="tile" role="link" href="/panel/profile.php<?php echo (!empty($serverActivity['id'])? '?uid=' . intval($serverActivity['id']): ''); ?>" style="text-decoration:none;color:inherit;height:70px;display:flex;flex-direction:column;justify-content:center;">
+				<a id="profile-tile" class="tile" role="link" href="/panel/profile.php<?php echo (!empty($serverActivity['id'])? '?uid=' . intval($serverActivity['id']): ''); ?>" style="text-decoration:none;color:inherit;height:70px;display:flex;flex-direction:column;justify-content:space-between;">
 					<div class="tile-top"><div class="icon-circle profile">👤</div></div>
 					<div class="tile-bottom">Mon Profil / Traker</div>
 				</a>
@@ -874,7 +874,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						$participants_href = '/panel/participants.php' . $uid_q;
 					}
 				?>
-				<a id="participants-tile" class="tile" role="link" href="<?php echo htmlspecialchars($participants_href); ?>" style="text-decoration:none;color:inherit;height:70px;display:flex;flex-direction:column;justify-content:center;">
+				<a id="participants-tile" class="tile" role="link" href="<?php echo htmlspecialchars($participants_href); ?>" style="text-decoration:none;color:inherit;height:70px;display:flex;flex-direction:column;justify-content:space-between;">
 					<div class="tile-top"><div class="icon-circle people">👥</div></div>
 					<div class="tile-bottom"><?php echo (strpos($participants_href, 'resultats.php') !== false) ? 'Classement' : 'Liste participants'; ?></div>
 				</a>
