@@ -211,7 +211,15 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
                     // Build link to activities that contributed to points
                     $link_params = '/panel/activities_points.php?uid=' . intval($r['mid']);
                     if (!empty($filter_uid)) { $link_params .= '&aid=' . intval($filter_uid); }
-                    if (!empty($provided_challenge)) { $link_params .= '&challenge=' . intval($provided_challenge) . '&challenge_col=' . urlencode($provided_challenge_col); }
+                    if (!empty($provided_challenge)) {
+                        // choose a sensible challenge_col parameter: prefer explicitly provided column,
+                        // otherwise use detected activity challenge column, or fallback to date-range mode
+                        $colparam = '';
+                        if (!empty($provided_challenge_col)) { $colparam = $provided_challenge_col; }
+                        else if (!empty($activity_challenge_col)) { $colparam = $activity_challenge_col; }
+                        else { $colparam = 'chal_dates'; }
+                        $link_params .= '&challenge=' . intval($provided_challenge) . '&challenge_col=' . urlencode($colparam);
+                    }
                     echo '<div class="pts"><a href="'. esc($link_params) .'" style="color:#ffffff;text-decoration:underline;text-decoration-color:#3CA6FF">'.number_format(intval($r['pts']),0,',',' ').'</a> </div>';
                     echo '<div class="smallcol">'.intval($r['itm']).'</div>';
                     echo '<div class="smallcol">'.intval($r['vic']).'</div>';
