@@ -582,7 +582,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         <div class="card" style="padding:12px">
             <div style="display:flex;gap:12px">
                 <div style="flex:1;text-align:center">
-                    <div class="num" style="font-weight:800;color:#9aa6b1"><a href="/panel/activities_buyins.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:underline;text-decoration-color:#08b0ff"><?php echo htmlspecialchars(number_format($stats['buyins'],0,',',' ')); ?> €</a></div>
+                    <div class="num" style="font-weight:800;color:#9aa6b1"><a href="/panel/activities_buyins.php?uid=<?php echo intval($uid_int); ?>" style="color:#08b0ff;text-decoration:underline;text-decoration-color:#08b0ff"><?php echo htmlspecialchars(number_format($stats['buyins'],0,',',' ')); ?> €</a></div>
                     <div class="sub"><?php echo intval($stats['parts']); ?> parties</div>
                 </div>
                 <div style="flex:1;text-align:center">
