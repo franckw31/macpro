@@ -183,7 +183,7 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
     <div class="sheet" role="application">
         <div class="header">
             <div class="title"> Classement ITM-2000</div>
-            <button class="back" onclick="history.back();" aria-label="Fermer">Fermer</button>
+            <a class="back" href="/panel/profile.php?uid=<?php echo intval($uid); ?>" aria-label="Fermer">Fermer</a>
         </div>
         <div class="cols-header" style="padding:8px 12px;border-bottom:1px solid rgba(0,0,0,0.04);">
             <div style="width:36px"></div>
