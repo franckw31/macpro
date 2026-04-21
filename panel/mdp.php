@@ -73,7 +73,32 @@ $qres = @mysqli_query($con, $sql);
     <div style="margin-bottom:8px;color:#9aa6b1">Affichage <?php echo min($total, $per_page); ?> / <?php echo $total; ?> joueurs — Page <?php echo $page; ?> / <?php echo $total_pages; ?></div>
 
     <table>
-        <thead><tr><th style="width:80px">ID</th><th>Pseudo</th><th style="width:220px">Email</th><th style="width:240px">Mot de passe</th><th style="width:240px">Mot de passe ext</th></tr></thead>
+        <thead>
+            <tr>
+                <?php
+                    // helper to build header sort links
+                    function hdr_link($key, $label, $current_sort, $current_dir, $q){
+                        $dir = 'asc';
+                        $arrow = '';
+                        if ($current_sort === $key) {
+                            if (strtolower($current_dir) === 'asc') { $dir = 'desc'; $arrow = ' ▲'; }
+                            else { $dir = 'asc'; $arrow = ' ▼'; }
+                        }
+                        $params = [];
+                        if ($q !== '') $params['q'] = $q;
+                        $params['sort'] = $key;
+                        $params['dir'] = $dir;
+                        $url = '/panel/mdp.php?' . http_build_query($params);
+                        return '<th><a href="' . htmlspecialchars($url) . '" style="color:#08b0ff">' . htmlspecialchars($label . $arrow) . '</a></th>';
+                    }
+                    echo hdr_link('id','ID',$sort,$dir,$q);
+                    echo hdr_link('pseudo','Pseudo',$sort,$dir,$q);
+                    echo hdr_link('email','Email',$sort,$dir,$q);
+                    echo hdr_link('password','Mot de passe',$sort,$dir,$q);
+                    echo hdr_link('password_ext','Mot de passe ext',$sort,$dir,$q);
+                ?>
+            </tr>
+        </thead>
         <tbody>
         <?php if ($qres && mysqli_num_rows($qres) > 0) {
             while ($r = mysqli_fetch_assoc($qres)) {
