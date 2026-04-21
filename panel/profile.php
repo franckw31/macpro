@@ -605,7 +605,10 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 <div style="font-weight:700">Meilleur gain</div>
                 <div style="font-weight:800;color:#16a34a;font-size:16px"><?php echo htmlspecialchars(number_format($stats['best_gain'],0,',',' ')) . ' €'; ?></div>
                 <div style="margin-left:auto;font-weight:800;font-size:14px">
-                    <a href="/panel/activities_rake.php?uid=<?php echo intval($uid_int); ?>" style="color:#ff4d4d;font-weight:800;text-decoration:underline;text-decoration-color:#08b0ff">&sum;&nbsp;Rake: <?php echo htmlspecialchars(number_format(isset($rake_sum)?$rake_sum:0,0,',',' ')) . ' €'; ?></a>
+                    <a href="/panel/activities_rake.php?uid=<?php echo intval($uid_int); ?>" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">
+                        <span style="color:#ffffff;font-weight:800">&sum;&nbsp;Rake:</span>
+                        <span style="color:#ff4d4d;font-weight:800;text-decoration:underline;text-decoration-color:#08b0ff"><?php echo htmlspecialchars(number_format(isset($rake_sum)?$rake_sum:0,0,',',' ')) . ' €'; ?></span>
+                    </a>
                 </div>
             </div>
         </div>
