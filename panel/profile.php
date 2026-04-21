@@ -328,7 +328,13 @@ $rake_sum = 0;
 $uid_int = intval($uid);
 $qr_sql = "SELECT COALESCE(SUM(COALESCE(a.rake,0)),0) AS rake_sum FROM participation p LEFT JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE p.`id-membre` = '". $uid_int ."' AND COALESCE(p.`option`, 'None') NOT IN ('Desinscrit', 'None') AND NOT ( (a.`id-membre` = '". $uid_int ."') OR (a.`id_membre` = '". $uid_int ."') OR (a.`id_membres` = '". $uid_int ."') OR (a.`id_membre_organisateur` = '". $uid_int ."') OR (a.`organisateur` = '". $uid_int ."') )";
 $qr = @mysqli_query($con, $qr_sql);
-if ($qr && ($rr = mysqli_fetch_assoc($qr))) { $rake_sum = intval(round(floatval($rr['rake_sum']))); }
+if ($qr && ($rr = mysqli_fetch_assoc($qr))) {
+    $rake_sum = intval(round(floatval($rr['rake_sum'])));
+} else {
+    // Log SQL error for debugging if present
+    $sql_err = isset($con) ? mysqli_error($con) : 'no-connection';
+    error_log("Rake SQL failed: " . $sql_err . " | SQL: " . $qr_sql);
+}
 
 // compute net = total gains sum - total buyins
 $gsum = isset($stats['gains_sum']) ? floatval($stats['gains_sum']) : 0;
