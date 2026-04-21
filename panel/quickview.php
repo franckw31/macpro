@@ -661,7 +661,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	?>
 		<div class="tile" id="live-timer-tile" style="min-height:70px;height:auto;align-self:start;display:flex;flex-direction:column;justify-content:flex-start;">
 		       <div class="tile-top" style="padding-top:0;">
-			       <div class="timer-circle-container" style="width:80px;height:80px;position:relative;margin:0 auto;">
+				   <div class="timer-circle-container" style="width:56px;height:56px;position:relative;margin:0 auto;">
 					       <svg class="timer-svg" viewBox="0 0 80 80" style="width:100%;height:100%;position:absolute;top:0;left:0;">
 						       <circle class="timer-bg" cx="40" cy="40" r="36" style="stroke-width:4;"></circle>
 						       <circle class="timer-progress" id="live-timer-progress" cx="40" cy="40" r="36" style="stroke-width:4;"></circle>
