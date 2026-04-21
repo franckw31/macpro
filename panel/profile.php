@@ -591,7 +591,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 </div>
                 <div style="flex:1;text-align:center">
                     <div class="num" style="font-weight:800;color:<?php echo ($stats['net'] < 0) ? '#ff4d4d' : '#16a34a'; ?>"><?php echo htmlspecialchars(number_format($stats['net'],0,',',' ')); ?> €</div>
-                    <div class="sub">NET</div>
+                    <div class="sub">BRUT</div>
                 </div>
             </div>
 
