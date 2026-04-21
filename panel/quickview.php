@@ -158,6 +158,15 @@ header('Vary: Cookie');
 				'recave' => $recave,
 			];
 
+				// If the activity starts in more than 24 hours, show only the live timer circle in the shortcut
+				$show_only_timer = false;
+				if (!empty($serverActivity['date']) && @strtotime($serverActivity['date']) !== false) {
+					$starts_in = strtotime($serverActivity['date']) - time();
+					if ($starts_in > 24 * 3600) {
+						$show_only_timer = true;
+					}
+				}
+
 			// Also fetch current user's participation for this activity (to pre-fill modal)
 			$serverParticipation = null;
 			if (!empty($_SESSION['id']) && !empty($con)) {
