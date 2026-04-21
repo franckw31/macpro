@@ -25,8 +25,24 @@ if (!empty($used)) {
     $exclude_clause = ' AND NOT (' . implode(' OR ', $parts) . ')';
 }
 
-// Query activities where this member participated and which contributed rake (exclude Desinscrit/None and organizer activities)
-$sql = "SELECT a.`id-activite` AS aid, COALESCE(a.`titre-activite`, '') AS title, a.`date_depart` AS dt, COALESCE(a.buyin,0) AS buyin, COALESCE(a.rake,0) AS rake, COALESCE(p.`option`,'') AS popt FROM participation p JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE p.`id-membre` = '".intval($uid)."' AND COALESCE(p.`option`,'None') NOT IN ('Desinscrit','None') AND COALESCE(a.rake,0) > 0" . $exclude_clause . " ORDER BY a.`date_depart` DESC LIMIT 500";
+// Pagination params (minimize scrolling)
+$per_page = 7;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$offset = ($page - 1) * $per_page;
+
+// Base WHERE
+$base_where = "p.`id-membre` = '" . intval($uid) . "' AND COALESCE(p.`option`,'None') NOT IN ('Desinscrit','None') AND COALESCE(a.rake,0) > 0";
+$where = $base_where . $exclude_clause;
+
+// total count for pagination
+$count_sql = "SELECT COUNT(*) AS c FROM participation p JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE " . $where;
+$count_q = @mysqli_query($con, $count_sql);
+$total = 0;
+if ($count_q && ($cr = mysqli_fetch_assoc($count_q))) { $total = intval($cr['c']); }
+$total_pages = max(1, intval(ceil($total / $per_page)));
+
+// Query activities where this member participated and which contributed rake (exclude Desinscrit/None and organizer activities) - paginated
+$sql = "SELECT a.`id-activite` AS aid, COALESCE(a.`titre-activite`, '') AS title, a.`date_depart` AS dt, COALESCE(a.buyin,0) AS buyin, COALESCE(a.rake,0) AS rake, COALESCE(p.`option`,'') AS popt FROM participation p JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE " . $where . " ORDER BY a.`date_depart` DESC LIMIT " . intval($offset) . "," . intval($per_page);
 $q = @mysqli_query($con, $sql);
 // Only show the final "Voir" column for member id 265
 $show_voir = (intval($uid) === 265);
