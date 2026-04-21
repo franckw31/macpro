@@ -198,7 +198,11 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
                     $is_me = (intval($r['mid']) === intval($uid));
                     $display_name = $is_me ? ('<span style="color:#16a34a">' . esc($r['pseudo']) . '</span>') : esc($r['pseudo']);
                     echo '<div class="who"><div class="avatar"><img src="'.esc($photo).'" alt="" style="width:100%;height:100%;object-fit:cover"></div><div><div class="name">' . $display_name . '</div></div></div>';
-                    echo '<div class="pts">'.number_format(intval($r['pts']),0,',',' ').' </div>';
+                    // Build link to activities that contributed to points
+                    $link_params = '/panel/activities_points.php?uid=' . intval($r['mid']);
+                    if (!empty($filter_uid)) { $link_params .= '&aid=' . intval($filter_uid); }
+                    if (!empty($provided_challenge)) { $link_params .= '&challenge=' . intval($provided_challenge) . '&challenge_col=' . urlencode($provided_challenge_col); }
+                    echo '<div class="pts"><a href="'. esc($link_params) .'">'.number_format(intval($r['pts']),0,',',' ').'</a> </div>';
                     echo '<div class="smallcol">'.intval($r['itm']).'</div>';
                     echo '<div class="smallcol">'.intval($r['vic']).'</div>';
                     echo '<div class="smallcol">'.intval($r['parts']).'</div>';
