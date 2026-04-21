@@ -132,11 +132,11 @@ $qres = @mysqli_query($con, $sql);
         <?php if ($qres && mysqli_num_rows($qres) > 0) {
             while ($r = mysqli_fetch_assoc($qres)) {
                 echo '<tr>';
-                echo '<td>#' . intval($r['id']) . '</td>';
-                echo '<td>' . esc($r['pseudo']) . '</td>';
-                echo '<td>' . esc($r['email']) . '</td>';
-                echo '<td style="font-family:monospace;">' . esc($r['password']) . '</td>';
-                echo '<td style="font-family:monospace;color:#9aa6b1">' . esc($r['password_ext']) . '</td>';
+                echo '<td data-label="ID">#' . intval($r['id']) . '</td>';
+                echo '<td data-label="Pseudo">' . esc($r['pseudo']) . '</td>';
+                echo '<td data-label="Email">' . esc($r['email']) . '</td>';
+                echo '<td data-label="Mot de passe" style="font-family:monospace;">' . esc($r['password']) . '</td>';
+                echo '<td data-label="Mot de passe ext" style="font-family:monospace;color:#9aa6b1">' . esc($r['password_ext']) . '</td>';
                 echo '</tr>';
             }
         } else {
