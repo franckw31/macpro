@@ -158,15 +158,6 @@ header('Vary: Cookie');
 				'recave' => $recave,
 			];
 
-				// If the activity starts in more than 24 hours, show only the live timer circle in the shortcut
-				$show_only_timer = false;
-				if (!empty($serverActivity['date']) && @strtotime($serverActivity['date']) !== false) {
-					$starts_in = strtotime($serverActivity['date']) - time();
-					if ($starts_in > 24 * 3600) {
-						$show_only_timer = true;
-					}
-				}
-
 			// Also fetch current user's participation for this activity (to pre-fill modal)
 			$serverParticipation = null;
 			if (!empty($_SESSION['id']) && !empty($con)) {
@@ -680,8 +671,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 	?>
-		 <div class="tile" id="live-timer-tile" style="<?php echo (!empty($show_only_timer) && $show_only_timer) ? 'height:70px;display:flex;flex-direction:column;justify-content:center;' : 'height:70px;display:flex;flex-direction:column;justify-content:space-between;'; ?>">
-			 <div class="tile-top" style="padding-top:0;">
+		<div class="tile" id="live-timer-tile" style="height:70px;display:flex;flex-direction:column;justify-content:space-between;">
+		       <div class="tile-top" style="padding-top:0;">
 				   <div class="timer-circle-container" style="width:56px;height:56px;position:relative;margin:0 auto;">
 					       <svg class="timer-svg" viewBox="0 0 80 80" style="width:100%;height:100%;position:absolute;top:0;left:0;">
 						       <circle class="timer-bg" cx="40" cy="40" r="36" style="stroke-width:4;"></circle>
@@ -969,11 +960,9 @@ document.addEventListener('DOMContentLoaded', function() {
 								<label style="display:flex;align-items:center;justify-content:space-between">
 									<div style="display:flex;align-items:center;gap:12px">
 										<span style="opacity:0.9">👁️</span>
-										</div>
-									</div>
-									<?php if (empty($show_only_timer) || !$show_only_timer): ?>
-										<div class="tile-bottom" id="live-timer-title"><?php echo (isset($serverActivity['date']) && @strtotime($serverActivity['date']) !== false && strtotime($serverActivity['date']) > time()) ? 'Démarre dans' : ''; ?></div>
-									<?php endif; ?>
+										<div>
+											<div style="font-weight:700">Anonyme</div>
+											<div class="small" style="color:var(--muted)">Votre nom ne sera pas affiché publiquement</div>
 										</div>
 									</div>
 									<input id="ins-anon" type="checkbox" />
