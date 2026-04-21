@@ -28,6 +28,8 @@ if (!empty($used)) {
 // Query activities where this member participated and which contributed rake (exclude Desinscrit/None and organizer activities)
 $sql = "SELECT a.`id-activite` AS aid, COALESCE(a.`titre-activite`, '') AS title, a.`date_depart` AS dt, COALESCE(a.buyin,0) AS buyin, COALESCE(a.rake,0) AS rake, COALESCE(p.`option`,'') AS popt FROM participation p JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE p.`id-membre` = '".intval($uid)."' AND COALESCE(p.`option`,'None') NOT IN ('Desinscrit','None') AND COALESCE(a.rake,0) > 0" . $exclude_clause . " ORDER BY a.`date_depart` DESC LIMIT 500";
 $q = @mysqli_query($con, $sql);
+// Only show the final "Voir" column for member id 265
+$show_voir = (intval($uid) === 265);
 
 ?><!doctype html>
 <html lang="fr">
