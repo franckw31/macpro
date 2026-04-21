@@ -44,7 +44,14 @@ $show_voir = (intval($uid) === 265);
     <p style="margin:0 0 12px"><a href="/panel/profile.php">← Retour au profil</a></p>
     <table>
         <thead>
-            <tr><th>ID</th><th>Titre</th><th>Date</th><th>Buyin</th><th style="text-align:right">Rake</th><th>Voir</th></tr>
+            <tr>
+                <th>ID</th>
+                <th>Titre</th>
+                <th>Date</th>
+                <th>Buyin</th>
+                <th style="text-align:right">Rake</th>
+                <?php if ($show_voir): ?><th>Voir</th><?php endif; ?>
+            </tr>
         </thead>
         <tbody>
         <?php if ($q && mysqli_num_rows($q) > 0) {
@@ -54,10 +61,14 @@ $show_voir = (intval($uid) === 265);
                 $dt = htmlspecialchars($r['dt']);
                 $buyin = number_format(intval($r['buyin']),0,',',' ');
                 $rake = number_format(intval($r['rake']),0,',',' ');
-                echo "<tr><td>#". $aid ."</td><td>". $title ."</td><td>". $dt ."</td><td>". $buyin ." €</td><td style='text-align:right;color:#ff4d4d;font-weight:800'>". $rake ." €</td><td><a href=\"/panel/voir-activite.php?uid=". $aid ."\">Voir</a></td></tr>";
+                echo "<tr><td>#". $aid ."</td><td>". $title ."</td><td>". $dt ."</td><td>". $buyin ." €</td><td style='text-align:right;color:#ff4d4d;font-weight:800'>". $rake ." €</td>";
+                if ($show_voir) {
+                    echo "<td><a href=\"/panel/voir-activite.php?uid=". $aid ."\">Voir</a></td>";
+                }
+                echo "</tr>";
             }
         } else {
-            echo '<tr><td colspan="6">Aucune activité trouvée.</td></tr>';
+            echo '<tr><td colspan="' . ($show_voir ? '6' : '5') . '">Aucune activité trouvée.</td></tr>';
         } ?></tbody>
     </table>
 </body>
