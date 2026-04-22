@@ -8,6 +8,7 @@ import UIKit
 private struct PlayerStats {
     let photoUrl: String
     let nbParties: Int
+    let nbPartiesWithGain: Int
     let totalGains: Double
     let nbGains: Int
     let totalBuyins: Double
