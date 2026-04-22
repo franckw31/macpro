@@ -69,7 +69,7 @@ struct PlayerProfileView: View {
                                     image
                                         .resizable()
                                         .scaledToFill()
-                                        .frame(width: 90, height: 90)
+                                        .frame(width: 130, height: 130)
                                         .clipShape(Circle())
                                 case .failure, .empty:
                                     initialsCircle
@@ -86,15 +86,15 @@ struct PlayerProfileView: View {
                                 ZStack {
                                     Circle()
                                         .fill(Color.black)
-                                        .frame(width: 36, height: 36)
+                                        .frame(width: 44, height: 44)
                                     Image(systemName: "camera")
                                         .foregroundColor(.white)
-                                        .font(.system(size: 14, weight: .semibold))
+                                        .font(.system(size: 16, weight: .semibold))
                                         .symbolRenderingMode(.hierarchical)
                                 }
                             }
                             .buttonStyle(PlainButtonStyle())
-                            .offset(x: 36, y: 36)
+                            .offset(x: 52, y: 52)
                         }
                     }
                     .sheet(isPresented: $showingImagePicker, onDismiss: {
@@ -571,9 +571,9 @@ struct PlayerProfileView: View {
         ZStack {
             Circle()
                 .fill(Color.accentColor.opacity(0.15))
-                .frame(width: 90, height: 90)
+                .frame(width: 130, height: 130)
             Text(pseudo.prefix(1).uppercased())
-                .font(.system(size: 40, weight: .bold, design: .rounded))
+                .font(.system(size: 60, weight: .bold, design: .rounded))
                 .foregroundColor(.accentColor)
         }
     }
