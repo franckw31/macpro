@@ -255,7 +255,7 @@ struct PlayerProfileView: View {
                                             .font(.subheadline)
                                             .foregroundColor(.secondary)
                                         Spacer()
-                                        Text(formatEur(Double(s.rakeSum)))
+                                        Text(formatEur(stats?.rakeSum ?? 0))
                                             .font(.subheadline.bold())
                                             .foregroundColor(Color(red: 1.0, green: 0.302, blue: 0.302))
                                             .underline()
