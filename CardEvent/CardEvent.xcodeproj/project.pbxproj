@@ -134,8 +134,8 @@
 				A1B2C3D4E5F60718293B0010 /* CardEvent/Views/StructureLibraryView.swift */,
 				A1B2C3D4E5F60718293B000B /* LoginView.swift */,
 				A1B2C3D4E5F60718293B000C /* ParticipantsListView.swift */,
-					B2C3D4E5F6071829AA00001A /* PlayerProfileView.swift */,
-					IMG07182900BB0000AB /* ImagePicker.swift */,
+				B2C3D4E5F6071829AA00001A /* PlayerProfileView.swift */,
+				IMG07182900BB0000AB /* ImagePicker.swift */,
 				C3D4E5F607182900BB00001A /* ActivityInfoView.swift */,
 				C3D4E5F607182900BB00001B /* PlayersMovementsView.swift */,
 				D4E5F607182900CC00001B /* LiveView.swift */,
@@ -189,7 +189,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 2630;
+				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					A1B2C3D4E5F60718293E0001 = {
 						CreatedOnToolsVersion = 16.0;
@@ -265,6 +265,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -328,6 +329,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
