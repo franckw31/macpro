@@ -18,8 +18,8 @@ private struct PlayerStats {
     let meilleurGain: Double
     let tauxVictoire: Double
     let tauxPodium: Double
-}
-
+                    })
+                    .overlay(Group {
 // TicketsListView is provided as a separate file `TicketsListView.swift`.
 
 
@@ -118,7 +118,7 @@ struct PlayerProfileView: View {
                             #endif
                         }
                     })
-                    .padding(.top, 20)
+                    .padding(.top, -12)
 
                     Text(pseudo)
                         .font(.system(size: 26, weight: .bold))
