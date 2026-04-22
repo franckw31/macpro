@@ -62,7 +62,37 @@ try {
     $nbPodiums    = (int)$stats['nb_podiums'];
     $totalRecaves = (int)$stats['total_recaves'];
     $meilleurGain = (float)$stats['meilleur_gain'];
-    $netResult    = $totalGains - $totalBuyins;
+    // Compute rake sum (exclude activities organized by the member) to match panel/profile.php logic
+    $rake_sum = 0;
+    // determine possible organizer columns present in `activite`
+    $existing_cols = [];
+    $colStmt = $pdo->query("SHOW COLUMNS FROM activite");
+    if ($colStmt) {
+        $cols = $colStmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($cols as $c) { $existing_cols[] = $c['Field']; }
+    }
+    $candidates = ['id-membre','id_membre','id_membres','id_membre_organisateur','organisateur'];
+    $used = array_values(array_intersect($candidates, $existing_cols));
+
+    $exclude_clause = '';
+    $params = [$memberId];
+    if (!empty($used)) {
+        $parts = [];
+        foreach ($used as $col) {
+            $parts[] = "a.`" . $col . "` = ?";
+            $params[] = $memberId;
+        }
+        $exclude_clause = ' AND NOT (' . implode(' OR ', $parts) . ')';
+    }
+
+    $rakeSql = "SELECT COALESCE(SUM(COALESCE(a.rake,0)),0) AS rake_sum FROM participation p JOIN activite a ON p.`id-activite` = a.`id-activite` WHERE p.`id-membre` = ? AND p.`option` NOT IN ('Desinscrit','None')" . $exclude_clause;
+    $rakeStmt = $pdo->prepare($rakeSql);
+    $rakeStmt->execute($params);
+    $rRow = $rakeStmt->fetch();
+    if ($rRow) { $rake_sum = (int)$rRow['rake_sum']; }
+
+    // Match panel logic: net = total_gains - (total_buyins - rake_sum)
+    $netResult    = $totalGains - ($totalBuyins - $rake_sum);
     $tauxVictoire = $nbParties > 0 ? round($nbVictoires / $nbParties * 100, 1) : 0;
     $tauxPodium   = $nbParties > 0 ? round($nbPodiums  / $nbParties * 100, 1) : 0;
 
