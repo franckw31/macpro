@@ -18,6 +18,7 @@ private struct PlayerStats {
     let meilleurGain: Double
     let tauxVictoire: Double
     let tauxPodium: Double
+}
 
 // TicketsListView is provided as a separate file `TicketsListView.swift`.
 
