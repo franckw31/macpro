@@ -319,6 +319,36 @@ struct PlayerProfileView: View {
                     TicketsListView(memberId: mid, pseudo: pseudo)
                 }
             }
+            .sheet(isPresented: $showChangePassword) {
+                NavigationView {
+                    VStack(spacing: 12) {
+                        SecureField("Nouveau mot de passe", text: $pwdNew)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal)
+                        SecureField("Confirmer", text: $pwdConfirm)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal)
+                        if let st = pwdStatus {
+                            Text(st).foregroundColor(.red).font(.caption).padding(.horizontal)
+                        }
+                        Spacer()
+                        HStack {
+                            Button("Annuler") { showChangePassword = false }
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Button(action: {
+                                Task { await changePassword() }
+                            }) {
+                                if pwdSubmitting { ProgressView().progressViewStyle(.circular) } else { Text("Enregistrer").bold() }
+                            }
+                            .disabled(pwdSubmitting)
+                        }
+                        .padding()
+                    }
+                    .navigationTitle("Changer le mot de passe")
+                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Fermer") { showChangePassword = false } } }
+                }
+            }
         }
     }
 
