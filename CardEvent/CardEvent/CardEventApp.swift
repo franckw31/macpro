@@ -63,7 +63,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 #endif
 
 @MainActor
-private final class WelcomeSpeaker: NSObject, AVSpeechSynthesizerDelegate {
+private final class WelcomeSpeaker: NSObject, @preconcurrency AVSpeechSynthesizerDelegate {
     private let speechSynthesizer = AVSpeechSynthesizer()
 
     override init() {
