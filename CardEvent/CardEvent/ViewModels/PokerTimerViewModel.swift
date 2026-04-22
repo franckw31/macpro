@@ -1164,10 +1164,12 @@ final class PokerTimerViewModel: NSObject, ObservableObject, AVSpeechSynthesizer
         }
     }
 
+    @MainActor
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         releaseSpeechSession()
     }
 
+    @MainActor
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
         releaseSpeechSession()
     }
