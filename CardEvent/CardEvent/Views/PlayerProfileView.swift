@@ -92,7 +92,7 @@ struct PlayerProfileView: View {
                                 .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 2)
                             }
                             .buttonStyle(PlainButtonStyle())
-                            .offset(x: 52, y: 40)
+                            .offset(x: 60, y: 48)
                         }
                     }
                     .sheet(isPresented: $showingImagePicker, onDismiss: {
