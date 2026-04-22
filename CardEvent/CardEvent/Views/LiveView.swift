@@ -21,7 +21,7 @@ private struct TimerAPIResponse: Decodable {
 // MARK: - LiveTimerViewModel
 
 @MainActor
-private final class LiveTimerViewModel: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
+private final class LiveTimerViewModel: NSObject, ObservableObject, @preconcurrency AVSpeechSynthesizerDelegate {
     @Published var secondsRemaining: Int = 0
     @Published var durationSeconds: Int = 1
     @Published var blindsText: String = "--/--"
