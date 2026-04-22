@@ -443,7 +443,7 @@ struct PlayerProfileView: View {
                                 PlayerStatsDetailView(pseudo: pseudo, type: "rake", navTitle: "Rake")
                             } label: {
                                 HStack(spacing: 6) {
-                                    Text("\u{2211} Rake :")
+                                    Text("\u{2211} Rake :")
                                         .font(.subheadline)
                                         .foregroundColor(.white)
                                         .fontWeight(.heavy)
