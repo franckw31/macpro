@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 // MARK: - PlayerStats Model
 
@@ -464,6 +465,48 @@ struct PlayerProfileView: View {
             }
         } catch {
             statsError = "Chargement impossible"
+        }
+    }
+
+    // MARK: - Image upload
+
+    private func uploadSelectedImage() async {
+        guard let img = inputImage else { return }
+        guard let data = img.jpegData(compressionQuality: 0.7) else { return }
+
+        await MainActor.run { isUploading = true; uploadMessage = nil }
+        defer { Task { await MainActor.run { isUploading = false } } }
+
+        let boundary = "Boundary-\(UUID().uuidString)"
+        guard let url = URL(string: "https://viendez.com/api/upload-avatar.php") else { return }
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        if let token = AuthService.shared.token { req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") }
+
+        var body = Data()
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"avatar.jpg\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+        body.append(data)
+        body.append("\r\n".data(using: .utf8)!)
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+
+        req.httpBody = body
+
+        do {
+            let (d, _) = try await URLSession.shared.data(for: req)
+            if let json = try JSONSerialization.jsonObject(with: d) as? [String: Any], let success = json["success"] as? Bool, success {
+                await MainActor.run {
+                    uploadMessage = "Avatar mis à jour"
+                }
+                await loadStats()
+            } else {
+                let err = (try JSONSerialization.jsonObject(with: d) as? [String: Any])? ["error"] as? String ?? "Erreur"
+                await MainActor.run { uploadMessage = err }
+            }
+        } catch {
+            await MainActor.run { uploadMessage = "Erreur réseau" }
         }
     }
 
