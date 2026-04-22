@@ -17,6 +17,7 @@ private struct PlayerStats {
     let nbPodiums: Int
     let totalRecaves: Int
     let meilleurGain: Double
+        let rakeSum: Double
     let tauxVictoire: Double
     let tauxPodium: Double
 }
