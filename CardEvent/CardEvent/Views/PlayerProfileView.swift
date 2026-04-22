@@ -41,10 +41,16 @@ struct PlayerProfileView: View {
     @State private var memberTickets: Int? = nil
     @State private var showMemberTickets: Bool = false
     // Image picker / upload
+#if canImport(UIKit)
     @State private var showingImagePicker = false
     @State private var inputImage: UIImage? = nil
     @State private var isUploading = false
     @State private var uploadMessage: String? = nil
+#else
+    @State private var showingImagePicker = false
+    @State private var isUploading = false
+    @State private var uploadMessage: String? = nil
+#endif
 
     var body: some View {
         NavigationView {
@@ -89,6 +95,7 @@ struct PlayerProfileView: View {
                             }
                         }
                     }
+#if canImport(UIKit)
                     .sheet(isPresented: $showingImagePicker, onDismiss: {
                         if let _ = inputImage {
                             Task { await uploadSelectedImage() }
@@ -98,9 +105,10 @@ struct PlayerProfileView: View {
                     }
                     .overlay(Group {
                         if isUploading {
-                            ProgressView().padding(8).background(Color(.systemBackground)).cornerRadius(8)
+                            ProgressView().padding(8).background(Color(UIColor.systemBackground)).cornerRadius(8)
                         }
                     })
+#endif
                     .padding(.top, 20)
 
                     Text(pseudo)
