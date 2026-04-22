@@ -177,29 +177,6 @@ struct PlayerProfileView: View {
                             .foregroundColor(.secondary)
                     }
 
-                    // Password display + change
-                    if let s = stats {
-                        let pwdDisplay = !s.password.isEmpty ? s.password : (!s.passwordExt.isEmpty ? s.passwordExt : "—")
-                        HStack {
-                            Text("Mot de passe")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(pwdDisplay)
-                                .font(.subheadline.bold())
-                                .foregroundColor(.primary)
-                            if pseudo == AuthService.shared.pseudo {
-                                Button(action: { pwdNew = ""; pwdConfirm = ""; pwdStatus = nil; showChangePassword = true }) {
-                                    Text("Changer")
-                                        .foregroundColor(.blue)
-                                        .fontWeight(.heavy)
-                                }
-                                .buttonStyle(PlainButtonStyle())
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-
                     // ── Rang Challenge + Notes (toujours visibles) ─────────
                     GroupBox {
                         VStack(spacing: 0) {
