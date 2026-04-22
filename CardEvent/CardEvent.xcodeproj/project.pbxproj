@@ -24,14 +24,14 @@
 		C3D4E5F607182900BB00002B /* ActivityInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F607182900BB00001A /* ActivityInfoView.swift */; };
 		C3D4E5F607182900BB00002C /* PlayersMovementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F607182900BB00001B /* PlayersMovementsView.swift */; };
 		CC07182900EE00009D /* TicketsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC07182900EE00009C /* TicketsListView.swift */; };
-		D4E5F607182900CC00002C /* LiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F607182900CC00001B /* LiveView.swift */; };
-		E5F607182900DD00003D /* PlayersLiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F607182900DD00002C /* PlayersLiveView.swift */; };
-		F607182900EE00004F /* ChallengeRankingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F607182900EE00003E /* ChallengeRankingView.swift */; };
-		F607182900FF00005F /* PlayerStatsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F607182900FF00004F /* PlayerStatsDetailView.swift */; };
 		CE12345001AA000001 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12345002BB000002 /* RegisterView.swift */; };
 		CE12345003AA000003 /* AuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12345004BB000004 /* AuthTextField.swift */; };
 		CE12345005AA000005 /* ForgotPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12345006BB000006 /* ForgotPasswordView.swift */; };
 		CE12345007AA000007 /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12345008BB000008 /* ResetPasswordView.swift */; };
+		D4E5F607182900CC00002C /* LiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F607182900CC00001B /* LiveView.swift */; };
+		E5F607182900DD00003D /* PlayersLiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F607182900DD00002C /* PlayersLiveView.swift */; };
+		F607182900EE00004F /* ChallengeRankingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F607182900EE00003E /* ChallengeRankingView.swift */; };
+		F607182900FF00005F /* PlayerStatsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F607182900FF00004F /* PlayerStatsDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,14 +55,14 @@
 		C3D4E5F607182900BB00001A /* ActivityInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityInfoView.swift; sourceTree = "<group>"; };
 		C3D4E5F607182900BB00001B /* PlayersMovementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersMovementsView.swift; sourceTree = "<group>"; };
 		CC07182900EE00009C /* TicketsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketsListView.swift; sourceTree = "<group>"; };
-		D4E5F607182900CC00001B /* LiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveView.swift; sourceTree = "<group>"; };
-		E5F607182900DD00002C /* PlayersLiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersLiveView.swift; sourceTree = "<group>"; };
-		F607182900EE00003E /* ChallengeRankingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeRankingView.swift; sourceTree = "<group>"; };
-		F607182900FF00004F /* PlayerStatsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStatsDetailView.swift; sourceTree = "<group>"; };
 		CE12345002BB000002 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		CE12345004BB000004 /* AuthTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTextField.swift; sourceTree = "<group>"; };
 		CE12345006BB000006 /* ForgotPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordView.swift; sourceTree = "<group>"; };
 		CE12345008BB000008 /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
+		D4E5F607182900CC00001B /* LiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveView.swift; sourceTree = "<group>"; };
+		E5F607182900DD00002C /* PlayersLiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersLiveView.swift; sourceTree = "<group>"; };
+		F607182900EE00003E /* ChallengeRankingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeRankingView.swift; sourceTree = "<group>"; };
+		F607182900FF00004F /* PlayerStatsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStatsDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -384,7 +384,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = CardEvent/CardEvent.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 5L3569V4B3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -398,7 +398,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.franck.cardevent;
 				PRODUCT_NAME = CardEvent;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -415,7 +415,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = CardEvent/CardEvent.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 5L3569V4B3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -429,7 +429,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.franck.cardevent;
 				PRODUCT_NAME = CardEvent;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

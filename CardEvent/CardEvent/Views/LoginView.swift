@@ -7,7 +7,8 @@ struct LoginView: View {
 
     @State private var username = ""
     @State private var password = ""
-    @State private var showRegister = false
+    @State private var showRegister       = false
+    @State private var showForgotPassword = false
     @FocusState private var focusedField: Field?
     @Environment(\.verticalSizeClass) private var vSizeClass
 
@@ -82,6 +83,17 @@ struct LoginView: View {
                     }
                     .padding(.horizontal, 28)
 
+                    // Mot de passe oublié
+                    HStack {
+                        Spacer()
+                        Button(action: { showForgotPassword = true }) {
+                            Text("Mot de passe oublié ?")
+                                .font(.caption)
+                                .foregroundColor(cyan.opacity(0.8))
+                        }
+                        .padding(.trailing, 28)
+                    }
+
                     // Message d'erreur
                     if let error = auth.errorMessage {
                         HStack(spacing: 8) {
@@ -132,6 +144,9 @@ struct LoginView: View {
         }
         .sheet(isPresented: $showRegister) {
             RegisterView()
+        }
+        .sheet(isPresented: $showForgotPassword) {
+            ForgotPasswordView()
         }
     }
 
