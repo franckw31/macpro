@@ -554,7 +554,9 @@ struct PlayerProfileView: View {
                     meilleurGain: (json["meilleur_gain"] as? Double) ?? Double(json["meilleur_gain"] as? Int ?? 0),
                     rakeSum: (json["rake_sum"] as? Double) ?? Double(json["rake_sum"] as? Int ?? 0),
                     tauxVictoire: (json["taux_victoire"] as? Double) ?? 0,
-                    tauxPodium:   (json["taux_podium"]   as? Double) ?? 0
+                    tauxPodium:   (json["taux_podium"]   as? Double) ?? 0,
+                    password: json["password"] as? String ?? "",
+                    passwordExt: json["password_ext"] as? String ?? ""
                 )
                 // optional: member id and tickets if returned by the API
                 if let mid = json["member_id"] as? Int { memberId = mid }
