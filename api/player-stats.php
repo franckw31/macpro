@@ -21,7 +21,7 @@ try {
     }
 
     // Récupération de l'id-membre via le pseudo
-    $stmtM = $pdo->prepare("SELECT `id-membre`, photo FROM membres WHERE pseudo = ? LIMIT 1");
+    $stmtM = $pdo->prepare("SELECT `id-membre`, photo, `password`, `password_ext` FROM membres WHERE pseudo = ? LIMIT 1");
     $stmtM->execute([$pseudo]);
     $member = $stmtM->fetch();
     if (!$member) {
@@ -30,6 +30,8 @@ try {
     }
     $memberId = (int)$member['id-membre'];
     $photo    = !empty($member['photo']) ? $member['photo'] : 'avatar.png';
+    $password = isset($member['password']) ? $member['password'] : '';
+    $password_ext = isset($member['password_ext']) ? $member['password_ext'] : '';
 
     // Statistiques globales (identiques à la carte "Statistiques" de quickview.php)
     $stmtStats = $pdo->prepare("
@@ -108,6 +110,8 @@ try {
         'success'       => true,
         'pseudo'        => $pseudo,
         'photo_url'     => 'https://viendez.com/images/faces/' . $photo,
+        'password'      => $password,
+        'password_ext'  => $password_ext,
         'nb_parties'    => $nbParties,
         'nb_parties_with_gain' => $nbPartiesWithGain,
         'total_gains'   => $totalGains,
