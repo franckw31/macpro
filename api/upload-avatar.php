@@ -44,6 +44,7 @@ try {
     $targetPath = $targetDir . $safeName;
 
     if (!move_uploaded_file($f['tmp_name'], $targetPath)) {
+        error_log('[upload-avatar] move_uploaded_file failed tmp=' . ($f['tmp_name'] ?? ''));
         echo json_encode(['success'=>false,'error'=>'impossible d\'enregistrer le fichier']); exit;
     }
 
@@ -51,10 +52,13 @@ try {
     $u = $pdo->prepare("UPDATE membres SET photo = ? WHERE `id-membre` = ?");
     $u->execute([$safeName, $memberId]);
 
+    error_log('[upload-avatar] saved ' . $safeName . ' for member ' . $memberId);
+
     $publicUrl = 'https://viendez.com/images/faces/' . rawurlencode($safeName);
     echo json_encode(['success'=>true,'photo_url'=>$publicUrl]);
 
 } catch (Exception $e) {
+    error_log('[upload-avatar] exception: ' . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['success'=>false,'error'=>'server error']);
+    echo json_encode(['success'=>false,'error'=>'server error','detail'=>$e->getMessage()]);
 }
