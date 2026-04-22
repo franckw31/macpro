@@ -229,11 +229,11 @@ struct PlayerProfileView: View {
 
                             Divider()
 
-                            NavigationLink {
+                                NavigationLink {
                                 PlayerTrakView(pseudo: pseudo, activityId: activityId)
                             } label: {
                                 HStack {
-                                    Text("Notes (Traker) 📝")
+                                    Text("Notes (Traker)")
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
                                     Spacer()
