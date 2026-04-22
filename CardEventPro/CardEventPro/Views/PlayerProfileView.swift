@@ -101,8 +101,8 @@ struct PlayerProfileView: View {
                         #if canImport(UIKit)
                         if let _ = inputImage {
                             Task { await uploadSelectedImage() }
-                        }
-                        #endif
+                        })
+                        .overlay(Group {
                     }) {
                         #if canImport(UIKit)
                         ImagePicker(image: $inputImage)
@@ -119,7 +119,7 @@ struct PlayerProfileView: View {
                             #endif
                         }
                     })
-                    .padding(.top, 20)
+                    .padding(.top, 8)
 
                     Text(pseudo)
                         .font(.title2.bold())
