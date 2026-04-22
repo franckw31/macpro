@@ -543,9 +543,9 @@ struct PlayerProfileView: View {
         ZStack {
             Circle()
                 .fill(Color.accentColor.opacity(0.15))
-                .frame(width: 90, height: 90)
+                .frame(width: 140, height: 140)
             Text(pseudo.prefix(1).uppercased())
-                .font(.system(size: 40, weight: .bold, design: .rounded))
+                .font(.system(size: 60, weight: .bold, design: .rounded))
                 .foregroundColor(.accentColor)
         }
     }
