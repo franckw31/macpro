@@ -542,10 +542,10 @@ struct PlayerProfileView: View {
     private var initialsCircle: some View {
         ZStack {
             Circle()
-                .fill(Color.accentColor.opacity(0.15))
-                .frame(width: 140, height: 140)
+                .fill(Color.accentColor.opacity(0.12))
+                .frame(width: 150, height: 150)
             Text(pseudo.prefix(1).uppercased())
-                .font(.system(size: 60, weight: .bold, design: .rounded))
+                .font(.system(size: 64, weight: .bold, design: .rounded))
                 .foregroundColor(.accentColor)
         }
     }
