@@ -248,7 +248,6 @@ struct PlayerProfileView: View {
                             }
                             .buttonStyle(.plain)
 
-                                <!-- Password moved here -->
                                 if let s = stats {
                                     let pwdDisplay = !s.password.isEmpty ? s.password : (!s.passwordExt.isEmpty ? s.passwordExt : "—")
                                     HStack {
