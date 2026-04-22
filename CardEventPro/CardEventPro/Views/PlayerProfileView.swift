@@ -53,18 +53,36 @@ struct PlayerProfileView: View {
     @State private var uploadMessage: String? = nil
 #else
     @State private var showingImagePicker = false
-    @State private var isUploading = false
-    @State private var uploadMessage: String? = nil
-#endif
-
-    var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-
-                    // Avatar
-                    ZStack(alignment: .center) {
-                        if let s = stats, !s.photoUrl.isEmpty, let url = URL(string: s.photoUrl) {
+                        Divider()
+                        HStack {
+                            Text("Meilleur gain")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Text(formatEur(s.meilleurGain))
+                                .font(.subheadline.bold())
+                                .foregroundColor(.green)
+                        }
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 4)
+                        // Rake sum on the right, linked
+                        NavigationLink {
+                            PlayerStatsDetailView(pseudo: pseudo, type: "rake", navTitle: "Rake")
+                        } label: {
+                            HStack(spacing: 6) {
+                                Text("\u{2211} Rake :")
+                                    .font(.subheadline)
+                                    .foregroundColor(.white)
+                                    .fontWeight(.heavy)
+                                Text(formatEur(s.rakeSum))
+                                    .font(.subheadline.bold())
+                                    .foregroundColor(Color(red: 1.0, green: 0.302, blue: 0.302))
+                                    .underline(true, color: Color(red: 0.0314, green: 0.6902, blue: 1.0))
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 4)
                             AsyncImage(url: url) { phase in
                                 switch phase {
                                 case .success(let image):
