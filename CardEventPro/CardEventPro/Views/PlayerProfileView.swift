@@ -143,7 +143,7 @@ struct PlayerProfileView: View {
                         #endif
                     }) {
                         #if canImport(UIKit)
-                        ImagePicker(image: $inputImage)
+                        ImagePickerLocal(image: $inputImage)
                         #else
                         EmptyView()
                         #endif
