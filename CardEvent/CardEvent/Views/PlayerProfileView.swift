@@ -1,35 +1,7 @@
 import SwiftUI
 #if canImport(UIKit)
 import UIKit
-                        HStack {
-                            Text("Meilleur gain")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-
-                            Text(formatEur(s.meilleurGain))
-                                .font(.subheadline.bold())
-                                .foregroundColor(.green)
-                                .padding(.leading, 8)
-
-                            Spacer()
-
-                            // Rake sum on the right, linked
-                            NavigationLink {
-                                PlayerStatsDetailView(pseudo: pseudo, type: "rake", navTitle: "Rake")
-                            } label: {
-                                HStack(spacing: 6) {
-                                    Text("\u{2211} Rake :")
-                                        .font(.subheadline)
-                                        .foregroundColor(.white)
-                                        .fontWeight(.heavy)
-                                    Text(formatEur(s.rakeSum))
-                                        .font(.subheadline.bold())
-                                        .foregroundColor(Color(red: 1.0, green: 0.302, blue: 0.302))
-                                        .underline(true, color: Color(red: 0.0314, green: 0.6902, blue: 1.0))
-                                }
-                            }
-                            .buttonStyle(.plain)
-                        }
+#endif
 
 // removed Safari wrapper — Tickets are shown in-app via TicketsListView
 
