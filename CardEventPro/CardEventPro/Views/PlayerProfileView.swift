@@ -119,7 +119,7 @@ struct PlayerProfileView: View {
                             #endif
                         }
                     })
-                    .padding(.top, 8)
+                    .padding(.top, 0)
 
                     Text(pseudo)
                         .font(.title2.bold())
