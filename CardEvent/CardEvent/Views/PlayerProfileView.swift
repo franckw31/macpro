@@ -103,7 +103,7 @@ struct PlayerProfileView: View {
                         }
                         #endif
                     }) {
-                        #if canImport(UIKit)
+                                             #if canImport(UIKit)
                         ImagePicker(image: $inputImage)
                         #else
                         EmptyView()
@@ -205,9 +205,7 @@ struct PlayerProfileView: View {
                                     .font(.subheadline.bold())
                                     .foregroundColor(.primary)
                                 Button("Voir") {
-                                    if let mid = memberId {
-                                        showMemberTickets = true
-                                    }
+                                    showMemberTickets = (memberId != nil)
                                 }
                                 .font(.subheadline)
                                 .disabled(memberId == nil)
