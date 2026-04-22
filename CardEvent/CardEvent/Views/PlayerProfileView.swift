@@ -338,7 +338,10 @@ struct PlayerProfileView: View {
                         linkedStatTile(
                             title: "Victoires",
                             value: "\(s.nbVictoires)",
-                            sub: s.tauxVictoire > 0 ? "\(s.tauxVictoire) %" : "—",
+                            sub: {
+                                let denom = s.nbPartiesWithGain > 0 ? s.nbPartiesWithGain : s.nbParties
+                                return denom > 0 ? String(format: "%.1f%%", (Double(s.nbVictoires) / Double(denom)) * 100.0) : "—"
+                            }(),
                             color: Color(red: 1.0, green: 0.8196, blue: 0.0), // #ffd100
                             type: "victoires"
                         )
@@ -346,7 +349,10 @@ struct PlayerProfileView: View {
                         linkedStatTile(
                             title: "ITM",
                             value: "\(s.nbGains)",
-                            sub: s.nbParties > 0 ? String(format: "%.1f%%", (Double(s.nbGains) / Double(s.nbParties)) * 100.0) : "—",
+                            sub: {
+                                let denom = s.nbPartiesWithGain > 0 ? s.nbPartiesWithGain : s.nbParties
+                                return denom > 0 ? String(format: "%.1f%%", (Double(s.nbGains) / Double(denom)) * 100.0) : "—"
+                            }(),
                             color: Color(red: 1.0, green: 0.6157, blue: 0.2314), // #ff9d3b
                             type: "gains"
                         )
