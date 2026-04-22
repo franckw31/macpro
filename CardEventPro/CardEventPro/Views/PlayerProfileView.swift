@@ -434,16 +434,20 @@ struct PlayerProfileView: View {
                             Text("Meilleur gain")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
-                            Spacer()
+
                             Text(formatEur(s.meilleurGain))
                                 .font(.subheadline.bold())
                                 .foregroundColor(.green)
+                                .padding(.leading, 8)
+
+                            Spacer()
+
                             // Rake sum on the right, linked
                             NavigationLink {
                                 PlayerStatsDetailView(pseudo: pseudo, type: "rake", navTitle: "Rake")
                             } label: {
                                 HStack(spacing: 6) {
-                                    Text("\u{2211} Rake :")
+                                    Text("\u{2211} Rake :")
                                         .font(.subheadline)
                                         .foregroundColor(.white)
                                         .fontWeight(.heavy)
