@@ -460,6 +460,7 @@ struct PlayerProfileView: View {
                 stats = PlayerStats(
                     photoUrl:     json["photo_url"]    as? String ?? "",
                     nbParties:    json["nb_parties"]    as? Int    ?? 0,
+                    nbPartiesWithGain: json["nb_parties_with_gain"] as? Int ?? 0,
                     totalGains:   (json["total_gains"]   as? Double) ?? Double(json["total_gains"]   as? Int ?? 0),
                     nbGains:      json["nb_gains"]      as? Int    ?? 0,
                     totalBuyins:  (json["total_buyins"]  as? Double) ?? Double(json["total_buyins"]  as? Int ?? 0),
