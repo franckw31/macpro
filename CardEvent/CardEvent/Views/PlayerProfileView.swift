@@ -621,6 +621,38 @@ struct PlayerProfileView: View {
     }
 #endif
 
+    // MARK: - Change Password
+
+    private func changePassword() async {
+        guard !pwdNew.trimmingCharacters(in: .whitespaces).isEmpty else { pwdStatus = "Tous les champs sont requis."; return }
+        guard pwdNew == pwdConfirm else { pwdStatus = "Les mots de passe ne correspondent pas."; return }
+        pwdSubmitting = true; pwdStatus = nil
+        defer { Task { await MainActor.run { pwdSubmitting = false } } }
+
+        guard let url = URL(string: "https://viendez.com/api/change-password.php") else { pwdStatus = "URL invalide"; return }
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token = AuthService.shared.token { req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") }
+        let body: [String: String] = ["new_password": pwdNew, "confirm_password": pwdConfirm]
+        do {
+            req.httpBody = try JSONEncoder().encode(body)
+            let (data, _) = try await URLSession.shared.data(for: req)
+            if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any], let success = json["success"] as? Bool, success {
+                await MainActor.run {
+                    pwdStatus = "Mot de passe mis à jour"
+                    showChangePassword = false
+                }
+                await loadStats()
+            } else {
+                let err = (try JSONSerialization.jsonObject(with: data) as? [String: Any])?["error"] as? String ?? "Erreur"
+                await MainActor.run { pwdStatus = err }
+            }
+        } catch {
+            await MainActor.run { pwdStatus = "Erreur réseau" }
+        }
+    }
+
     private var initialsCircle: some View {
         ZStack {
             Circle()
