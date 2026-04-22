@@ -434,7 +434,8 @@ struct PlayerProfileView: View {
             NavigationLink(destination: PlayerStatsDetailView(pseudo: pseudo, type: type, navTitle: title)) {
                 Text(value)
                     .font(.system(.subheadline, design: .rounded).bold())
-                    .foregroundColor(color)
+                    .foregroundColor(.blue)
+                    .underline()
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
