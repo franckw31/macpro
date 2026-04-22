@@ -417,8 +417,8 @@ struct PlayerProfileView: View {
             NavigationLink(destination: PlayerStatsDetailView(pseudo: pseudo, type: type, navTitle: title)) {
                 Text(value)
                     .font(.system(.subheadline, design: .rounded).bold())
-                    .foregroundColor(.blue)
-                    .underline()
+                    .foregroundColor(color)
+                    .underline(true, Color(red: 0.0314, green: 0.6902, blue: 1.0)) // blue underline (#08b0ff)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
