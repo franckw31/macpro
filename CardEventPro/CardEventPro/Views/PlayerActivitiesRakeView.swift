@@ -82,8 +82,8 @@ struct PlayerActivitiesRakeView: View {
             let root = try JSONDecoder().decode(ActivitiesRakeResponse.self, from: data)
             if p == 1 { activities = root.rake_contrib } else { activities.append(contentsOf: root.rake_contrib) }
             page = p
-        } catch {
-            error = error.localizedDescription
+        } catch let loadErr {
+            error = loadErr.localizedDescription
         }
     }
 }
