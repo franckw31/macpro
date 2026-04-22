@@ -1,4 +1,7 @@
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 // MARK: - PlayerStats Model
 
@@ -38,6 +41,17 @@ struct PlayerProfileView: View {
     @State private var memberTickets: Int? = nil
     @State private var showMemberTickets: Bool = false
     @State private var fetchedChallengeRank: Int = 0
+    // Image picker / upload
+#if canImport(UIKit)
+    @State private var showingImagePicker = false
+    @State private var inputImage: UIImage? = nil
+    @State private var isUploading = false
+    @State private var uploadMessage: String? = nil
+#else
+    @State private var showingImagePicker = false
+    @State private var isUploading = false
+    @State private var uploadMessage: String? = nil
+#endif
 
     var body: some View {
         NavigationView {
@@ -45,7 +59,7 @@ struct PlayerProfileView: View {
                 VStack(spacing: 20) {
 
                     // Avatar
-                    ZStack {
+                    ZStack(alignment: .center) {
                         if let s = stats, !s.photoUrl.isEmpty, let url = URL(string: s.photoUrl) {
                             AsyncImage(url: url) { phase in
                                 switch phase {
@@ -64,7 +78,45 @@ struct PlayerProfileView: View {
                         } else {
                             initialsCircle
                         }
+
+                        if pseudo == AuthService.shared.pseudo {
+                            Button(action: { showingImagePicker = true }) {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.black)
+                                        .frame(width: 36, height: 36)
+                                    Image(systemName: "camera")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 14, weight: .semibold))
+                                        .symbolRenderingMode(.hierarchical)
+                                }
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .offset(x: 36, y: 36)
+                        }
                     }
+                    .sheet(isPresented: $showingImagePicker, onDismiss: {
+                        #if canImport(UIKit)
+                        if let _ = inputImage {
+                            Task { await uploadSelectedImage() }
+                        }
+                        #endif
+                    }) {
+                        #if canImport(UIKit)
+                        ImagePicker(image: $inputImage)
+                        #else
+                        EmptyView()
+                        #endif
+                    }
+                    .overlay(Group {
+                        if isUploading {
+                            #if canImport(UIKit)
+                            ProgressView().padding(8).background(Color(UIColor.systemBackground)).cornerRadius(8)
+                            #else
+                            ProgressView().padding(8).background(Color.clear).cornerRadius(8)
+                            #endif
+                        }
+                    })
                     .padding(.top, 20)
 
                     Text(pseudo)
@@ -77,27 +129,26 @@ struct PlayerProfileView: View {
                             statutBadge(p.statut)
                         }
 
-                        // Stats de la partie en cours
+                        // Stats de la partie en cours — single-line Inscription + bonus
                         GroupBox(activityTitle.isEmpty ? "Partie en cours" : activityTitle) {
-                            VStack(spacing: 0) {
-                                statRow(label: "Inscription", value: p.dateInscription.isEmpty ? "—" : p.dateInscription)
-                                Divider()
-                                statRow(label: "Bonus inscription", value: p.bonus1 > 0 ? "+\(p.bonus1)" : "—", valueColor: p.bonus1 > 0 ? .blue : .secondary)
-                                if p.gain >= 1 {
-                                    Divider()
-                                    statRow(label: "Recave(s)", value: p.recave > 0 ? "\(p.recave)" : "—", valueColor: p.recave > 0 ? .orange : .secondary)
-                                    Divider()
-                                    statRow(label: "Bounty", value: p.bounty > 0 ? "\(p.bounty)" : "—", valueColor: p.bounty > 0 ? Color(red: 0.6, green: 0.2, blue: 0.8) : .secondary)
-                                    if p.classement > 0 {
-                                        Divider()
-                                        statRow(label: "Classement", value: "#\(p.classement)",
-                                                valueColor: p.classement == 1 ? .yellow : p.classement == 2 ? Color(white: 0.6) : p.classement == 3 ? Color(red: 0.8, green: 0.5, blue: 0.2) : .primary)
-                                        Divider()
-                                        statRow(label: "Gains", value: "\(p.gain)€",
-                                                valueColor: p.gain > 0 ? .green : p.gain < 0 ? .red : .secondary)
+                            HStack {
+                                Text("Inscription")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                                HStack(spacing: 8) {
+                                    Text(p.dateInscription.isEmpty ? "—" : p.dateInscription)
+                                        .font(.subheadline.bold())
+                                        .foregroundColor(.primary)
+                                    if p.bonus1 > 0 {
+                                        Text("(+\(p.bonus1))")
+                                            .font(.subheadline.bold())
+                                            .foregroundColor(.yellow)
                                     }
                                 }
                             }
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 4)
                         }
                         .padding(.horizontal)
                     } else {
