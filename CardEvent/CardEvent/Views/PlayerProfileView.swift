@@ -476,6 +476,7 @@ struct PlayerProfileView: View {
                     nbPodiums:    json["nb_podiums"]    as? Int    ?? 0,
                     totalRecaves: json["total_recaves"] as? Int    ?? 0,
                     meilleurGain: (json["meilleur_gain"] as? Double) ?? Double(json["meilleur_gain"] as? Int ?? 0),
+                    rakeSum: (json["rake_sum"] as? Double) ?? Double(json["rake_sum"] as? Int ?? 0),
                     tauxVictoire: (json["taux_victoire"] as? Double) ?? 0,
                     tauxPodium:   (json["taux_podium"]   as? Double) ?? 0
                 )
