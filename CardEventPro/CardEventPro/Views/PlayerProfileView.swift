@@ -208,16 +208,16 @@ struct PlayerProfileView: View {
                             .buttonStyle(.plain)
 
                             // Link to activities that contributed rake
-                            if let s = stats {
+                            if stats != nil {
                                 NavigationLink {
-                                    PlayerActivitiesRakeView(pseudo: pseudo, memberId: s.memberId)
+                                    PlayerActivitiesRakeView(pseudo: pseudo, memberId: memberId)
                                 } label: {
                                     HStack {
                                         Text("Activités — Rake")
                                             .font(.subheadline)
                                             .foregroundColor(.secondary)
                                         Spacer()
-                                        Text(formatEur(Double(s.rakeSum)))
+                                        Text(formatEur(stats?.rakeSum ?? 0))
                                             .font(.subheadline.bold())
                                             .foregroundColor(Color(red: 1.0, green: 0.302, blue: 0.302))
                                             .underline()
