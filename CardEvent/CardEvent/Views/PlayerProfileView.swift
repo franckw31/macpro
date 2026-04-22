@@ -136,14 +136,6 @@ struct PlayerProfileView: View {
 
                         // Stats de la partie en cours — single-line Inscription + bonus
                         GroupBox(activityTitle.isEmpty ? "Partie en cours" : activityTitle) {
-                        }
-                        .padding(.horizontal)
-                        .background(
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .fill(Color(red: 0.06, green: 0.09, blue: 0.11))
-                                .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).stroke(Color.white.opacity(0.03), lineWidth: 1))
-                        )
-                        .shadow(color: Color.black.opacity(0.35), radius: 6, x: 0, y: 4)
                             HStack {
                                 Text("Inscription")
                                     .font(.subheadline)
@@ -164,6 +156,12 @@ struct PlayerProfileView: View {
                             .padding(.horizontal, 4)
                         }
                         .padding(.horizontal)
+                        .background(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .fill(Color(red: 0.06, green: 0.09, blue: 0.11))
+                                .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).stroke(Color.white.opacity(0.03), lineWidth: 1))
+                        )
+                        .shadow(color: Color.black.opacity(0.35), radius: 6, x: 0, y: 4)
                     } else {
                         Text("Pas encore inscrit à cette activité")
                             .font(.subheadline)
