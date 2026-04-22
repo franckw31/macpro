@@ -13,29 +13,16 @@ private struct PlayerStats {
     let nbPartiesWithGain: Int
     let totalGains: Double
     let nbGains: Int
-    import SwiftUI
-    #if canImport(UIKit)
-    import UIKit
-    #endif
-
-    // MARK: - PlayerStats Model
-
-    private struct PlayerStats {
-        let photoUrl: String
-        let nbParties: Int
-        let nbPartiesWithGain: Int
-        let totalGains: Double
-        let nbGains: Int
-        let totalBuyins: Double
-        let netResult: Double
-        let nbVictoires: Int
-        let nbPodiums: Int
-        let totalRecaves: Int
-        let meilleurGain: Double
-        let rakeSum: Double
-        let tauxVictoire: Double
-        let tauxPodium: Double
-    }
+    let totalBuyins: Double
+    let netResult: Double
+    let nbVictoires: Int
+    let nbPodiums: Int
+    let totalRecaves: Int
+    let meilleurGain: Double
+    let rakeSum: Double
+    let tauxVictoire: Double
+    let tauxPodium: Double
+}
 
     // TicketsListView is provided as a separate file `TicketsListView.swift`.
 
