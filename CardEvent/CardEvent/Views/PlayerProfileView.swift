@@ -334,12 +334,13 @@ struct PlayerProfileView: View {
                                 Text(memberTickets != nil ? "\(memberTickets!)" : "—")
                                     .font(.subheadline.bold())
                                     .foregroundColor(.primary)
-                                Button("Voir") {
-                                    showMemberTickets = (memberId != nil)
+                                Button(action: { showMemberTickets = (memberId != nil) }) {
+                                    Text("Voir")
+                                        .font(.subheadline)
+                                        .foregroundColor(memberId == nil ? .secondary : .blue)
+                                        .underline()
                                 }
-                                .font(.subheadline)
                                 .disabled(memberId == nil)
-                                .foregroundColor(memberId == nil ? .secondary : .blue)
                             }
                             .padding(.vertical, 8)
                             .padding(.horizontal, 4)
@@ -379,8 +380,9 @@ struct PlayerProfileView: View {
                                         if pseudo == AuthService.shared.pseudo {
                                             Button(action: { pwdNew = ""; pwdConfirm = ""; pwdStatus = nil; showChangePassword = true }) {
                                                 Text("Changer")
+                                                    .font(.subheadline)
                                                     .foregroundColor(.blue)
-                                                    .fontWeight(.heavy)
+                                                    .underline()
                                             }
                                             .buttonStyle(PlainButtonStyle())
                                         }
