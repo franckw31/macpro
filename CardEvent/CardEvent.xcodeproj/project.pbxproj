@@ -247,6 +247,7 @@
 				E5F607182900DD00003D /* PlayersLiveView.swift in Sources */,
 				F607182900EE00004F /* ChallengeRankingView.swift in Sources */,
 				F607182900FF00005F /* PlayerStatsDetailView.swift in Sources */,
+				IMG07182900BB0000AA /* ImagePicker.swift in Sources */,
 				AA07182900BB00007B /* PlayerTrakView.swift in Sources */,
 				CC07182900EE00009D /* TicketsListView.swift in Sources */,
 				BB07182900CC00008C /* HomeView.swift in Sources */,
