@@ -246,9 +246,9 @@ struct PlayerProfileView: View {
                             .buttonStyle(.plain)
 
                             // Link to activities that contributed rake
-                            if let s = stats {
+                            if stats != nil {
                                 NavigationLink {
-                                    PlayerActivitiesRakeView(pseudo: pseudo, memberId: s.memberId)
+                                    PlayerActivitiesRakeView(pseudo: pseudo, memberId: memberId)
                                 } label: {
                                     HStack {
                                         Text("Activités — Rake")
