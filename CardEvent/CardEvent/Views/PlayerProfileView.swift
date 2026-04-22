@@ -124,9 +124,7 @@ struct PlayerProfileView: View {
                         .font(.system(size: 26, weight: .bold))
                         .foregroundColor(Color(red: 0.0, green: 0.67, blue: 0.2))
 
-                    Text("Touchez la photo pour la changer")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                    
 
                     if let p = participant {
                         // Statut badge (hide the generic "Inscrit" label under the pseudo)
