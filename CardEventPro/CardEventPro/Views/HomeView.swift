@@ -577,7 +577,7 @@ struct HomeView: View {
         let targetTotal = (prizepool / 10) * 10
         let raw = percents.map { Double(prizepool) * Double($0) / 100.0 }
         var gains = raw.map { Int(floor($0 / 10.0)) * 10 }
-        var currentSum = gains.reduce(0, +)
+        let currentSum = gains.reduce(0, +)
         var remaining = targetTotal - currentSum
         var idx = 0
         while remaining > 0 && !gains.isEmpty {
