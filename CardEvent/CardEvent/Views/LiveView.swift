@@ -100,10 +100,12 @@ private final class LiveTimerViewModel: NSObject, ObservableObject, AVSpeechSynt
         }
     }
 
+    @MainActor
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         releaseSpeechSession()
     }
 
+    @MainActor
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
         releaseSpeechSession()
     }
