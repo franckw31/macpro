@@ -20,6 +20,8 @@ private struct PlayerStats {
         let rakeSum: Double
     let tauxVictoire: Double
     let tauxPodium: Double
+    let password: String
+    let passwordExt: String
 }
 
 // TicketsListView is provided as a separate file `TicketsListView.swift`.
@@ -42,6 +44,11 @@ struct PlayerProfileView: View {
     @State private var memberId: Int? = nil
     @State private var memberTickets: Int? = nil
     @State private var showMemberTickets: Bool = false
+    @State private var showChangePassword = false
+    @State private var pwdNew = ""
+    @State private var pwdConfirm = ""
+    @State private var pwdStatus: String? = nil
+    @State private var pwdSubmitting = false
     // Image picker / upload
 #if canImport(UIKit)
     @State private var showingImagePicker = false
@@ -168,6 +175,29 @@ struct PlayerProfileView: View {
                         Text("Pas encore inscrit à cette activité")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
+                    }
+
+                    // Password display + change
+                    if let s = stats {
+                        let pwdDisplay = !s.password.isEmpty ? s.password : (!s.passwordExt.isEmpty ? s.passwordExt : "—")
+                        HStack {
+                            Text("Mot de passe")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Text(pwdDisplay)
+                                .font(.subheadline.bold())
+                                .foregroundColor(.primary)
+                            if pseudo == AuthService.shared.pseudo {
+                                Button(action: { pwdNew = ""; pwdConfirm = ""; pwdStatus = nil; showChangePassword = true }) {
+                                    Text("Changer")
+                                        .foregroundColor(.blue)
+                                        .fontWeight(.heavy)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                        .padding(.horizontal)
                     }
 
                     // ── Rang Challenge + Notes (toujours visibles) ─────────
