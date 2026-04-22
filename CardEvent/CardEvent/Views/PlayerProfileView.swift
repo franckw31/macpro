@@ -3,6 +3,16 @@ import SwiftUI
 import UIKit
 #endif
 
+// File-level helper used by embedded views
+fileprivate func formatEur(_ v: Double) -> String {
+    let intVal = Int(round(v))
+    let nf = NumberFormatter()
+    nf.numberStyle = .decimal
+    nf.groupingSeparator = " "
+    nf.locale = Locale(identifier: "fr_FR")
+    return (nf.string(from: NSNumber(value: intVal)) ?? "0") + " €"
+}
+
 // MARK: - PlayerStats Model
 
 private struct PlayerStats {
