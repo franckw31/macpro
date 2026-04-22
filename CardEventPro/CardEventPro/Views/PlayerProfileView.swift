@@ -124,7 +124,8 @@ struct PlayerProfileView: View {
                     .padding(.top, -28)
 
                     Text(pseudo)
-                        .font(.title2.bold())
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundColor(Color(red: 0.086, green: 0.639, blue: 0.29))
 
                     if let p = participant {
                         // Statut badge (hide the generic "Inscrit" label under the pseudo)
