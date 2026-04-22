@@ -364,26 +364,7 @@ struct PlayerProfileView: View {
                             }
                             .buttonStyle(.plain)
 
-                            // Link to activities that contributed rake
-                            if stats != nil {
-                                NavigationLink {
-                                    PlayerActivitiesRakeView(pseudo: pseudo, memberId: memberId)
-                                } label: {
-                                    HStack {
-                                        Text("Activités — Rake")
-                                            .font(.subheadline)
-                                            .foregroundColor(.secondary)
-                                        Spacer()
-                                        Text(formatEur(stats?.rakeSum ?? 0))
-                                            .font(.subheadline.bold())
-                                            .foregroundColor(Color(red: 1.0, green: 0.302, blue: 0.302))
-                                            .underline()
-                                    }
-                                    .padding(.vertical, 8)
-                                    .padding(.horizontal, 4)
-                                }
-                                .buttonStyle(.plain)
-                            }
+                            // Rake link removed here — the rake sum at the end of the stats section is the clickable target now
 
                                 if let s = stats {
                                     let pwdDisplay = !s.password.isEmpty ? s.password : (!s.passwordExt.isEmpty ? s.passwordExt : "—")
