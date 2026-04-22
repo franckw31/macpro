@@ -485,7 +485,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             </button>
             <div class="profile-identity-text">
                 <div class="name"><span style="color:#16a34a"><?php echo htmlspecialchars($user['pseudo']); ?></span></div>
-                <div class="avatar-hint">Touchez la photo pour la changer</div>
+                
             </div>
         </div>
         <div id="avatarCropModal" class="avatar-modal" aria-hidden="true">
