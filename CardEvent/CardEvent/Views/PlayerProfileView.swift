@@ -85,9 +85,10 @@ struct PlayerProfileView: View {
                                     Circle()
                                         .fill(Color.black)
                                         .frame(width: 44, height: 44)
-                                    Image(systemName: "camera.fill")
+                                    Image(systemName: "camera")
                                         .foregroundColor(.white)
                                         .font(.system(size: 18, weight: .semibold))
+                                        .symbolRenderingMode(.hierarchical)
                                 }
                                 .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 2)
                             }
