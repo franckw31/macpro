@@ -519,8 +519,8 @@ struct PlayerProfileView: View {
         } catch {
             await MainActor.run { uploadMessage = "Erreur réseau" }
         }
-#endif
     }
+#endif
 
     private var initialsCircle: some View {
         ZStack {
