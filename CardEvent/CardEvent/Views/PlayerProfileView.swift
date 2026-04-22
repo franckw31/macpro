@@ -37,6 +37,11 @@ struct PlayerProfileView: View {
     @State private var memberId: Int? = nil
     @State private var memberTickets: Int? = nil
     @State private var showMemberTickets: Bool = false
+    // Image picker / upload
+    @State private var showingImagePicker = false
+    @State private var inputImage: UIImage? = nil
+    @State private var isUploading = false
+    @State private var uploadMessage: String? = nil
 
     var body: some View {
         NavigationView {
@@ -63,7 +68,36 @@ struct PlayerProfileView: View {
                         } else {
                             initialsCircle
                         }
+                        // Edit overlay when it's the current user
+                        if pseudo == AuthService.shared.pseudo {
+                            VStack {
+                                Spacer()
+                                HStack {
+                                    Spacer()
+                                    Button(action: { showingImagePicker = true }) {
+                                        Image(systemName: "pencil.circle.fill")
+                                            .resizable()
+                                            .frame(width: 32, height: 32)
+                                            .foregroundColor(.blue)
+                                            .background(Circle().fill(Color.white).frame(width: 36, height: 36))
+                                    }
+                                    .padding(.trailing, 4)
+                                }
+                            }
+                        }
                     }
+                    .sheet(isPresented: $showingImagePicker, onDismiss: {
+                        if let _ = inputImage {
+                            Task { await uploadSelectedImage() }
+                        }
+                    }) {
+                        ImagePicker(image: $inputImage)
+                    }
+                    .overlay(Group {
+                        if isUploading {
+                            ProgressView().padding(8).background(Color(.systemBackground)).cornerRadius(8)
+                        }
+                    })
                     .padding(.top, 20)
 
                     Text(pseudo)
