@@ -504,6 +504,13 @@ struct PlayerProfileView: View {
         if let token = AuthService.shared.token { req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") }
 
         var body = Data()
+        // include token as form field (fallback for servers that don't receive Authorization header)
+        if let token = AuthService.shared.token {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"token\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(token)\r\n".data(using: .utf8)!)
+        }
+
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
         body.append("Content-Disposition: form-data; name=\"file\"; filename=\"avatar.jpg\"\r\n".data(using: .utf8)!)
         body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
