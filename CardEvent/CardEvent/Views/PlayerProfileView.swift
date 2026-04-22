@@ -95,20 +95,28 @@ struct PlayerProfileView: View {
                             }
                         }
                     }
-#if canImport(UIKit)
                     .sheet(isPresented: $showingImagePicker, onDismiss: {
+                        #if canImport(UIKit)
                         if let _ = inputImage {
                             Task { await uploadSelectedImage() }
                         }
+                        #endif
                     }) {
+                        #if canImport(UIKit)
                         ImagePicker(image: $inputImage)
+                        #else
+                        EmptyView()
+                        #endif
                     }
                     .overlay(Group {
                         if isUploading {
+                            #if canImport(UIKit)
                             ProgressView().padding(8).background(Color(UIColor.systemBackground)).cornerRadius(8)
+                            #else
+                            ProgressView().padding(8).background(Color.clear).cornerRadius(8)
+                            #endif
                         }
                     })
-#endif
                     .padding(.top, 20)
 
                     Text(pseudo)
