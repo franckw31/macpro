@@ -480,6 +480,7 @@ struct PlayerProfileView: View {
 
     // MARK: - Image upload
 
+#if canImport(UIKit)
     private func uploadSelectedImage() async {
         guard let img = inputImage else { return }
         guard let data = img.jpegData(compressionQuality: 0.7) else { return }
@@ -518,6 +519,7 @@ struct PlayerProfileView: View {
         } catch {
             await MainActor.run { uploadMessage = "Erreur réseau" }
         }
+#endif
     }
 
     private var initialsCircle: some View {
