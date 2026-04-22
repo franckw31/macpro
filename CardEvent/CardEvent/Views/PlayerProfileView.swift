@@ -362,26 +362,17 @@ struct PlayerProfileView: View {
 
                     if s.meilleurGain > 0 {
                         Divider()
-                        NavigationLink {
-                            PlayerStatsDetailView(pseudo: pseudo, type: "meilleur_gain", navTitle: "Meilleur gain")
-                        } label: {
-                            HStack {
-                                Text("Meilleur gain")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                Text(formatEur(s.meilleurGain))
-                                    .font(.subheadline.bold())
-                                    .foregroundColor(.green)
-                                Text("Détail")
-                                    .font(.subheadline)
-                                    .foregroundColor(.blue)
-                                    .underline()
-                            }
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 4)
+                        HStack {
+                            Text("Meilleur gain")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Text(formatEur(s.meilleurGain))
+                                .font(.subheadline.bold())
+                                .foregroundColor(.green)
                         }
-                        .buttonStyle(.plain)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 4)
                     }
                 }
             } else if let err = statsError {
