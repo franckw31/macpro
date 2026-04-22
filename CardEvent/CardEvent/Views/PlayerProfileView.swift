@@ -135,27 +135,26 @@ struct PlayerProfileView: View {
                             statutBadge(p.statut)
                         }
 
-                        // Stats de la partie en cours
+                        // Stats de la partie en cours — single-line Inscription + bonus
                         GroupBox(activityTitle.isEmpty ? "Partie en cours" : activityTitle) {
-                            VStack(spacing: 0) {
-                                statRow(label: "Inscription", value: p.dateInscription.isEmpty ? "—" : p.dateInscription)
-                                Divider()
-                                statRow(label: "Bonus inscription", value: p.bonus1 > 0 ? "+\(p.bonus1)" : "—", valueColor: p.bonus1 > 0 ? .blue : .secondary)
-                                if p.gain >= 1 {
-                                    Divider()
-                                    statRow(label: "Recave(s)", value: p.recave > 0 ? "\(p.recave)" : "—", valueColor: p.recave > 0 ? .orange : .secondary)
-                                    Divider()
-                                    statRow(label: "Bounty", value: p.bounty > 0 ? "\(p.bounty)" : "—", valueColor: p.bounty > 0 ? Color(red: 0.6, green: 0.2, blue: 0.8) : .secondary)
-                                    if p.classement > 0 {
-                                        Divider()
-                                        statRow(label: "Classement", value: "#\(p.classement)",
-                                                valueColor: p.classement == 1 ? .yellow : p.classement == 2 ? Color(white: 0.6) : p.classement == 3 ? Color(red: 0.8, green: 0.5, blue: 0.2) : .primary)
-                                        Divider()
-                                        statRow(label: "Gains", value: "\(p.gain)€",
-                                                valueColor: p.gain > 0 ? .green : p.gain < 0 ? .red : .secondary)
+                            HStack {
+                                Text("Inscription")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                                HStack(spacing: 8) {
+                                    Text(p.dateInscription.isEmpty ? "—" : p.dateInscription)
+                                        .font(.subheadline.bold())
+                                        .foregroundColor(.primary)
+                                    if p.bonus1 > 0 {
+                                        Text("(+\(p.bonus1))")
+                                            .font(.subheadline.bold())
+                                            .foregroundColor(.yellow)
                                     }
                                 }
                             }
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 4)
                         }
                         .padding(.horizontal)
                     } else {
