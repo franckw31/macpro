@@ -58,7 +58,7 @@ struct PlayerProfileView: View {
                 VStack(spacing: 20) {
 
                     // Avatar
-                    ZStack {
+                    ZStack(alignment: .center) {
                         if let s = stats, !s.photoUrl.isEmpty, let url = URL(string: s.photoUrl) {
                             AsyncImage(url: url) { phase in
                                 switch phase {
@@ -66,7 +66,7 @@ struct PlayerProfileView: View {
                                     image
                                         .resizable()
                                         .scaledToFill()
-                                        .frame(width: 90, height: 90)
+                                        .frame(width: 140, height: 140)
                                         .clipShape(Circle())
                                 case .failure, .empty:
                                     initialsCircle
@@ -77,22 +77,22 @@ struct PlayerProfileView: View {
                         } else {
                             initialsCircle
                         }
-                        // Edit overlay when it's the current user
+
+                        // Edit overlay when it's the current user: black camera circle overlapping lower-right
                         if pseudo == AuthService.shared.pseudo {
-                            VStack {
-                                Spacer()
-                                HStack {
-                                    Spacer()
-                                    Button(action: { showingImagePicker = true }) {
-                                        Image(systemName: "pencil.circle.fill")
-                                            .resizable()
-                                            .frame(width: 32, height: 32)
-                                            .foregroundColor(.blue)
-                                            .background(Circle().fill(Color.white).frame(width: 34, height: 34))
-                                    }
-                                    .offset(x: -6, y: -6)
+                            Button(action: { showingImagePicker = true }) {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.black)
+                                        .frame(width: 44, height: 44)
+                                    Image(systemName: "camera.fill")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 18, weight: .semibold))
                                 }
+                                .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 2)
                             }
+                            .buttonStyle(PlainButtonStyle())
+                            .offset(x: 52, y: 40)
                         }
                     }
                     .sheet(isPresented: $showingImagePicker, onDismiss: {
@@ -120,7 +120,12 @@ struct PlayerProfileView: View {
                     .padding(.top, 20)
 
                     Text(pseudo)
-                        .font(.title2.bold())
+                        .font(.system(size: 26, weight: .bold))
+                        .foregroundColor(Color(red: 0.0, green: 0.67, blue: 0.2))
+
+                    Text("Touchez la photo pour la changer")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
 
                     if let p = participant {
                         // Statut badge (hide the generic "Inscrit" label under the pseudo)
