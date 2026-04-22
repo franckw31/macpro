@@ -171,7 +171,7 @@ struct ActivityInfoView: View {
                         Text("Info Partie")
                             .font(.headline)
                         Spacer()
-                        if let info = viewModel.activityInfo {
+                        if viewModel.activityInfo != nil {
                             Button(action: { showMovements = true }) {
                                 HStack(spacing: 4) {
                                     Image(systemName: "arrow.up.arrow.down")
