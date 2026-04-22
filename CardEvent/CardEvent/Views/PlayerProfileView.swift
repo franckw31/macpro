@@ -18,7 +18,7 @@ import UIKit
                                 PlayerStatsDetailView(pseudo: pseudo, type: "rake", navTitle: "Rake")
                             } label: {
                                 HStack(spacing: 6) {
-                                    Text("\u{2211}\u00A0Rake :")
+                                    Text("\u{2211} Rake :")
                                         .font(.subheadline)
                                         .foregroundColor(.white)
                                         .fontWeight(.heavy)
