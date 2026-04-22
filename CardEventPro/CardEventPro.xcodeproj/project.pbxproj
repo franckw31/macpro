@@ -68,7 +68,7 @@
 		PRO000100B001A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		PRO000100B001B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		PRO000100B001C /* CardEventPro.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CardEventPro.entitlements; sourceTree = "<group>"; };
-		PRO000100B001E /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ImagePicker.swift; sourceTree = "<group>"; };
+		PRO000100B001E /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
