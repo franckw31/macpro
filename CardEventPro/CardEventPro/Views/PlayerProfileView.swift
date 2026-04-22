@@ -352,10 +352,10 @@ struct PlayerProfileView: View {
                         Divider().frame(height: 62)
                         linkedStatTile(
                             title: "ITM",
-                            value: "\(s.nbPodiums)",
-                            sub: s.tauxPodium > 0 ? "\(s.tauxPodium) %" : "—",
+                            value: "\(s.nbGains)",
+                            sub: s.nbParties > 0 ? String(format: "%.1f%%", (Double(s.nbGains) / Double(s.nbParties)) * 100.0) : "—",
                             color: Color(red: 0.8, green: 0.5, blue: 0.2),
-                            type: "podiums"
+                            type: "gains"
                         )
                         Divider().frame(height: 62)
                         linkedStatTile(
