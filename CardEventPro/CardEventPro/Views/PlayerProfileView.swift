@@ -424,31 +424,27 @@ struct PlayerProfileView: View {
     }
 
     private func linkedStatTile(title: String, value: String, sub: String, color: Color, type: String) -> some View {
-        NavigationLink {
-            PlayerStatsDetailView(pseudo: pseudo, type: type, navTitle: title)
-        } label: {
-            VStack(spacing: 3) {
-                Text(title)
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-                    .textCase(.uppercase)
-                    .tracking(1)
+        VStack(spacing: 3) {
+            Text(title)
+                .font(.caption2)
+                .foregroundColor(.secondary)
+                .textCase(.uppercase)
+                .tracking(1)
+            NavigationLink {
+                PlayerStatsDetailView(pseudo: pseudo, type: type, navTitle: title)
+            } label: {
                 Text(value)
                     .font(.system(.subheadline, design: .rounded).bold())
-                    .foregroundColor(color)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                Text(sub)
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-                Text("Détail")
-                    .font(.caption2)
                     .foregroundColor(.blue)
                     .underline()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
             }
-            .frame(maxWidth: .infinity)
+            Text(sub)
+                .font(.caption2)
+                .foregroundColor(.secondary)
         }
-        .buttonStyle(.plain)
+        .frame(maxWidth: .infinity)
     }
 
     private func formatEur(_ v: Double) -> String {
