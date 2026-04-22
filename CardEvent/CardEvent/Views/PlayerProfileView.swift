@@ -418,7 +418,7 @@ struct PlayerProfileView: View {
                 Text(value)
                     .font(.system(.subheadline, design: .rounded).bold())
                     .foregroundColor(color)
-                    .underline(true, Color(red: 0.0314, green: 0.6902, blue: 1.0)) // blue underline (#08b0ff)
+                    .underline(true, color: Color(red: 0.0314, green: 0.6902, blue: 1.0)) // blue underline (#08b0ff)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
