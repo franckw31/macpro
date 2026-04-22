@@ -66,7 +66,7 @@ struct PlayerProfileView: View {
                                     image
                                         .resizable()
                                         .scaledToFill()
-                                        .frame(width: 140, height: 140)
+                                        .frame(width: 150, height: 150)
                                         .clipShape(Circle())
                                 case .failure, .empty:
                                     initialsCircle
@@ -84,16 +84,17 @@ struct PlayerProfileView: View {
                                 ZStack {
                                     Circle()
                                         .fill(Color.black)
-                                        .frame(width: 44, height: 44)
+                                        .frame(width: 36, height: 36)
+                                        .overlay(Circle().stroke(Color(.systemBackground).opacity(0.15), lineWidth: 2))
                                     Image(systemName: "camera")
                                         .foregroundColor(.white)
-                                        .font(.system(size: 18, weight: .semibold))
+                                        .font(.system(size: 16, weight: .semibold))
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 2)
                             }
                             .buttonStyle(PlainButtonStyle())
-                            .offset(x: 60, y: 48)
+                            .offset(x: 56, y: 52)
                         }
                     }
                     .sheet(isPresented: $showingImagePicker, onDismiss: {
