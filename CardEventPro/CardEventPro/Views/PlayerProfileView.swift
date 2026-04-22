@@ -317,7 +317,7 @@ struct PlayerProfileView: View {
                             title: "Buy-ins",
                             value: formatEur(s.totalBuyins),
                             sub: "\(s.nbParties) parties",
-                            color: .secondary,
+                            color: Color(red: 0.6039, green: 0.6509, blue: 0.6941), // #9aa6b1
                             type: "buyins"
                         )
                         Divider().frame(height: 62)
@@ -325,7 +325,7 @@ struct PlayerProfileView: View {
                             title: "Gains",
                             value: formatEur(s.totalGains),
                             sub: "\(s.nbGains) Gains",
-                            color: s.totalGains >= 0 ? .green : .red,
+                            color: s.totalGains >= 0 ? Color(red: 0.0863, green: 0.6392, blue: 0.2902) : Color(red: 1, green: 0.302, blue: 0.302), // green / red
                             type: "gains"
                         )
                         Divider().frame(height: 62)
@@ -346,7 +346,7 @@ struct PlayerProfileView: View {
                             title: "Victoires",
                             value: "\(s.nbVictoires)",
                             sub: s.tauxVictoire > 0 ? "\(s.tauxVictoire) %" : "—",
-                            color: .yellow,
+                            color: Color(red: 1.0, green: 0.8196, blue: 0.0), // #ffd100
                             type: "victoires"
                         )
                         Divider().frame(height: 62)
@@ -354,7 +354,7 @@ struct PlayerProfileView: View {
                             title: "ITM",
                             value: "\(s.nbGains)",
                             sub: s.nbParties > 0 ? String(format: "%.1f%%", (Double(s.nbGains) / Double(s.nbParties)) * 100.0) : "—",
-                            color: Color(red: 0.8, green: 0.5, blue: 0.2),
+                            color: Color(red: 1.0, green: 0.6157, blue: 0.2314), // #ff9d3b
                             type: "gains"
                         )
                         Divider().frame(height: 62)
@@ -362,7 +362,7 @@ struct PlayerProfileView: View {
                             title: "Recaves",
                             value: "\(s.totalRecaves)",
                             sub: s.nbParties > 0 ? String(format: "%.1f%%", (Double(s.totalRecaves) / Double(s.nbParties)) * 100.0) : "—",
-                            color: .orange,
+                            color: Color(red: 0.0314, green: 0.6902, blue: 1.0), // #08b0ff
                             type: "recaves"
                         )
                     }
