@@ -582,9 +582,9 @@ struct PlayerProfileView: View {
 
                             Spacer()
 
-                            // Rake sum on the right, linked
+                            // Rake sum on the right, linked to activities list
                             NavigationLink {
-                                PlayerStatsDetailView(pseudo: pseudo, type: "rake", navTitle: "Rake")
+                                PlayerActivitiesRakeView(pseudo: pseudo, memberId: memberId)
                             } label: {
                                 HStack(spacing: 6) {
                                     Text("\u{2211} Rake :")
