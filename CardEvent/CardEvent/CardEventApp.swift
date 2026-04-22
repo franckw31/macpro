@@ -63,6 +63,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 #endif
 
 @MainActor
+@MainActor
 private final class WelcomeSpeaker: NSObject, AVSpeechSynthesizerDelegate {
     private let speechSynthesizer = AVSpeechSynthesizer()
 
