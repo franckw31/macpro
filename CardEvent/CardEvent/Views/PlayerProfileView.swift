@@ -119,11 +119,11 @@ struct PlayerProfileView: View {
                             #endif
                         }
                     })
-                    .padding(.top, -12)
+                    .padding(.top, -28)
 
                     Text(pseudo)
-                        .font(.system(size: 26, weight: .bold))
-                        .foregroundColor(Color(red: 0.0, green: 0.67, blue: 0.2))
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundColor(Color(red: 0.086, green: 0.639, blue: 0.29))
 
                     
 
