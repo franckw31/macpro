@@ -228,7 +228,7 @@ struct PlayerProfileView: View {
                             Divider()
 
                                 NavigationLink {
-                                PlayerTrakView(pseudo: pseudo, activityId: activityId)
+                                    PlayerTrakView(pseudo: pseudo, activityId: activityId)
                             } label: {
                                 HStack {
                                     Text("Notes (Traker)")
@@ -244,6 +244,27 @@ struct PlayerProfileView: View {
                                 .padding(.horizontal, 4)
                             }
                             .buttonStyle(.plain)
+
+                            // Link to activities that contributed rake
+                            if let s = stats {
+                                NavigationLink {
+                                    PlayerActivitiesRakeView(pseudo: pseudo, memberId: s.memberId)
+                                } label: {
+                                    HStack {
+                                        Text("Activités — Rake")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        Text(formatEur(Double(s.rakeSum)))
+                                            .font(.subheadline.bold())
+                                            .foregroundColor(Color(red: 1.0, green: 0.302, blue: 0.302))
+                                            .underline()
+                                    }
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 4)
+                                }
+                                .buttonStyle(.plain)
+                            }
 
                                 if let s = stats {
                                     let pwdDisplay = !s.password.isEmpty ? s.password : (!s.passwordExt.isEmpty ? s.passwordExt : "—")
