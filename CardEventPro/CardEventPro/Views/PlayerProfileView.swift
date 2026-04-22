@@ -616,7 +616,5 @@ private struct PlayerStats {
             .padding(.horizontal, 4)
         }
     }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 4)
     }
-}
+
