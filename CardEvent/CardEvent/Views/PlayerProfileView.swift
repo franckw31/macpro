@@ -308,7 +308,7 @@ struct PlayerProfileView: View {
                         linkedStatTile(
                             title: "Buy-ins",
                             value: formatEur(s.totalBuyins),
-                            sub: "\(s.nbParties) partie" + (s.nbParties > 1 ? "s" : ""),
+                            sub: "\(s.nbParties) parties",
                             color: .secondary,
                             type: "buyins"
                         )
@@ -316,7 +316,7 @@ struct PlayerProfileView: View {
                         linkedStatTile(
                             title: "Gains",
                             value: formatEur(s.totalGains),
-                            sub: "\(s.nbGains) fois",
+                            sub: "\(s.nbGains) Gains",
                             color: s.totalGains >= 0 ? .green : .red,
                             type: "gains"
                         )
@@ -324,7 +324,7 @@ struct PlayerProfileView: View {
                         statTile(
                             title: "Net",
                             value: (s.netResult >= 0 ? "+" : "") + formatEur(s.netResult),
-                            sub: s.netResult >= 0 ? "✓" : "✗",
+                            sub: "BRUT",
                             color: s.netResult >= 0 ? .green : .red
                         )
                     }
@@ -343,7 +343,7 @@ struct PlayerProfileView: View {
                         )
                         Divider().frame(height: 62)
                         linkedStatTile(
-                            title: "Podiums",
+                            title: "ITM",
                             value: "\(s.nbPodiums)",
                             sub: s.tauxPodium > 0 ? "\(s.tauxPodium) %" : "—",
                             color: Color(red: 0.8, green: 0.5, blue: 0.2),
@@ -353,7 +353,7 @@ struct PlayerProfileView: View {
                         linkedStatTile(
                             title: "Recaves",
                             value: "\(s.totalRecaves)",
-                            sub: s.nbParties > 0 ? String(format: "%.1f/partie", Double(s.totalRecaves) / Double(s.nbParties)) : "—",
+                            sub: s.nbParties > 0 ? String(format: "%.1f%%", (Double(s.totalRecaves) / Double(s.nbParties)) * 100.0) : "—",
                             color: .orange,
                             type: "recaves"
                         )
