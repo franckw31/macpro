@@ -69,7 +69,7 @@ struct PlayerProfileView: View {
                                     image
                                         .resizable()
                                         .scaledToFill()
-                                        .frame(width: 130, height: 130)
+                                        .frame(width: 150, height: 150)
                                         .clipShape(Circle())
                                 case .failure, .empty:
                                     initialsCircle
