@@ -88,9 +88,9 @@ struct PlayerProfileView: View {
                                             .resizable()
                                             .frame(width: 32, height: 32)
                                             .foregroundColor(.blue)
-                                            .background(Circle().fill(Color.white).frame(width: 36, height: 36))
+                                            .background(Circle().fill(Color.white).frame(width: 34, height: 34))
                                     }
-                                    .padding(.trailing, 4)
+                                    .offset(x: -6, y: -6)
                                 }
                             }
                         }
