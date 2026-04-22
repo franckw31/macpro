@@ -120,8 +120,8 @@ struct PlayerActivitiesRakeView: View {
             let root = try JSONDecoder().decode(ActivitiesRakeResponse.self, from: data)
             if p == 1 { activities = root.rake_contrib } else { activities.append(contentsOf: root.rake_contrib) }
             page = p
-        } catch {
-            error = error.localizedDescription
+        } catch let loadErr {
+            error = loadErr.localizedDescription
         }
     }
 }
@@ -659,16 +659,7 @@ struct PlayerProfileView: View {
         .frame(maxWidth: .infinity)
     }
 
-    private func formatEur(_ v: Double) -> String {
-        let absV = abs(v)
-        let formatted: String
-        if absV >= 1000 {
-            formatted = String(format: "%.0f €", v)
-        } else {
-            formatted = String(format: "%.0f €", v)
-        }
-        return formatted
-    }
+    
 
     // MARK: - Load Stats
 
