@@ -111,6 +111,7 @@ try {
         'nb_parties'    => $nbParties,
         'nb_parties_with_gain' => $nbPartiesWithGain,
         'total_gains'   => $totalGains,
+        'rake_sum'      => $rake_sum,
         'nb_gains'      => $nbGains,
         'total_buyins'  => $totalBuyins,
         'net_result'    => $netResult,
