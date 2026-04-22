@@ -3,6 +3,27 @@ import SwiftUI
 import UIKit
 #endif
 
+// MARK: - PlayerStats Model
+
+private struct PlayerStats {
+    let photoUrl: String
+    let nbParties: Int
+    let nbPartiesWithGain: Int
+    let totalGains: Double
+    let nbGains: Int
+    let totalBuyins: Double
+    let netResult: Double
+    let nbVictoires: Int
+    let nbPodiums: Int
+    let totalRecaves: Int
+    let meilleurGain: Double
+    let rakeSum: Double
+    let tauxVictoire: Double
+    let tauxPodium: Double
+    let password: String
+    let passwordExt: String
+}
+
 // removed Safari wrapper — Tickets are shown in-app via TicketsListView
 
 // MARK: - PlayerProfileView
