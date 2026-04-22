@@ -35,6 +35,7 @@ try {
     $stmtStats = $pdo->prepare("
         SELECT
             COUNT(*)                                                                                           AS nb_parties,
+            SUM(CASE WHEN COALESCE(p.gain,0) <> 0 THEN 1 ELSE 0 END)                                         AS nb_parties_with_gain,
             COALESCE(SUM(p.gain), 0)                                                                          AS total_gains,
             SUM(CASE WHEN p.gain > 0 THEN 1 ELSE 0 END)                                                      AS nb_gains,
             SUM(
@@ -55,6 +56,7 @@ try {
     $stats = $stmtStats->fetch();
 
     $nbParties    = (int)$stats['nb_parties'];
+    $nbPartiesWithGain = isset($stats['nb_parties_with_gain']) ? (int)$stats['nb_parties_with_gain'] : $nbParties;
     $totalGains   = (float)$stats['total_gains'];
     $nbGains      = (int)$stats['nb_gains'];
     $totalBuyins  = (float)$stats['total_buyins'];
@@ -107,6 +109,7 @@ try {
         'pseudo'        => $pseudo,
         'photo_url'     => 'https://viendez.com/images/faces/' . $photo,
         'nb_parties'    => $nbParties,
+        'nb_parties_with_gain' => $nbPartiesWithGain,
         'total_gains'   => $totalGains,
         'nb_gains'      => $nbGains,
         'total_buyins'  => $totalBuyins,
