@@ -201,7 +201,7 @@ struct PlayerProfileView: View {
                                     .font(.subheadline.bold())
                                     .foregroundColor(.primary)
                                 Button("Voir") {
-                                    if let mid = memberId {
+                                    if memberId != nil {
                                         showMemberTickets = true
                                     }
                                 }
