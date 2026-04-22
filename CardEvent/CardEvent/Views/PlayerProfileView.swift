@@ -1,31 +1,35 @@
 import SwiftUI
 #if canImport(UIKit)
 import UIKit
-#endif
+                        HStack {
+                            Text("Meilleur gain")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
 
-// MARK: - PlayerStats Model
+                            Text(formatEur(s.meilleurGain))
+                                .font(.subheadline.bold())
+                                .foregroundColor(.green)
+                                .padding(.leading, 8)
 
-private struct PlayerStats {
-    let photoUrl: String
-    let nbParties: Int
-    let nbPartiesWithGain: Int
-    let totalGains: Double
-    let nbGains: Int
-    let totalBuyins: Double
-    let netResult: Double
-    let nbVictoires: Int
-    let nbPodiums: Int
-    let totalRecaves: Int
-    let meilleurGain: Double
-        let rakeSum: Double
-    let tauxVictoire: Double
-    let tauxPodium: Double
-    let password: String
-    let passwordExt: String
-}
+                            Spacer()
 
-// TicketsListView is provided as a separate file `TicketsListView.swift`.
-
+                            // Rake sum on the right, linked
+                            NavigationLink {
+                                PlayerStatsDetailView(pseudo: pseudo, type: "rake", navTitle: "Rake")
+                            } label: {
+                                HStack(spacing: 6) {
+                                    Text("\u{2211}\u00A0Rake :")
+                                        .font(.subheadline)
+                                        .foregroundColor(.white)
+                                        .fontWeight(.heavy)
+                                    Text(formatEur(s.rakeSum))
+                                        .font(.subheadline.bold())
+                                        .foregroundColor(Color(red: 1.0, green: 0.302, blue: 0.302))
+                                        .underline(true, color: Color(red: 0.0314, green: 0.6902, blue: 1.0))
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
 
 // removed Safari wrapper — Tickets are shown in-app via TicketsListView
 
