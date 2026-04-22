@@ -101,8 +101,8 @@ struct PlayerProfileView: View {
                         #if canImport(UIKit)
                         if let _ = inputImage {
                             Task { await uploadSelectedImage() }
-                        })
-                        .overlay(Group {
+                        }
+                        #endif
                     }) {
                         #if canImport(UIKit)
                         ImagePicker(image: $inputImage)
