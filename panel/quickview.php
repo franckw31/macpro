@@ -926,7 +926,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						// Server-side fallback: render podium entries if any players have a positive gain
 						if (!empty($con) && !empty($serverActivity) && !empty($serverActivity['id'])) {
 							$aid = intval($serverActivity['id']);
-							$podq = mysqli_query($con, "SELECT COALESCE(p.classement,999) AS classement, COALESCE(p.gain,0) AS gain, COALESCE(p.`nom-membre`, m.pseudo) AS pseudo FROM participation p JOIN membres m ON p.`id-membre` = m.`id-membre` WHERE p.`id-activite` = '". $aid ."' AND COALESCE(p.gain,0) > 0 ORDER BY classement ASC, gain DESC LIMIT 9");
+							$podq = mysqli_query($con, "SELECT COALESCE(p.classement,999) AS classement, COALESCE(p.gain,0) AS gain, COALESCE(p.`nom-membre`, m.pseudo) AS pseudo FROM participation p JOIN membres m ON p.`id-membre` = m.`id-membre` WHERE p.`id-activite` = '". $aid ."' AND COALESCE(p.gain,0) > 0 ORDER BY classement ASC, gain DESC LIMIT 20");
 							if ($podq && mysqli_num_rows($podq) > 0) {
 								while ($prow = mysqli_fetch_assoc($podq)) {
 									$ps = htmlspecialchars($prow['pseudo']);
