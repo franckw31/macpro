@@ -1829,67 +1829,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 														<span style="color:#ccc;font-size:0.9em;margin-left:8px;">(Met à jour `jetons` et recalcul `jetons_total`)</span>
 														</form>
 														<script>
-														// Confirmation avant assignation globale
-														document.querySelector('.assign-jetons-form').addEventListener('submit', function(e) {
-															// Determine which button triggered the submit (modern browsers expose e.submitter)
-															var submitter = (typeof e.submitter !== 'undefined') ? e.submitter : document.activeElement;
-															// If undo button triggered, skip assign confirmation
-															if (submitter && submitter.name === 'undo_assign_jetons') return;
-															var v = document.getElementById('assign_all_jetons_input').value;
-															if (!v || parseInt(v,10) < 0) { e.preventDefault(); alert('Veuillez saisir un nombre de jetons valide.'); return; }
-															if (!confirm('Affecter ' + v + ' jetons à TOUS les participants ?')) { e.preventDefault(); }
-														});
-
-														function confirmUndo() {
-															return confirm('Annuler la dernière affectation de jetons pour cette activité ?');
-														}
-
-														// Update bonus arrivee inline via AJAX
-														document.addEventListener('change', function(e) {
-															var target = e.target;
-															if (!target || !target.classList) return;
-															if (target.classList.contains('bonus-arrivee-input')) {
-																var memberId = target.getAttribute('data-member-id');
-																var activityId = target.getAttribute('data-activity-id');
-																var value = parseInt(target.value || '0', 10);
-																var statusSpan = target.nextElementSibling;
-																if (statusSpan) { statusSpan.textContent = '…'; statusSpan.style.color = '#999'; statusSpan.style.display = 'inline-block'; }
-																var formData = new FormData();
-																formData.append('id_membre', memberId);
-																formData.append('id_activite', activityId);
-																formData.append('field', 'jetons_bonus_arrivee');
-																formData.append('value', value);
-																fetch('update_field.php', {
-																	method: 'POST',
-																	body: formData,
-																	credentials: 'same-origin'
-																}).then(function(resp){ return resp.json(); }).then(function(json){
-																	if (json && json.success) {
-																		if (statusSpan) { statusSpan.textContent = '✓'; statusSpan.style.color = 'green'; setTimeout(function(){ statusSpan.style.display = 'none'; }, 1200); }
-																	} else {
-																		if (statusSpan) { statusSpan.textContent = 'Erreur'; statusSpan.style.color = 'red'; }
-																		console.error('update error', json);
-																	}
-																}).catch(function(err){ if (statusSpan) { statusSpan.textContent = 'Err'; statusSpan.style.color = 'red'; } console.error(err); });
+														(function(){
+															var form = document.querySelector('.assign-jetons-form');
+															if (form) {
+																form.addEventListener('submit', function(e){
+																	var submitter = (typeof e.submitter !== 'undefined') ? e.submitter : document.activeElement;
+																	if (submitter && submitter.name === 'undo_assign_jetons') return;
+																	var v = document.getElementById('assign_all_jetons_input').value;
+																	if (!v || parseInt(v,10) < 0) { e.preventDefault(); alert('Veuillez saisir un nombre de jetons valide.'); return; }
+																	if (!confirm('Affecter ' + v + ' jetons à TOUS les participants ?')) { e.preventDefault(); }
+																});
 															}
-														});
-														</script>
-													<script>
-													// Confirmation avant assignation globale
-													document.querySelector('.assign-jetons-form').addEventListener('submit', function(e) {
-														// Determine which button triggered the submit (modern browsers expose e.submitter)
-														var submitter = (typeof e.submitter !== 'undefined') ? e.submitter : document.activeElement;
-														// If undo button triggered, skip assign confirmation
-														if (submitter && submitter.name === 'undo_assign_jetons') return;
-														var v = document.getElementById('assign_all_jetons_input').value;
-														if (!v || parseInt(v,10) < 0) { e.preventDefault(); alert('Veuillez saisir un nombre de jetons valide.'); return; }
-														if (!confirm('Affecter ' + v + ' jetons à TOUS les participants ?')) { e.preventDefault(); }
-													});
 
-													function confirmUndo() {
-														return confirm('Annuler la dernière affectation de jetons pour cette activité ?');
-													}
-													</script>
+															window.confirmUndo = function(){ return confirm('Annuler la dernière affectation de jetons pour cette activité ?'); };
+
+															function sendBonus(memberId, activityId, value, statusSpan, callback) {
+																if (statusSpan) { statusSpan.textContent = '…'; statusSpan.style.color = '#999'; statusSpan.style.display = 'inline-block'; }
+																var fd = new FormData();
+																fd.append('id_membre', memberId);
+																fd.append('id_activite', activityId);
+																fd.append('field', 'jetons_bonus_arrivee');
+																fd.append('value', value);
+																fetch('update_field.php', { method: 'POST', body: fd, credentials: 'same-origin' })
+																	.then(function(r){ return r.json(); })
+																	.then(function(json){
+																		if (json && json.success) {
+																			if (statusSpan) { statusSpan.textContent = '✓'; statusSpan.style.color = 'green'; setTimeout(function(){ statusSpan.style.display = 'none'; }, 1200); }
+																			if (callback) callback(true);
+																		} else {
+																			if (statusSpan) { statusSpan.textContent = 'Erreur'; statusSpan.style.color = 'red'; }
+																			if (callback) callback(false);
+																		}
+																	}).catch(function(err){ if (statusSpan) { statusSpan.textContent = 'Err'; statusSpan.style.color = 'red'; } if (callback) callback(false); });
+															}
+
+															// Double-clic pour éditer la valeur
+															document.addEventListener('dblclick', function(e){
+																var el = e.target;
+																if (!el.classList || !el.classList.contains('bonus-arrivee-display')) return;
+																var memberId = el.getAttribute('data-member-id');
+																var activityId = el.getAttribute('data-activity-id');
+																var curVal = el.getAttribute('data-value') || '0';
+																var input = document.createElement('input');
+																input.type = 'number'; input.className = 'form-control bonus-arrivee-input'; input.style.width = '120px'; input.value = curVal;
+																input.setAttribute('data-member-id', memberId); input.setAttribute('data-activity-id', activityId);
+																var status = el.parentNode.querySelector('.bonus-save-status');
+																el.parentNode.insertBefore(input, el);
+																el.style.display = 'none';
+																input.focus(); input.select();
+
+																function finish(save) {
+																	var v = parseInt(input.value || '0', 10) || 0;
+																	if (save) {
+																		sendBonus(memberId, activityId, v, status, function(ok){
+																			if (ok) {
+																				el.setAttribute('data-value', v);
+																				el.textContent = v > 0 ? v.toLocaleString('fr-FR') : '-';
+																			}
+																			input.remove();
+																			el.style.display = 'inline-block';
+																		});
+																	} else {
+																		input.remove();
+																		el.style.display = 'inline-block';
+																	}
+																}
+
+																input.addEventListener('keydown', function(ev){
+																	if (ev.key === 'Enter') { ev.preventDefault(); finish(true); }
+																	else if (ev.key === 'Escape') { ev.preventDefault(); finish(false); }
+																});
+																input.addEventListener('blur', function(){ finish(true); });
+															}, false);
+														})();
+														</script>
 													<table class="table table-condensed">
 														<thead>
 															<tr>
