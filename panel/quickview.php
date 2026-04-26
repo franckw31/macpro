@@ -893,6 +893,13 @@ document.addEventListener('DOMContentLoaded', function() {
 			</div>
 		</section>
 
+		<style>
+		/* Reduce podium font size for compact display */
+		#podium-section { font-size: 13px; }
+		#podium-section .podium-item { display:flex; justify-content:space-between; gap:12px; font-size:13px; }
+		#podium-section .podium-item div { line-height:1.1; }
+		@media (max-width:480px){ #podium-section { font-size:12px; } }
+		</style>
 		<section id="podium-section" class="card stroked" style="display:none" aria-hidden="true">
 			<div style="font-weight:700;color:var(--gold);text-transform:uppercase;font-size:12px">Podium payés</div>
 			<hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
