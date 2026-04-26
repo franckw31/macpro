@@ -249,7 +249,8 @@ if($activity){
             if($foundRow !== null){
                 $r = $foundRow['row']; $i = $foundRow['index'];
                 $rank = (isset($r['place']) && intval($r['place'])>0) ? intval($r['place']) : ($i+1);
-                $depenses = $activity_buyin + (intval($r['recave'] ?? 0) * $activity_recave_montant) + (floatval($r['bounty'] ?? 0));
+                $effective_buyin = max(0.0, $activity_buyin - $activity_rake);
+                $depenses = $effective_buyin + (intval($r['recave'] ?? 0) * $activity_recave_montant) + (floatval($r['bounty'] ?? 0));
                 $gains = floatval($r['gains'] ?? 0.0);
                 $benef = $gains - $depenses;
                 ?>
