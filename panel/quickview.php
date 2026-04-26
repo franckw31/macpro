@@ -893,7 +893,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			</div>
 		</section>
 
-		<section class="card stroked" style="display:none" aria-hidden="true">
+		<section id="podium-section" class="card stroked" style="display:none" aria-hidden="true">
 			<div style="font-weight:700;color:var(--gold);text-transform:uppercase;font-size:12px">Podium payés</div>
 			<hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
 			<div id="podium-list">
@@ -901,7 +901,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			</div>
 		</section>
 
-		   <section class="card quick-action">
+		   <section id="reg-section" class="card quick-action">
 						 <div style="display:flex;align-items:center;justify-content:space-between">
 							 <div id="reg-text" style="font-weight:600;font-size:14px">Votre Inscription : </div>
 							<?php
