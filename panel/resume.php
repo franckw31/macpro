@@ -217,6 +217,33 @@ if($activity){
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
+    <?php if(!empty($rows) && $activity): ?>
+        <div class="table summary" role="list" aria-label="Synthèse joueurs" style="margin-top:12px">
+            <div class="row header-row" role="row">
+                <div class="col-num">#</div>
+                <div class="col-pseudo">Pseudo</div>
+                <div class="col-bounty">Classement</div>
+                <div class="col-recave">Dépenses (sans rake)</div>
+                <div class="col-gains">Gains</div>
+                <div class="col-gains">Bénéfice</div>
+            </div>
+            <?php foreach($rows as $i=>$r):
+                $rank = (isset($r['place']) && intval($r['place'])>0) ? intval($r['place']) : ($i+1);
+                $depenses = $activity_buyin + (intval($r['recave'] ?? 0) * $activity_recave_montant) + (floatval($r['bounty'] ?? 0));
+                $gains = floatval($r['gains'] ?? 0.0);
+                $benef = $gains - $depenses;
+            ?>
+                <div class="row" role="listitem">
+                    <div class="col-num"><?php echo '#'.h($rank); ?></div>
+                    <div class="col-pseudo"><?php echo h($r['pseudo']); ?></div>
+                    <div class="col-bounty"><?php echo h($rank); ?></div>
+                    <div class="col-recave"><?php echo number_format($depenses, 0, ',', ' ') . '€'; ?></div>
+                    <div class="col-gains"><?php echo ($gains>0)? number_format($gains,0,',',' ') . '€' : '-'; ?></div>
+                    <div class="col-gains" style="color:<?php echo ($benef>=0)?'var(--green)':'#ff6b6b'; ?>;font-weight:700"><?php echo number_format($benef,0,',',' ') . '€'; ?></div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 </div>
 </body>
 </html>
