@@ -226,8 +226,8 @@ if($activity){
             <div class="row header-row" role="row">
                 <div class="col-num">#</div>
                 <div class="col-pseudo">Pseudo</div>
-                <div class="col-bounty">Classement</div>
-                <div class="col-recave">Dépenses (sans rake)</div>
+                <div class="col-bounty">Place</div>
+                <div class="col-recave">Dépenses</div>
                 <div class="col-gains">Gains</div>
                 <div class="col-gains">Bénéfice</div>
             </div>
