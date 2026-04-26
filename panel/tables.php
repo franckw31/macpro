@@ -1181,19 +1181,22 @@ $createBackupTableSql = "CREATE TABLE IF NOT EXISTS `participation_jetons_backup
 	KEY (`activity_id`),
 	KEY (`id_participation`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+// Helper: log and display SQL errors immediately (temporary for debugging)
+function handleSqlError($message, $query = null) {
+	$log = date('c') . " - " . $message . "\n";
+	if ($query) $log .= "Query: " . $query . "\n";
+	file_put_contents('/tmp/tables_error.log', $log, FILE_APPEND);
+	echo "<div style='background:#fee;border:2px solid #f00;padding:12px;margin:12px;font-family:monospace;'>";
+	echo "<h3>Erreur SQL détectée</h3>";
+	echo "<pre>" . htmlspecialchars($log) . "</pre>";
+	echo "</div>";
+	exit;
+}
+
  $resCreate = mysqli_query($con, $createBackupTableSql);
  if ($resCreate === false) {
-	// Log and display immediately
-	function handleSqlError($message, $query = null) {
-		$log = date('c') . " - " . $message . "\n";
-		if ($query) $log .= "Query: " . $query . "\n";
-		file_put_contents('/tmp/tables_error.log', $log, FILE_APPEND);
-		echo "<div style='background:#fee;border:2px solid #f00;padding:12px;margin:12px;font-family:monospace;'>";
-		echo "<h3>Erreur SQL détectée</h3>";
-		echo "<pre>" . htmlspecialchars($log) . "</pre>";
-		echo "</div>";
-		exit;
-	}
+	handleSqlError("create backup table failed: " . mysqli_error($con), $createBackupTableSql);
+}
 	handleSqlError("create backup table failed: " . mysqli_error($con), $createBackupTableSql);
 }
 // S'assurer que les colonnes de bonus existent (pour les anciens schémas)
