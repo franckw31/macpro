@@ -256,6 +256,13 @@ error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id(
 	});
 	</script>
 
+	<style>
+/* Compact card padding for Quickview page */
+.container > section.card.stroked { padding: 10px 12px !important; }
+.container > section.card.stroked .modal-sheet { padding: 12px !important; }
+@media (max-width:480px){ .container > section.card.stroked { padding:8px 10px !important; } }
+	</style>
+
 	<script>
 	// Partie detail modal logic (bind after DOM ready)
 	document.addEventListener('DOMContentLoaded', function(){
