@@ -1831,8 +1831,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 													<script>
 													// Confirmation avant assignation globale
 													document.querySelector('.assign-jetons-form').addEventListener('submit', function(e) {
+														// Determine which button triggered the submit (modern browsers expose e.submitter)
+														var submitter = (typeof e.submitter !== 'undefined') ? e.submitter : document.activeElement;
 														// If undo button triggered, skip assign confirmation
-														if (document.activeElement && document.activeElement.name === 'undo_assign_jetons') return;
+														if (submitter && submitter.name === 'undo_assign_jetons') return;
 														var v = document.getElementById('assign_all_jetons_input').value;
 														if (!v || parseInt(v,10) < 0) { e.preventDefault(); alert('Veuillez saisir un nombre de jetons valide.'); return; }
 														if (!confirm('Affecter ' + v + ' jetons à TOUS les participants ?')) { e.preventDefault(); }
