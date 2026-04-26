@@ -260,6 +260,9 @@ if($activity){
                     <div class="col-recave"><?php echo number_format($depenses, 0, ',', ' ') . '€'; ?></div>
                     <div class="col-gains"><?php echo ($gains>0)? number_format($gains,0,',',' ') . '€' : '-'; ?></div>
                 </div>
+                <div class="row position-row" role="listitem">
+                    <div class="col-position" style="grid-column:1 / -1; padding-left:12px; color:var(--muted); font-weight:600">Position <?php echo h($rank); ?> / <?php echo intval($total_count); ?> avec <?php echo intval($r['recave'] ?? 0); ?> recaves</div>
+                </div>
                 <div class="row benefit-row" role="listitem">
                     <?php
                     $label = ($benef >= 0) ? 'Bénéfice' : 'Perte';
