@@ -1932,7 +1932,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 																	</td>
 																	<td><?php echo isset($player['jetons_bonus_ins']) && (int)$player['jetons_bonus_ins'] > 0 ? number_format((int)$player['jetons_bonus_ins'], 0, ',', ' ') : '-'; ?></td>
 																	<td>
-																		<input type="number" class="form-control bonus-arrivee-input" style="width:120px;display:inline-block;" value="<?php echo isset($player['jetons_bonus_arrivee']) ? intval($player['jetons_bonus_arrivee']) : 0; ?>" data-member-id="<?php echo intval($player['id-membre']); ?>" data-activity-id="<?php echo intval($selectedActivityId); ?>">
+																		<span class="bonus-arrivee-display" data-member-id="<?php echo intval($player['id-membre']); ?>" data-activity-id="<?php echo intval($selectedActivityId); ?>" data-value="<?php echo isset($player['jetons_bonus_arrivee']) ? intval($player['jetons_bonus_arrivee']) : 0; ?>" style="cursor:pointer;display:inline-block;min-width:120px;">
+																			<?php echo isset($player['jetons_bonus_arrivee']) && (int)$player['jetons_bonus_arrivee'] > 0 ? number_format((int)$player['jetons_bonus_arrivee'], 0, ',', ' ') : '-'; ?>
+																		</span>
 																		<span class="bonus-save-status" style="display:none;margin-left:6px;font-weight:bold;"></span>
 																	</td>
 																	<td><?php echo htmlspecialchars($player['option']); ?></td>
