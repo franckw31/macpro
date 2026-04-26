@@ -1843,12 +1843,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 															window.confirmUndo = function(){ return confirm('Annuler la dernière affectation de jetons pour cette activité ?'); };
 
-															function sendBonus(memberId, activityId, value, statusSpan, callback) {
+															function sendBonus(memberId, activityId, value, statusSpan, callback, field) {
 																if (statusSpan) { statusSpan.textContent = '…'; statusSpan.style.color = '#999'; statusSpan.style.display = 'inline-block'; }
 																var fd = new FormData();
 																fd.append('id_membre', memberId);
 																fd.append('id_activite', activityId);
-																fd.append('field', 'jetons_bonus_arrivee');
+																fd.append('field', field);
 																fd.append('value', value);
 																fetch('update_field.php', { method: 'POST', body: fd, credentials: 'same-origin' })
 																	.then(function(r){ return r.json(); })
