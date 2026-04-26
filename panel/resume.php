@@ -96,6 +96,16 @@ if($activity){
             $winners_count = count(array_filter($rows, function($r){ return ($r['gains'] ?? 0) > 0; }));
             // Limit display to top 9 (table finale)
             $rows = array_slice($rows, 0, 9);
+            // activity financial defaults for per-player calculations
+            $activity_buyin = isset($activity['buyin'])? floatval($activity['buyin']) : 0.0;
+            $activity_recave_montant = 0.0;
+            if(isset($activity['recave_montant']) && $activity['recave_montant'] !== ''){
+                $activity_recave_montant = floatval($activity['recave_montant']);
+            } else {
+                // fallback: use activity buyin as recave amount when specific recave amount missing
+                $activity_recave_montant = $activity_buyin;
+            }
+            $activity_rake = isset($activity['rake'])? floatval($activity['rake']) : 0.0;
         }
     }
 }
