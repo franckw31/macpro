@@ -1944,7 +1944,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 																			}
 																		?>
 																	</td>
-																	<td><?php echo isset($player['jetons_bonus_ins']) && (int)$player['jetons_bonus_ins'] > 0 ? number_format((int)$player['jetons_bonus_ins'], 0, ',', ' ') : '-'; ?></td>
+																	<td>
+																		<span class="bonus-ins-display" data-member-id="<?php echo intval($player['id-membre']); ?>" data-activity-id="<?php echo intval($selectedActivityId); ?>" data-value="<?php echo isset($player['jetons_bonus_ins']) ? intval($player['jetons_bonus_ins']) : 0; ?>" style="cursor:pointer;display:inline-block;min-width:120px;">
+																			<?php echo isset($player['jetons_bonus_ins']) && (int)$player['jetons_bonus_ins'] > 0 ? number_format((int)$player['jetons_bonus_ins'], 0, ',', ' ') : '-'; ?>
+																		</span>
+																	</td>
 																	<td>
 																		<span class="bonus-arrivee-display" data-member-id="<?php echo intval($player['id-membre']); ?>" data-activity-id="<?php echo intval($selectedActivityId); ?>" data-value="<?php echo isset($player['jetons_bonus_arrivee']) ? intval($player['jetons_bonus_arrivee']) : 0; ?>" style="cursor:pointer;display:inline-block;min-width:120px;">
 																			<?php echo isset($player['jetons_bonus_arrivee']) && (int)$player['jetons_bonus_arrivee'] > 0 ? number_format((int)$player['jetons_bonus_arrivee'], 0, ',', ' ') : '-'; ?>
