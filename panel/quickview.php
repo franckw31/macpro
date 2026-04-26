@@ -897,7 +897,24 @@ document.addEventListener('DOMContentLoaded', function() {
 			<div style="font-weight:700;color:var(--gold);text-transform:uppercase;font-size:12px">Podium payés</div>
 			<hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
 			<div id="podium-list">
-				<div class="small">Chargement...</div>
+						<?php
+						// Server-side fallback: render podium entries if any players have a positive gain
+						if (!empty($con) && !empty($serverActivity) && !empty($serverActivity['id'])) {
+							$aid = intval($serverActivity['id']);
+							$podq = mysqli_query($con, "SELECT COALESCE(p.classement,999) AS classement, COALESCE(p.gain,0) AS gain, COALESCE(p.`nom-membre`, m.pseudo) AS pseudo FROM participation p JOIN membres m ON p.`id-membre` = m.`id-membre` WHERE p.`id-activite` = '". $aid ."' AND COALESCE(p.gain,0) > 0 ORDER BY classement ASC, gain DESC LIMIT 20");
+							if ($podq && mysqli_num_rows($podq) > 0) {
+								while ($prow = mysqli_fetch_assoc($podq)) {
+									$ps = htmlspecialchars($prow['pseudo']);
+									$g = intval($prow['gain']);
+									echo "<div class=\"podium-item\"><div style=\"font-weight:700\">{$ps}</div><div style=\"color:var(--green);font-weight:700\">" . number_format($g, 0, ',', ' ') . " €</div></div>";
+								}
+							} else {
+								echo '<div class="small">Aucun joueur payé</div>';
+							}
+						} else {
+							echo '<div class="small">Chargement...</div>';
+						}
+						?>
 			</div>
 		</section>
 
