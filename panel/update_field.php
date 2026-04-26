@@ -85,7 +85,7 @@ try {
         'classement', 'recave', 'points', 'tf',
         'rake', 'rake_0', 'rake_5', 'rake_10', 'rake_12', 'rake_15', 'rake_20',
         'cout_in', 'latereg', 'option', 'valide', 'gain',
-        'addon', 'win', 'bonbon', 'ordre', 'position', 'heure_arrivee', 'jetons_bonus_arrivee'
+        'addon', 'win', 'bonbon', 'ordre', 'position', 'heure_arrivee', 'jetons_bonus_arrivee', 'jetons_bonus_ins'
     ];
     if (!in_array($field, $allowed_fields)) {
         error_log("Invalid field: $field");
@@ -100,7 +100,7 @@ try {
         $param_type = "i";
     } elseif ($field === 'option' || $field === 'valide') {
         $param_type = "s";
-    } elseif ($field === 'jetons_bonus_arrivee') {
+    } elseif ($field === 'jetons_bonus_arrivee' || $field === 'jetons_bonus_ins') {
         $value = (int)$value;
         $param_type = "i";
     } else {
@@ -158,6 +158,13 @@ try {
                     `jetons_total` = `jetons` + `jetons_bonus_ins` + ?
                 WHERE `id-membre` = ? 
                 AND `id-activite` = ?";
+    } elseif ($field === 'jetons_bonus_ins') {
+        // Pour jetons_bonus_ins, on met directement la valeur et on recalcule jetons_total
+        $sql = "UPDATE participation 
+                SET `jetons_bonus_ins` = ?,
+                    `jetons_total` = `jetons` + ? + `jetons_bonus_arrivee`
+                WHERE `id-membre` = ? 
+                AND `id-activite` = ?";
     } else {
         $sql = "UPDATE participation 
                 SET `" . mysqli_real_escape_string($conn, $field) . "` = ?, `ds` = NOW()
@@ -184,8 +191,8 @@ try {
         // Pour heure_arrivee, on n'a que 2 paramètres : id_membre et id_activite
         $bind_types = "ii";
         mysqli_stmt_bind_param($stmt, $bind_types, $id_membre, $id_activite);
-    } elseif ($field === 'jetons_bonus_arrivee') {
-        // Pour jetons_bonus_arrivee, on a 4 paramètres : value (int), value2 (int pour jetons_total), id_membre (int), id_activite (int)
+    } elseif ($field === 'jetons_bonus_arrivee' || $field === 'jetons_bonus_ins') {
+        // Pour jetons_bonus_arrivee/ins, on a 4 paramètres : value (int), value2 (int pour jetons_total), id_membre (int), id_activite (int)
         $bind_types = "iiii";
         mysqli_stmt_bind_param($stmt, $bind_types, $value, $value, $id_membre, $id_activite);
     } else {
