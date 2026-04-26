@@ -141,8 +141,8 @@ if($activity){
     /* configurable column sizes */
     :root{--col-num:56px;--col-recave:36px;--col-bounty:36px;--col-gains:64px}
 
-    /* summary grid: same columns as main table; benefit is shown on separate full-width row */
-    .summary .row{display:grid;grid-template-columns:var(--col-num) minmax(80px,260px) var(--col-bounty) var(--col-recave) var(--col-gains);grid-column-gap:6px;align-items:center;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02);line-height:1.15}
+    /* summary grid with extra column for bénéfice */
+    .summary .row{display:grid;grid-template-columns:var(--col-num) minmax(80px,260px) 72px 96px var(--col-gains) 72px;grid-column-gap:6px;align-items:center;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02);line-height:1.15}
 
     /* use CSS grid for consistent column alignment */
     /* cap the pseudo column max so it doesn't push Gains too far right */
@@ -186,12 +186,12 @@ if($activity){
         <div style="flex:1">
             <div class="title"><?php echo h($title); ?></div>
             <?php if($activity && !empty($activity['date_depart'])): ?>
-            <div class="row header-row" role="row">
-                <div class="col-num">#</div>
-                <div class="col-pseudo">Pseudo</div>
-                <div class="col-bounty">Bounty</div>
-                <div class="col-recave">Rebuy</div>
-                <div class="col-gains">Gains</div>
+                <div class="sub"><?php echo h($activity['date_depart']); ?></div>
+            <?php endif; ?>
+            <div class="muted">
+                <span style="color:#ff7a45;font-weight:700"><?php echo intval($total_count); ?></span> inscrits
+                <?php if(!is_null($max_places)){ ?> sur <span style="color:#ff7a45;font-weight:700"><?php echo intval($max_places); ?></span> max<?php } ?>
+            </div>
         </div>
         
     </div>
