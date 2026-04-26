@@ -1200,12 +1200,12 @@ $createBackupTableSql = "CREATE TABLE IF NOT EXISTS `participation_jetons_backup
 $colCheck = mysqli_query($con, "SHOW COLUMNS FROM participation_jetons_backup LIKE 'jetons_bonus_ins'");
 if ($colCheck && mysqli_num_rows($colCheck) === 0) {
 	$resAlt1 = mysqli_query($con, "ALTER TABLE participation_jetons_backup ADD COLUMN `jetons_bonus_ins` INT DEFAULT 0");
-	if ($resAlt1 === false) file_put_contents('/tmp/tables_error.log', date('c') . " - alter add jetons_bonus_ins failed: " . mysqli_error($con) . "\n", FILE_APPEND);
+	if ($resAlt1 === false) handleSqlError("alter add jetons_bonus_ins failed: " . mysqli_error($con), "ALTER TABLE participation_jetons_backup ADD COLUMN `jetons_bonus_ins` INT DEFAULT 0");
 }
 $colCheck2 = mysqli_query($con, "SHOW COLUMNS FROM participation_jetons_backup LIKE 'jetons_bonus_arrivee'");
 if ($colCheck2 && mysqli_num_rows($colCheck2) === 0) {
 	$resAlt2 = mysqli_query($con, "ALTER TABLE participation_jetons_backup ADD COLUMN `jetons_bonus_arrivee` INT DEFAULT 0");
-	if ($resAlt2 === false) file_put_contents('/tmp/tables_error.log', date('c') . " - alter add jetons_bonus_arrivee failed: " . mysqli_error($con) . "\n", FILE_APPEND);
+	if ($resAlt2 === false) handleSqlError("alter add jetons_bonus_arrivee failed: " . mysqli_error($con), "ALTER TABLE participation_jetons_backup ADD COLUMN `jetons_bonus_arrivee` INT DEFAULT 0");
 }
 
 // Handler pour affecter un même nombre de jetons à tous les joueurs de l'activité
@@ -1252,17 +1252,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				FROM participation p
 				WHERE p.`id-activite` = " . intval($selectedActivityId);
 			$resBackup = mysqli_query($con, $backupInsert);
-			if ($resBackup === false) file_put_contents('/tmp/tables_error.log', date('c') . " - backup insert failed: " . mysqli_error($con) . "\nQuery: " . $backupInsert . "\n", FILE_APPEND);
+			if ($resBackup === false) handleSqlError("backup insert failed: " . mysqli_error($con), $backupInsert);
 
 			// Mise à jour des jetons et recalcul jetons_total sans toucher jetons_bonus_arrivee
 			$bonusInsVal = 5000;
 			$sql = "UPDATE `participation` SET `jetons` = " . intval($assignVal) . ", `jetons_bonus_ins` = " . $bonusInsVal . ", `jetons_total` = " . (intval($assignVal) . " + " . $bonusInsVal . " + COALESCE(`jetons_bonus_arrivee`,0)") . " WHERE `id-activite` = " . $selectedActivityId;
 			$resUpdate = mysqli_query($con, $sql);
-			if ($resUpdate === false) file_put_contents('/tmp/tables_error.log', date('c') . " - update failed (no_arrive): " . mysqli_error($con) . "\nQuery: " . $sql . "\n", FILE_APPEND);
+			if ($resUpdate === false) handleSqlError("update failed (no_arrive): " . mysqli_error($con), $sql);
 
 			// Met à jour la valeur moyenne stockée dans `activite.jetons_activite`
 			$resAct = mysqli_query($con, "UPDATE `activite` SET `jetons_activite` = " . intval($assignVal) . " WHERE `id-activite` = " . $selectedActivityId);
-			if ($resAct === false) file_put_contents('/tmp/tables_error.log', date('c') . " - update activite failed: " . mysqli_error($con) . "\n", FILE_APPEND);
+			if ($resAct === false) handleSqlError("update activite failed: " . mysqli_error($con));
 
 			// Redirection pour éviter la double soumission
 			$redirectUrl = 'tables.php?id_activite=' . $selectedActivityId . '&mode=' . htmlspecialchars($mode, ENT_QUOTES, 'UTF-8') . '&equilibrage=' . (int)$autoBalance;
@@ -1281,18 +1281,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				FROM participation p
 				WHERE p.`id-activite` = " . intval($selectedActivityId);
 			$resBackup2 = mysqli_query($con, $backupInsert);
-			if ($resBackup2 === false) file_put_contents('/tmp/tables_error.log', date('c') . " - backup insert failed (assign_all): " . mysqli_error($con) . "\nQuery: " . $backupInsert . "\n", FILE_APPEND);
+			if ($resBackup2 === false) handleSqlError("backup insert failed (assign_all): " . mysqli_error($con), $backupInsert);
 
 			// Mise à jour des jetons et recalcul jetons_total
 			$bonusVal = 5000;
 			$newTotal = intval($assignVal) + $bonusVal + $bonusVal;
 			$sql = "UPDATE `participation` SET `jetons` = " . intval($assignVal) . ", `jetons_bonus_ins` = " . $bonusVal . ", `jetons_bonus_arrivee` = " . $bonusVal . ", `jetons_total` = " . $newTotal . " WHERE `id-activite` = " . $selectedActivityId;
 			$resUpdate2 = mysqli_query($con, $sql);
-			if ($resUpdate2 === false) file_put_contents('/tmp/tables_error.log', date('c') . " - update failed (assign_all): " . mysqli_error($con) . "\nQuery: " . $sql . "\n", FILE_APPEND);
+			if ($resUpdate2 === false) handleSqlError("update failed (assign_all): " . mysqli_error($con), $sql);
 
 			// Met à jour la valeur moyenne stockée dans `activite.jetons_activite`
 			$resAct2 = mysqli_query($con, "UPDATE `activite` SET `jetons_activite` = " . intval($assignVal) . " WHERE `id-activite` = " . $selectedActivityId);
-			if ($resAct2 === false) file_put_contents('/tmp/tables_error.log', date('c') . " - update activite failed (assign_all): " . mysqli_error($con) . "\n", FILE_APPEND);
+			if ($resAct2 === false) handleSqlError("update activite failed (assign_all): " . mysqli_error($con));
 
 			// Redirection pour éviter la double soumission
 			$redirectUrl = 'tables.php?id_activite=' . $selectedActivityId . '&mode=' . htmlspecialchars($mode, ENT_QUOTES, 'UTF-8') . '&equilibrage=' . (int)$autoBalance;
