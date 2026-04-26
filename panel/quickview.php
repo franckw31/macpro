@@ -635,6 +635,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				   /* Force uniform tile sizing and alignment */
 				   .shortcuts-grid { align-items:stretch; }
 				   .shortcuts-grid .tile { height:70px !important; display:flex !important; flex-direction:column !important; justify-content:space-between !important; align-items:center !important; box-sizing:border-box !important; }
+                   /* Reduce fonts for compact shortcuts view */
+                   .shortcuts-grid .tile { font-size: 13px; }
+                   .shortcuts-grid .tile-top { font-size: 13px; }
+                   .shortcuts-grid .tile-bottom { font-size: 12px; }
+                   .shortcuts-grid .tile .icon-circle { width:38px; height:38px; }
 				   /* Fixed zones so tops and bottoms align across tiles */
 				   .shortcuts-grid .tile-top{height:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:center;padding:0;margin:0}
 				   .shortcuts-grid .tile-bottom{height:26px;flex:0 0 26px;display:flex;align-items:center;justify-content:center;padding:0;margin:0;width:100%;box-sizing:border-box}
