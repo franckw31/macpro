@@ -261,7 +261,12 @@ if($activity){
                     <div class="col-gains"><?php echo ($gains>0)? number_format($gains,0,',',' ') . '€' : '-'; ?></div>
                 </div>
                 <div class="row benefit-row" role="listitem">
-                    <div class="col-benefit" style="grid-column:1 / -1; padding-left:12px; color:<?php echo ($benef>=0)?'var(--green)':'#ff6b6b'; ?>;font-weight:700">Bénéfice: <?php echo number_format($benef,0,',',' ') . '€'; ?></div>
+                    <?php
+                    $label = ($benef >= 0) ? 'Bénéfice' : 'Perte';
+                    $displayValue = ($benef >= 0) ? number_format($benef,0,',',' ') . '€' : number_format(abs($benef),0,',',' ') . '€';
+                    $color = ($benef >= 0) ? 'var(--green)' : '#ff6b6b';
+                    ?>
+                    <div class="col-benefit" style="grid-column:1 / -1; padding-left:12px; color:<?php echo $color; ?>;font-weight:700"><?php echo $label . ': ' . $displayValue; ?></div>
                 </div>
             <?php } ?>
         </div>
