@@ -229,7 +229,7 @@ if($activity){
                 <div class="col-bounty">Place</div>
                 <div class="col-recave">Caves</div>
                 <div class="col-gains">Gains</div>
-                <div class="col-gains">Bénéfice</div>
+                
             </div>
             <?php
             $current_member_id = isset($_SESSION['id']) ? intval($_SESSION['id']) : null;
