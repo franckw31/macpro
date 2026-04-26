@@ -8,11 +8,13 @@ include('include/config.php');
 
 if (strlen($_SESSION['id']) == 0) {
 	header('location:logout.php');
-	exit;
-}
+					exit;
 
-// Vérifier et créer la colonne a_paye si elle n'existe pas
-$checkColumnQuery = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'participation' AND COLUMN_NAME = 'a_paye' AND TABLE_SCHEMA = DATABASE()";
+			}
+
+	}
+
+?>
 $columnResult = mysqli_query($con, $checkColumnQuery);
 if (!$columnResult || mysqli_num_rows($columnResult) === 0) {
 	// La colonne n'existe pas, la créer
