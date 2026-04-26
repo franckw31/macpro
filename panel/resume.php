@@ -227,7 +227,7 @@ if($activity){
                 <div class="col-num">#</div>
                 <div class="col-pseudo">Pseudo</div>
                 <div class="col-bounty">Place</div>
-                <div class="col-recave">Dépenses</div>
+                <div class="col-recave">Caves</div>
                 <div class="col-gains">Gains</div>
                 <div class="col-gains">Bénéfice</div>
             </div>
