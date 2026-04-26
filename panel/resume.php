@@ -141,8 +141,8 @@ if($activity){
     /* configurable column sizes */
     :root{--col-num:56px;--col-recave:36px;--col-bounty:36px;--col-gains:64px}
 
-    /* summary grid with extra column for bénéfice */
-    .summary .row{display:grid;grid-template-columns:var(--col-num) minmax(80px,260px) 72px 96px var(--col-gains) 72px;grid-column-gap:6px;align-items:center;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02);line-height:1.15}
+    /* summary grid: same columns as main table; benefit is shown on separate full-width row */
+    .summary .row{display:grid;grid-template-columns:var(--col-num) minmax(80px,260px) var(--col-bounty) var(--col-recave) var(--col-gains);grid-column-gap:6px;align-items:center;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02);line-height:1.15}
 
     /* use CSS grid for consistent column alignment */
     /* cap the pseudo column max so it doesn't push Gains too far right */
