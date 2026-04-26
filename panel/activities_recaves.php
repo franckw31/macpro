@@ -52,7 +52,7 @@ $q = @mysqli_query($con, $sql);
                 $dt = htmlspecialchars($r['dt']);
                 $buyin = number_format(intval($r['buyin']),0,',',' ');
                 $recave = number_format(intval($r['recave']),0,',',' ');
-                echo "<tr><td>#". $aid ."</td><td>". $title ."</td><td>". $dt ."</td><td>". $buyin ." €</td><td style='text-align:right;color:#08b0ff;font-weight:800'>". $recave ."</td><td><a href=\"/panel/voir-activite.php?uid=". $aid ."\">Voir</a></td></tr>";
+                echo "<tr><td>#". $aid ."</td><td>". $title ."</td><td>". $dt ."</td><td>". $buyin ." €</td><td style='text-align:right;color:#08b0ff;font-weight:800'>". $recave ."</td><td><a href=\"/panel/resume.php?uid=". $aid ."\">Voir</a></td></tr>";
             }
         } else {
             echo '<tr><td colspan="6">Aucune activité trouvée.</td></tr>';
