@@ -93,10 +93,13 @@ if($activity){
                 return strcmp($a['pseudo'] ?? '', $b['pseudo'] ?? '');
             });
 
-            $total_count = count($rows);
-            $winners_count = count(array_filter($rows, function($r){ return ($r['gains'] ?? 0) > 0; }));
+            // keep a copy of full result set for lookups (so we can show summaries
+            // for players not in the top 9)
+            $all_rows = $rows;
+            $total_count = count($all_rows);
+            $winners_count = count(array_filter($all_rows, function($r){ return ($r['gains'] ?? 0) > 0; }));
             // Limit display to top 9 (table finale)
-            $rows = array_slice($rows, 0, 9);
+            $rows = array_slice($all_rows, 0, 9);
             // activity financial defaults for per-player calculations
             $activity_buyin = isset($activity['buyin'])? floatval($activity['buyin']) : 0.0;
             $activity_recave_montant = 0.0;
