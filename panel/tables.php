@@ -94,6 +94,43 @@ if ($selectedActivityId > 0) {
 		}
 	}
 
+	// Attribution automatique du bonus d'arrivée à l'organisateur (id-membre = 2)
+	// et marquage comme payé si nécessaire
+	$organizerMemberIdAuto = 2;
+	if ($selectedActivityId > 0) {
+		foreach ($players as $pAuto) {
+			if (isset($pAuto['id-membre']) && (int)$pAuto['id-membre'] === $organizerMemberIdAuto) {
+				$pidAuto = (int)$pAuto['id-participation'];
+				// Ne rien faire si le participant est éliminé
+				if (isset($pAuto['option']) && strcasecmp($pAuto['option'], 'Elimine') === 0) {
+					break;
+				}
+				// Récupérer date de l'activité et valeur actuelle
+				$q = mysqli_query($con, "SELECT a.`date_depart`, p.`jetons_bonus_arrivee`, p.`a_paye`, COALESCE(p.jetons,0) AS jetons, COALESCE(p.jetons_bonus_ins,0) AS bonus_ins FROM participation p JOIN activite a ON p.`id-activite` = a.`id-activite` WHERE p.`id-participation` = " . $pidAuto . " LIMIT 1");
+				if ($q && $rowAuto = mysqli_fetch_assoc($q)) {
+					$assignBonus = 0;
+					// Si la date de départ est dans le futur, on donne le bonus arrivee (5000)
+					if (!empty($rowAuto['date_depart']) && strtotime($rowAuto['date_depart']) > time()) {
+						$assignBonus = 5000;
+					}
+					$currentBonus = intval($rowAuto['jetons_bonus_arrivee']);
+					$currentPaid = intval($rowAuto['a_paye']);
+					if ($assignBonus > 0 && $currentBonus === 0) {
+						// Appliquer le bonus et marquer payé
+						$jetonsBase = intval($rowAuto['jetons']);
+						$bonusIns = intval($rowAuto['bonus_ins']);
+						$newTotal = $jetonsBase + $bonusIns + $assignBonus;
+						mysqli_query($con, "UPDATE participation SET jetons_bonus_arrivee = " . $assignBonus . ", jetons_total = " . $newTotal . ", a_paye = 1 WHERE `id-participation` = " . $pidAuto);
+					} elseif ($currentPaid !== 1) {
+						// S'assurer qu'il est marqué payé même si bonus déjà présent
+						mysqli_query($con, "UPDATE participation SET a_paye = 1 WHERE `id-participation` = " . $pidAuto);
+					}
+				}
+				break; // on ne traite qu'un seul organisateur
+			}
+		}
+	}
+
 	// Traiter la libération de tous les sièges IMMÉDIATEMENT après charger les joueurs
 	if ($selectedActivityId > 0 && isset($_GET['release_all_seats']) && $_GET['release_all_seats'] === '1') {
 		file_put_contents('/tmp/release_all_seats_log.txt', date('Y-m-d H:i:s') . ' - release_all_seats détecté' . PHP_EOL, FILE_APPEND);
