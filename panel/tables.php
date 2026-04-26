@@ -6,6 +6,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 include('include/config.php');
 
+// Ensure we have a valid query to check for the `a_paye` column in `participation`
+$checkColumnQuery = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'participation' AND COLUMN_NAME = 'a_paye' AND TABLE_SCHEMA = DATABASE()";
+
 $columnResult = mysqli_query($con, $checkColumnQuery);
 if (!$columnResult || mysqli_num_rows($columnResult) === 0) {
 	// La colonne n'existe pas, la créer
