@@ -572,7 +572,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		<div class="container">
 				<section id="activity-card" class="card stroked" style="padding:10px 12px;">
-			<div class="section-title">Prochaine partie</div>
+			<div class="section-title">Prochaine(s) partie(s)</div>
 			<hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
 			<!-- removed duplicate small label to avoid repeating the title -->
 			<div class="row" style="margin-top:6px">
