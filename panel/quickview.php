@@ -583,9 +583,9 @@ document.addEventListener('DOMContentLoaded', function() {
 						<div id="activity-date" class="small" style="color:var(--gold);font-weight:700"><?php echo !empty($serverActivity['display_date'])? htmlspecialchars($serverActivity['display_date']) : (!empty($serverActivity['date'])? htmlspecialchars($serverActivity['date']) : '—'); ?></div>
 					</div>
                     
-					<div style="margin-top:8px;display:flex;gap:1px;align-items:center">
-						<div class="pill" id="buyin-pill"><span><?php echo isset($serverActivity['buyin'])? htmlspecialchars($serverActivity['buyin']).' €':'—'; ?></span></div>
-						<div class="pill" id="rake-pill">
+					<div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:nowrap;white-space:nowrap;overflow:hidden">
+						<div class="pill" id="buyin-pill" style="padding:6px 8px;font-size:13px;min-width:0"><span><?php echo isset($serverActivity['buyin'])? htmlspecialchars($serverActivity['buyin']).' €':'—'; ?></span></div>
+						<div class="pill" id="rake-pill" style="padding:6px 8px;font-size:13px;min-width:0">
 							<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
 								<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
 								<path d="M9 6v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
@@ -594,8 +594,8 @@ document.addEventListener('DOMContentLoaded', function() {
 							</svg>
 							<span><?php echo isset($serverActivity['rake'])? htmlspecialchars($serverActivity['rake']).' €':'—'; ?></span>
 						</div>
-						<div class="pill" id="recave-pill"><span><?php echo isset($serverActivity['recave'])? htmlspecialchars($serverActivity['recave']).' Rec':'—'; ?></span></div>
-						<div class="pill" id="inscrits-pill"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><text x="2" y="16" font-size="16" fill="#B47BFF">👥</text></svg>
+						<div class="pill" id="recave-pill" style="padding:6px 8px;font-size:13px;min-width:0"><span><?php echo isset($serverActivity['recave'])? htmlspecialchars($serverActivity['recave']).' Rec':'—'; ?></span></div>
+						<div class="pill" id="inscrits-pill" style="padding:6px 8px;font-size:13px;min-width:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><text x="2" y="16" font-size="16" fill="#B47BFF">👥</text></svg>
 							<span><?php
 								if (isset($serverActivity['participants_count'])) {
 									$pc = htmlspecialchars($serverActivity['participants_count']);
