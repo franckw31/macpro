@@ -363,9 +363,10 @@ async function fetchPodium(activityId){
     const j = await fetchWithRetry(url, {}, 2, 700);
     if(j.success && j.participants){
       const paid = j.participants.filter(p=>p.gain && p.gain>0).sort((a,b)=>(a.classement||999)-(b.classement||999));
+      const paidTop = paid.slice(0,9);
       const el=document.getElementById('podium-list');
-      if(!paid.length){ el.innerHTML='<div class="small">Aucun joueur payé</div>'; return; }
-      el.innerHTML = paid.map(p=>`<div class="podium-item"><div style="font-weight:700">${p.pseudo||'(inconnu)'}</div><div style="color:var(--green);font-weight:700">${formatEur(p.gain)}</div></div>`).join('');
+      if(!paidTop.length){ el.innerHTML='<div class="small">Aucun joueur payé</div>'; return; }
+      el.innerHTML = paidTop.map(p=>`<div class="podium-item"><div style="font-weight:700">${p.pseudo||'(inconnu)'}</div><div style="color:var(--green);font-weight:700">${formatEur(p.gain)}</div></div>`).join('');
     }
   }catch(e){ debugLog('podium',e); const el=document.getElementById('podium-list'); if(el) el.innerHTML='<div class="small">Erreur réseau</div>'; }
 }
