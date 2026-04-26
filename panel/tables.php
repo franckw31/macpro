@@ -6,15 +6,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 include('include/config.php');
 
-if (strlen($_SESSION['id']) == 0) {
-	header('location:logout.php');
-					exit;
-
-			}
-
-	}
-
-?>
 $columnResult = mysqli_query($con, $checkColumnQuery);
 if (!$columnResult || mysqli_num_rows($columnResult) === 0) {
 	// La colonne n'existe pas, la créer
