@@ -415,12 +415,14 @@ if ($selectedActivityId > 0) {
 				);
 				// Redirection pour rafraîchir la page
 				header("Location: " . "tables.php?id_activite=" . $selectedActivityId . "&mode=" . $mode . "&equilibrage=" . $autoBalance);
-				exit;
-			}
+				    exit;
+			    }
+
+		    }
+
 		}
 
-		// Endpoint pour le polling des changements de paiement
-		if (isset($_GET['check_payments']) && $_GET['check_payments'] == 1) {
+		?>
 			// Récupérer les statuts actuels de paiement depuis la base de données
 			$currentPaidStatuses = [];
 			$sqlCurrentPayments = mysqli_query(
