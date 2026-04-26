@@ -233,30 +233,35 @@ if($activity){
             </div>
             <?php
             $current_member_id = isset($_SESSION['id']) ? intval($_SESSION['id']) : null;
-            $shown = false;
+            $foundRow = null;
             if($current_member_id !== null){
+                // search displayed rows first
                 foreach($rows as $i=>$r){
-                    if(isset($r['member_id']) && intval($r['member_id']) === $current_member_id){
-                        $rank = (isset($r['place']) && intval($r['place'])>0) ? intval($r['place']) : ($i+1);
-                        $depenses = $activity_buyin + (intval($r['recave'] ?? 0) * $activity_recave_montant) + (floatval($r['bounty'] ?? 0));
-                        $gains = floatval($r['gains'] ?? 0.0);
-                        $benef = $gains - $depenses;
-                        ?>
-                        <div class="row" role="listitem">
-                            <div class="col-num"><?php echo '#'.h($rank); ?></div>
-                            <div class="col-pseudo"><?php echo h($r['pseudo']); ?></div>
-                            <div class="col-bounty"><?php echo h($rank); ?></div>
-                            <div class="col-recave"><?php echo number_format($depenses, 0, ',', ' ') . '€'; ?></div>
-                            <div class="col-gains"><?php echo ($gains>0)? number_format($gains,0,',',' ') . '€' : '-'; ?></div>
-                            <div class="col-gains" style="color:<?php echo ($benef>=0)?'var(--green)':'#ff6b6b'; ?>;font-weight:700"><?php echo number_format($benef,0,',',' ') . '€'; ?></div>
-                        </div>
-                        <?php
-                        $shown = true;
-                        break;
+                    if(isset($r['member_id']) && intval($r['member_id']) === $current_member_id){ $foundRow = ['row'=>$r,'index'=>$i]; break; }
+                }
+                // if not found in top9, search the full list
+                if($foundRow === null && isset($all_rows) && is_array($all_rows)){
+                    foreach($all_rows as $i=>$r){
+                        if(isset($r['member_id']) && intval($r['member_id']) === $current_member_id){ $foundRow = ['row'=>$r,'index'=>$i]; break; }
                     }
                 }
             }
-            ?>
+            if($foundRow !== null){
+                $r = $foundRow['row']; $i = $foundRow['index'];
+                $rank = (isset($r['place']) && intval($r['place'])>0) ? intval($r['place']) : ($i+1);
+                $depenses = $activity_buyin + (intval($r['recave'] ?? 0) * $activity_recave_montant) + (floatval($r['bounty'] ?? 0));
+                $gains = floatval($r['gains'] ?? 0.0);
+                $benef = $gains - $depenses;
+                ?>
+                <div class="row" role="listitem">
+                    <div class="col-num"><?php echo '#'.h($rank); ?></div>
+                    <div class="col-pseudo"><?php echo h($r['pseudo']); ?></div>
+                    <div class="col-bounty"><?php echo h($rank); ?></div>
+                    <div class="col-recave"><?php echo number_format($depenses, 0, ',', ' ') . '€'; ?></div>
+                    <div class="col-gains"><?php echo ($gains>0)? number_format($gains,0,',',' ') . '€' : '-'; ?></div>
+                    <div class="col-gains" style="color:<?php echo ($benef>=0)?'var(--green)':'#ff6b6b'; ?>;font-weight:700"><?php echo number_format($benef,0,',',' ') . '€'; ?></div>
+                </div>
+            <?php } ?>
         </div>
     <?php endif; ?>
 </div>
