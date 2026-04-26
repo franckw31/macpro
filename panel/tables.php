@@ -1768,13 +1768,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 												<div class="players-list">
 													<!-- Formulaire : affecter le même nombre de jetons à tous les joueurs -->
-													<form method="post" class="form-inline" style="max-width:900px;margin:10px auto;display:flex;gap:8px;align-items:center;">
+													<form method="post" class="form-inline assign-jetons-form" style="max-width:900px;margin:10px auto;display:flex;gap:8px;align-items:center;">
 														<div class="input-group">
-															<input type="number" name="assign_all_jetons" class="form-control" placeholder="Nombre de jetons" required min="0" style="width:180px;">
+															<input id="assign_all_jetons_input" type="number" name="assign_all_jetons" class="form-control" placeholder="Nombre de jetons" required min="0" style="width:180px;">
 															<button type="submit" class="btn btn-primary">Affecter à tous</button>
+															<button type="submit" name="undo_assign_jetons" value="1" class="btn btn-secondary" onclick="return confirmUndo();">Annuler dernier</button>
 														</div>
 														<span style="color:#ccc;font-size:0.9em;margin-left:8px;">(Met à jour `jetons` et recalcul `jetons_total`)</span>
 													</form>
+													<script>
+													// Confirmation avant assignation globale
+													document.querySelector('.assign-jetons-form').addEventListener('submit', function(e) {
+														// If undo button triggered, skip assign confirmation
+														if (document.activeElement && document.activeElement.name === 'undo_assign_jetons') return;
+														var v = document.getElementById('assign_all_jetons_input').value;
+														if (!v || parseInt(v,10) < 0) { e.preventDefault(); alert('Veuillez saisir un nombre de jetons valide.'); return; }
+														if (!confirm('Affecter ' + v + ' jetons à TOUS les participants ?')) { e.preventDefault(); }
+													});
+
+													function confirmUndo() {
+														return confirm('Annuler la dernière affectation de jetons pour cette activité ?');
+													}
+													</script>
 													<table class="table table-condensed">
 														<thead>
 															<tr>
