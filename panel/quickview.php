@@ -1094,6 +1094,39 @@ document.addEventListener('DOMContentLoaded', function() {
 	   }
 	   </script>
 
+	<script>
+	// Toggle podium vs registration: show podium when paid players exist
+	document.addEventListener('DOMContentLoaded', function(){
+		var podiumSection = document.getElementById('podium-section');
+		var regSection = document.getElementById('reg-section');
+		var podiumList = document.getElementById('podium-list');
+		function updateVisibility(){
+			if(!podiumList) return;
+			// consider podium present when an element with class .podium-item exists
+			var hasItems = !!podiumList.querySelector('.podium-item');
+			// also accept table rows or non-empty paid content
+			if(!hasItems){
+				// trim text and check for known empty messages
+				var txt = (podiumList.textContent||'').trim();
+				if(txt && !/chargement|aucun joueur payé|erreur réseau/i.test(txt)) hasItems = true;
+			}
+			if(hasItems){
+				if(podiumSection){ podiumSection.style.display='block'; podiumSection.removeAttribute('aria-hidden'); }
+				if(regSection){ regSection.style.display='none'; regSection.setAttribute('aria-hidden','true'); }
+			} else {
+				if(podiumSection){ podiumSection.style.display='none'; podiumSection.setAttribute('aria-hidden','true'); }
+				if(regSection){ regSection.style.display='block'; regSection.removeAttribute('aria-hidden'); }
+			}
+		}
+		if(podiumList){
+			var mo = new MutationObserver(function(){ setTimeout(updateVisibility, 50); });
+			mo.observe(podiumList, { childList: true, subtree: true, characterData: true });
+		}
+		// initial check in case app.js already populated podium
+		setTimeout(updateVisibility, 700);
+	});
+	</script>
+
 
 	<script>
 		(function(){
