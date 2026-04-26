@@ -1718,6 +1718,14 @@ if ($selectedActivityId > 0) {
 												</div>
 
 												<div class="players-list">
+													<!-- Formulaire : affecter le même nombre de jetons à tous les joueurs -->
+													<form method="post" class="form-inline" style="max-width:900px;margin:10px auto;display:flex;gap:8px;align-items:center;">
+														<div class="input-group">
+															<input type="number" name="assign_all_jetons" class="form-control" placeholder="Nombre de jetons" required min="0" style="width:180px;">
+															<button type="submit" class="btn btn-primary">Affecter à tous</button>
+														</div>
+														<span style="color:#ccc;font-size:0.9em;margin-left:8px;">(Met à jour `jetons` et recalcul `jetons_total`)</span>
+													</form>
 													<table class="table table-condensed">
 														<thead>
 															<tr>
