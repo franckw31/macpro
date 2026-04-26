@@ -94,6 +94,8 @@ if($activity){
 
             $total_count = count($rows);
             $winners_count = count(array_filter($rows, function($r){ return ($r['gains'] ?? 0) > 0; }));
+            // Limit display to top 9 (table finale)
+            $rows = array_slice($rows, 0, 9);
         }
     }
 }
