@@ -1130,26 +1130,75 @@ if ($selectedActivityId > 0) {
 	}
 }
 ?>
-	<?php
-	// Handler pour affecter un même nombre de jetons à tous les joueurs de l'activité
-	if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['assign_all_jetons'])) {
-		$assignVal = intval($_POST['assign_all_jetons']);
-		if ($selectedActivityId > 0) {
-			$assignVal = max(0, $assignVal);
-			// Met à jour la colonne `jetons` et recalcule `jetons_total` avec les bonus existants
-			$sql = "UPDATE `participation` SET `jetons` = " . intval($assignVal) . ", `jetons_total` = " . intval($assignVal) . " + COALESCE(`jetons_bonus_ins`,0) + COALESCE(`jetons_bonus_arrivee`,0) WHERE `id-activite` = " . $selectedActivityId;
-			mysqli_query($con, $sql);
+<?php
+// Assure l'existence d'une table de backup pour pouvoir annuler l'opération
+$createBackupTableSql = "CREATE TABLE IF NOT EXISTS `participation_jetons_backup` (
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+	`id_participation` INT NOT NULL,
+	`activity_id` INT NOT NULL,
+	`jetons` INT DEFAULT 0,
+	`jetons_total` INT DEFAULT 0,
+	`created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+	KEY (`activity_id`),
+	KEY (`id_participation`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+mysqli_query($con, $createBackupTableSql);
 
-			// Met à jour la valeur moyenne stockée dans `activite.jetons_activite` pour cohérence
-			mysqli_query($con, "UPDATE `activite` SET `jetons_activite` = " . intval($assignVal) . " WHERE `id-activite` = " . $selectedActivityId);
+// Handler pour affecter un même nombre de jetons à tous les joueurs de l'activité
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	// Annuler la dernière assignation
+	if (isset($_POST['undo_assign_jetons']) && $selectedActivityId > 0) {
+		// Récupérer le timestamp le plus récent pour cette activité
+		$res = mysqli_query($con, "SELECT MAX(created_at) AS last_ts FROM participation_jetons_backup WHERE activity_id = " . intval($selectedActivityId));
+		$row = $res ? mysqli_fetch_assoc($res) : null;
+		$lastTs = $row && $row['last_ts'] ? $row['last_ts'] : null;
+		if ($lastTs) {
+			// Restaurer les valeurs depuis la sauvegarde
+			$restoreQ = "SELECT id_participation, jetons, jetons_total FROM participation_jetons_backup WHERE activity_id = " . intval($selectedActivityId) . " AND created_at = '" . mysqli_real_escape_string($con, $lastTs) . "'";
+			$r2 = mysqli_query($con, $restoreQ);
+			while ($rrow = mysqli_fetch_assoc($r2)) {
+				$pid = intval($rrow['id_participation']);
+				$jet = intval($rrow['jetons']);
+				$jtot = intval($rrow['jetons_total']);
+				mysqli_query($con, "UPDATE participation SET jetons = " . $jet . ", jetons_total = " . $jtot . " WHERE `id-participation` = " . $pid);
+			}
+			// Supprimer les entrées restaurées pour éviter double-undo
+			mysqli_query($con, "DELETE FROM participation_jetons_backup WHERE activity_id = " . intval($selectedActivityId) . " AND created_at = '" . mysqli_real_escape_string($con, $lastTs) . "'");
+			// Recalcul / mise à jour de la moyenne stockée
+			mysqli_query($con, "UPDATE activite a SET jetons_activite = (SELECT FLOOR(AVG(COALESCE(p.jetons,0))) FROM participation p WHERE p.`id-activite` = " . intval($selectedActivityId) . ") WHERE a.`id-activite` = " . intval($selectedActivityId));
 		}
+
+		$redirectUrl = 'tables.php?id_activite=' . $selectedActivityId . '&mode=' . htmlspecialchars($mode, ENT_QUOTES, 'UTF-8') . '&equilibrage=' . (int)$autoBalance;
+		header('Location: ' . $redirectUrl);
+		exit;
+	}
+
+	// Assignation globale — créer une sauvegarde avant
+	if (isset($_POST['assign_all_jetons']) && $selectedActivityId > 0) {
+		$assignVal = intval($_POST['assign_all_jetons']);
+		$assignVal = max(0, $assignVal);
+
+		// Sauvegarde des valeurs actuelles pour cette activité
+		$backupInsert = "INSERT INTO participation_jetons_backup (id_participation, activity_id, jetons, jetons_total, created_at) 
+			SELECT p.`id-participation`, p.`id-activite`, COALESCE(p.jetons,0), COALESCE(p.jetons_total,0), NOW()
+			FROM participation p
+			WHERE p.`id-activite` = " . intval($selectedActivityId);
+		mysqli_query($con, $backupInsert);
+
+		// Mise à jour des jetons et recalcul jetons_total
+		$sql = "UPDATE `participation` SET `jetons` = " . intval($assignVal) . ", `jetons_total` = " . intval($assignVal) . " + COALESCE(`jetons_bonus_ins`,0) + COALESCE(`jetons_bonus_arrivee`,0) WHERE `id-activite` = " . $selectedActivityId;
+		mysqli_query($con, $sql);
+
+		// Met à jour la valeur moyenne stockée dans `activite.jetons_activite`
+		mysqli_query($con, "UPDATE `activite` SET `jetons_activite` = " . intval($assignVal) . " WHERE `id-activite` = " . $selectedActivityId);
 
 		// Redirection pour éviter la double soumission
 		$redirectUrl = 'tables.php?id_activite=' . $selectedActivityId . '&mode=' . htmlspecialchars($mode, ENT_QUOTES, 'UTF-8') . '&equilibrage=' . (int)$autoBalance;
 		header('Location: ' . $redirectUrl);
 		exit;
 	}
-	?>
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
