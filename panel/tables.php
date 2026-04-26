@@ -1130,6 +1130,26 @@ if ($selectedActivityId > 0) {
 	}
 }
 ?>
+	<?php
+	// Handler pour affecter un même nombre de jetons à tous les joueurs de l'activité
+	if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['assign_all_jetons'])) {
+		$assignVal = intval($_POST['assign_all_jetons']);
+		if ($selectedActivityId > 0) {
+			$assignVal = max(0, $assignVal);
+			// Met à jour la colonne `jetons` et recalcule `jetons_total` avec les bonus existants
+			$sql = "UPDATE `participation` SET `jetons` = " . intval($assignVal) . ", `jetons_total` = " . intval($assignVal) . " + COALESCE(`jetons_bonus_ins`,0) + COALESCE(`jetons_bonus_arrivee`,0) WHERE `id-activite` = " . $selectedActivityId;
+			mysqli_query($con, $sql);
+
+			// Met à jour la valeur moyenne stockée dans `activite.jetons_activite` pour cohérence
+			mysqli_query($con, "UPDATE `activite` SET `jetons_activite` = " . intval($assignVal) . " WHERE `id-activite` = " . $selectedActivityId);
+		}
+
+		// Redirection pour éviter la double soumission
+		$redirectUrl = 'tables.php?id_activite=' . $selectedActivityId . '&mode=' . htmlspecialchars($mode, ENT_QUOTES, 'UTF-8') . '&equilibrage=' . (int)$autoBalance;
+		header('Location: ' . $redirectUrl);
+		exit;
+	}
+	?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
