@@ -1824,6 +1824,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 														<div class="input-group">
 															<input id="assign_all_jetons_input" type="number" name="assign_all_jetons" class="form-control" placeholder="Nombre de jetons" required min="0" style="width:180px;">
 															<button type="submit" class="btn btn-primary">Affecter à tous</button>
+															<button type="submit" name="assign_all_jetons_no_arrive" value="1" class="btn btn-warning">Affecter (sans bonus arrivée)</button>
 															<button type="submit" name="undo_assign_jetons" value="1" class="btn btn-secondary" onclick="return confirmUndo();">Annuler dernier</button>
 														</div>
 														<span style="color:#ccc;font-size:0.9em;margin-left:8px;">(Met à jour `jetons` et recalcul `jetons_total`)</span>
@@ -1835,7 +1836,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 														if (document.activeElement && document.activeElement.name === 'undo_assign_jetons') return;
 														var v = document.getElementById('assign_all_jetons_input').value;
 														if (!v || parseInt(v,10) < 0) { e.preventDefault(); alert('Veuillez saisir un nombre de jetons valide.'); return; }
-														if (!confirm('Affecter ' + v + ' jetons à TOUS les participants ?')) { e.preventDefault(); }
+														// If the "without arrive" button triggered, show a variant message
+														if (document.activeElement && document.activeElement.name === 'assign_all_jetons_no_arrive') {
+															if (!confirm('Affecter ' + v + ' jetons à TOUS les participants en laissant le bonus arrivée inchangé ?')) { e.preventDefault(); }
+														} else {
+															if (!confirm('Affecter ' + v + ' jetons à TOUS les participants ? (les deux bonus seront réglés à 5000)')) { e.preventDefault(); }
+														}
 													});
 
 													function confirmUndo() {
