@@ -1250,6 +1250,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		header('Location: ' . $redirectUrl);
 		exit;
 	}
+
+		// Action: assigner jetons et forcer les deux bonus à 5000 (comportement précédent)
+		if (isset($_POST['assign_all_jetons']) && !isset($_POST['assign_all_jetons_no_arrive'])) {
+			$assignVal = intval($_POST['assign_all_jetons']);
+			$assignVal = max(0, $assignVal);
+
+			// Sauvegarde des valeurs actuelles pour cette activité (incluant les bonus)
+			$backupInsert = "INSERT INTO participation_jetons_backup (id_participation, activity_id, jetons, jetons_bonus_ins, jetons_bonus_arrivee, jetons_total, created_at) 
+				SELECT p.`id-participation`, p.`id-activite`, COALESCE(p.jetons,0), COALESCE(p.jetons_bonus_ins,0), COALESCE(p.jetons_bonus_arrivee,0), COALESCE(p.jetons_total,0), NOW()
+				FROM participation p
+				WHERE p.`id-activite` = " . intval($selectedActivityId);
+			mysqli_query($con, $backupInsert);
+
+			// Mise à jour des jetons et recalcul jetons_total
+			$bonusVal = 5000;
+			$newTotal = intval($assignVal) + $bonusVal + $bonusVal;
+			$sql = "UPDATE `participation` SET `jetons` = " . intval($assignVal) . ", `jetons_bonus_ins` = " . $bonusVal . ", `jetons_bonus_arrivee` = " . $bonusVal . ", `jetons_total` = " . $newTotal . " WHERE `id-activite` = " . $selectedActivityId;
+			mysqli_query($con, $sql);
+
+			// Met à jour la valeur moyenne stockée dans `activite.jetons_activite`
+			mysqli_query($con, "UPDATE `activite` SET `jetons_activite` = " . intval($assignVal) . " WHERE `id-activite` = " . $selectedActivityId);
+
+			// Redirection pour éviter la double soumission
+			$redirectUrl = 'tables.php?id_activite=' . $selectedActivityId . '&mode=' . htmlspecialchars($mode, ENT_QUOTES, 'UTF-8') . '&equilibrage=' . (int)$autoBalance;
+			header('Location: ' . $redirectUrl);
+			exit;
+		}
 }
 ?>
 <!DOCTYPE html>
