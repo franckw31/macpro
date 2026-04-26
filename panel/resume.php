@@ -186,12 +186,12 @@ if($activity){
         <div style="flex:1">
             <div class="title"><?php echo h($title); ?></div>
             <?php if($activity && !empty($activity['date_depart'])): ?>
-                <div class="sub"><?php echo h($activity['date_depart']); ?></div>
-            <?php endif; ?>
-            <div class="muted">
-                <span style="color:#ff7a45;font-weight:700"><?php echo intval($total_count); ?></span> inscrits
-                <?php if(!is_null($max_places)){ ?> sur <span style="color:#ff7a45;font-weight:700"><?php echo intval($max_places); ?></span> max<?php } ?>
-            </div>
+            <div class="row header-row" role="row">
+                <div class="col-num">#</div>
+                <div class="col-pseudo">Pseudo</div>
+                <div class="col-bounty">Bounty</div>
+                <div class="col-recave">Rebuy</div>
+                <div class="col-gains">Gains</div>
         </div>
         
     </div>
