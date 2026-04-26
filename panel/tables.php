@@ -1160,7 +1160,9 @@ if ($selectedActivityId > 0) {
 			}
 		}
 	}
-}
+		}
+	}
+
 ?>
 <?php
 // Assure l'existence d'une table de backup pour pouvoir annuler l'opération
