@@ -608,10 +608,12 @@ document.addEventListener('DOMContentLoaded', function() {
 					<div style="margin-top:8px;color:#ff6b6b;font-weight:700"><?php echo (empty($serverActivity) || empty($serverActivity['participants_count']))? '● Pas encore inscrit(e)' : ''; ?></div>
 
 				</div>
-				<div style="width:52px;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center">
-				   <button class="chev" id="next-act" onclick="navigateActivity(1)">›</button>
-				   <button class="chev" id="prev-act" onclick="navigateActivity(-1)">‹</button>
-				</div>
+					 <div style="width:72px;display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center">
+						 <div class="chev-label" style="font-size:12px;color:var(--muted);">Suiv</div>
+						 <button class="chev" id="next-act" onclick="navigateActivity(1)">›</button>
+						 <div class="chev-label" style="font-size:12px;color:var(--muted);">Prec</div>
+						 <button class="chev" id="prev-act" onclick="navigateActivity(-1)">‹</button>
+					 </div>
 			</div>
 		</section>
 
