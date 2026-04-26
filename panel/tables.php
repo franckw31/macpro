@@ -1827,7 +1827,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 															<button type="submit" name="undo_assign_jetons" value="1" class="btn btn-secondary" onclick="return confirmUndo();">Annuler dernier</button>
 														</div>
 														<span style="color:#ccc;font-size:0.9em;margin-left:8px;">(Met à jour `jetons` et recalcul `jetons_total`)</span>
-													</form>
+														</form>
+														<script>
+														// Confirmation avant assignation globale
+														document.querySelector('.assign-jetons-form').addEventListener('submit', function(e) {
+															// Determine which button triggered the submit (modern browsers expose e.submitter)
+															var submitter = (typeof e.submitter !== 'undefined') ? e.submitter : document.activeElement;
+															// If undo button triggered, skip assign confirmation
+															if (submitter && submitter.name === 'undo_assign_jetons') return;
+															var v = document.getElementById('assign_all_jetons_input').value;
+															if (!v || parseInt(v,10) < 0) { e.preventDefault(); alert('Veuillez saisir un nombre de jetons valide.'); return; }
+															if (!confirm('Affecter ' + v + ' jetons à TOUS les participants ?')) { e.preventDefault(); }
+														});
+
+														function confirmUndo() {
+															return confirm('Annuler la dernière affectation de jetons pour cette activité ?');
+														}
+
+														// Update bonus arrivee inline via AJAX
+														document.addEventListener('change', function(e) {
+															var target = e.target;
+															if (!target || !target.classList) return;
+															if (target.classList.contains('bonus-arrivee-input')) {
+																var memberId = target.getAttribute('data-member-id');
+																var activityId = target.getAttribute('data-activity-id');
+																var value = parseInt(target.value || '0', 10);
+																var statusSpan = target.nextElementSibling;
+																if (statusSpan) { statusSpan.textContent = '…'; statusSpan.style.color = '#999'; statusSpan.style.display = 'inline-block'; }
+																var formData = new FormData();
+																formData.append('id_membre', memberId);
+																formData.append('id_activite', activityId);
+																formData.append('field', 'jetons_bonus_arrivee');
+																formData.append('value', value);
+																fetch('update_field.php', {
+																	method: 'POST',
+																	body: formData,
+																	credentials: 'same-origin'
+																}).then(function(resp){ return resp.json(); }).then(function(json){
+																	if (json && json.success) {
+																		if (statusSpan) { statusSpan.textContent = '✓'; statusSpan.style.color = 'green'; setTimeout(function(){ statusSpan.style.display = 'none'; }, 1200); }
+																	} else {
+																		if (statusSpan) { statusSpan.textContent = 'Erreur'; statusSpan.style.color = 'red'; }
+																		console.error('update error', json);
+																	}
+																}).catch(function(err){ if (statusSpan) { statusSpan.textContent = 'Err'; statusSpan.style.color = 'red'; } console.error(err); });
+															}
+														});
+														</script>
 													<script>
 													// Confirmation avant assignation globale
 													document.querySelector('.assign-jetons-form').addEventListener('submit', function(e) {
