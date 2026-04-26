@@ -1174,12 +1174,23 @@ $createBackupTableSql = "CREATE TABLE IF NOT EXISTS `participation_jetons_backup
 	`id_participation` INT NOT NULL,
 	`activity_id` INT NOT NULL,
 	`jetons` INT DEFAULT 0,
+	`jetons_bonus_ins` INT DEFAULT 0,
+	`jetons_bonus_arrivee` INT DEFAULT 0,
 	`jetons_total` INT DEFAULT 0,
 	`created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	KEY (`activity_id`),
 	KEY (`id_participation`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
 mysqli_query($con, $createBackupTableSql);
+// S'assurer que les colonnes de bonus existent (pour les anciens schémas)
+$colCheck = mysqli_query($con, "SHOW COLUMNS FROM participation_jetons_backup LIKE 'jetons_bonus_ins'");
+if ($colCheck && mysqli_num_rows($colCheck) === 0) {
+	mysqli_query($con, "ALTER TABLE participation_jetons_backup ADD COLUMN `jetons_bonus_ins` INT DEFAULT 0");
+}
+$colCheck2 = mysqli_query($con, "SHOW COLUMNS FROM participation_jetons_backup LIKE 'jetons_bonus_arrivee'");
+if ($colCheck2 && mysqli_num_rows($colCheck2) === 0) {
+	mysqli_query($con, "ALTER TABLE participation_jetons_backup ADD COLUMN `jetons_bonus_arrivee` INT DEFAULT 0");
+}
 
 // Handler pour affecter un même nombre de jetons à tous les joueurs de l'activité
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -1190,14 +1201,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$row = $res ? mysqli_fetch_assoc($res) : null;
 		$lastTs = $row && $row['last_ts'] ? $row['last_ts'] : null;
 		if ($lastTs) {
-			// Restaurer les valeurs depuis la sauvegarde
-			$restoreQ = "SELECT id_participation, jetons, jetons_total FROM participation_jetons_backup WHERE activity_id = " . intval($selectedActivityId) . " AND created_at = '" . mysqli_real_escape_string($con, $lastTs) . "'";
+			// Restaurer les valeurs depuis la sauvegarde (incluant les bonus)
+			$restoreQ = "SELECT id_participation, jetons, jetons_bonus_ins, jetons_bonus_arrivee, jetons_total FROM participation_jetons_backup WHERE activity_id = " . intval($selectedActivityId) . " AND created_at = '" . mysqli_real_escape_string($con, $lastTs) . "'";
 			$r2 = mysqli_query($con, $restoreQ);
 			while ($rrow = mysqli_fetch_assoc($r2)) {
 				$pid = intval($rrow['id_participation']);
 				$jet = intval($rrow['jetons']);
+				$bonusIns = intval($rrow['jetons_bonus_ins']);
+				$bonusArr = intval($rrow['jetons_bonus_arrivee']);
 				$jtot = intval($rrow['jetons_total']);
-				mysqli_query($con, "UPDATE participation SET jetons = " . $jet . ", jetons_total = " . $jtot . " WHERE `id-participation` = " . $pid);
+				mysqli_query($con, "UPDATE participation SET jetons = " . $jet . ", jetons_bonus_ins = " . $bonusIns . ", jetons_bonus_arrivee = " . $bonusArr . ", jetons_total = " . $jtot . " WHERE `id-participation` = " . $pid);
 			}
 			// Supprimer les entrées restaurées pour éviter double-undo
 			mysqli_query($con, "DELETE FROM participation_jetons_backup WHERE activity_id = " . intval($selectedActivityId) . " AND created_at = '" . mysqli_real_escape_string($con, $lastTs) . "'");
@@ -1215,15 +1228,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$assignVal = intval($_POST['assign_all_jetons']);
 		$assignVal = max(0, $assignVal);
 
-		// Sauvegarde des valeurs actuelles pour cette activité
-		$backupInsert = "INSERT INTO participation_jetons_backup (id_participation, activity_id, jetons, jetons_total, created_at) 
-			SELECT p.`id-participation`, p.`id-activite`, COALESCE(p.jetons,0), COALESCE(p.jetons_total,0), NOW()
+		// Sauvegarde des valeurs actuelles pour cette activité (incluant les bonus)
+		$backupInsert = "INSERT INTO participation_jetons_backup (id_participation, activity_id, jetons, jetons_bonus_ins, jetons_bonus_arrivee, jetons_total, created_at) 
+			SELECT p.`id-participation`, p.`id-activite`, COALESCE(p.jetons,0), COALESCE(p.jetons_bonus_ins,0), COALESCE(p.jetons_bonus_arrivee,0), COALESCE(p.jetons_total,0), NOW()
 			FROM participation p
 			WHERE p.`id-activite` = " . intval($selectedActivityId);
 		mysqli_query($con, $backupInsert);
 
 		// Mise à jour des jetons et recalcul jetons_total
-		$sql = "UPDATE `participation` SET `jetons` = " . intval($assignVal) . ", `jetons_total` = " . intval($assignVal) . " + COALESCE(`jetons_bonus_ins`,0) + COALESCE(`jetons_bonus_arrivee`,0) WHERE `id-activite` = " . $selectedActivityId;
+		$bonusVal = 5000;
+		$newTotal = intval($assignVal) + $bonusVal + $bonusVal;
+		$sql = "UPDATE `participation` SET `jetons` = " . intval($assignVal) . ", `jetons_bonus_ins` = " . $bonusVal . ", `jetons_bonus_arrivee` = " . $bonusVal . ", `jetons_total` = " . $newTotal . " WHERE `id-activite` = " . $selectedActivityId;
 		mysqli_query($con, $sql);
 
 		// Met à jour la valeur moyenne stockée dans `activite.jetons_activite`
