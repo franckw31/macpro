@@ -1197,8 +1197,6 @@ function handleSqlError($message, $query = null) {
  if ($resCreate === false) {
 	handleSqlError("create backup table failed: " . mysqli_error($con), $createBackupTableSql);
 }
-	handleSqlError("create backup table failed: " . mysqli_error($con), $createBackupTableSql);
-}
 // S'assurer que les colonnes de bonus existent (pour les anciens schémas)
 $colCheck = mysqli_query($con, "SHOW COLUMNS FROM participation_jetons_backup LIKE 'jetons_bonus_ins'");
 if ($colCheck && mysqli_num_rows($colCheck) === 0) {
