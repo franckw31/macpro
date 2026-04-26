@@ -66,6 +66,7 @@ if($activity){
                 $rows[] = [
                     'id' => isset($r['id-participation'])? $r['id-participation'] : (isset($r['id'])? $r['id'] : null),
                     'pseudo' => $r['pseudo'] ?? '',
+                    'member_id' => isset($r['id-membre']) ? intval($r['id-membre']) : (isset($r['id_membre']) ? intval($r['id_membre']) : null),
                     'place' => $place,
                     'challenge' => $challenge,
                     'recave' => $recave,
@@ -227,21 +228,32 @@ if($activity){
                 <div class="col-gains">Gains</div>
                 <div class="col-gains">Bénéfice</div>
             </div>
-            <?php foreach($rows as $i=>$r):
-                $rank = (isset($r['place']) && intval($r['place'])>0) ? intval($r['place']) : ($i+1);
-                $depenses = $activity_buyin + (intval($r['recave'] ?? 0) * $activity_recave_montant) + (floatval($r['bounty'] ?? 0));
-                $gains = floatval($r['gains'] ?? 0.0);
-                $benef = $gains - $depenses;
+            <?php
+            $current_member_id = isset($_SESSION['id']) ? intval($_SESSION['id']) : null;
+            $shown = false;
+            if($current_member_id !== null){
+                foreach($rows as $i=>$r){
+                    if(isset($r['member_id']) && intval($r['member_id']) === $current_member_id){
+                        $rank = (isset($r['place']) && intval($r['place'])>0) ? intval($r['place']) : ($i+1);
+                        $depenses = $activity_buyin + (intval($r['recave'] ?? 0) * $activity_recave_montant) + (floatval($r['bounty'] ?? 0));
+                        $gains = floatval($r['gains'] ?? 0.0);
+                        $benef = $gains - $depenses;
+                        ?>
+                        <div class="row" role="listitem">
+                            <div class="col-num"><?php echo '#'.h($rank); ?></div>
+                            <div class="col-pseudo"><?php echo h($r['pseudo']); ?></div>
+                            <div class="col-bounty"><?php echo h($rank); ?></div>
+                            <div class="col-recave"><?php echo number_format($depenses, 0, ',', ' ') . '€'; ?></div>
+                            <div class="col-gains"><?php echo ($gains>0)? number_format($gains,0,',',' ') . '€' : '-'; ?></div>
+                            <div class="col-gains" style="color:<?php echo ($benef>=0)?'var(--green)':'#ff6b6b'; ?>;font-weight:700"><?php echo number_format($benef,0,',',' ') . '€'; ?></div>
+                        </div>
+                        <?php
+                        $shown = true;
+                        break;
+                    }
+                }
+            }
             ?>
-                <div class="row" role="listitem">
-                    <div class="col-num"><?php echo '#'.h($rank); ?></div>
-                    <div class="col-pseudo"><?php echo h($r['pseudo']); ?></div>
-                    <div class="col-bounty"><?php echo h($rank); ?></div>
-                    <div class="col-recave"><?php echo number_format($depenses, 0, ',', ' ') . '€'; ?></div>
-                    <div class="col-gains"><?php echo ($gains>0)? number_format($gains,0,',',' ') . '€' : '-'; ?></div>
-                    <div class="col-gains" style="color:<?php echo ($benef>=0)?'var(--green)':'#ff6b6b'; ?>;font-weight:700"><?php echo number_format($benef,0,',',' ') . '€'; ?></div>
-                </div>
-            <?php endforeach; ?>
         </div>
     <?php endif; ?>
 </div>
