@@ -445,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function(){
 			if(window.SERVER_ACTIVITY && typeof window.SERVER_ACTIVITY.participants_count !== 'undefined'){
 				var pc = window.SERVER_ACTIVITY.participants_count;
 				var mp = window.SERVER_ACTIVITY.max_participants || window.SERVER_ACTIVITY.places || null;
-				span.textContent = mp ? pc + '/' + mp + ' Inscrits' : pc + ' Inscrits';
+				span.textContent = mp ? pc + '/' + mp + ' In' : pc + ' In';
 			}
 		}catch(e){}
 	}
