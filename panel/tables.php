@@ -803,9 +803,8 @@ if ($selectedActivityId > 0) {
 		foreach ($players as $p) {
 			$flatSeating[] = $p;
 		}
-	}
-
-	// S'assure que toutes les tables à afficher existent dans $seatingTables
+			
+			// S'assure que toutes les tables à afficher existent dans $seatingTables
 	if (isset($tablesCount) && $tablesCount > 0) {
 		for ($t = 0; $t < $tablesCount; $t++) {
 			if (!isset($seatingTables[$t])) {
