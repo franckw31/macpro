@@ -419,14 +419,13 @@ if ($selectedActivityId > 0) {
 				// Redirection pour rafraîchir la page
 				header("Location: " . "tables.php?id_activite=" . $selectedActivityId . "&mode=" . $mode . "&equilibrage=" . $autoBalance);
 				    exit;
-			    }
+				}
 
-		    }
+				}
 
-		}
+				}
 
-		?>
-			// Récupérer les statuts actuels de paiement depuis la base de données
+				// Récupérer les statuts actuels de paiement depuis la base de données
 			$currentPaidStatuses = [];
 			$sqlCurrentPayments = mysqli_query(
 				$con,
