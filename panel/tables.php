@@ -1183,8 +1183,19 @@ $createBackupTableSql = "CREATE TABLE IF NOT EXISTS `participation_jetons_backup
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
  $resCreate = mysqli_query($con, $createBackupTableSql);
  if ($resCreate === false) {
-	 file_put_contents('/tmp/tables_error.log', date('c') . " - create backup table failed: " . mysqli_error($con) . "\nQuery: " . $createBackupTableSql . "\n", FILE_APPEND);
- }
+	// Log and display immediately
+	function handleSqlError($message, $query = null) {
+		$log = date('c') . " - " . $message . "\n";
+		if ($query) $log .= "Query: " . $query . "\n";
+		file_put_contents('/tmp/tables_error.log', $log, FILE_APPEND);
+		echo "<div style='background:#fee;border:2px solid #f00;padding:12px;margin:12px;font-family:monospace;'>";
+		echo "<h3>Erreur SQL détectée</h3>";
+		echo "<pre>" . htmlspecialchars($log) . "</pre>";
+		echo "</div>";
+		exit;
+	}
+	handleSqlError("create backup table failed: " . mysqli_error($con), $createBackupTableSql);
+}
 // S'assurer que les colonnes de bonus existent (pour les anciens schémas)
 $colCheck = mysqli_query($con, "SHOW COLUMNS FROM participation_jetons_backup LIKE 'jetons_bonus_ins'");
 if ($colCheck && mysqli_num_rows($colCheck) === 0) {
