@@ -57,7 +57,7 @@ $q = @mysqli_query($con, $sql);
                 $addon = intval($r['addon']);
                 $recave_m = number_format(intval($r['recave_montant']),0,',',' ');
                 $expense = number_format(intval($r['expense']),0,',',' ');
-                echo "<tr><td>#". $aid ."</td><td>". $title ."</td><td>". $dt ."</td><td>". $buyin ." €</td><td>". $rake ." €</td><td>". $recave ."</td><td>". $addon ."</td><td style='text-align:right;color:#9aa6b1;font-weight:800'>". $expense ." €</td><td><a href=\"/panel/voir-activite.php?uid=". $aid ."\">Voir</a></td></tr>";
+                echo "<tr><td>#". $aid ."</td><td>". $title ."</td><td>". $dt ."</td><td>". $buyin ." €</td><td>". $rake ." €</td><td>". $recave ."</td><td>". $addon ."</td><td style='text-align:right;color:#9aa6b1;font-weight:800'>". $expense ." €</td><td><a href=\"/panel/resume.php?uid=". $aid ."\">Voir</a></td></tr>";
             }
         } else {
             echo '<tr><td colspan="9">Aucune activité trouvée.</td></tr>';
