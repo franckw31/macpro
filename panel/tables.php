@@ -1866,12 +1866,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 															// Double-clic pour éditer la valeur
 															document.addEventListener('dblclick', function(e){
 																var el = e.target;
-																if (!el.classList || !el.classList.contains('bonus-arrivee-display')) return;
+																if (!el.classList || !(el.classList.contains('bonus-arrivee-display') || el.classList.contains('bonus-ins-display'))) return;
 																var memberId = el.getAttribute('data-member-id');
 																var activityId = el.getAttribute('data-activity-id');
 																var curVal = el.getAttribute('data-value') || '0';
+																var fieldName = el.classList.contains('bonus-arrivee-display') ? 'jetons_bonus_arrivee' : 'jetons_bonus_ins';
 																var input = document.createElement('input');
-																input.type = 'number'; input.className = 'form-control bonus-arrivee-input'; input.style.width = '120px'; input.value = curVal;
+																input.type = 'number'; input.className = 'form-control bonus-inline-input'; input.style.width = '120px'; input.value = curVal;
 																input.setAttribute('data-member-id', memberId); input.setAttribute('data-activity-id', activityId);
 																var status = el.parentNode.querySelector('.bonus-save-status');
 																el.parentNode.insertBefore(input, el);
@@ -1888,7 +1889,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 																			}
 																			input.remove();
 																			el.style.display = 'inline-block';
-																		});
+																		}, fieldName);
 																	} else {
 																		input.remove();
 																		el.style.display = 'inline-block';
