@@ -288,6 +288,10 @@ if($activity){
                     </div>
                     <!-- Place line removed as requested -->
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                        <div class="label">Position / Inscrits</div>
+                        <div class="value"><?php echo h($rank) . ' / ' . intval($total_count); ?> (<?php echo intval($r['recave'] ?? 0); ?> recaves)</div>
+                    </div>
+                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">Caves</div>
                         <div class="value"><?php echo intval($r['recave'] ?? 0); ?></div>
                     </div>
@@ -309,10 +313,7 @@ if($activity){
                         <div class="label">Gains</div>
                         <div class="value"><?php echo ($total_gains>0)? number_format($total_gains,0,',',' ') . '€' : '-'; ?></div>
                     </div>
-                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
-                        <div class="label">Position / Inscrits</div>
-                        <div class="value"><?php echo h($rank) . ' / ' . intval($total_count); ?> (<?php echo intval($r['recave'] ?? 0); ?> recaves)</div>
-                    </div>
+                    
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;font-weight:700">
                         <div class="label"><?php echo ($benef >= 0) ? 'Bénéfice' : 'Perte'; ?></div>
                         <div class="value" style="color:<?php echo ($benef >= 0) ? 'var(--green)' : '#ff6b6b'; ?>"><?php echo ($benef >= 0) ? number_format($benef,0,',',' ') . '€' : number_format(abs($benef),0,',',' ') . '€'; ?></div>
