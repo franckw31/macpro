@@ -751,8 +751,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					       lateSeconds = Math.abs(diff);
 					   }
 				       }
-                       if(showCountdown) {
-                       	// Compte à rebours positif : affiche en bleu
+                       if(showCountdown && seconds <= 0) {
+                       	// Compte à rebours positif : affiche en bleu (seulement si pas de timer live actif)
                        	if(tile) tile.style.display = 'flex';
                        	display.textContent = countdownText;
                        	display.style.color = '#00d2ff';
