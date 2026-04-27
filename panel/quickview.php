@@ -813,9 +813,14 @@ document.addEventListener('DOMContentLoaded', function() {
 				}catch(e){}
 		       });
 	       }
-		   setInterval(tick, 1000);
-		   setInterval(syncTimer, 5000);
-		   syncTimer();
+		setInterval(tick, 1000);
+		setInterval(syncTimer, 5000);
+		syncTimer();
+		// Démarrer le compte à rebours si la partie n'a pas encore commencé
+		if(activityStartTs > 0 && Math.floor(Date.now()/1000) < activityStartTs) {
+			showCountdown();
+			countdownInterval = setInterval(showCountdown, 1000);
+		}
 		   // Force full page reload every 30 seconds for robustness
 		   setInterval(function(){
 			   // Force cache refresh by appending a random query param
