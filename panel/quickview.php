@@ -734,6 +734,9 @@ document.addEventListener('DOMContentLoaded', function() {
 				   function updateDisplay() {
 				       var tile = document.getElementById('live-timer-tile');
 				       var now = new Date();
+				       var nowTs = Math.floor(now.getTime() / 1000);
+				       // Mettre à jour liveRunning si la partie a démarré
+				       if(activityStartTs > 0 && nowTs >= activityStartTs) liveRunning = true;
 				       var showCountdown = false;
 				       var countdownText = '';
 				       var countdownSecs = 0;
