@@ -717,8 +717,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	       var seconds = 0;
 	       var total = 0;
 	       var timerPaused = false;
-	       // true si la partie est déjà démarrée (côté serveur) ou dès que le timer live est confirmé actif
-	       var liveRunning = <?php echo (isset($serverActivity['date']) && @strtotime($serverActivity['date']) !== false && strtotime($serverActivity['date']) <= time()) ? 'true' : 'false'; ?>;
+	       // Timestamp Unix (serveur) du départ de la partie — 0 si inconnu
+	       var activityStartTs = <?php echo (isset($serverActivity['date']) && @strtotime($serverActivity['date']) !== false) ? intval(strtotime($serverActivity['date'])) : '0'; ?>;
+	       // true si la partie est déjà démarrée côté serveur ou dès que le timer live est confirmé actif
+	       var liveRunning = (activityStartTs > 0 && Math.floor(Date.now()/1000) >= activityStartTs);
 	       var statusEl = document.getElementById('live-timer-status');
 		       // Get activity start time from PHP
 		       var activityStart = null;
