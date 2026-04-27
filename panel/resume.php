@@ -281,39 +281,45 @@ if($activity){
                 $total_depenses = $depenses + $bounty_depense;
                 $benef = $total_gains - $total_depenses;
                 ?>
-                <div class="row" role="listitem">
-                    <div class="col-num"><?php echo '#'.h($rank); ?></div>
-                    <div class="col-pseudo"><?php echo h($r['pseudo']); ?></div>
-                    <div class="col-bounty"><?php echo h($rank); ?></div>
-                    <div class="col-recave"><?php echo number_format($depenses, 0, ',', ' ') . '€'; ?></div>
-                    <div class="col-gains"><?php echo ($total_gains>0)? number_format($total_gains,0,',',' ') . '€' : '-'; ?></div>
-                </div>
-                <?php if(!empty($activity_bounty) && floatval($activity_bounty) > 0): ?>
-                <div class="row" role="listitem">
-                    <div class="col-num"></div>
-                    <div class="col-pseudo">Dépenses bounty</div>
-                    <div class="col-bounty"></div>
-                    <div class="col-recave"><?php echo number_format($bounty_depense,0,',',' ') . '€'; ?></div>
-                    <div class="col-gains">-</div>
-                </div>
-                <div class="row" role="listitem">
-                    <div class="col-num"></div>
-                    <div class="col-pseudo">Gains bounty</div>
-                    <div class="col-bounty"></div>
-                    <div class="col-recave"><?php echo ($bounty_gains>0)? number_format($bounty_gains,0,',',' ') . '€' : '-'; ?></div>
-                    <div class="col-gains">-</div>
-                </div>
-                <?php endif; ?>
-                <div class="row position-row" role="listitem">
-                    <div class="col-position" style="grid-column:1 / -1; padding-left:12px; color:var(--muted); font-weight:600">Position <?php echo h($rank); ?> / <?php echo intval($total_count); ?> avec <?php echo intval($r['recave'] ?? 0); ?> recaves</div>
-                </div>
-                <div class="row benefit-row" role="listitem">
-                    <?php
-                    $label = ($benef >= 0) ? 'Bénéfice' : 'Perte';
-                    $displayValue = ($benef >= 0) ? number_format($benef,0,',',' ') . '€' : number_format(abs($benef),0,',',' ') . '€';
-                    $color = ($benef >= 0) ? 'var(--green)' : '#ff6b6b';
-                    ?>
-                    <div class="col-benefit" style="grid-column:1 / -1; padding-left:12px; color:<?php echo $color; ?>;font-weight:700"><?php echo $label . ': ' . $displayValue; ?></div>
+                <div class="summary-lines" role="list" aria-label="Synthèse joueur" style="margin-top:12px">
+                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                        <div class="label">Pseudo</div>
+                        <div class="value"><?php echo h($r['pseudo']); ?></div>
+                    </div>
+                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                        <div class="label">Place</div>
+                        <div class="value"><?php echo h($rank); ?></div>
+                    </div>
+                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                        <div class="label">Caves</div>
+                        <div class="value"><?php echo intval($r['recave'] ?? 0); ?></div>
+                    </div>
+                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                        <div class="label">Dépenses</div>
+                        <div class="value"><?php echo number_format($depenses,0,',',' ') . '€'; ?></div>
+                    </div>
+                    <?php if(!empty($activity_bounty) && floatval($activity_bounty) > 0): ?>
+                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                        <div class="label">Dépenses bounty</div>
+                        <div class="value"><?php echo number_format($bounty_depense,0,',',' ') . '€'; ?></div>
+                    </div>
+                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                        <div class="label">Gains bounty</div>
+                        <div class="value"><?php echo ($bounty_gains>0)? number_format($bounty_gains,0,',',' ') . '€' : '-'; ?></div>
+                    </div>
+                    <?php endif; ?>
+                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                        <div class="label">Gains</div>
+                        <div class="value"><?php echo ($total_gains>0)? number_format($total_gains,0,',',' ') . '€' : '-'; ?></div>
+                    </div>
+                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                        <div class="label">Position / Inscrits</div>
+                        <div class="value"><?php echo h($rank) . ' / ' . intval($total_count); ?> (<?php echo intval($r['recave'] ?? 0); ?> recaves)</div>
+                    </div>
+                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;font-weight:700">
+                        <div class="label"><?php echo ($benef >= 0) ? 'Bénéfice' : 'Perte'; ?></div>
+                        <div class="value" style="color:<?php echo ($benef >= 0) ? 'var(--green)' : '#ff6b6b'; ?>"><?php echo ($benef >= 0) ? number_format($benef,0,',',' ') . '€' : number_format(abs($benef),0,',',' ') . '€'; ?></div>
+                    </div>
                 </div>
             <?php } ?>
         </div>
