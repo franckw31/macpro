@@ -697,9 +697,9 @@ document.addEventListener('DOMContentLoaded', function() {
 						       <circle class="timer-progress" id="qs-timer-progress" cx="40" cy="40" r="36" style="stroke-width:4;"></circle>
 				       </svg>
 					       <div class="timer-content" style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;">
-							       <div id="live-timer-level" style="font-size:10px;font-weight:600;color:#fff;letter-spacing:1px;text-transform:uppercase;"></div>
-							       <div id="live-timer-display" style="font-size:18px;font-weight:900;color:#00d2ff;line-height:1;">--:--</div>
-							       <div id="live-timer-blinds" style="font-size:10px;color:#ffc107;font-weight:700;margin-top:2px;"></div>
+							       <div id="qs-timer-level" style="font-size:10px;font-weight:600;color:#fff;letter-spacing:1px;text-transform:uppercase;"></div>
+							       <div id="qs-timer-display" style="font-size:18px;font-weight:900;color:#00d2ff;line-height:1;">--:--</div>
+							       <div id="qs-timer-blinds" style="font-size:10px;color:#ffc107;font-weight:700;margin-top:2px;"></div>
 					       </div>
 			       </div>
 					       <!-- <div class="count-label" id="live-timer-label" style="margin-top:8px;">Live Timer</div> -->
