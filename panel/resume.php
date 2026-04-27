@@ -286,7 +286,7 @@ if($activity){
                     <div class="col-pseudo"><?php echo h($r['pseudo']); ?></div>
                     <div class="col-bounty"><?php echo h($rank); ?></div>
                     <div class="col-recave"><?php echo number_format($depenses, 0, ',', ' ') . '€'; ?></div>
-                    <div class="col-gains"><?php echo ($gains>0)? number_format($gains,0,',',' ') . '€' : '-'; ?></div>
+                    <div class="col-gains"><?php echo ($total_gains>0)? number_format($total_gains,0,',',' ') . '€' : '-'; ?></div>
                 </div>
                 <?php if(!empty($activity_bounty) && floatval($activity_bounty) > 0): ?>
                 <div class="row" role="listitem">
