@@ -273,7 +273,7 @@ if($activity){
                 $bounty_depense = 0.0;
                 $bounty_gains = 0.0;
                 if(!empty($activity_bounty) && floatval($activity_bounty) > 0){
-                    $bounty_depense = floatval($activity_bounty) * intval($r['recave'] ?? 0);
+                    $bounty_depense = floatval($activity_bounty) + floatval($activity_bounty) * intval($r['recave'] ?? 0);
                     $bounty_gains = floatval($activity_bounty) * intval($r['bounty'] ?? 0);
                 }
                 // total amounts include bounty gains as positive gains
