@@ -292,7 +292,7 @@ if($activity){
                         <div class="value"><?php echo h($rank) . ' / ' . intval($total_count); ?> </div>
                     </div>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
-                        <div class="label">Caves</div>
+                        <div class="label">Cave(s)</div>
                         <div class="value"><?php echo intval($r['recave'] ?? 0); ?></div>
                     </div>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
