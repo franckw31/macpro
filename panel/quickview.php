@@ -704,7 +704,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			       </div>
 					       <!-- <div class="count-label" id="live-timer-label" style="margin-top:8px;">Live Timer</div> -->
 		</div>
-						<div class="tile-bottom" id="live-timer-title"><?php echo (isset($serverActivity['date']) && @strtotime($serverActivity['date']) !== false && strtotime($serverActivity['date']) > time()) ? 'Démarre dans' : ''; ?></div>
+						<div class="tile-bottom" id="live-timer-title"></div>
 					   <!-- <div class="tile-bottom" id="live-timer-status">—</div> -->
 	</div>
 	<script>
@@ -713,129 +713,56 @@ document.addEventListener('DOMContentLoaded', function() {
 		var progressCircle = document.getElementById('live-timer-progress');
 		var levelEl = document.getElementById('live-timer-level');
 		var blindsEl = document.getElementById('live-timer-blinds');
-		var titleEl = document.getElementById('live-timer-title');
-	       var seconds = 0;
-	       var total = 0;
-	       var timerPaused = false;
-	       // Timestamp Unix (serveur) du départ de la partie — 0 si inconnu
-	       var activityStartTs = <?php echo (isset($serverActivity['date']) && @strtotime($serverActivity['date']) !== false) ? intval(strtotime($serverActivity['date'])) : '0'; ?>;
-	       // true si la partie est déjà démarrée côté serveur ou dès que le timer live est confirmé actif
-	       var liveRunning = (activityStartTs > 0 && Math.floor(Date.now()/1000) >= activityStartTs);
-	       var statusEl = document.getElementById('live-timer-status');
-		       // Get activity start time from PHP
-		       var activityStart = null;
-		       try {
-			   activityStart = <?php echo isset($serverActivity['date']) ? '"'.addslashes($serverActivity['date']).'"' : 'null'; ?>;
-		       } catch(e) { activityStart = null; }
+		var seconds = 0;
+		var total = 0;
+		var timerPaused = false;
 
+		function updateDisplay() {
+			var tile = document.getElementById('live-timer-tile');
+			if(tile) tile.style.display = (seconds > 0) ? 'flex' : 'none';
+			if(seconds <= 0) return;
+			var m = Math.floor(seconds/60).toString().padStart(2,'0');
+			var s = (seconds%60).toString().padStart(2,'0');
+			display.textContent = m+':'+s;
+			if(total > 0){
+				var elapsed = total - seconds;
+				var progress = Math.max(0, Math.min(1, elapsed/total));
+				var circumference = 2 * Math.PI * 50;
+				var offset = circumference * (1 - progress);
+				progressCircle.style.strokeDashoffset = offset;
+				if(seconds <= 120){
+					display.style.color = '#ff0000';
+					progressCircle.style.stroke = '#ff0000';
+					progressCircle.style.filter = 'drop-shadow(0 0 6px #ff0000)';
+				} else {
+					display.style.color = '#00d2ff';
+					progressCircle.style.stroke = '#00d2ff';
+					progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
+				}
+			}
+		}
 
-				   // (activityStart is provided above) — avoid duplicate declaration
+		function tick() {
+			if(!timerPaused && seconds > 0){ seconds--; updateDisplay(); }
+		}
 
-				   function updateDisplay() {
-				       var tile = document.getElementById('live-timer-tile');
-				       if(titleEl) titleEl.textContent = '';
-				       // Masquer la tuile si pas de timer live actif
-				       if(tile) tile.style.display = (seconds > 0) ? 'flex' : 'none';
-				       if(seconds <= 0) return;
-				       var m = Math.floor(seconds/60).toString().padStart(2,'0');
-				       var s = (seconds%60).toString().padStart(2,'0');
-				       display.textContent = m+':'+s;
-				       // Progress
-				       if(total > 0){
-					       var elapsed = total - seconds;
-					       var progress = Math.max(0, Math.min(1, elapsed/total));
-					       var circumference = 2 * Math.PI * 50;
-					       var offset = circumference * (1 - progress);
-					       progressCircle.style.strokeDashoffset = offset;
-					       if(seconds <= 120 && seconds > 0){
-						       display.style.color = '#ff0000';
-						       progressCircle.style.stroke = '#ff0000';
-						       progressCircle.style.filter = 'drop-shadow(0 0 6px #ff0000)';
-					       }else{
-						       display.style.color = '#00d2ff';
-						       progressCircle.style.stroke = '#00d2ff';
-						       progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
-					       }
-				       }
-				       // Update status label
-						   if(statusEl){
-							   var now = new Date();
-							   var startDate = null;
-							   if(activityStart){
-								   var parts = String(activityStart).split(/[- :]/);
-								   startDate = new Date(
-									   parseInt(parts[0]||'0',10),
-									   Math.max(0, (parseInt(parts[1]||'1',10)-1)),
-									   parseInt(parts[2]||'1',10),
-									   parseInt(parts[3]||'0',10),
-									   parseInt(parts[4]||'0',10),
-									   parseInt(parts[5]||'0',10)
-								   );
-							   }
-							   // If activity has started and there is no remaining seconds -> mark as finished
-							   if(startDate && now > startDate && seconds === 0){
-								   statusEl.textContent = 'Terminée';
-								   if(levelEl) levelEl.textContent = '';
-								   if(blindsEl) blindsEl.textContent = '';
-								   display.textContent = '--:--';
-								   display.style.color = '#00d2ff';
-								   progressCircle.style.strokeDashoffset = 0;
-								   progressCircle.style.stroke = '#00d2ff';
-								   progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
-								   return;
-							   }
-							   // If activity is in the future
-							   if(startDate && now < startDate){
-								   statusEl.textContent = 'A venir';
-								   return;
-							   }
-							   // Fallback based on available timer data
-							   if(total === 0){
-								   statusEl.textContent = '—';
-							   } else if(seconds === 0){
-								   statusEl.textContent = 'Terminé';
-							   } else {
-								   statusEl.textContent = 'Live';
-							   }
-						   }
-			       }
-	       function tick() {
-		       if(!timerPaused && seconds > 0){
-			       seconds--;
-			       updateDisplay();
-		       }
-	       }
-	       function syncTimer() {
-		       var params = new URLSearchParams(window.location.search);
-		       var uid = params.get('uid');
-		       if(!uid) return;
-		       fetch('/panel/timer-api.php?uid='+encodeURIComponent(uid))
-		       .then(r=>r.json())
-		       .then(function(data){
-			       if(data.status!=='success') return;
-			       // Ne pas démarrer le timer live si la partie n'a pas encore commencé
-			       var _now = new Date();
-			       var _started = true;
-			       if(activityStart) {
-				       var _startDate = new Date(activityStart.replace(/-/g,'/'));
-				       if(_startDate > _now) _started = false;
-			       }
-			       if(!_started) { updateDisplay(); return; }
-			       seconds = parseInt(data.seconds_remaining)||0;
-			       total = parseInt(data.duration_seconds)||0;
-			       if(seconds > 0) liveRunning = true;
-					   if(levelEl) {
-						   // Remove 'Niveau' and only show 'x / y'
-						   if(data.level_name){
-							   var txt = data.level_name.replace(/^Niveau\s*/i, '').trim();
-							   levelEl.textContent = txt;
-						   } else {
-							   levelEl.textContent = '--';
-						   }
-					   }
-			       if(blindsEl) blindsEl.textContent = data.blinds_text || '-- / --';
-			       timerPaused = !!data.is_paused;
-			       updateDisplay();
+		function syncTimer() {
+			var params = new URLSearchParams(window.location.search);
+			var uid = params.get('uid');
+			if(!uid) return;
+			fetch('/panel/timer-api.php?uid='+encodeURIComponent(uid))
+			.then(r=>r.json())
+			.then(function(data){
+				if(data.status!=='success') return;
+				seconds = parseInt(data.seconds_remaining)||0;
+				total = parseInt(data.duration_seconds)||0;
+				if(levelEl){
+					var txt = data.level_name ? data.level_name.replace(/^Niveau\s*/i,'').trim() : '--';
+					levelEl.textContent = txt;
+				}
+				if(blindsEl) blindsEl.textContent = data.blinds_text || '-- / --';
+				timerPaused = !!data.is_paused;
+				updateDisplay();
 				// Refresh profile links to point to the active activity id (use URL uid or fallback to lastActivity)
 				try{
 					var actId = null;
