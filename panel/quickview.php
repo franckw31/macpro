@@ -718,6 +718,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		var timerPaused = false;
 
 		var activityStartTs = <?php echo (isset($serverActivity['date']) && @strtotime($serverActivity['date']) !== false) ? intval(strtotime($serverActivity['date'])) : '0'; ?>;
+		var serverNowTs = <?php echo time(); ?>; // timestamp serveur au moment du rendu
+		var clientNowTs = Math.floor(Date.now() / 1000);
+		var serverClientOffset = serverNowTs - clientNowTs; // décalage serveur/client
 		var countdownInterval = null;
 
 		function showCountdown() {
