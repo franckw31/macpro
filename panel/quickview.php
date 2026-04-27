@@ -689,7 +689,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 	?>
-		<div class="tile" id="qs-timer-tile" style="height:70px;display:none;flex-direction:column;justify-content:space-between;">
+		<div class="tile" id="qs-timer-tile" style="height:70px;display:none;flex-direction:column;justify-content:space-between;cursor:default;" onclick="if(window._qsTimerLiveActive){var uid=new URLSearchParams(window.location.search).get('uid');if(uid)window.location.href='/panel/fullscreen-timer.php?uid='+encodeURIComponent(uid);}">
 		       <div class="tile-top" style="padding-top:0;">
 				   <div class="timer-circle-container" style="width:56px;height:56px;position:relative;margin:0 auto;">
 					       <svg class="timer-svg" viewBox="0 0 80 80" style="width:100%;height:100%;position:absolute;top:0;left:0;">
