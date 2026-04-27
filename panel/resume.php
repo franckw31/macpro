@@ -270,7 +270,7 @@ if($activity){
                     $bounty_gains = floatval($activity_bounty) * intval($r['bounty'] ?? 0);
                 }
                 // total amounts include bounty gains as positive gains
-                $total_gains = $gains + $bounty_gains;
+                $total_gains = $gains ;
                 $total_depenses = $depenses + $bounty_depense;
                 $benef = $total_gains - $total_depenses;
                 ?>
