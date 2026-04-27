@@ -838,6 +838,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			       if(data.status!=='success') return;
 			       seconds = parseInt(data.seconds_remaining)||0;
 			       total = parseInt(data.duration_seconds)||0;
+			       // Afficher la tuile seulement si le timer est actif
+			       var tile = document.getElementById('live-timer-tile');
+			       if(tile) tile.style.display = (seconds > 0) ? 'flex' : 'none';
 					   if(levelEl) {
 						   // Remove 'Niveau' and only show 'x / y'
 						   if(data.level_name){
