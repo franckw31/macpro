@@ -752,7 +752,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			var params = new URLSearchParams(window.location.search);
 			var uid = params.get('uid');
 			if(!uid) return;
-			fetch('/panel/timer-api.php?uid='+encodeURIComponent(uid))
+			fetch('/panel/timer-api.php?uid='+encodeURIComponent(uid)+'&_='+Date.now())
 			.then(r=>r.json())
 			.then(function(data){
 				if(data.status!=='success') return;
