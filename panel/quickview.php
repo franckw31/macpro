@@ -749,10 +749,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		function updateDisplay() {
 			var tile = document.getElementById('qs-timer-tile');
-			// Masquer si pas de timer ou si valeur aberrante (> 2h = timer pas encore démarré)
 			var timerValid = (seconds > 0 && seconds <= 7200);
+			var nowTs = Math.floor(Date.now() / 1000);
+			var hasCountdown = (activityStartTs > 0 && nowTs < activityStartTs);
 			if(!timerValid) {
-				if(tile) tile.style.display = 'none';
+				if(hasCountdown) return; // le compte à rebours gère l'affichage
+				// Ni live timer ni compte à rebours : afficher 'Partie Terminée'
+				if(tile) tile.style.display = 'flex';
+				display.textContent = 'Terminée';
+				display.style.color = '#888';
+				display.style.fontSize = '11px';
+				progressCircle.style.strokeDashoffset = 0;
+				progressCircle.style.stroke = 'transparent';
+				progressCircle.style.filter = 'none';
+				var svgBg2 = document.querySelector('#qs-timer-tile .timer-bg');
+				if(svgBg2) svgBg2.style.stroke = 'transparent';
+				if(levelEl) levelEl.textContent = 'Partie';
+				if(blindsEl) blindsEl.textContent = '';
 				return;
 			}
 			// Timer live actif : arrêter le compte à rebours et restaurer le cercle
