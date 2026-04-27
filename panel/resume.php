@@ -303,7 +303,7 @@ if($activity){
                     <?php endif; ?>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">Gains PricePool</div>
-                        <div class="value"><?php echo ($total_gains>0)? number_format($total_gains,0,',',' ') . '€' : '-'; ?></div>
+                        <div class="value"><?php echo ($gains>0)? number_format($gains,0,',',' ') . '€' : '-'; ?></div>
                     </div>
                     
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;font-weight:700">
