@@ -235,14 +235,7 @@ if($activity){
     </div>
     <?php if(!empty($rows) && $activity): ?>
         <div class="table summary" role="list" aria-label="Synthèse joueurs" style="margin-top:12px">
-            <div class="row header-row" role="row">
-                <div class="col-num">#</div>
-                <div class="col-pseudo">Pseudo</div>
-                <div class="col-bounty">Place</div>
-                <div class="col-recave">Caves</div>
-                <div class="col-gains">Gains</div>
-                
-            </div>
+            
             <?php
             $current_member_id = isset($_SESSION['id']) ? intval($_SESSION['id']) : null;
             $foundRow = null;
