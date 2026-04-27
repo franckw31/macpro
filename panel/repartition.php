@@ -76,23 +76,17 @@ $asset_ver = @filemtime(__DIR__ . '/timer_web/public/style.variantA.css') ?: @fi
 	function computeDistribution(prizepool, buyrebuy) {
 		var total = Math.max(0, Math.round(prizepool));
 		var players = Math.max(1, Math.round(buyrebuy));
+		// Déterminer le nombre de places payées (capé à 6) et appliquer la distribution fournie
+		var paidPlaces = Math.max(1, Math.min(players, 6));
 		var weights;
-		if (players <= 1) {
-			weights = [100];
-		} else if (players <= 2) {
-			weights = [60, 40];
-		} else if (players <= 3) {
-			weights = [50, 30, 20];
-		} else if (players <= 4) {
-			weights = [40, 30, 18, 12];
-		} else if (players < 25) {
-			// moins de 25 buy/rebuy => 4 places payées
-			weights = [40, 30, 18, 12];
-		} else {
-			// 25 et plus => 5 places payées
-			weights = [38 ,25, 15, 12, 7];
+		switch (paidPlaces) {
+			case 6: weights = [32, 22, 16, 13, 10, 7]; break;
+			case 5: weights = [35, 25, 18, 12, 10]; break;
+			case 4: weights = [40, 30, 20, 10]; break;
+			case 3: weights = [50, 30, 20]; break;
+			case 2: weights = [65, 35]; break;
+			default: weights = [100]; break;
 		}
-		var paidPlaces = weights.length;
 		var amounts = weights.map(function(w){
 			var v = total * w / 100;
 			return Math.max(0, Math.round(v / 10) * 10);
