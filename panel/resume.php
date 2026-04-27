@@ -115,6 +115,13 @@ if($activity){
             foreach(['id-membre','id_membre','id_membres','id_membre_organisateur','organisateur','id-organisateur','id_organisateur'] as $c){
                 if(isset($activity[$c]) && $activity[$c] !== ''){ $activity_organizer_id = intval($activity[$c]); break; }
             }
+            // activity-level bounty amount (per elimination)
+            $activity_bounty = 0.0;
+            if(isset($activity['bounty']) && $activity['bounty'] !== ''){
+                $activity_bounty = floatval($activity['bounty']);
+            } else if(isset($activity['bounties']) && $activity['bounties'] !== ''){
+                $activity_bounty = floatval($activity['bounties']);
+            }
         }
     }
 }
