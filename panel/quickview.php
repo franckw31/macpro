@@ -694,7 +694,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				   <div class="timer-circle-container" style="width:56px;height:56px;position:relative;margin:0 auto;">
 					       <svg class="timer-svg" viewBox="0 0 80 80" style="width:100%;height:100%;position:absolute;top:0;left:0;">
 						       <circle class="timer-bg" cx="40" cy="40" r="36" style="stroke-width:4;"></circle>
-						       <circle class="timer-progress" id="live-timer-progress" cx="40" cy="40" r="36" style="stroke-width:4;"></circle>
+						       <circle class="timer-progress" id="qs-timer-progress" cx="40" cy="40" r="36" style="stroke-width:4;"></circle>
 				       </svg>
 					       <div class="timer-content" style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;">
 							       <div id="live-timer-level" style="font-size:10px;font-weight:600;color:#fff;letter-spacing:1px;text-transform:uppercase;"></div>
@@ -709,10 +709,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	</div>
 	<script>
 	(function(){
-		var display = document.getElementById('live-timer-display');
-		var progressCircle = document.getElementById('live-timer-progress');
-		var levelEl = document.getElementById('live-timer-level');
-		var blindsEl = document.getElementById('live-timer-blinds');
+		var display = document.getElementById('qs-timer-display');
+		var progressCircle = document.getElementById('qs-timer-progress');
+		var levelEl = document.getElementById('qs-timer-level');
+		var blindsEl = document.getElementById('qs-timer-blinds');
 		var seconds = 0;
 		var total = 0;
 		var timerPaused = false;
