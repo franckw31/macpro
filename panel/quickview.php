@@ -717,10 +717,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		var total = 0;
 		var timerPaused = false;
 
-		var activityStartTs = <?php echo (isset($serverActivity['date']) && @strtotime($serverActivity['date']) !== false) ? intval(strtotime($serverActivity['date'])) : '0'; ?>;
-		var serverNowTs = <?php echo time(); ?>; // timestamp serveur au moment du rendu
-		var clientNowTs = Math.floor(Date.now() / 1000);
-		var serverClientOffset = serverNowTs - clientNowTs; // décalage serveur/client
+		// Date brute depuis la DB (ex: "2026-04-29 20:00:00") — parsée côté client en heure locale
+		var activityStartStr = <?php echo (isset($serverActivity['date']) && $serverActivity['date']) ? '"'.addslashes($serverActivity['date']).'"' : 'null'; ?>;
+		var activityStartTs = 0;
+		if(activityStartStr) {
+			// Remplacer l'espace par T pour un parsing ISO fiable, sans suffixe Z (heure locale)
+			var activityStartTs = Math.floor(new Date(activityStartStr.replace(' ','T')).getTime() / 1000);
+		}
+		var serverClientOffset = 0; // pas nécessaire : on parse en heure locale directement
 		var countdownInterval = null;
 
 		function showCountdown() {
