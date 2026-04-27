@@ -689,7 +689,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 	?>
-		<div class="tile" id="live-timer-tile" style="height:70px;display:none;flex-direction:column;justify-content:space-between;">
+		<div class="tile" id="qs-timer-tile" style="height:70px;display:none;flex-direction:column;justify-content:space-between;">
 		       <div class="tile-top" style="padding-top:0;">
 				   <div class="timer-circle-container" style="width:56px;height:56px;position:relative;margin:0 auto;">
 					       <svg class="timer-svg" viewBox="0 0 80 80" style="width:100%;height:100%;position:absolute;top:0;left:0;">
@@ -698,7 +698,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				       </svg>
 					       <div class="timer-content" style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;">
 							       <div id="qs-timer-level" style="font-size:10px;font-weight:600;color:#fff;letter-spacing:1px;text-transform:uppercase;"></div>
-							       <div id="qs-timer-display" style="font-size:18px;font-weight:900;color:#00d2ff;line-height:1;">--:--</div>
+							       <div id="qs-timer-display" style="font-size:18px;font-weight:900;color:#00d2ff;line-height:1;"></div>
 							       <div id="qs-timer-blinds" style="font-size:10px;color:#ffc107;font-weight:700;margin-top:2px;"></div>
 					       </div>
 			       </div>
@@ -718,7 +718,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		var timerPaused = false;
 
 		function updateDisplay() {
-			var tile = document.getElementById('live-timer-tile');
+			var tile = document.getElementById('qs-timer-tile');
 			// Masquer si pas de timer ou si valeur aberrante (> 2h = timer pas encore démarré)
 			var timerValid = (seconds > 0 && seconds <= 7200);
 			if(!timerValid) {
