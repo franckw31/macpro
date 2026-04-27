@@ -110,6 +110,11 @@ if($activity){
                 $activity_recave_montant = $activity_buyin;
             }
             $activity_rake = isset($activity['rake'])? floatval($activity['rake']) : 0.0;
+            // detect activity organizer id from possible column names
+            $activity_organizer_id = null;
+            foreach(['id-membre','id_membre','id_membres','id_membre_organisateur','organisateur','id-organisateur','id_organisateur'] as $c){
+                if(isset($activity[$c]) && $activity[$c] !== ''){ $activity_organizer_id = intval($activity[$c]); break; }
+            }
         }
     }
 }
