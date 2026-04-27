@@ -276,7 +276,10 @@ if($activity){
                     $bounty_depense = floatval($activity_bounty) * intval($r['recave'] ?? 0);
                     $bounty_gains = floatval($activity_bounty) * intval($r['bounty'] ?? 0);
                 }
-                $benef = $gains - $depenses - $bounty_depense;
+                // total amounts include bounty gains as positive gains
+                $total_gains = $gains + $bounty_gains;
+                $total_depenses = $depenses + $bounty_depense;
+                $benef = $total_gains - $total_depenses;
                 ?>
                 <div class="row" role="listitem">
                     <div class="col-num"><?php echo '#'.h($rank); ?></div>
