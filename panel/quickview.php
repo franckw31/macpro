@@ -738,10 +738,13 @@ document.addEventListener('DOMContentLoaded', function() {
 			display.style.color = '#00d2ff';
 			display.style.fontSize = '14px';
 			progressCircle.style.strokeDashoffset = 0;
-			progressCircle.style.stroke = '#00d2ff';
-			progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
-			if(levelEl) levelEl.textContent = '';
-			if(blindsEl) blindsEl.textContent = 'Démarre dans';
+			progressCircle.style.stroke = 'transparent';
+			progressCircle.style.filter = 'none';
+			// Masquer aussi le cercle de fond
+			var svgBg = document.querySelector('#qs-timer-tile .timer-bg');
+			if(svgBg) svgBg.style.stroke = 'transparent';
+			if(levelEl) levelEl.textContent = 'Démarre dans';
+			if(blindsEl) blindsEl.textContent = h+'h '+m+'m '+s+'s';
 		}
 
 		function updateDisplay() {
