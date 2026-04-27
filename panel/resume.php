@@ -226,7 +226,7 @@ if($activity){
                 $rankClass = ($rank == 1)? 'rank-1' : (($rank<=3)? 'rank-top3' : '');
             ?>
                 <div class="row" role="listitem">
-                    <div class="col-num <?php echo $rankClass; ?>">#<?php echo h($rank); ?></div>
+                    <div class="col-num <?php echo $rankClass; ?>"><?php echo h($rank); ?></div>
                     <div class="col-pseudo <?php echo ($i===0? 'pseudo-highlight':''); ?>"><?php echo h($r['pseudo']); ?></div>
                     <div class="col-bounty"><?php echo $r['bounty']? h($r['bounty']) : '-'; ?></div>
                     <div class="col-recave"><?php echo $r['recave']? h($r['recave']) : '-'; ?></div>
