@@ -303,7 +303,7 @@ if($activity){
                                 $dateLabel = $day . ' ' . $monthName;
                             }
                         }
-                        $statsLine = 'Stats de ' . '<span class="pseudo-highlight">' . h($r['pseudo']) . '</span>' . ' chez ' . h($organizer_name) . ($dateLabel ? ' Le ' . h($dateLabel) : '');
+                        $statsLine = 'Stats de ' . '<span class="pseudo-highlight">' . h($r['pseudo']) . '</span>' . ' chez ' . h($organizer_name) . ($dateLabel ? ' <span style="color:var(--blue)">Le ' . h($dateLabel) . '</span>' : '');
                     ?>
                     <div class="line" style="display:flex;justify-content:center;padding:6px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="value" style="margin-top:6px;text-align:center;color:var(--orange);font-size:18px;font-weight:900"><?php echo $statsLine; ?></div>
