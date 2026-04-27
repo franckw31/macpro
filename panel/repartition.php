@@ -79,18 +79,18 @@ $asset_ver = @filemtime(__DIR__ . '/timer_web/public/style.variantA.css') ?: @fi
 		var weights;
 		if (players <= 1) {
 			weights = [100];
-		} else if (players <= 2) {
+		} else if (players <= 13) {
 			weights = [60, 40];
-		} else if (players <= 3) {
+		} else if (players <= 17) {
 			weights = [50, 30, 20];
-		} else if (players <= 4) {
-			weights = [40, 30, 18, 12];
-		} else if (players < 25) {
-			// moins de 25 buy/rebuy => 4 places payées
-			weights = [40, 30, 18, 12];
+		} else if (players <= 25) {
+			weights = [40, 30, 20, 10];
+		} else if (players <= 30) {
+			// moins de 31 buy/rebuy => 5 places payées
+			weights = [35, 25, 18, 12, 10];
 		} else {
-			// 25 et plus => 5 places payées
-			weights = [38 ,25, 15, 12, 7];
+			// 32 et plus => 6 places payées
+			weights = [32 ,22, 16, 13, 10, 7];
 		}
 		var paidPlaces = weights.length;
 		var amounts = weights.map(function(w){
