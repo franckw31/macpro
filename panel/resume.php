@@ -278,6 +278,8 @@ if($activity){
                 // recave count and color: green when 0, red otherwise
                 $recave_count = intval($r['recave'] ?? 0);
                 $recave_color = ($recave_count === 0) ? 'var(--green)' : '#ff6b6b';
+                // position color depends on PricePool gains (green when >0, red otherwise)
+                $position_color = ($gains > 0) ? 'var(--green)' : '#ff6b6b';
                 ?>
                 <div class="summary-lines" role="list" aria-label="Synthèse joueur" style="margin-top:12px">
                     <div class="line" style="display:flex;justify-content:center;padding:12px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
@@ -286,7 +288,7 @@ if($activity){
                     <!-- Place line removed as requested -->
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">Position / Inscrits</div>
-                        <div class="value"><?php echo h($rank) . ' / ' . intval($total_count); ?> </div>
+                        <div class="value" style="color:<?php echo $position_color; ?>"><?php echo h($rank) . ' / ' . intval($total_count); ?> </div>
                     </div>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">ReCave(s)</div>
