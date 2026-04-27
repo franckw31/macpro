@@ -744,7 +744,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			var svgBg = document.querySelector('#qs-timer-tile .timer-bg');
 			if(svgBg) svgBg.style.stroke = 'transparent';
 			if(levelEl) levelEl.textContent = 'Démarre dans';
-			if(blindsEl) blindsEl.textContent = h+'h '+m+'m '+s+'s';
+			if(blindsEl) blindsEl.textContent = '';
 		}
 
 		function updateDisplay() {
