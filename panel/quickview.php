@@ -844,6 +844,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		       .then(r=>r.json())
 		       .then(function(data){
 			       if(data.status!=='success') return;
+			       // Ne pas démarrer le timer live si la partie n'a pas encore commencé
+			       var _now = new Date();
+			       var _started = true;
+			       if(activityStart) {
+				       var _startDate = new Date(activityStart.replace(/-/g,'/'));
+				       if(_startDate > _now) _started = false;
+			       }
+			       if(!_started) { updateDisplay(); return; }
 			       seconds = parseInt(data.seconds_remaining)||0;
 			       total = parseInt(data.duration_seconds)||0;
 					   if(levelEl) {
