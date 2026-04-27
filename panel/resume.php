@@ -254,7 +254,12 @@ if($activity){
             if($foundRow !== null){
                 $r = $foundRow['row']; $i = $foundRow['index'];
                 $rank = (isset($r['place']) && intval($r['place'])>0) ? intval($r['place']) : ($i+1);
-                $effective_buyin = max(0.0, $activity_buyin - $activity_rake);
+                if($current_member_id !== null && $activity_organizer_id !== null && intval($current_member_id) === intval($activity_organizer_id)){
+                    // organizer: do not take rake into account
+                    $effective_buyin = $activity_buyin;
+                } else {
+                    $effective_buyin = max(0.0, $activity_buyin - $activity_rake);
+                }
                 $depenses = $effective_buyin + (intval($r['recave'] ?? 0) * $activity_recave_montant);
                 $gains = floatval($r['gains'] ?? 0.0);
                 $benef = $gains - $depenses;
