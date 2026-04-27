@@ -282,8 +282,31 @@ if($activity){
                 $position_color = ($gains > 0) ? 'var(--green)' : '#ff6b6b';
                 ?>
                 <div class="summary-lines" role="list" aria-label="Synthèse joueur" style="margin-top:12px">
+                    <?php
+                        // Build header: "Stats de <Pseudo> chez <Organisateur> Le <date>"
+                        $organizer_name = '';
+                        // try common activity fields that may contain organizer name or id
+                        foreach(['organisateur','organizer','organizer_name'] as $c){ if(isset($activity[$c]) && $activity[$c] !== ''){ $organizer_name = $activity[$c]; break; } }
+                        // if activity only stores organizer id, try to lookup member pseudo
+                        if(empty($organizer_name) && !empty($activity_organizer_id) && !empty($con)){
+                            $oq = @mysqli_query($con, "SELECT COALESCE(pseudo,'') AS pseudo FROM membres WHERE `id-membre` = '".intval($activity_organizer_id)."' LIMIT 1");
+                            if($oq && mysqli_num_rows($oq)>0){ $or = mysqli_fetch_assoc($oq); $organizer_name = $or['pseudo']; }
+                        }
+                        // format date as '15 Avril' (French month)
+                        $dateLabel = '';
+                        if(!empty($activity['date_depart'])){
+                            $dt2 = strtotime($activity['date_depart']);
+                            if($dt2){
+                                $months = [1=>'janvier',2=>'février',3=>'mars',4=>'avril',5=>'mai',6=>'juin',7=>'juillet',8=>'août',9=>'septembre',10=>'octobre',11=>'novembre',12=>'décembre'];
+                                $day = date('j', $dt2);
+                                $monthName = isset($months[intval(date('n',$dt2))]) ? ucfirst($months[intval(date('n',$dt2))]) : '';
+                                $dateLabel = $day . ' ' . $monthName;
+                            }
+                        }
+                        $statsLine = 'Stats de ' . h($r['pseudo']) . ' chez ' . h($organizer_name) . ($dateLabel ? ' Le ' . h($dateLabel) : '');
+                    ?>
                     <div class="line" style="display:flex;justify-content:center;padding:12px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
-                        <div class="value" style="margin-top:12px;text-align:center;color:var(--orange);font-size:18px;font-weight:900"><?php echo h($r['pseudo']); ?></div>
+                        <div class="value" style="margin-top:12px;text-align:center;color:var(--orange);font-size:18px;font-weight:900"><?php echo $statsLine; ?></div>
                     </div>
                     <!-- Place line removed as requested -->
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
