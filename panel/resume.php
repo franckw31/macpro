@@ -317,8 +317,19 @@ if($activity){
                         <div class="label">ReCave(s)</div>
                         <div class="value" style="color:<?php echo $recave_color; ?>"><?php echo $recave_count; ?></div>
                     </div>
+                    <?php
+                        // prepare a small inline calculation example: (buyin + recave_total + rake)
+                        $buyin_disp = intval($activity_buyin);
+                        $recave_total = intval($recave_count) * $activity_recave_montant;
+                        // if current member is organizer, rake isn't counted in expenses
+                        $display_rake = ($current_member_id !== null && $activity_organizer_id !== null && intval($current_member_id) === intval($activity_organizer_id)) ? 0 : $activity_rake;
+                        $rake_disp = intval($display_rake);
+                        // cast recave_total to int for display if it's effectively integer-like
+                        $recave_disp = intval($recave_total);
+                        $calc_example = '(' . $buyin_disp . '+' . $recave_disp . '+' . $rake_disp . ')';
+                    ?>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
-                        <div class="label">Dépenses Buyin+Recave(s)+Rake</div>
+                        <div class="label">Dépenses Buyin+Recave(s)+Rake <span class="small-muted"><?php echo $calc_example; ?></span></div>
                         <div class="value" style="color:#ff6b6b"><?php echo number_format($depenses,0,',',' ') . '€'; ?></div>
                     </div>
                     <?php if(!empty($activity_bounty) && floatval($activity_bounty) > 0): ?>
