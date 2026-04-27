@@ -734,23 +734,25 @@ document.addEventListener('DOMContentLoaded', function() {
 				       var countdownText = '';
 				       var countdownSecs = 0;
 				       var beforeStart = false;
+				       var lateSeconds = 0;
 				       if(activityStart) {
 					   var startDate = new Date(activityStart.replace(/-/g,'/'));
-					   if(startDate > now) {
-					       // Show countdown
-					       var diff = Math.floor((startDate - now) / 1000);
-					       if(diff > 0) {
-						   countdownSecs = diff;
-						   var h = Math.floor(diff/3600).toString().padStart(2,'0');
-						   var m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
-						   countdownText = h+':'+m;
-						   showCountdown = true;
-						   beforeStart = true;
-					       }
+					   var diff = Math.floor((startDate - now) / 1000);
+					   if(diff > 0) {
+					       // Partie pas encore commencée : compte à rebours positif
+					       countdownSecs = diff;
+					       var h = Math.floor(diff/3600).toString().padStart(2,'0');
+					       var m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
+					       countdownText = h+':'+m;
+					       showCountdown = true;
+					       beforeStart = true;
+					   } else if(seconds <= 0) {
+					       // Partie en retard (pas de timer live) : afficher le dépassement en rouge
+					       lateSeconds = Math.abs(diff);
 					   }
 				       }
                        if(showCountdown) {
-                       	// N'affiche la tuile que si le compte à rebours est positif
+                       	// Compte à rebours positif : affiche en bleu
                        	if(tile) tile.style.display = 'flex';
                        	display.textContent = countdownText;
                        	display.style.color = '#00d2ff';
@@ -762,9 +764,23 @@ document.addEventListener('DOMContentLoaded', function() {
                        	if(blindsEl) blindsEl.textContent = '';
                        	if(titleEl) titleEl.textContent = 'Démarre dans';
                        	return;
+                       } else if(lateSeconds > 0) {
+                       	// Compte à rebours négatif (retard) : affiche en rouge
+                       	if(tile) tile.style.display = 'flex';
+                       	var lh = Math.floor(lateSeconds/3600).toString().padStart(2,'0');
+                       	var lm = Math.floor((lateSeconds%3600)/60).toString().padStart(2,'0');
+                       	display.textContent = '+'+lh+':'+lm;
+                       	display.style.color = '#ff0000';
+                       	progressCircle.style.strokeDashoffset = 0;
+                       	progressCircle.style.stroke = '#ff0000';
+                       	progressCircle.style.filter = 'drop-shadow(0 0 6px #ff0000)';
+                       	if(levelEl) levelEl.textContent = '';
+                       	if(blindsEl) blindsEl.textContent = '';
+                       	if(titleEl) titleEl.textContent = 'En retard';
+                       	return;
                        } else {
                        	if(titleEl) titleEl.textContent = '';
-                       	// Compte à rebours = 0 ou négatif : n'afficher la tuile que si le timer live tourne
+                       	// Pas de compte à rebours et pas de timer live : masquer
                        	if(tile) tile.style.display = (seconds > 0) ? 'flex' : 'none';
                        	if(seconds <= 0) return;
                        }
