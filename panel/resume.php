@@ -286,10 +286,7 @@ if($activity){
                         <div class="label">Pseudo</div>
                         <div class="value"><?php echo h($r['pseudo']); ?></div>
                     </div>
-                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
-                        <div class="label">Place</div>
-                        <div class="value"><?php echo h($rank); ?></div>
-                    </div>
+                    <!-- Place line removed as requested -->
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">Caves</div>
                         <div class="value"><?php echo intval($r['recave'] ?? 0); ?></div>
