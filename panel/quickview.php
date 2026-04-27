@@ -752,22 +752,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			// Masquer si pas de timer ou si valeur aberrante (> 2h = timer pas encore démarré)
 			var timerValid = (seconds > 0 && seconds <= 7200);
 			if(!timerValid) {
-				var nowTs = Math.floor(Date.now() / 1000);
-				// Si la partie a commencé mais pas de timer live → 'Partie Terminée'
-				if(activityStartTs > 0 && nowTs > activityStartTs) {
-					if(tile) tile.style.display = 'flex';
-					display.textContent = 'Terminée';
-					display.style.color = '#888';
-					display.style.fontSize = '12px';
-					progressCircle.style.stroke = 'transparent';
-					progressCircle.style.filter = 'none';
-					var svgBg2 = document.querySelector('#qs-timer-tile .timer-bg');
-					if(svgBg2) svgBg2.style.stroke = 'transparent';
-					if(levelEl) levelEl.textContent = 'Partie';
-					if(blindsEl) blindsEl.textContent = '';
-				} else {
-					if(tile) tile.style.display = 'none';
-				}
+				if(tile) tile.style.display = 'none';
 				return;
 			}
 			// Timer live actif : arrêter le compte à rebours et restaurer le cercle
