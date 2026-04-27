@@ -725,7 +725,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		function showCountdown() {
 			var tile = document.getElementById('qs-timer-tile');
-			var nowTs = Math.floor(Date.now() / 1000);
+			var nowTs = Math.floor(Date.now() / 1000) + serverClientOffset;
 			var diff = activityStartTs - nowTs;
 			if(diff <= 0 || activityStartTs === 0) {
 				// Partie démarrée : arrêter le compte à rebours
@@ -753,7 +753,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		function updateDisplay() {
 			var tile = document.getElementById('qs-timer-tile');
 			var timerValid = (seconds > 0 && seconds <= 7200);
-			var nowTs = Math.floor(Date.now() / 1000);
+			var nowTs = Math.floor(Date.now() / 1000) + serverClientOffset;
 			var hasCountdown = (activityStartTs > 0 && nowTs < activityStartTs);
 			if(!timerValid) {
 				if(hasCountdown) return; // le compte à rebours gère l'affichage
@@ -842,7 +842,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		setInterval(syncTimer, 5000);
 		syncTimer();
 		// Démarrer le compte à rebours si la partie n'a pas encore commencé
-		if(activityStartTs > 0 && Math.floor(Date.now()/1000) < activityStartTs) {
+		if(activityStartTs > 0 && (Math.floor(Date.now()/1000) + serverClientOffset) < activityStartTs) {
 			showCountdown();
 			countdownInterval = setInterval(showCountdown, 1000);
 		} else {
