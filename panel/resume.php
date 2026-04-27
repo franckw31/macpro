@@ -273,7 +273,7 @@ if($activity){
                 $bounty_depense = 0.0;
                 $bounty_gains = 0.0;
                 if(!empty($activity_bounty) && floatval($activity_bounty) > 0){
-                    $bounty_depense = floatval($activity_bounty) * (intval($r['recave'] ?? 0 + 1);
+                    $bounty_depense = floatval($activity_bounty) * intval($r['recave'] ?? 0);
                     $bounty_gains = floatval($activity_bounty) * intval($r['bounty'] ?? 0);
                 }
                 // total amounts include bounty gains as positive gains
@@ -292,8 +292,8 @@ if($activity){
                         <div class="value"><?php echo h($rank) . ' / ' . intval($total_count); ?> </div>
                     </div>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
-                        <div class="label">ReCave(s)</div>
-                            <div class="value" style="color:#ff6b6b"><?php echo intval($r['recave'] ?? 0); ?></div>
+                        <div class="label">Cave(s)</div>
+                        <div class="value"><?php echo intval($r['recave'] ?? 0); ?></div>
                     </div>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">Dépenses Buyin + Recave(s)</div>
