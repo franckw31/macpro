@@ -49,8 +49,8 @@ $asset_ver = @filemtime(__DIR__ . '/timer_web/public/style.variantA.css') ?: @fi
 		<section class="card stroked" style="margin-top:8px;padding:16px;background:rgba(0,0,0,0.45);border:1px solid rgba(0,172,255,.25);">
 			<div style="font-weight:700;color:var(--gold);text-transform:uppercase;font-size:13px;margin-bottom:2px">Paramètres de répartition</div>
 			<ul style="line-height:1.5;font-size:14px;">
-				<li>1er à 5e (par défaut) si 25 Buy-Rebuy ou plus</li>
-				<li>Si moins de 25 Buy-Rebuy, la répartition s’adapte.</li>
+				<li>1er à 5e (par défaut) si 25 Buy-Rebuy ou moins</li>
+				<li>Si plus de 25 Buy-Rebuy, la répartition s’adapte.</li>
 			</ul>
 		</section>
 	</div>
