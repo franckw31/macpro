@@ -719,8 +719,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		function updateDisplay() {
 			var tile = document.getElementById('live-timer-tile');
-			if(tile) tile.style.display = (seconds > 0) ? 'flex' : 'none';
-			if(seconds <= 0) return;
+			// Masquer si pas de timer ou si valeur aberrante (> 2h = timer pas encore démarré)
+			var timerValid = (seconds > 0 && seconds <= 7200);
+			if(tile) tile.style.display = timerValid ? 'flex' : 'none';
+			if(!timerValid) return;
 			var m = Math.floor(seconds/60).toString().padStart(2,'0');
 			var s = (seconds%60).toString().padStart(2,'0');
 			display.textContent = m+':'+s;
