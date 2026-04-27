@@ -764,20 +764,6 @@ document.addEventListener('DOMContentLoaded', function() {
                        	if(blindsEl) blindsEl.textContent = '';
                        	if(titleEl) titleEl.textContent = 'Démarre dans';
                        	return;
-                       } else if(lateSeconds > 0) {
-                       	// Compte à rebours négatif (retard) : affiche en rouge
-                       	if(tile) tile.style.display = 'flex';
-                       	var lh = Math.floor(lateSeconds/3600).toString().padStart(2,'0');
-                       	var lm = Math.floor((lateSeconds%3600)/60).toString().padStart(2,'0');
-                       	display.textContent = '+'+lh+':'+lm;
-                       	display.style.color = '#ff0000';
-                       	progressCircle.style.strokeDashoffset = 0;
-                       	progressCircle.style.stroke = '#ff0000';
-                       	progressCircle.style.filter = 'drop-shadow(0 0 6px #ff0000)';
-                       	if(levelEl) levelEl.textContent = '';
-                       	if(blindsEl) blindsEl.textContent = '';
-                       	if(titleEl) titleEl.textContent = 'En retard';
-                       	return;
                        } else {
                        	if(titleEl) titleEl.textContent = '';
                        	// Pas de compte à rebours et pas de timer live : masquer
