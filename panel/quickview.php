@@ -777,9 +777,12 @@ document.addEventListener('DOMContentLoaded', function() {
 				} else {
 					if(tile) tile.style.display = 'none';
 				}
+				window._qsTimerLiveActive = false;
 				return;
 			}
 			// Timer live actif : arrêter le compte à rebours et restaurer le cercle
+			window._qsTimerLiveActive = true;
+			if(tile) tile.style.cursor = 'pointer';
 			if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
 			display.style.fontSize = '';
 			if(blindsEl && blindsEl.textContent === 'Démarre dans') blindsEl.textContent = '';
