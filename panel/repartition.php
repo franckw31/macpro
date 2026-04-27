@@ -34,8 +34,8 @@ $asset_ver = @filemtime(__DIR__ . '/timer_web/public/style.variantA.css') ?: @fi
 		<section class="card stroked" style="margin-top:16px;padding:16px;background:rgba(0,0,0,0.45);border:1px solid rgba(0,172,255,.45);">
 			<div style="font-weight:700;color:var(--blue);text-transform:uppercase;font-size:13px;margin-bottom:8px">Répartition du Prizepool</div>
 			<div style="display:flex;flex-wrap:nowrap;gap:10px;align-items:flex-end;justify-content:flex-start;">
-				<div style="flex:0 0 80px;"><label style="font-size:14px;display:block;margin-bottom:6px;color:#fff;">Prizepool (€)</label><input type="number" id="pricepool" class="calc-field" min="0" value="670" step="1" /></div>
-				<div style="flex:0 0 80px;"><label style="font-size:14px;display:block;margin-bottom:6px;color:#fff;">Nb Buy-Rebuy</label><input type="number" id="buyrebuy" class="calc-field" min="1" value="26" step="1" /></div>
+				<div style="flex:0 0 80px;"><label style="font-size:14px;display:block;margin-bottom:6px;color:#fff;">Prizepool</label><input type="number" id="pricepool" class="calc-field" min="0" value="670" step="1" /></div>
+				<div style="flex:0 0 80px;"><label style="font-size:14px;display:block;margin-bottom:6px;color:#fff;">Nb Caves</label><input type="number" id="buyrebuy" class="calc-field" min="1" value="26" step="1" /></div>
 				<div style="flex:0 0 auto;align-self:flex-end;display:flex;gap:8px;">
 <button id="run-calc" class="button primary" style="padding:6px 10px;height:32px;line-height:20px;border-radius:8px;font-weight:700;min-width:50px;">Calculer</button>
 					<button id="close-btn" class="button" style="padding:6px 10px;height:32px;line-height:20px;border-radius:8px;border:1px solid rgba(255,255,255,0.3);background:rgba(0,0,0,0.35);color:#ffa500;min-width:50px;">Fermer</button>
