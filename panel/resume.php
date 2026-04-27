@@ -289,7 +289,7 @@ if($activity){
                     <!-- Place line removed as requested -->
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">Position / Inscrits</div>
-                        <div class="value"><?php echo h($rank) . ' / ' . intval($total_count); ?> (<?php echo intval($r['recave'] ?? 0); ?> recaves)</div>
+                        <div class="value"><?php echo h($rank) . ' / ' . intval($total_count); ?> (<?php echo intval($r['recave'] ?? 0); ?> recave(s))</div>
                     </div>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">Caves</div>
