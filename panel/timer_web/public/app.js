@@ -228,21 +228,17 @@ function startCountdown(dt){
     }
     const now = new Date();
     const s = Math.floor((dt - now)/1000);
-    // Prefer explicit `#countdown` element, otherwise fall back to the circular timer display
-    const el = document.getElementById('countdown') || document.getElementById('live-timer-display');
-    const lbl = document.querySelector('.count-label') || document.querySelector('#live-timer-tile .count-label');
+    // Ne pas toucher à #live-timer-display (géré par le timer live de blindes)
+    const el = document.getElementById('countdown');
+    const lbl = document.querySelector('.count-label');
     if(s>0){
       const h = String(Math.floor(s/3600)).padStart(2,'0');
       const m = String(Math.floor((s%3600)/60)).padStart(2,'0');
       if(el) el.textContent = h+':'+m;
       if(lbl) lbl.textContent = 'Démarre dans';
     } else {
-      // Affiche le temps écoulé depuis le début de l'activité (en minutes)
-      const elapsed = Math.abs(s); // secondes écoulées depuis le début
-      const h = String(Math.floor(elapsed/3600)).padStart(2,'0');
-      const m = String(Math.floor((elapsed%3600)/60)).padStart(2,'0');
-      if(el) el.textContent = h+':'+m;
-      if(lbl) lbl.textContent = 'En cours';
+      if(el) el.textContent = '';
+      if(lbl) lbl.textContent = '';
     }
   }
   u();
