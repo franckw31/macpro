@@ -275,6 +275,9 @@ if($activity){
                 $total_gains = $gains + $bounty_gains;
                 $total_depenses = $depenses + $bounty_depense;
                 $benef = $total_gains - $total_depenses;
+                // recave count and color: green when 0, red otherwise
+                $recave_count = intval($r['recave'] ?? 0);
+                $recave_color = ($recave_count === 0) ? 'var(--green)' : '#ff6b6b';
                 ?>
                 <div class="summary-lines" role="list" aria-label="Synthèse joueur" style="margin-top:12px">
                     <div class="line" style="display:flex;justify-content:center;padding:12px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
@@ -287,7 +290,7 @@ if($activity){
                     </div>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">ReCave(s)</div>
-                        <div class="value"><?php echo intval($r['recave'] ?? 0); ?></div>
+                        <div class="value" style="color:<?php echo $recave_color; ?>"><?php echo $recave_count; ?></div>
                     </div>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">Dépenses Buyin + Recave(s) + Rake</div>
