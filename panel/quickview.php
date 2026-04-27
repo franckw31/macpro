@@ -733,50 +733,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				   function updateDisplay() {
 				       var tile = document.getElementById('live-timer-tile');
-				       var now = new Date();
-				       var nowTs = Math.floor(now.getTime() / 1000);
-				       // Mettre à jour liveRunning si la partie a démarré
-				       if(activityStartTs > 0 && nowTs >= activityStartTs) liveRunning = true;
-				       var showCountdown = false;
-				       var countdownText = '';
-				       var countdownSecs = 0;
-				       var beforeStart = false;
-				       var lateSeconds = 0;
-				       if(activityStart) {
-					   var startDate = new Date(activityStart.replace(/-/g,'/'));
-					   var diff = Math.floor((startDate - now) / 1000);
-					   if(diff > 0) {
-					       // Partie pas encore commencée : compte à rebours positif
-					       countdownSecs = diff;
-					       var h = Math.floor(diff/3600).toString().padStart(2,'0');
-					       var m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
-					       countdownText = h+':'+m;
-					       showCountdown = true;
-					       beforeStart = true;
-					   } else if(seconds <= 0) {
-					       // Partie en retard (pas de timer live) : afficher le dépassement en rouge
-					       lateSeconds = Math.abs(diff);
-					   }
-				       }
-                       if(showCountdown && !liveRunning) {
-                       	// Compte à rebours positif : affiche en bleu (seulement si pas de timer live actif)
-                       	if(tile) tile.style.display = 'flex';
-                       	display.textContent = countdownText;
-                       	display.style.color = '#00d2ff';
-                       	progressCircle.style.strokeDashoffset = 0;
-                       	progressCircle.style.stroke = '#00d2ff';
-                       	progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
-                       	if(statusEl) statusEl.textContent = 'A venir';
-                       	if(levelEl) levelEl.textContent = '';
-                       	if(blindsEl) blindsEl.textContent = '';
-                       	if(titleEl) titleEl.textContent = 'Démarre dans';
-                       	return;
-                       } else {
-                       	if(titleEl) titleEl.textContent = '';
-                       	// Pas de compte à rebours et pas de timer live : masquer
-                       	if(tile) tile.style.display = (seconds > 0) ? 'flex' : 'none';
-                       	if(seconds <= 0) return;
-                       }
+				       if(titleEl) titleEl.textContent = '';
+				       // Masquer la tuile si pas de timer live actif
+				       if(tile) tile.style.display = (seconds > 0) ? 'flex' : 'none';
+				       if(seconds <= 0) return;
 				       var m = Math.floor(seconds/60).toString().padStart(2,'0');
 				       var s = (seconds%60).toString().padStart(2,'0');
 				       display.textContent = m+':'+s;
