@@ -717,7 +717,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	       var seconds = 0;
 	       var total = 0;
 	       var timerPaused = false;
-	       var liveRunning = false; // true dès que le timer live a été confirmé actif
+	       // true si la partie est déjà démarrée (côté serveur) ou dès que le timer live est confirmé actif
+	       var liveRunning = <?php echo (isset($serverActivity['date']) && @strtotime($serverActivity['date']) !== false && strtotime($serverActivity['date']) <= time()) ? 'true' : 'false'; ?>;
 	       var statusEl = document.getElementById('live-timer-status');
 		       // Get activity start time from PHP
 		       var activityStart = null;
