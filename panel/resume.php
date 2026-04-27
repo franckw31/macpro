@@ -269,7 +269,14 @@ if($activity){
                 }
                 $depenses = $effective_buyin + (intval($r['recave'] ?? 0) * $activity_recave_montant);
                 $gains = floatval($r['gains'] ?? 0.0);
-                $benef = $gains - $depenses;
+                // bounty-specific values (only for display when activity defines a bounty)
+                $bounty_depense = 0.0;
+                $bounty_gains = 0.0;
+                if(!empty($activity_bounty) && floatval($activity_bounty) > 0){
+                    $bounty_depense = floatval($activity_bounty) * intval($r['recave'] ?? 0);
+                    $bounty_gains = floatval($activity_bounty) * intval($r['bounty'] ?? 0);
+                }
+                $benef = $gains - $depenses - $bounty_depense;
                 ?>
                 <div class="row" role="listitem">
                     <div class="col-num"><?php echo '#'.h($rank); ?></div>
@@ -278,6 +285,22 @@ if($activity){
                     <div class="col-recave"><?php echo number_format($depenses, 0, ',', ' ') . '€'; ?></div>
                     <div class="col-gains"><?php echo ($gains>0)? number_format($gains,0,',',' ') . '€' : '-'; ?></div>
                 </div>
+                <?php if(!empty($activity_bounty) && floatval($activity_bounty) > 0): ?>
+                <div class="row" role="listitem">
+                    <div class="col-num"></div>
+                    <div class="col-pseudo">Dépenses bounty</div>
+                    <div class="col-bounty"></div>
+                    <div class="col-recave"><?php echo number_format($bounty_depense,0,',',' ') . '€'; ?></div>
+                    <div class="col-gains">-</div>
+                </div>
+                <div class="row" role="listitem">
+                    <div class="col-num"></div>
+                    <div class="col-pseudo">Gains bounty</div>
+                    <div class="col-bounty"></div>
+                    <div class="col-recave"><?php echo ($bounty_gains>0)? number_format($bounty_gains,0,',',' ') . '€' : '-'; ?></div>
+                    <div class="col-gains">-</div>
+                </div>
+                <?php endif; ?>
                 <div class="row position-row" role="listitem">
                     <div class="col-position" style="grid-column:1 / -1; padding-left:12px; color:var(--muted); font-weight:600">Position <?php echo h($rank); ?> / <?php echo intval($total_count); ?> avec <?php echo intval($r['recave'] ?? 0); ?> recaves</div>
                 </div>
