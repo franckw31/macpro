@@ -717,6 +717,33 @@ document.addEventListener('DOMContentLoaded', function() {
 		var total = 0;
 		var timerPaused = false;
 
+		var activityStartTs = <?php echo (isset($serverActivity['date']) && @strtotime($serverActivity['date']) !== false) ? intval(strtotime($serverActivity['date'])) : '0'; ?>;
+		var countdownInterval = null;
+
+		function showCountdown() {
+			var tile = document.getElementById('qs-timer-tile');
+			var nowTs = Math.floor(Date.now() / 1000);
+			var diff = activityStartTs - nowTs;
+			if(diff <= 0 || activityStartTs === 0) {
+				// Partie démarrée : arrêter le compte à rebours
+				if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+				if(tile) tile.style.display = 'none';
+				return;
+			}
+			var h = Math.floor(diff / 3600).toString().padStart(2,'0');
+			var m = Math.floor((diff % 3600) / 60).toString().padStart(2,'0');
+			var s = (diff % 60).toString().padStart(2,'0');
+			if(tile) tile.style.display = 'flex';
+			display.textContent = h+':'+m+':'+s;
+			display.style.color = '#00d2ff';
+			display.style.fontSize = '14px';
+			progressCircle.style.strokeDashoffset = 0;
+			progressCircle.style.stroke = '#00d2ff';
+			progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
+			if(levelEl) levelEl.textContent = '';
+			if(blindsEl) blindsEl.textContent = 'Démarre dans';
+		}
+
 		function updateDisplay() {
 			var tile = document.getElementById('qs-timer-tile');
 			// Masquer si pas de timer ou si valeur aberrante (> 2h = timer pas encore démarré)
@@ -725,6 +752,10 @@ document.addEventListener('DOMContentLoaded', function() {
 				if(tile) tile.style.display = 'none';
 				return;
 			}
+			// Timer live actif : arrêter le compte à rebours
+			if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+			display.style.fontSize = '';
+			if(blindsEl && blindsEl.textContent === 'Démarre dans') blindsEl.textContent = '';
 			var m = Math.floor(seconds/60).toString().padStart(2,'0');
 			var s = (seconds%60).toString().padStart(2,'0');
 			display.textContent = m+':'+s;
