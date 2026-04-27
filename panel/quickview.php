@@ -689,7 +689,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 	?>
-		<div class="tile" id="live-timer-tile" style="height:70px;display:flex;flex-direction:column;justify-content:space-between;">
+		<div class="tile" id="live-timer-tile" style="height:70px;display:<?php echo (isset($serverActivity['date']) && @strtotime($serverActivity['date']) !== false && strtotime($serverActivity['date']) > time()) ? 'flex' : 'none'; ?>;flex-direction:column;justify-content:space-between;">
 		       <div class="tile-top" style="padding-top:0;">
 				   <div class="timer-circle-container" style="width:56px;height:56px;position:relative;margin:0 auto;">
 					       <svg class="timer-svg" viewBox="0 0 80 80" style="width:100%;height:100%;position:absolute;top:0;left:0;">
@@ -746,7 +746,9 @@ document.addEventListener('DOMContentLoaded', function() {
 					       }
 					   }
 				       }
+                       var tile = document.getElementById('live-timer-tile');
                        if(showCountdown) {
+                       	if(tile) tile.style.display = 'flex';
                        	display.textContent = countdownText;
                        	display.style.color = '#00d2ff';
                        	progressCircle.style.strokeDashoffset = 0;
@@ -758,7 +760,9 @@ document.addEventListener('DOMContentLoaded', function() {
                        	if(titleEl) titleEl.textContent = 'Démarre dans';
                        	return;
                        } else {
+                       	if(tile) tile.style.display = 'none';
                        	if(titleEl) titleEl.textContent = '';
+                       	return;
                        }
 				       var m = Math.floor(seconds/60).toString().padStart(2,'0');
 				       var s = (seconds%60).toString().padStart(2,'0');
