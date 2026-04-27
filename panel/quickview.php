@@ -728,9 +728,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				   // (activityStart is provided above) — avoid duplicate declaration
 
 				   function updateDisplay() {
+				       var tile = document.getElementById('live-timer-tile');
 				       var now = new Date();
 				       var showCountdown = false;
 				       var countdownText = '';
+				       var countdownSecs = 0;
 				       var beforeStart = false;
 				       if(activityStart) {
 					   var startDate = new Date(activityStart.replace(/-/g,'/'));
@@ -738,6 +740,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					       // Show countdown
 					       var diff = Math.floor((startDate - now) / 1000);
 					       if(diff > 0) {
+						   countdownSecs = diff;
 						   var h = Math.floor(diff/3600).toString().padStart(2,'0');
 						   var m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
 						   countdownText = h+':'+m;
@@ -747,6 +750,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					   }
 				       }
                        if(showCountdown) {
+                       	// N'affiche la tuile que si le compte à rebours est positif
+                       	if(tile) tile.style.display = 'flex';
                        	display.textContent = countdownText;
                        	display.style.color = '#00d2ff';
                        	progressCircle.style.strokeDashoffset = 0;
@@ -759,6 +764,9 @@ document.addEventListener('DOMContentLoaded', function() {
                        	return;
                        } else {
                        	if(titleEl) titleEl.textContent = '';
+                       	// Compte à rebours = 0 ou négatif : n'afficher la tuile que si le timer live tourne
+                       	if(tile) tile.style.display = (seconds > 0) ? 'flex' : 'none';
+                       	if(seconds <= 0) return;
                        }
 				       var m = Math.floor(seconds/60).toString().padStart(2,'0');
 				       var s = (seconds%60).toString().padStart(2,'0');
