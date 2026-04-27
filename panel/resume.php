@@ -315,7 +315,7 @@ if($activity){
                     </div>
                     
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;font-weight:700">
-                        <div class="label"><?php echo ($benef >= 0) ? 'Bénéfice' : 'Perte'; ?></div>
+                        <div class="label"><?php echo ($benef >= 0) ? 'Bénéfice Hors Rake' : 'Perte Hors Rake'; ?></div>
                         <div class="value" style="color:<?php echo ($benef >= 0) ? 'var(--green)' : '#ff6b6b'; ?>"><?php echo ($benef >= 0) ? number_format($benef,0,',',' ') . '€' : number_format(abs($benef),0,',',' ') . '€'; ?></div>
                     </div>
                 </div>
