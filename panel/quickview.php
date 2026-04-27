@@ -689,7 +689,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 	?>
-		<div class="tile" id="live-timer-tile" style="height:70px;display:<?php echo ($timer_seconds_left > 0) ? 'flex' : 'none'; ?>;flex-direction:column;justify-content:space-between;">
+		<div class="tile" id="live-timer-tile" style="height:70px;display:flex;flex-direction:column;justify-content:space-between;">
 		       <div class="tile-top" style="padding-top:0;">
 				   <div class="timer-circle-container" style="width:56px;height:56px;position:relative;margin:0 auto;">
 					       <svg class="timer-svg" viewBox="0 0 80 80" style="width:100%;height:100%;position:absolute;top:0;left:0;">
@@ -838,9 +838,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			       if(data.status!=='success') return;
 			       seconds = parseInt(data.seconds_remaining)||0;
 			       total = parseInt(data.duration_seconds)||0;
-			       // Afficher la tuile seulement si le timer est actif
-			       var tile = document.getElementById('live-timer-tile');
-			       if(tile) tile.style.display = (seconds > 0) ? 'flex' : 'none';
 					   if(levelEl) {
 						   // Remove 'Niveau' and only show 'x / y'
 						   if(data.level_name){
