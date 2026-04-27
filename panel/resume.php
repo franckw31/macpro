@@ -209,7 +209,7 @@ if($activity){
         
     </div>
 
-    <div style="margin-top:12px;font-weight:800;font-size:15px;color:var(--muted)">Table Finale avec ITM</div>
+    <div style="margin-top:12px;text-align:center;color:var(--blue);font-size:20px;font-weight:900">Table Finale avec ITM</div>
     <div class="table" role="list" aria-label="Résultats">
         <?php if(empty($rows)): ?>
             <div class="row"><div class="col-pseudo">Aucun résultat disponible</div></div>
