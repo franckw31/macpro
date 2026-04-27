@@ -842,6 +842,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		if(activityStartTs > 0 && Math.floor(Date.now()/1000) < activityStartTs) {
 			showCountdown();
 			countdownInterval = setInterval(showCountdown, 1000);
+		} else {
+			// Appel immédiat pour afficher 'Partie Terminée' si applicable
+			updateDisplay();
 		}
 		   // Force full page reload every 30 seconds for robustness
 		   setInterval(function(){
