@@ -308,8 +308,9 @@ if($activity){
                         <div class="value"><?php echo ($gains>0)? number_format($gains,0,',',' ') . '€' : '-'; ?></div>
                     </div>
                     
+                    <?php $labelText = ($benef >= 0) ? 'Bénéfice Net' : 'Perte Net'; $labelColor = ($benef > 0) ? 'var(--green)' : '#ff6b6b'; ?>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;font-weight:700">
-                        <div class="label"><?php echo ($benef >= 0) ? 'Bénéfice Net' : 'Perte Net'; ?></div>
+                        <div class="label" style="color:<?php echo $labelColor; ?>"><?php echo $labelText; ?></div>
                         <div class="value" style="color:<?php echo ($benef >= 0) ? 'var(--green)' : '#ff6b6b'; ?>"><?php echo ($benef >= 0) ? number_format($benef,0,',',' ') . '€' : number_format(abs($benef),0,',',' ') . '€'; ?></div>
                     </div>
                 </div>
