@@ -721,8 +721,25 @@ document.addEventListener('DOMContentLoaded', function() {
 			var tile = document.getElementById('live-timer-tile');
 			// Masquer si pas de timer ou si valeur aberrante (> 2h = timer pas encore démarré)
 			var timerValid = (seconds > 0 && seconds <= 7200);
-			if(tile) tile.style.display = timerValid ? 'flex' : 'none';
-			if(!timerValid) return;
+			if(!timerValid) {
+				// Si la partie a débuté depuis plus de 24h, afficher 'Terminée'
+				var actStartTs = <?php echo (isset($serverActivity['date']) && @strtotime($serverActivity['date']) !== false) ? intval(strtotime($serverActivity['date'])) : '0'; ?>;
+				var nowTs = Math.floor(Date.now() / 1000);
+				if(actStartTs > 0 && (nowTs - actStartTs) > 86400) {
+					if(tile) tile.style.display = 'flex';
+					display.textContent = 'Terminée';
+					display.style.color = '#aaa';
+					display.style.fontSize = '11px';
+					if(levelEl) levelEl.textContent = '';
+					if(blindsEl) blindsEl.textContent = '';
+					progressCircle.style.strokeDashoffset = 0;
+					progressCircle.style.stroke = '#444';
+					progressCircle.style.filter = 'none';
+				} else {
+					if(tile) tile.style.display = 'none';
+				}
+				return;
+			}
 			var m = Math.floor(seconds/60).toString().padStart(2,'0');
 			var s = (seconds%60).toString().padStart(2,'0');
 			display.textContent = m+':'+s;
