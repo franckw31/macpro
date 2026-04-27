@@ -717,6 +717,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	       var seconds = 0;
 	       var total = 0;
 	       var timerPaused = false;
+	       var liveRunning = false; // true dès que le timer live a été confirmé actif
 	       var statusEl = document.getElementById('live-timer-status');
 		       // Get activity start time from PHP
 		       var activityStart = null;
@@ -751,7 +752,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					       lateSeconds = Math.abs(diff);
 					   }
 				       }
-                       if(showCountdown && seconds <= 0) {
+                       if(showCountdown && !liveRunning) {
                        	// Compte à rebours positif : affiche en bleu (seulement si pas de timer live actif)
                        	if(tile) tile.style.display = 'flex';
                        	display.textContent = countdownText;
@@ -856,6 +857,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			       if(!_started) { updateDisplay(); return; }
 			       seconds = parseInt(data.seconds_remaining)||0;
 			       total = parseInt(data.duration_seconds)||0;
+			       if(seconds > 0) liveRunning = true;
 					   if(levelEl) {
 						   // Remove 'Niveau' and only show 'x / y'
 						   if(data.level_name){
