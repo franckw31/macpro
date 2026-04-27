@@ -318,7 +318,7 @@ if($activity){
                         <div class="value" style="color:<?php echo $recave_color; ?>"><?php echo $recave_count; ?></div>
                     </div>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
-                        <div class="label">Dépenses Buyin + Recave(s) + Rake</div>
+                        <div class="label">Dépenses Buyin+Recave(s)+Rake</div>
                         <div class="value" style="color:#ff6b6b"><?php echo number_format($depenses,0,',',' ') . '€'; ?></div>
                     </div>
                     <?php if(!empty($activity_bounty) && floatval($activity_bounty) > 0): ?>
