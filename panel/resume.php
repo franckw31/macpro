@@ -305,8 +305,8 @@ if($activity){
                         }
                         $statsLine = 'Stats de ' . '<span class="pseudo-highlight">' . h($r['pseudo']) . '</span>' . ' chez ' . h($organizer_name) . ($dateLabel ? ' Le ' . h($dateLabel) : '');
                     ?>
-                    <div class="line" style="display:flex;justify-content:center;padding:12px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
-                        <div class="value" style="margin-top:12px;text-align:center;color:var(--orange);font-size:18px;font-weight:900"><?php echo $statsLine; ?></div>
+                    <div class="line" style="display:flex;justify-content:center;padding:6px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                        <div class="value" style="margin-top:6px;text-align:center;color:var(--orange);font-size:18px;font-weight:900"><?php echo $statsLine; ?></div>
                     </div>
                     <!-- Place line removed as requested -->
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
