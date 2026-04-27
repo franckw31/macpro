@@ -258,7 +258,7 @@ if($activity){
                     // organizer: do not take rake into account
                     $effective_buyin = $activity_buyin;
                 } else {
-                    $effective_buyin = max(0.0, $activity_buyin - $activity_rake);
+                    $effective_buyin = max(0.0, $activity_buyin + $activity_rake);
                 }
                 $depenses = $effective_buyin + (intval($r['recave'] ?? 0) * $activity_recave_montant);
                 $gains = floatval($r['gains'] ?? 0.0);
