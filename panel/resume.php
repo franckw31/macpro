@@ -181,7 +181,7 @@ if($activity){
 </head>
 <body>
 <div class="page" role="main">
-    <a href="/panel/cardevent.php" class="close-btn">Fermer</a>
+    <a href="/panel/quickview.php" class="close-btn">Fermer</a>
     <div class="header">
         <div style="flex:1">
             <div class="title"><?php echo h($title); ?></div>
