@@ -755,10 +755,12 @@ document.addEventListener('DOMContentLoaded', function() {
 				if(tile) tile.style.display = 'none';
 				return;
 			}
-			// Timer live actif : arrêter le compte à rebours
+			// Timer live actif : arrêter le compte à rebours et restaurer le cercle
 			if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
 			display.style.fontSize = '';
 			if(blindsEl && blindsEl.textContent === 'Démarre dans') blindsEl.textContent = '';
+			var svgBg = document.querySelector('#qs-timer-tile .timer-bg');
+			if(svgBg) svgBg.style.stroke = '';
 			var m = Math.floor(seconds/60).toString().padStart(2,'0');
 			var s = (seconds%60).toString().padStart(2,'0');
 			display.textContent = m+':'+s;
