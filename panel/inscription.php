@@ -1,6 +1,9 @@
 <?php
 session_start();
 include('include/config.php');
+if (!function_exists('log_activity') && file_exists(__DIR__ . '/../include/functions_logs.php')) {
+    include_once __DIR__ . '/../include/functions_logs.php';
+}
 
 $db = null;
 if (isset($con)) {
@@ -97,6 +100,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg'])) {
             $updates[] = "`ds` = NOW()";
         }
         mysqli_query($db, "UPDATE participation SET " . implode(', ', $updates) . " WHERE `id-participation` = '" . intval($existing['id-participation']) . "'");
+        if (function_exists('log_activity')) {
+            $logAction = ($status === 'Desinscrit') ? 'desinscription' : 'modification_inscription';
+            $logDetails = "Activite #$activityId | Statut: $status" . ($anonyme ? ' | Anonyme' : '') . ($latereg ? ' | Latereg' : '') . ($optionChapitre ? " | Chapitre: $optionChapitre" : '');
+            log_activity($db, $logAction, $logDetails, $userId, $memberRow['pseudo'] ?? '');
+        }
     } elseif ($status !== 'Desinscrit') {
         $orderQuery = mysqli_query($db, "SELECT MAX(ordre) AS max_o FROM participation WHERE `id-activite` = '" . intval($activityId) . "'");
         $orderRow = $orderQuery ? mysqli_fetch_assoc($orderQuery) : null;
@@ -135,6 +143,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg'])) {
         }
 
         mysqli_query($db, "INSERT INTO participation (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ")");
+        if (function_exists('log_activity')) {
+            $logDetails = "Activite #$activityId | Statut: $status" . ($anonyme ? ' | Anonyme' : '') . ($latereg ? ' | Latereg' : '') . ($optionChapitre ? " | Chapitre: $optionChapitre" : '');
+            log_activity($db, 'nouvelle_inscription', $logDetails, $userId, $memberRow['pseudo'] ?? '');
+        }
     }
 
     $participation = [
@@ -179,6 +191,10 @@ if ($userId > 0 && $activityId > 0) {
             $values[] = "'0'";
         }
         mysqli_query($db, "INSERT INTO participation (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ")");
+        if (function_exists('log_activity')) {
+            $logDetails = "Activite #$activityId | Statut: Inscrit (auto via URL)";
+            log_activity($db, 'nouvelle_inscription', $logDetails, $userId, $memberName);
+        }
     }
 }
 
