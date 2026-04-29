@@ -23,7 +23,7 @@ if ($action === '') {
 }
 
 // Whitelist des actions autorisees
-$allowed = ['vue_liste_participants', 'vue_classement_challenge', 'vue_quickview'];
+$allowed = ['vue_liste_participants', 'vue_classement_challenge', 'vue_quickview', 'change_password'];
 if (!in_array($action, $allowed, true)) {
     http_response_code(403);
     exit;
