@@ -53,6 +53,11 @@ header('Vary: Cookie');
 	if (isset($_GET['uid']) && is_numeric($_GET['uid'])) {
 		$selected_id = intval($_GET['uid']);
 	}
+	// Log vue quickview pour utilisateur connecte
+	if (!empty($_SESSION['id']) && function_exists('log_activity') && isset($con)) {
+		$_logDetails = $selected_id ? "Activite #$selected_id" : 'Activite auto';
+		log_activity($con, 'vue_quickview', $_logDetails);
+	}
 	if(isset($con)){
 		if ($selected_id) {
 			// Use the selected activity from ?uid=xxx (select all columns)
