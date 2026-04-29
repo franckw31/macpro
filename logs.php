@@ -2,7 +2,7 @@
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/include/functions_logs.php';
 
-define('ADMIN_KEY', 'CardEvent@Admin2026!');
+define('ADMIN_KEY', 'Cardevent');
 
 function getCity($ip) {
     if (in_array($ip, array('127.0.0.1','::1','localhost'))) return 'Local';
