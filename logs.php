@@ -6,24 +6,33 @@ define('ADMIN_KEY', 'Cardevent');
 
 function getCity($ip) {
     if (in_array($ip, array('127.0.0.1','::1','localhost'))) return 'Local';
+    if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) return 'IP privée';
     static $cache = array();
     if (isset($cache[$ip])) return $cache[$ip];
-    $ctx = stream_context_create(array(
-        'http' => array('timeout' => 3, 'user_agent' => 'Mozilla/5.0'),
-        'ssl'  => array('verify_peer' => false, 'verify_peer_name' => false)
-    ));
-    // ipapi.co : 30k req/jour gratuit, sans clé, très fiable
-    $r = @file_get_contents('https://ipapi.co/'.urlencode($ip).'/json/', false, $ctx);
+
     $city = 'N/A';
-    if ($r) {
-        $d = json_decode($r, true);
-        // ipinfo retourne city, region, country (ex: "Toulouse", "Occitanie", "FR")
-        $parts = array_filter(array(
-            $d['city']    ?? '',
-            $d['region']  ?? '',
-            $d['country'] ?? '',
+    if (function_exists('curl_init')) {
+        $ch = curl_init('https://ipapi.co/'.urlencode($ip).'/json/');
+        curl_setopt_array($ch, array(
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 4,
+            CURLOPT_USERAGENT      => 'Mozilla/5.0',
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_FOLLOWLOCATION => true,
         ));
-        if ($parts) $city = implode(', ', $parts);
+        $r = curl_exec($ch);
+        curl_close($ch);
+        if ($r) {
+            $d = json_decode($r, true);
+            if (!empty($d['city'])) {
+                $parts = array_filter(array(
+                    $d['city']         ?? '',
+                    $d['region']       ?? '',
+                    $d['country_name'] ?? '',
+                ));
+                if ($parts) $city = implode(', ', $parts);
+            }
+        }
     }
     return $cache[$ip] = $city;
 }
