@@ -356,6 +356,10 @@ if($activity){
                         </div>
                     </div>
                     <?php endif; ?>
+                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                        <div class="label">A éliminé</div>
+                        <div class="value" style="color:<?php echo count($eliminated_players) > 0 ? 'var(--purple)' : 'var(--muted)'; ?>;font-weight:700"><?php echo count($eliminated_players); ?> joueur<?php echo count($eliminated_players) > 1 ? 's' : ''; ?></div>
+                    </div>
                     <?php if(!empty($duree_label)): ?>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">Durée de jeu<?php if(!empty($elim_time_label)): ?> <span class="small-muted">(OUT à <?php echo h($elim_time_label); ?>)</span><?php endif; ?></div>
