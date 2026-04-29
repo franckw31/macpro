@@ -6,32 +6,19 @@ define('ADMIN_KEY', 'Cardevent');
 
 function getCity($ip) {
     if (in_array($ip, array('127.0.0.1','::1','localhost'))) return 'Local';
-    if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) return 'IP privée';
     static $cache = array();
     if (isset($cache[$ip])) return $cache[$ip];
-
+    $ctx = stream_context_create(array(
+        'http' => array('timeout' => 2, 'user_agent' => 'Mozilla/5.0'),
+        'ssl'  => array('verify_peer' => false, 'verify_peer_name' => false)
+    ));
+    $r = @file_get_contents('https://get.geojs.io/v1/ip/geo/'.urlencode($ip).'.json', false, $ctx);
     $city = 'N/A';
-    if (function_exists('curl_init')) {
-        $ch = curl_init('http://www.geoplugin.net/json.gp?ip='.urlencode($ip));
-        curl_setopt_array($ch, array(
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT        => 4,
-            CURLOPT_USERAGENT      => 'Mozilla/5.0',
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_FOLLOWLOCATION => true,
-        ));
-        $r = curl_exec($ch);
-        curl_close($ch);
-        if ($r) {
-            $d = json_decode($r, true);
-            if (!empty($d['geoplugin_city'])) {
-                $parts = array_filter(array(
-                    $d['geoplugin_city']        ?? '',
-                    $d['geoplugin_regionName']  ?? '',
-                    $d['geoplugin_countryName'] ?? '',
-                ));
-                if ($parts) $city = implode(', ', $parts);
-            }
+    if ($r) {
+        $d = json_decode($r, true);
+        if (!empty($d['city'])) {
+            $city = $d['city'];
+            if (!empty($d['country'])) $city .= ' ('.$d['country'].')';
         }
     }
     return $cache[$ip] = $city;
