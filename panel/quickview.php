@@ -984,6 +984,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						<div style="font-weight:700;color:var(--gold);margin-bottom:6px">Options</div>
 						<form id="ins-form" method="post" action="/panel/inscription.php" style="margin-top:8px">
 							<input type="hidden" name="quick_reg" value="1">
+							<input type="hidden" name="ajax" value="1">
 							<input type="hidden" name="uid" value="">
 							<input type="hidden" name="status" value="Inscrit">
 							<input type="hidden" name="anonyme" value="0">
@@ -1065,14 +1066,60 @@ document.addEventListener('DOMContentLoaded', function() {
 					var btnUn = document.getElementById('ins-unregister');
 					if(btnUn){
 						btnUn.addEventListener('click', function(){
-							// set status to None (server maps None -> Desinscrit)
 							form.querySelector('input[name="status"]').value = 'None';
-							// clear flags
 							form.querySelector('input[name="anonyme"]').value = '0';
 							form.querySelector('input[name="latereg"]').value = '0';
-							form.submit();
+							submitInscriptionAjax();
 						});
 					}
+
+					// Intercept form submit -> AJAX
+					form.addEventListener('submit', function(e){
+						e.preventDefault();
+						syncHidden();
+						submitInscriptionAjax();
+					});
+
+					function submitInscriptionAjax(){
+						var btn = document.getElementById('ins-validate');
+						var btnDes = document.getElementById('ins-unregister');
+						if(btn) btn.disabled = true;
+						if(btnDes) btnDes.disabled = true;
+						var data = new URLSearchParams(new FormData(form));
+						fetch('/panel/inscription.php', {
+							method: 'POST',
+							headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+							body: data.toString()
+						})
+						.then(function(r){ return r.json(); })
+						.then(function(d){
+							if(btn) btn.disabled = false;
+							if(btnDes) btnDes.disabled = false;
+							modal.style.display = 'none';
+							modal.setAttribute('aria-hidden','true');
+							// mise à jour visuelle du bouton d'inscription
+							var insBtn = document.getElementById('btn-inscription');
+							if(insBtn && d.participation){
+								var s = d.participation.status;
+								if(s === 'Desinscrit' || s === 'None'){
+									insBtn.textContent = "S'inscrire";
+									insBtn.style.background = '';
+								} else if(s === 'Option'){
+									insBtn.textContent = 'Modifier (Option)';
+									insBtn.style.background = '#b8860b';
+								} else {
+									insBtn.textContent = 'Modifier';
+									insBtn.style.background = '#17a34a';
+								}
+							}
+						})
+						.catch(function(){
+							if(btn) btn.disabled = false;
+							if(btnDes) btnDes.disabled = false;
+							alert('Erreur réseau, veuillez réessayer.');
+						});
+					}
+
 					// Close modal when clicking close button
 					var closeBtns = modal.querySelectorAll('.inscription-modal-close');
 					closeBtns.forEach(function(b){ b.addEventListener('click', function(){ modal.style.display='none'; modal.setAttribute('aria-hidden','true'); }); });
