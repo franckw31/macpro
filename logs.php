@@ -349,7 +349,7 @@ td { color: var(--text); }
         </tr>
         <?php endforeach; ?>
         </tbody>
-    </table>
+    </table></div>
     <?php endif; ?>
 </div>
 
@@ -430,7 +430,7 @@ function showMsg(el, text, type) {
     </tr>
     <?php endwhile; ?>
     </tbody>
-</table>
+</table></div>
 
 <?php
 $base_url = '?tab='.urlencode($tab).'&sort='.urlencode($sort).'&dir='.urlencode($dir);
