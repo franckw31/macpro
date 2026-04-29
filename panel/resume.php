@@ -356,9 +356,15 @@ if($activity){
                         </div>
                     </div>
                     <?php endif; ?>
-                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                    <div class="line" style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">A éliminé</div>
-                        <div class="value" style="color:<?php echo count($eliminated_players) > 0 ? 'var(--purple)' : 'var(--muted)'; ?>;font-weight:700"><?php echo count($eliminated_players); ?> joueur<?php echo count($eliminated_players) > 1 ? 's' : ''; ?></div>
+                        <div class="value" style="text-align:right;max-width:60%;word-break:break-word">
+                            <?php if(empty($eliminated_players)): ?>
+                                <span style="color:var(--muted)">—</span>
+                            <?php else: foreach($eliminated_players as $ei => $ep): ?>
+                                <span style="color:var(--purple);display:block"><?php echo (count($eliminated_players) > 1 ? ($ei+1).'. ' : '') . h($ep); ?></span>
+                            <?php endforeach; endif; ?>
+                        </div>
                     </div>
                     <?php if(!empty($duree_label)): ?>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
