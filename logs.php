@@ -12,8 +12,8 @@ function getCity($ip) {
         'http' => array('timeout' => 3, 'user_agent' => 'Mozilla/5.0'),
         'ssl'  => array('verify_peer' => false, 'verify_peer_name' => false)
     ));
-    // ipinfo.io : référence du secteur, 50k req/mois gratuit sans token
-    $r = @file_get_contents('https://ipinfo.io/'.urlencode($ip).'/json', false, $ctx);
+    // ipapi.co : 30k req/jour gratuit, sans clé, très fiable
+    $r = @file_get_contents('https://ipapi.co/'.urlencode($ip).'/json/', false, $ctx);
     $city = 'N/A';
     if ($r) {
         $d = json_decode($r, true);
