@@ -278,6 +278,14 @@ if($activity){
                 // recave count and color: green when 0, red otherwise
                 $recave_count = intval($r['recave'] ?? 0);
                 $recave_color = ($recave_count === 0) ? 'var(--green)' : '#ff6b6b';
+                // fetch list of players eliminated by current player
+                $eliminated_players = [];
+                if(!empty($r['pseudo']) && !empty($con)){
+                    $esc_cur = mysqli_real_escape_string($con, $r['pseudo']);
+                    $elim_list_q = "SELECT COALESCE(m.pseudo,'') AS elim_pseudo FROM `eliminations` e JOIN `participation` p2 ON e.`id_participation` = p2.`id-participation` LEFT JOIN `membres` m ON m.`id-membre` = p2.`id-membre` WHERE p2.`id-activite` = '".$aid."' AND e.`nom_membre` = '".$esc_cur."'";
+                    $elim_list_r = @mysqli_query($con, $elim_list_q);
+                    if($elim_list_r){ while($er = mysqli_fetch_assoc($elim_list_r)){ if($er['elim_pseudo'] !== '') $eliminated_players[] = $er['elim_pseudo']; } }
+                }
                 // position color depends on PricePool gains (green when >0, red otherwise)
                 $position_color = ($gains > 0) ? 'var(--green)' : '#ff6b6b';
                 ?>
@@ -313,6 +321,12 @@ if($activity){
                         <div class="label">Position / Inscrits</div>
                         <div class="value"><span style="color:<?php echo $position_color; ?>"><?php echo h($rank); ?></span> / <?php echo intval($total_count); ?></div>
                     </div>
+                    <?php if(!empty($eliminated_players)): ?>
+                    <div class="line" style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                        <div class="label">Éliminés</div>
+                        <div class="value" style="text-align:right;color:var(--purple);max-width:60%;word-break:break-word"><?php echo implode(', ', array_map('h', $eliminated_players)); ?></div>
+                    </div>
+                    <?php endif; ?>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">ReCave(s)</div>
                         <div class="value" style="color:<?php echo $recave_color; ?>"><?php echo $recave_count; ?></div>
