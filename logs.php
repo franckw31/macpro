@@ -126,8 +126,12 @@ try {
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'all';
 $page = max(1, intval($_GET['page'] ?? 1));
 $per_page = 8;
-$offset = ($page - 1) * $per_page;
 $exclude_ids = 'user_id NOT IN(2, 265)';
+
+// Tri
+$allowed_sort = array('timestamp','username','action','source','details','ip_address');
+$sort = isset($_GET['sort']) && in_array($_GET['sort'], $allowed_sort) ? $_GET['sort'] : 'timestamp';
+$dir  = (isset($_GET['dir']) && strtoupper($_GET['dir']) === 'ASC') ? 'ASC' : 'DESC';
 
 if ($tab === 'ios') {
     $where = "source IN('iOS App','iOS Admin') AND $exclude_ids";
@@ -142,7 +146,7 @@ $total_pages = max(1, ceil($total_rows / $per_page));
 $page = min($page, $total_pages);
 $offset = ($page - 1) * $per_page;
 
-$query = "SELECT * FROM activity_logs WHERE $where ORDER BY timestamp DESC LIMIT $per_page OFFSET $offset";
+$query = "SELECT * FROM activity_logs WHERE $where ORDER BY `$sort` $dir LIMIT $per_page OFFSET $offset";
 $result   = mysqli_query($conx, $query);
 $statsIos = mysqli_query($conx, "SELECT action, COUNT(*) AS total FROM activity_logs WHERE source IN('iOS App','iOS Admin') AND $exclude_ids GROUP BY action ORDER BY total DESC");
 ?>
@@ -328,13 +332,23 @@ function showMsg(el, text, type) {
 <?php endif; ?>
 
 <table>
+    <?php
+    function sort_url($col, $current_sort, $current_dir, $tab, $page) {
+        $new_dir = ($current_sort === $col && $current_dir === 'DESC') ? 'ASC' : 'DESC';
+        return '?tab='.urlencode($tab).'&sort='.urlencode($col).'&dir='.$new_dir.'&page=1';
+    }
+    function sort_icon($col, $current_sort, $current_dir) {
+        if ($current_sort !== $col) return '<span class="sort-icon">⇕</span>';
+        return '<span class="sort-icon">'.($current_dir === 'ASC' ? '▲' : '▼').'</span>';
+    }
+    ?>
     <thead><tr>
-        <th>Date</th>
-        <th>Utilisateur</th>
-        <th>Action</th>
-        <th>Source</th>
-        <th>Details</th>
-        <th>IP</th>
+        <th class="th-sort <?php echo $sort==='timestamp'?'active':''; ?>"><a href="<?php echo sort_url('timestamp',$sort,$dir,$tab,$page); ?>" style="text-decoration:none;color:inherit">Date<?php echo sort_icon('timestamp',$sort,$dir); ?></a></th>
+        <th class="th-sort <?php echo $sort==='username'?'active':''; ?>"><a href="<?php echo sort_url('username',$sort,$dir,$tab,$page); ?>" style="text-decoration:none;color:inherit">Utilisateur<?php echo sort_icon('username',$sort,$dir); ?></a></th>
+        <th class="th-sort <?php echo $sort==='action'?'active':''; ?>"><a href="<?php echo sort_url('action',$sort,$dir,$tab,$page); ?>" style="text-decoration:none;color:inherit">Action<?php echo sort_icon('action',$sort,$dir); ?></a></th>
+        <th class="th-sort <?php echo $sort==='source'?'active':''; ?>"><a href="<?php echo sort_url('source',$sort,$dir,$tab,$page); ?>" style="text-decoration:none;color:inherit">Source<?php echo sort_icon('source',$sort,$dir); ?></a></th>
+        <th class="th-sort <?php echo $sort==='details'?'active':''; ?>"><a href="<?php echo sort_url('details',$sort,$dir,$tab,$page); ?>" style="text-decoration:none;color:inherit">Details<?php echo sort_icon('details',$sort,$dir); ?></a></th>
+        <th class="th-sort <?php echo $sort==='ip_address'?'active':''; ?>"><a href="<?php echo sort_url('ip_address',$sort,$dir,$tab,$page); ?>" style="text-decoration:none;color:inherit">IP<?php echo sort_icon('ip_address',$sort,$dir); ?></a></th>
         <th>Ville</th>
     </tr></thead>
     <tbody>
@@ -360,7 +374,7 @@ function showMsg(el, text, type) {
 </table>
 
 <?php
-$base_url = '?tab='.urlencode($tab);
+$base_url = '?tab='.urlencode($tab).'&sort='.urlencode($sort).'&dir='.urlencode($dir);
 if ($total_pages > 1):
 ?>
 <div style="display:flex;align-items:center;gap:6px;margin-top:16px;flex-wrap:wrap">
