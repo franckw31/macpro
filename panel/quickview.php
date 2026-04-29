@@ -1250,5 +1250,15 @@ document.addEventListener('DOMContentLoaded', function() {
 			const saved = localStorage.getItem('uiVariant') || 'A'; apply(saved);
 		})();
 	</script>
+<script>
+// Log panel actions (clic sur tuiles) via fetch silencieux
+function logPanelAction(action) {
+	try {
+		var uid = (window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id) ? window.SERVER_ACTIVITY.id : (new URLSearchParams(window.location.search).get('uid') || '');
+		var details = uid ? 'Activite #' + uid : '';
+		navigator.sendBeacon('/panel/log-action.php', JSON.stringify({action: action, details: details}));
+	} catch(e) {}
+}
+</script>
 </body>
 </html>
