@@ -296,7 +296,7 @@ if($activity){
                     if($dq && ($dr = mysqli_fetch_assoc($dq)) && !empty($dr['last_elim'])){
                         $elim_ts = strtotime($dr['last_elim']);
                         if($elim_ts && $activity_start){
-                            $diff = max(0, $elim_ts - $activity_start);
+                            $diff = max(0, $elim_ts - $activity_start - 1200); // -20min pause
                             $h_dur = intdiv($diff, 3600);
                             $m_dur = intdiv($diff % 3600, 60);
                             $duree_label = ($h_dur > 0) ? $h_dur.'h'.sprintf('%02d', $m_dur) : $m_dur.'min';
