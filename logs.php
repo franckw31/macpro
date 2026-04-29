@@ -124,14 +124,25 @@ try {
 
 // Onglet & requete logs
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'all';
+$page = max(1, intval($_GET['page'] ?? 1));
+$per_page = 10;
+$offset = ($page - 1) * $per_page;
 $exclude_ids = 'user_id NOT IN(2, 265)';
+
 if ($tab === 'ios') {
-    $query = "SELECT * FROM activity_logs WHERE source IN('iOS App','iOS Admin') AND $exclude_ids ORDER BY timestamp DESC LIMIT 200";
+    $where = "source IN('iOS App','iOS Admin') AND $exclude_ids";
 } elseif ($tab === 'auth') {
-    $query = "SELECT * FROM activity_logs WHERE source IN('iOS App','iOS Admin') AND action IN('login_success','login_failure','verify_success','verify_failure','logout') AND $exclude_ids ORDER BY timestamp DESC LIMIT 200";
+    $where = "source IN('iOS App','iOS Admin') AND action IN('login_success','login_failure','verify_success','verify_failure','logout') AND $exclude_ids";
 } else {
-    $query = "SELECT * FROM activity_logs WHERE $exclude_ids ORDER BY timestamp DESC LIMIT 200";
+    $where = $exclude_ids;
 }
+
+$total_rows = (int)mysqli_fetch_row(mysqli_query($conx, "SELECT COUNT(*) FROM activity_logs WHERE $where"))[0];
+$total_pages = max(1, ceil($total_rows / $per_page));
+$page = min($page, $total_pages);
+$offset = ($page - 1) * $per_page;
+
+$query = "SELECT * FROM activity_logs WHERE $where ORDER BY timestamp DESC LIMIT $per_page OFFSET $offset";
 $result   = mysqli_query($conx, $query);
 $statsIos = mysqli_query($conx, "SELECT action, COUNT(*) AS total FROM activity_logs WHERE source IN('iOS App','iOS Admin') AND $exclude_ids GROUP BY action ORDER BY total DESC");
 ?>
@@ -345,6 +356,33 @@ function showMsg(el, text, type) {
     <?php endwhile; ?>
     </tbody>
 </table>
+
+<?php
+$base_url = '?tab='.urlencode($tab);
+if ($total_pages > 1):
+?>
+<div style="display:flex;align-items:center;gap:6px;margin-top:16px;flex-wrap:wrap">
+    <span style="font-size:13px;color:#666"><?php echo $total_rows; ?> entr&eacute;es &mdash; page <?php echo $page; ?>/<?php echo $total_pages; ?></span>
+    <div style="display:flex;gap:4px;margin-left:auto;flex-wrap:wrap">
+        <?php if ($page > 1): ?>
+            <a href="<?php echo $base_url.'&page=1'; ?>" style="padding:5px 10px;border-radius:5px;background:#ddd;text-decoration:none;color:#333;font-size:13px">&laquo;</a>
+            <a href="<?php echo $base_url.'&page='.($page-1); ?>" style="padding:5px 10px;border-radius:5px;background:#ddd;text-decoration:none;color:#333;font-size:13px">&lsaquo; Préc</a>
+        <?php endif; ?>
+        <?php
+        $start = max(1, $page - 3);
+        $end   = min($total_pages, $page + 3);
+        for ($p = $start; $p <= $end; $p++):
+            $active = ($p === $page);
+        ?>
+            <a href="<?php echo $base_url.'&page='.$p; ?>" style="padding:5px 10px;border-radius:5px;text-decoration:none;font-size:13px;font-weight:<?php echo $active?'bold':'normal'; ?>;background:<?php echo $active?'#4a90d9':'#ddd'; ?>;color:<?php echo $active?'#fff':'#333'; ?>"><?php echo $p; ?></a>
+        <?php endfor; ?>
+        <?php if ($page < $total_pages): ?>
+            <a href="<?php echo $base_url.'&page='.($page+1); ?>" style="padding:5px 10px;border-radius:5px;background:#ddd;text-decoration:none;color:#333;font-size:13px">Suiv &rsaquo;</a>
+            <a href="<?php echo $base_url.'&page='.$total_pages; ?>" style="padding:5px 10px;border-radius:5px;background:#ddd;text-decoration:none;color:#333;font-size:13px">&raquo;</a>
+        <?php endif; ?>
+    </div>
+</div>
+<?php endif; ?>
 
 <?php endif; ?>
 
