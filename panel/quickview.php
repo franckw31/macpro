@@ -489,9 +489,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		// Pré-remplir l'activité
 		var uidInput = form.querySelector('input[name="uid"]');
 		if (uidInput && actId) uidInput.value = actId;
-		// Pré-remplir depuis SERVER_ACTIVITY (participation existante)
-		if (window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.participation) {
-			var p = window.SERVER_ACTIVITY.participation;
+		// Pré-remplir depuis SERVER_PARTICIPATION (participation existante)
+		if (window.SERVER_PARTICIPATION) {
+			var p = window.SERVER_PARTICIPATION;
 			var inAnon = document.getElementById('ins-anon');
 			var inOpt  = document.getElementById('ins-opt');
 			var inLate = document.getElementById('ins-late');
