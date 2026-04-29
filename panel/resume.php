@@ -299,7 +299,7 @@ if($activity){
                             $diff = max(0, $elim_ts - $activity_start - 1200); // -20min pause
                             $h_dur = intdiv($diff, 3600);
                             $m_dur = intdiv($diff % 3600, 60);
-                            $duree_label = ($h_dur > 0) ? $h_dur.'h'.sprintf('%02d', $m_dur) : $m_dur.'min';
+                            $duree_label = ($h_dur > 0) ? $h_dur.' Heure'.($h_dur > 1 ? 's' : '').' '.$m_dur.' Minute'.($m_dur > 1 ? 's' : '') : $m_dur.' Minute'.($m_dur > 1 ? 's' : '');
                             $elim_time_label = date('H:i', $elim_ts);
                         }
                     } else {
