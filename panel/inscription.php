@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg'])) {
         if (function_exists('log_activity')) {
             $logAction = ($status === 'Desinscrit') ? 'desinscription' : 'modification_inscription';
             $logDetails = "Activite #$activityId | Statut: $status" . ($anonyme ? ' | Anonyme' : '') . ($latereg ? ' | Latereg' : '') . ($optionChapitre ? " | Chapitre: $optionChapitre" : '');
-            log_activity($db, $logAction, $logDetails, $userId, $memberRow['pseudo'] ?? '');
+            log_activity($db, $logAction, $logDetails);
         }
     } elseif ($status !== 'Desinscrit') {
         $orderQuery = mysqli_query($db, "SELECT MAX(ordre) AS max_o FROM participation WHERE `id-activite` = '" . intval($activityId) . "'");
@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg'])) {
         mysqli_query($db, "INSERT INTO participation (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ")");
         if (function_exists('log_activity')) {
             $logDetails = "Activite #$activityId | Statut: $status" . ($anonyme ? ' | Anonyme' : '') . ($latereg ? ' | Latereg' : '') . ($optionChapitre ? " | Chapitre: $optionChapitre" : '');
-            log_activity($db, 'nouvelle_inscription', $logDetails, $userId, $memberRow['pseudo'] ?? '');
+            log_activity($db, 'nouvelle_inscription', $logDetails);
         }
     }
 
@@ -193,7 +193,7 @@ if ($userId > 0 && $activityId > 0) {
         mysqli_query($db, "INSERT INTO participation (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ")");
         if (function_exists('log_activity')) {
             $logDetails = "Activite #$activityId | Statut: Inscrit (auto via URL)";
-            log_activity($db, 'nouvelle_inscription', $logDetails, $userId, $memberName);
+            log_activity($db, 'nouvelle_inscription', $logDetails);
         }
     }
 }
