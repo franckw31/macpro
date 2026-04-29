@@ -198,8 +198,10 @@ tr:hover td { background: #fafafa; }
 .btn-info:hover { background: #138496; }
 .key-input, .pseudo-input { width: 100%; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; margin-bottom: 8px; box-sizing: border-box; }
 .result-msg { margin-top: 10px; padding: 8px; border-radius: 4px; font-size: 13px; display: none; }
-.result-ok  { background: #d4edda; color: #155724; }
-.result-err { background: #f8d7da; color: #721c24; }
+.th-sort { cursor:pointer; user-select:none; white-space:nowrap; }
+.th-sort:hover { background:#e8e8e8; }
+.th-sort .sort-icon { margin-left:4px; color:#999; font-size:10px; }
+.th-sort.active .sort-icon { color:#4a90d9; }
 </style>
 </head>
 <body>
