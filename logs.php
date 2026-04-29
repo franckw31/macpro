@@ -436,26 +436,23 @@ function showMsg(el, text, type) {
 $base_url = '?tab='.urlencode($tab).'&sort='.urlencode($sort).'&dir='.urlencode($dir);
 if ($total_pages > 1):
 ?>
-<div style="display:flex;align-items:center;gap:6px;margin-top:16px;flex-wrap:wrap">
-    <span style="font-size:13px;color:#666"><?php echo $total_rows; ?> entr&eacute;es &mdash; page <?php echo $page; ?>/<?php echo $total_pages; ?></span>
-    <div style="display:flex;gap:4px;margin-left:auto;flex-wrap:wrap">
-        <?php if ($page > 1): ?>
-            <a href="<?php echo $base_url.'&page=1'; ?>" style="padding:5px 10px;border-radius:5px;background:#ddd;text-decoration:none;color:#333;font-size:13px">&laquo;</a>
-            <a href="<?php echo $base_url.'&page='.($page-1); ?>" style="padding:5px 10px;border-radius:5px;background:#ddd;text-decoration:none;color:#333;font-size:13px">&lsaquo; Préc</a>
-        <?php endif; ?>
-        <?php
-        $start = max(1, $page - 3);
-        $end   = min($total_pages, $page + 3);
-        for ($p = $start; $p <= $end; $p++):
-            $active = ($p === $page);
-        ?>
-            <a href="<?php echo $base_url.'&page='.$p; ?>" style="padding:5px 10px;border-radius:5px;text-decoration:none;font-size:13px;font-weight:<?php echo $active?'bold':'normal'; ?>;background:<?php echo $active?'#4a90d9':'#ddd'; ?>;color:<?php echo $active?'#fff':'#333'; ?>"><?php echo $p; ?></a>
-        <?php endfor; ?>
-        <?php if ($page < $total_pages): ?>
-            <a href="<?php echo $base_url.'&page='.($page+1); ?>" style="padding:5px 10px;border-radius:5px;background:#ddd;text-decoration:none;color:#333;font-size:13px">Suiv &rsaquo;</a>
-            <a href="<?php echo $base_url.'&page='.$total_pages; ?>" style="padding:5px 10px;border-radius:5px;background:#ddd;text-decoration:none;color:#333;font-size:13px">&raquo;</a>
-        <?php endif; ?>
-    </div>
+<div class="pagination">
+    <span class="info"><?php echo $total_rows; ?> entr&eacute;es &mdash; page <?php echo $page; ?>/<?php echo $total_pages; ?></span>
+    <?php if ($page > 1): ?>
+        <a href="<?php echo $base_url.'&page=1'; ?>">&laquo;</a>
+        <a href="<?php echo $base_url.'&page='.($page-1); ?>">&lsaquo; Préc</a>
+    <?php endif; ?>
+    <?php
+    $start = max(1, $page - 3);
+    $end   = min($total_pages, $page + 3);
+    for ($p = $start; $p <= $end; $p++):
+    ?>
+        <a href="<?php echo $base_url.'&page='.$p; ?>" class="<?php echo ($p===$page)?'current':''; ?>"><?php echo $p; ?></a>
+    <?php endfor; ?>
+    <?php if ($page < $total_pages): ?>
+        <a href="<?php echo $base_url.'&page='.($page+1); ?>">Suiv &rsaquo;</a>
+        <a href="<?php echo $base_url.'&page='.$total_pages; ?>">&raquo;</a>
+    <?php endif; ?>
 </div>
 <?php endif; ?>
 
