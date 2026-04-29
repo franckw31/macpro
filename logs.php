@@ -9,16 +9,20 @@ function getCity($ip) {
     static $cache = array();
     if (isset($cache[$ip])) return $cache[$ip];
     $ctx = stream_context_create(array(
-        'http' => array('timeout' => 2, 'user_agent' => 'Mozilla/5.0'),
+        'http' => array('timeout' => 3, 'user_agent' => 'Mozilla/5.0'),
         'ssl'  => array('verify_peer' => false, 'verify_peer_name' => false)
     ));
-    $r = @file_get_contents('https://get.geojs.io/v1/ip/geo/'.urlencode($ip).'.json', false, $ctx);
+    // ip-api.com : gratuit, pas de clé, très précis (limite : 45 req/min)
+    $r = @file_get_contents('http://ip-api.com/json/'.urlencode($ip).'?fields=status,city,regionName,country&lang=fr', false, $ctx);
     $city = 'N/A';
     if ($r) {
         $d = json_decode($r, true);
-        if (!empty($d['city'])) {
-            $city = $d['city'];
-            if (!empty($d['country'])) $city .= ' ('.$d['country'].')';
+        if (!empty($d['status']) && $d['status'] === 'success') {
+            $parts = array();
+            if (!empty($d['city']))       $parts[] = $d['city'];
+            if (!empty($d['regionName'])) $parts[] = $d['regionName'];
+            if (!empty($d['country']))    $parts[] = $d['country'];
+            if ($parts) $city = implode(', ', $parts);
         }
     }
     return $cache[$ip] = $city;
