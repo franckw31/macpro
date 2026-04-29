@@ -53,7 +53,13 @@ try {
     }
     $userId = (int)$user['membre_id'];
 
-    // ── Activité cible (param ou auto-détectée) ──────────────────
+    // ── Log de consultation ──────────────────────────────────────
+    $actIdForLog = isset($_GET['activity_id']) ? (int)$_GET['activity_id'] : 0;
+    $logDetails = $actIdForLog ? "Activite #$actIdForLog" : 'Activite auto';
+    $logIp = $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'UNKNOWN';
+    $pdo->prepare("INSERT INTO activity_logs (user_id, username, action, source, details, ip_address) VALUES (?, ?, 'vue_liste_participants', 'iOS App', ?, ?)")
+        ->execute([$userId, $user['pseudo'], $logDetails, $logIp]);
+
     $actId = isset($_GET['activity_id']) ? (int)$_GET['activity_id'] : 0;
 
     if ($actId === 0) {
