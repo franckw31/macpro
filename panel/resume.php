@@ -352,7 +352,7 @@ if($activity){
                     </div>
                     <?php if(!empty($eliminated_by)): ?>
                     <div class="line" style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
-                        <div class="label">Éliminé(e)s par :</div>
+                        <div class="label">Éliminé par :</div>
                         <div class="value" style="text-align:right;max-width:60%;word-break:break-word">
                             <?php
                             $last_idx = count($eliminated_by) - 1;
