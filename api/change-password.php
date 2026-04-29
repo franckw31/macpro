@@ -58,6 +58,14 @@ try {
     $ustmt = $pdo->prepare("UPDATE membres SET password = ? WHERE `id-membre` = ?");
     $ok = $ustmt->execute([$new, $memberId]);
     if ($ok) {
+        // ── Log changement mot de passe ──────────────────────────
+        $mstmt = $pdo->prepare("SELECT pseudo FROM membres WHERE `id-membre` = ? LIMIT 1");
+        $mstmt->execute([$memberId]);
+        $mrow = $mstmt->fetch();
+        $mpseudo = $mrow['pseudo'] ?? 'Inconnu';
+        $logIp = $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'UNKNOWN';
+        $pdo->prepare("INSERT INTO activity_logs (user_id, username, action, source, details, ip_address) VALUES (?, ?, 'change_password', 'iOS App', 'Mot de passe modifie', ?)")
+            ->execute([$memberId, $mpseudo, $logIp]);
         echo json_encode(['success'=>true,'message'=>'Mot de passe mis à jour']);
     } else {
         echo json_encode(['success'=>false,'error'=>'impossible de mettre à jour']);
