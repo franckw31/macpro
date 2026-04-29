@@ -334,7 +334,7 @@ td { color: var(--text); }
     <?php if (empty($sessions)): ?>
     <p style="color:#888;font-size:13px">Aucune session active.</p>
     <?php else: ?>
-    <table>
+    <div class="table-wrap"><table>
         <thead><tr>
             <th>Utilisateur</th><th>Device ID</th><th>Creee le</th><th>Dernier usage</th><th>Expire le</th>
         </tr></thead>
@@ -390,7 +390,7 @@ function showMsg(el, text, type) {
 </div>
 <?php endif; ?>
 
-<table>
+<div class="table-wrap"><table>
     <?php
     function sort_url($col, $current_sort, $current_dir, $tab, $page) {
         $new_dir = ($current_sort === $col && $current_dir === 'DESC') ? 'ASC' : 'DESC';
