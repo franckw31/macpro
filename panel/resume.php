@@ -350,7 +350,7 @@ if($activity){
                     <?php endif; ?>
                     <?php if(!empty($duree_label)): ?>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
-                        <div class="label">Durée en jeu<?php if(!empty($elim_time_label)): ?> <span class="small-muted">(OUT à <?php echo h($elim_time_label); ?>)</span><?php endif; ?></div>
+                        <div class="label">Durée de jeu<?php if(!empty($elim_time_label)): ?> <span class="small-muted">(OUT à <?php echo h($elim_time_label); ?>)</span><?php endif; ?></div>
                         <div class="value" style="color:var(--blue)"><?php echo h($duree_label); ?></div>
                     </div>
                     <?php endif; ?>
