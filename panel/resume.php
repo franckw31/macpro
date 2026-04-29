@@ -158,7 +158,7 @@ if($activity){
 
     /* use CSS grid for consistent column alignment */
     /* cap the pseudo column max so it doesn't push Gains too far right */
-    .table .row{display:grid;grid-template-columns:var(--col-num) minmax(80px,260px) var(--col-bounty) var(--col-recave) var(--col-gains);grid-column-gap:6px;align-items:center;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02);line-height:1.15}
+    .table .row{display:grid;grid-template-columns:var(--col-num) minmax(80px,260px) var(--col-bounty) var(--col-recave) var(--col-gains);grid-column-gap:6px;align-items:center;padding:4px 4px;border-bottom:1px solid rgba(255,255,255,0.02);line-height:1.1}
     .row.header-row{font-size:13px;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.01);font-weight:700}
 
     /* column alignment */
