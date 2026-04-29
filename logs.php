@@ -12,19 +12,18 @@ function getCity($ip) {
         'http' => array('timeout' => 3, 'user_agent' => 'Mozilla/5.0'),
         'ssl'  => array('verify_peer' => false, 'verify_peer_name' => false)
     ));
-    // ipwho.is : gratuit, sans clé, HTTPS, précis
-    $r = @file_get_contents('https://ipwho.is/'.urlencode($ip), false, $ctx);
+    // ipinfo.io : référence du secteur, 50k req/mois gratuit sans token
+    $r = @file_get_contents('https://ipinfo.io/'.urlencode($ip).'/json', false, $ctx);
     $city = 'N/A';
     if ($r) {
         $d = json_decode($r, true);
-        if (!empty($d['success']) && $d['success'] === true) {
-            $parts = array_filter(array(
-                $d['city']    ?? '',
-                $d['region']  ?? '',
-                $d['country'] ?? '',
-            ));
-            if ($parts) $city = implode(', ', $parts);
-        }
+        // ipinfo retourne city, region, country (ex: "Toulouse", "Occitanie", "FR")
+        $parts = array_filter(array(
+            $d['city']    ?? '',
+            $d['region']  ?? '',
+            $d['country'] ?? '',
+        ));
+        if ($parts) $city = implode(', ', $parts);
     }
     return $cache[$ip] = $city;
 }
