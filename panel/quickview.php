@@ -925,7 +925,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						$participants_href = '/panel/participants.php' . $uid_q;
 					}
 				?>
-				<a id="participants-tile" class="tile" role="link" href="<?php echo htmlspecialchars($participants_href); ?>" style="text-decoration:none;color:inherit;height:70px;display:flex;flex-direction:column;justify-content:space-between;">
+				<a id="participants-tile" class="tile" role="link" href="<?php echo htmlspecialchars($participants_href); ?>" style="text-decoration:none;color:inherit;height:70px;display:flex;flex-direction:column;justify-content:space-between;" onclick="logPanelAction('vue_liste_participants')">
 					<div class="tile-top"><div class="icon-circle people">👥</div></div>
 					<div class="tile-bottom"><?php echo (strpos($participants_href, 'resultats.php') !== false) ? 'Classement' : 'Liste participants'; ?></div>
 				</a>
