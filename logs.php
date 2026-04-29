@@ -337,7 +337,14 @@ function showMsg(el, text, type) {
         <td><strong><?php echo htmlspecialchars($row['source']); ?></strong></td>
         <td><?php echo htmlspecialchars($row['details']); ?></td>
         <td><?php echo htmlspecialchars($row['ip_address']); ?></td>
-        <td><?php echo getCity($row['ip_address']); ?></td>
+        <td><?php
+            $ip = trim($row['ip_address']);
+            // Afficher IP brute + résultat pour diagnostic
+            $city = getCity($ip);
+            echo '<span title="IP: '.htmlspecialchars($ip).'">';
+            echo ($city !== 'N/A') ? htmlspecialchars($city) : '<span style="color:#aaa">N/A ('.$ip.')</span>';
+            echo '</span>';
+        ?></td>
     </tr>
     <?php endwhile; ?>
     </tbody>
