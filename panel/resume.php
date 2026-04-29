@@ -282,7 +282,7 @@ if($activity){
                 $eliminated_players = [];
                 if(!empty($r['pseudo']) && !empty($con)){
                     $esc_cur = mysqli_real_escape_string($con, $r['pseudo']);
-                    $elim_list_q = "SELECT COALESCE(m.pseudo,'') AS elim_pseudo FROM `eliminations` e JOIN `participation` p2 ON e.`id_participation` = p2.`id-participation` LEFT JOIN `membres` m ON m.`id-membre` = p2.`id-membre` WHERE p2.`id-activite` = '".$aid."' AND e.`nom_membre` = '".$esc_cur."'";
+                    $elim_list_q = "SELECT COALESCE(m.pseudo,'') AS elim_pseudo FROM `eliminations` e JOIN `participation` p2 ON e.`id_participation` = p2.`id-participation` LEFT JOIN `membres` m ON m.`id-membre` = p2.`id-membre` WHERE p2.`id-activite` = '".$aid."' AND e.`nom_membre` = '".$esc_cur."' ORDER BY e.`created_at` ASC";
                     $elim_list_r = @mysqli_query($con, $elim_list_q);
                     if($elim_list_r){ while($er = mysqli_fetch_assoc($elim_list_r)){ if($er['elim_pseudo'] !== '') $eliminated_players[] = $er['elim_pseudo']; } }
                 }
@@ -344,8 +344,16 @@ if($activity){
                     </div>
                     <?php if(!empty($eliminated_players)): ?>
                     <div class="line" style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
-                        <div class="label">Éliminé(e) par :</div>
-                        <div class="value" style="text-align:right;color:var(--purple);max-width:60%;word-break:break-word"><?php echo implode(', ', array_map('h', $eliminated_players)); ?></div>
+                        <div class="label">Éliminé(e)s par :</div>
+                        <div class="value" style="text-align:right;max-width:60%;word-break:break-word">
+                            <?php
+                            $last_idx = count($eliminated_players) - 1;
+                            foreach($eliminated_players as $ei => $ep):
+                                $is_last = ($ei === $last_idx);
+                            ?>
+                            <span style="color:<?php echo $is_last ? '#ff6b6b' : 'var(--purple)'; ?>;display:block"><?php echo ($last_idx > 0 ? ($ei+1).'. ' : '') . h($ep); ?></span>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
                     <?php endif; ?>
                     <?php if(!empty($duree_label)): ?>
