@@ -323,7 +323,7 @@ if($activity){
                     </div>
                     <?php if(!empty($eliminated_players)): ?>
                     <div class="line" style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
-                        <div class="label">Éliminés</div>
+                        <div class="label">Éliminé(e) par :</div>
                         <div class="value" style="text-align:right;color:var(--purple);max-width:60%;word-break:break-word"><?php echo implode(', ', array_map('h', $eliminated_players)); ?></div>
                     </div>
                     <?php endif; ?>
