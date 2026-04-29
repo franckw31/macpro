@@ -805,5 +805,14 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             window.addEventListener('pageshow', function(ev){ if (ev.persisted) redirectToQuickview(); });
         })();
     </script>
+<script>
+function logPanelAction(action) {
+    try {
+        var uid = new URLSearchParams(window.location.search).get('uid') || '';
+        var details = uid ? 'Activite #' + uid : '';
+        navigator.sendBeacon('/panel/log-action.php', JSON.stringify({action: action, details: details}));
+    } catch(e) {}
+}
+</script>
 </body>
 </html>
