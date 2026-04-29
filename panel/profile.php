@@ -266,6 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'chang
     }
 
     if ($updated) {
+        if (function_exists('log_activity')) log_activity($con, 'change_password', 'Mot de passe modifie via profil web');
         $set_flash('success', 'Mot de passe mis à jour.');
     } else {
         $set_flash('error', 'Impossible de mettre à jour le mot de passe.');
@@ -544,7 +545,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 }
             }
             ?>
-            <div class="card-row"><div class="label">Rang Challenge</div><div class="value"><?php echo htmlspecialchars($challenge_rank_display); ?> <a id="link-challenge" href="/panel/challenge_rank.php<?php echo $challenge_uid? '?uid=' . $challenge_uid : ''; ?>" style="margin-left:8px;color:#ff9d3b;font-weight:700">Visualiser</a></div></div>
+            <div class="card-row"><div class="label">Rang Challenge</div><div class="value"><?php echo htmlspecialchars($challenge_rank_display); ?> <a id="link-challenge" href="/panel/challenge_rank.php<?php echo $challenge_uid? '?uid=' . $challenge_uid : ''; ?>" onclick="logPanelAction('vue_classement_challenge')" style="margin-left:8px;color:#ff9d3b;font-weight:700">Visualiser</a></div></div>
             <div class="card-row"><div class="label">Vos Tickets de Tombola</div><div class="value"><?php echo intval($tombola_count); ?> <a id="link-tombola" href="/panel/tickets_tombolas.php?id=<?php echo intval($uid); ?>" onclick="window.location.href=this.href;" style="margin-left:8px;color:#16a34a;font-weight:700">Voir</a></div></div>
             <div class="card-row"><div class="label">Notes (Traker)</div><div class="value">— <a id="link-notes" href="#" style="margin-left:8px;color:#08b0ff;font-weight:700">Voir</a></div></div>
         </div>
