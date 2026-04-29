@@ -12,7 +12,7 @@ function getCity($ip) {
 
     $city = 'N/A';
     if (function_exists('curl_init')) {
-        $ch = curl_init('https://ipapi.co/'.urlencode($ip).'/json/');
+        $ch = curl_init('http://www.geoplugin.net/json.gp?ip='.urlencode($ip));
         curl_setopt_array($ch, array(
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => 4,
@@ -24,11 +24,11 @@ function getCity($ip) {
         curl_close($ch);
         if ($r) {
             $d = json_decode($r, true);
-            if (!empty($d['city'])) {
+            if (!empty($d['geoplugin_city'])) {
                 $parts = array_filter(array(
-                    $d['city']         ?? '',
-                    $d['region']       ?? '',
-                    $d['country_name'] ?? '',
+                    $d['geoplugin_city']        ?? '',
+                    $d['geoplugin_regionName']  ?? '',
+                    $d['geoplugin_countryName'] ?? '',
                 ));
                 if ($parts) $city = implode(', ', $parts);
             }
