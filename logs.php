@@ -210,7 +210,10 @@ tr:hover td { background: #fafafa; }
 </head>
 <body>
 <div class="container">
-<a href="index.php" class="back">&larr; Retour</a>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <a href="index.php" class="back" style="margin-bottom:0">&larr; Retour</a>
+    <button onclick="location.reload()" style="padding:7px 16px;border-radius:6px;border:1px solid #ccc;background:#fff;cursor:pointer;font-size:13px;font-weight:bold">&#x21bb; Actualiser</button>
+</div>
 <h1>Logs d'activite</h1>
 
 <div class="tabs">
