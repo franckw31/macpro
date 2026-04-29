@@ -286,6 +286,14 @@ if($activity){
                     $elim_list_r = @mysqli_query($con, $elim_list_q);
                     if($elim_list_r){ while($er = mysqli_fetch_assoc($elim_list_r)){ if($er['elim_pseudo'] !== '') $eliminated_players[] = $er['elim_pseudo']; } }
                 }
+                // fetch list of players who eliminated the current player (killers)
+                $eliminated_by = [];
+                $part_id_for_elim = $r['id'] ?? null;
+                if($part_id_for_elim && !empty($con)){
+                    $eby_q = "SELECT e.`nom_membre` FROM `eliminations` e WHERE e.`id_participation` = '".intval($part_id_for_elim)."' ORDER BY e.`created_at` ASC";
+                    $eby_r = @mysqli_query($con, $eby_q);
+                    if($eby_r){ while($er2 = mysqli_fetch_assoc($eby_r)){ if($er2['nom_membre'] !== '') $eliminated_by[] = $er2['nom_membre']; } }
+                }
                 // compute duration in game: activity start → player's last elimination
                 $duree_en_jeu = null;
                 $duree_label = '';
@@ -342,13 +350,13 @@ if($activity){
                         <div class="label">Position / Inscrits</div>
                         <div class="value"><span style="color:<?php echo $position_color; ?>"><?php echo h($rank); ?></span> / <?php echo intval($total_count); ?></div>
                     </div>
-                    <?php if(!empty($eliminated_players)): ?>
+                    <?php if(!empty($eliminated_by)): ?>
                     <div class="line" style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">Éliminé(e)s par :</div>
                         <div class="value" style="text-align:right;max-width:60%;word-break:break-word">
                             <?php
-                            $last_idx = count($eliminated_players) - 1;
-                            foreach($eliminated_players as $ei => $ep):
+                            $last_idx = count($eliminated_by) - 1;
+                            foreach($eliminated_by as $ei => $ep):
                                 $is_last = ($ei === $last_idx);
                             ?>
                             <span style="color:<?php echo $is_last ? '#ff6b6b' : 'var(--purple)'; ?>;display:block"><?php echo ($last_idx > 0 ? ($ei+1).'. ' : '') . h($ep); ?></span>
