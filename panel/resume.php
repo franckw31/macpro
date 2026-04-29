@@ -286,6 +286,26 @@ if($activity){
                     $elim_list_r = @mysqli_query($con, $elim_list_q);
                     if($elim_list_r){ while($er = mysqli_fetch_assoc($elim_list_r)){ if($er['elim_pseudo'] !== '') $eliminated_players[] = $er['elim_pseudo']; } }
                 }
+                // compute duration in game: activity start → player's last elimination
+                $duree_en_jeu = null;
+                $duree_label = '';
+                $part_id = $r['id'] ?? null;
+                $activity_start = !empty($activity['date_depart']) ? strtotime($activity['date_depart']) : null;
+                if($part_id && !empty($con)){
+                    $dq = @mysqli_query($con, "SELECT MAX(created_at) AS last_elim FROM `eliminations` WHERE `id_participation` = '".intval($part_id)."'");
+                    if($dq && ($dr = mysqli_fetch_assoc($dq)) && !empty($dr['last_elim'])){
+                        $elim_ts = strtotime($dr['last_elim']);
+                        if($elim_ts && $activity_start){
+                            $diff = max(0, $elim_ts - $activity_start);
+                            $h_dur = intdiv($diff, 3600);
+                            $m_dur = intdiv($diff % 3600, 60);
+                            $duree_label = ($h_dur > 0) ? $h_dur.'h'.sprintf('%02d', $m_dur) : $m_dur.'min';
+                        }
+                    } else {
+                        // no elimination = still alive / winner
+                        $duree_label = ($gains > 0) ? 'Vainqueur 🏆' : 'En jeu';
+                    }
+                }
                 // position color depends on PricePool gains (green when >0, red otherwise)
                 $position_color = ($gains > 0) ? 'var(--green)' : '#ff6b6b';
                 ?>
@@ -325,6 +345,12 @@ if($activity){
                     <div class="line" style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">Éliminé(e) par :</div>
                         <div class="value" style="text-align:right;color:var(--purple);max-width:60%;word-break:break-word"><?php echo implode(', ', array_map('h', $eliminated_players)); ?></div>
+                    </div>
+                    <?php endif; ?>
+                    <?php if(!empty($duree_label)): ?>
+                    <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+                        <div class="label">Durée en jeu</div>
+                        <div class="value" style="color:var(--blue)"><?php echo h($duree_label); ?></div>
                     </div>
                     <?php endif; ?>
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
