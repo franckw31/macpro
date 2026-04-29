@@ -335,6 +335,7 @@ error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id(
 	<style>
 	/* Modal sheet for Partie details (mobile-friendly) - dark sheet for readability */
 	.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;z-index:1200}
+	.modal-overlay.open{display:flex;align-items:flex-end;justify-content:center}
 	.modal-sheet{position:fixed;left:0;right:0;bottom:0;max-height:92vh;background:#071019;color:#eef6fb;border-top-left-radius:18px;border-top-right-radius:18px;padding:18px 18px 28px;overflow:auto;box-shadow:0 -12px 40px rgba(0,0,0,0.45)}
 	.modal-close{position:absolute;right:18px;top:12px;background:rgba(255,255,255,0.06);border-radius:20px;padding:6px 10px;font-weight:700;color:#bfe9ff;border:0}
 	.modal-title{font-weight:800;font-size:16px;margin-bottom:6px;color:#ffffff}
@@ -501,7 +502,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			if (inLate) inLate.checked = (p.latereg == '1' || p.latereg === true);
 			if (inChap) inChap.value   = p.option_chapitre || '';
 		}
-		modal.style.display = 'flex';
+		modal.classList.add('open');
+		modal.removeAttribute('style');
 		modal.setAttribute('aria-hidden', 'false');
 	});
 
@@ -1118,6 +1120,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						.then(function(d){
 							if(btn) btn.disabled = false;
 							if(btnDes) btnDes.disabled = false;
+							modal.classList.remove('open');
 							modal.style.display = 'none';
 							modal.setAttribute('aria-hidden','true');
 							// mise à jour visuelle du bouton d'inscription
@@ -1145,7 +1148,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 					// Close modal when clicking close button
 					var closeBtns = modal.querySelectorAll('.inscription-modal-close');
-					closeBtns.forEach(function(b){ b.addEventListener('click', function(){ modal.style.display='none'; modal.setAttribute('aria-hidden','true'); }); });
+					closeBtns.forEach(function(b){ b.addEventListener('click', function(){ modal.classList.remove('open'); modal.style.display='none'; modal.setAttribute('aria-hidden','true'); }); });
 				});
 				</script>
 
