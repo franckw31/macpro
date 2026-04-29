@@ -477,9 +477,32 @@ document.addEventListener('DOMContentLoaded', function() {
 	regBtn.addEventListener('click', function(e) {
 		e.preventDefault();
 		var actId = getActivityId();
-		var dest = '/panel/inscription.php';
-		if (actId) dest += '?uid=' + encodeURIComponent(actId);
-		window.location.href = dest;
+		var modal = document.getElementById('inscription-modal');
+		var form  = document.getElementById('ins-form');
+		if (!modal || !form) {
+			// fallback si le modal n'existe pas
+			var dest = '/panel/inscription.php';
+			if (actId) dest += '?uid=' + encodeURIComponent(actId);
+			window.location.href = dest;
+			return;
+		}
+		// Pré-remplir l'activité
+		var uidInput = form.querySelector('input[name="uid"]');
+		if (uidInput && actId) uidInput.value = actId;
+		// Pré-remplir depuis SERVER_ACTIVITY (participation existante)
+		if (window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.participation) {
+			var p = window.SERVER_ACTIVITY.participation;
+			var inAnon = document.getElementById('ins-anon');
+			var inOpt  = document.getElementById('ins-opt');
+			var inLate = document.getElementById('ins-late');
+			var inChap = form.querySelector('input[name="option_chapitre"]');
+			if (inAnon) inAnon.checked = (p.anonyme == '1' || p.anonyme === true);
+			if (inOpt)  inOpt.checked  = (p.status === 'Option');
+			if (inLate) inLate.checked = (p.latereg == '1' || p.latereg === true);
+			if (inChap) inChap.value   = p.option_chapitre || '';
+		}
+		modal.style.display = 'flex';
+		modal.setAttribute('aria-hidden', 'false');
 	});
 
 	// No auto-open: dedicated inscription page is preferred
