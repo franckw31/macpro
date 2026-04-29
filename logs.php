@@ -125,7 +125,7 @@ try {
 // Onglet & requete logs
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'all';
 $page = max(1, intval($_GET['page'] ?? 1));
-$per_page = 10;
+$per_page = 8;
 $offset = ($page - 1) * $per_page;
 $exclude_ids = 'user_id NOT IN(2, 265)';
 
