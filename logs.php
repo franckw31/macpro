@@ -85,6 +85,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $n = $pdo->query("SELECT COUNT(*) FROM activity_logs WHERE source IN('iOS App','iOS Admin')")->fetchColumn();
             $pdo->exec("DELETE FROM activity_logs WHERE source IN('iOS App','iOS Admin')");
             echo json_encode(array('success' => true, 'message' => "$n entrees supprimees"));
+        } elseif ($action === 'clear_all_logs') {
+            $n = $pdo->query("SELECT COUNT(*) FROM activity_logs")->fetchColumn();
+            $pdo->exec("TRUNCATE TABLE activity_logs");
+            echo json_encode(array('success' => true, 'message' => "Table videe : $n entrees supprimees"));
         } else {
             echo json_encode(array('success' => false, 'error' => 'Action inconnue'));
         }
@@ -120,15 +124,16 @@ try {
 
 // Onglet & requete logs
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'all';
+$exclude_ids = 'user_id NOT IN(2, 265)';
 if ($tab === 'ios') {
-    $query = "SELECT * FROM activity_logs WHERE source IN('iOS App','iOS Admin') ORDER BY timestamp DESC LIMIT 200";
+    $query = "SELECT * FROM activity_logs WHERE source IN('iOS App','iOS Admin') AND $exclude_ids ORDER BY timestamp DESC LIMIT 200";
 } elseif ($tab === 'auth') {
-    $query = "SELECT * FROM activity_logs WHERE source IN('iOS App','iOS Admin') AND action IN('login_success','login_failure','verify_success','verify_failure','logout') ORDER BY timestamp DESC LIMIT 200";
+    $query = "SELECT * FROM activity_logs WHERE source IN('iOS App','iOS Admin') AND action IN('login_success','login_failure','verify_success','verify_failure','logout') AND $exclude_ids ORDER BY timestamp DESC LIMIT 200";
 } else {
-    $query = "SELECT * FROM activity_logs ORDER BY timestamp DESC LIMIT 200";
+    $query = "SELECT * FROM activity_logs WHERE $exclude_ids ORDER BY timestamp DESC LIMIT 200";
 }
 $result   = mysqli_query($conx, $query);
-$statsIos = mysqli_query($conx, "SELECT action, COUNT(*) AS total FROM activity_logs WHERE source IN('iOS App','iOS Admin') GROUP BY action ORDER BY total DESC");
+$statsIos = mysqli_query($conx, "SELECT action, COUNT(*) AS total FROM activity_logs WHERE source IN('iOS App','iOS Admin') AND $exclude_ids GROUP BY action ORDER BY total DESC");
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -235,6 +240,14 @@ tr:hover td { background: #fafafa; }
             <input class="key-input" type="password" placeholder="Cle admin" id="key4">
             <button class="btn btn-info" onclick="adminAction('clear_logs','key4','msg4')">Vider les logs iOS</button>
             <div class="result-msg" id="msg4"></div>
+        </div>
+
+        <div class="admin-card">
+            <h3>Vider toute la table des logs</h3>
+            <p>Supprime TOUTES les entrees de la table activity_logs (TRUNCATE).</p>
+            <input class="key-input" type="password" placeholder="Cle admin" id="key5">
+            <button class="btn btn-danger" onclick="adminAction('clear_all_logs','key5','msg5')">Vider toute la table</button>
+            <div class="result-msg" id="msg5"></div>
         </div>
 
     </div>
