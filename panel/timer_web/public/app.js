@@ -200,13 +200,14 @@ function formatDisplayDate(display, dateStr){
   if(!dateStr) return display || '';
   let d = dateStr;
   if(typeof d === 'string' && d.indexOf(' ') !== -1 && d.indexOf('T') === -1) d = d.replace(' ', 'T');
-  // Forcer UTC pour éviter les décalages de fuseau horaire
-  if(typeof d === 'string' && d.indexOf('Z') === -1 && d.indexOf('+') === -1) d = d + 'Z';
+  // Pas de Z : on garde l'heure locale Europe/Paris
   const dt = new Date(d);
   if(isNaN(dt.getTime())) return display || dateStr;
   try{
-    let s = new Intl.DateTimeFormat('fr-FR', { weekday:'long', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit', timeZone:'UTC' }).format(dt);
-    s = s.replace(/\b\w/g, c => c.toUpperCase());
+    const tz = 'Europe/Paris';
+    const datePart = new Intl.DateTimeFormat('fr-FR', { weekday:'long', day:'numeric', month:'long', timeZone: tz }).format(dt);
+    const timePart = new Intl.DateTimeFormat('fr-FR', { hour:'2-digit', minute:'2-digit', timeZone: tz }).format(dt);
+    let s = datePart.replace(/\b\w/g, c => c.toUpperCase()) + ' ' + timePart;
     return s;
   }catch(e){
     return dt.toLocaleString('fr-FR');
