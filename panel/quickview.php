@@ -686,7 +686,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-detail-row"><div class="v2-detail-label">🎲 Jetons départ</div><div class="v2-detail-value" style="color:var(--orange)" id="dd-jetons">—</div></div>
     </div>
 
-    <div class="v2-detail-section" style="margin-bottom:4px">
+    <div class="v2-detail-section" style="margin-bottom:0">
       <div id="dd-structure-wrap"><div style="color:var(--muted);font-size:13px;padding:8px 0" id="dd-structure-empty">—</div></div>
       <div class="v2-scroll-hint hidden" id="dd-structure-hint">▼ défiler</div>
     </div>
