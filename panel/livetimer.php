@@ -600,7 +600,7 @@ if (isset($_GET['action'])) {
 
     <!-- TOPBAR -->
     <div class="topbar">
-        <a href="voir-blindes.php?uid=<?php echo $id; ?>" class="pill-btn" style="text-decoration:none;">← Retour</a>
+        <a href="quickview.php" class="pill-btn" style="text-decoration:none;">← Retour</a>
         <div class="title-stack">
             <div class="live-title">Live Timer</div>
             <div class="live-subtitle" id="timer-date-label">—</div>
