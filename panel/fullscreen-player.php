@@ -274,7 +274,7 @@ if (!empty($act_row['date_depart'])) {
     </style>
 </head>
 <body>
-    <a href="voir-blindes.php?uid=<?php echo $id; ?>" class="back-btn"><i class="fa fa-arrow-left"></i> Retour</a>
+    <a href="livetimer.php?uid=<?php echo $id; ?>" class="back-btn"><i class="fa fa-arrow-left"></i> Retour</a>
 
     <div class="header-title">
         <a href="fullscreen-cardevent.php?uid=<?php echo $id; ?>" style="color:inherit; text-decoration:none; cursor:pointer;"><?php echo htmlspecialchars($activity_title); ?></a> <span style="color: white; opacity: 0.5;">
