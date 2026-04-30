@@ -110,14 +110,7 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
         <div class="player-sub" id="player-sub">Sélectionnez un joueur</div>
     </div>
 </div>
-// Réinitialiser le filtre (retour à mes notes)
-function resetFilter() {
-    trak.allMode = true;
-    trak.pseudo = '';
-    document.getElementById('search-input').value = '';
-    document.getElementById('player-hdr').classList.remove('visible');
-    loadNotes();
-}
+
 
 <div class="content-area" id="content-area">
   <div class="tabs">
@@ -134,6 +127,14 @@ function resetFilter() {
 </div>
 
 <script>
+// Réinitialiser le filtre (retour à mes notes)
+function resetFilter() {
+    trak.allMode = true;
+    trak.pseudo = '';
+    document.getElementById('search-input').value = '';
+    document.getElementById('player-hdr').classList.remove('visible');
+    loadNotes();
+}
 var membres = <?php echo json_encode(array_map(function($m){
     return [
         'id'     => (int)$m['id-membre'],
