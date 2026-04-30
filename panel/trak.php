@@ -369,10 +369,17 @@ document.getElementById('note-input').addEventListener('keydown', function(e){
         if(m) {
             trak.pseudo = m.pseudo;
             trak.allMode = false;
-            // Forcer la valeur du champ de recherche avant selectPlayer
             var searchEl = document.getElementById('search-input');
             if (searchEl) searchEl.value = m.pseudo;
-            selectPlayer(m.pseudo, m.photo||'');
+            // Mettre à jour l'UI header joueur
+            document.getElementById('player-avatar').src = m.photo || 'https://viendez.com/images/noprofil.jpg';
+            document.getElementById('player-name').textContent = m.pseudo;
+            document.getElementById('player-sub').textContent = 'Notes sur ' + m.pseudo;
+            document.getElementById('player-hdr').classList.add('visible');
+            document.getElementById('content-area').classList.add('visible');
+            document.getElementById('reset-filter-btn').style.display = '';
+            trak.mode = 'auteur';
+            loadNotes();
         } else {
             trak.allMode = true;
             trak.pseudo = '';
