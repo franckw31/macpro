@@ -190,18 +190,26 @@ function setInscritsPill(count) {
 
 function formatEur(v){ return v + ' €'; }
 
+function setDateEl(display, dateStr){
+  const el = document.getElementById('activity-date');
+  if(!el) return;
+  if(el.getAttribute('data-locked') === '1') return;
+  const val = formatDisplayDate(display, dateStr);
+  if(val && /\d{2}:\d{2}/.test(val)) el.textContent = val;
+}
+
 // Format display date: prefer server-provided `display`, otherwise format `dateStr` to French readable string
 function formatDisplayDate(display, dateStr){
-  if(display && String(display).trim()) return display;
-  if(!dateStr) return '';
+  if(!dateStr) return display || '';
   let d = dateStr;
   if(typeof d === 'string' && d.indexOf(' ') !== -1 && d.indexOf('T') === -1) d = d.replace(' ', 'T');
   const dt = new Date(d);
-  if(isNaN(dt.getTime())) return dateStr;
+  if(isNaN(dt.getTime())) return display || dateStr;
   try{
-    let s = new Intl.DateTimeFormat('fr-FR', { weekday:'long', day:'numeric', month:'long' }).format(dt);
-    // Capitalize first letter of each word to match visual style (Vendredi 27 Mars)
-    s = s.replace(/\b\w/g, c => c.toUpperCase());
+    const tz = 'Europe/Paris';
+    const datePart = new Intl.DateTimeFormat('fr-FR', { weekday:'long', day:'numeric', month:'long', timeZone: tz }).format(dt);
+    const timePart = new Intl.DateTimeFormat('fr-FR', { hour:'2-digit', minute:'2-digit', timeZone: tz }).format(dt);
+    let s = datePart.replace(/\b\w/g, c => c.toUpperCase()) + ' ' + timePart;
     return s;
   }catch(e){
     return dt.toLocaleString('fr-FR');
@@ -249,7 +257,7 @@ function applyActivityToUI(act){
   currentActivity = act;
   const titleEl = document.getElementById('activity-title'); if(titleEl) titleEl.textContent = act.title || 'Prochaine partie';
   const nameEl = document.getElementById('activity-name'); if(nameEl) nameEl.textContent = act.title || '—';
-  const dateEl = document.getElementById('activity-date'); if(dateEl) dateEl.textContent = formatDisplayDate(act.display_date, act.date);
+  setDateEl(act.display_date, act.date);
   setPillText('buyin-pill', (act.buyin!==null && act.buyin!==undefined)? act.buyin+' €' : '—');
   setPillText('rake-pill', (act.rake!==null && act.rake!==undefined)? act.rake+' €' : '—');
   setInscritsPill(act.participants_count !== undefined ? act.participants_count : act.count);
@@ -340,7 +348,7 @@ async function fetchNext(){
       try{ localStorage.setItem('lastActivity', JSON.stringify(act)); }catch(e){}
       document.getElementById('activity-title').textContent = act.title || 'Prochaine partie';
       document.getElementById('activity-name').textContent = act.title || '—';
-      document.getElementById('activity-date').textContent = formatDisplayDate(act.display_date, act.date);
+      setDateEl(act.display_date, act.date);
       setPillText('buyin-pill', (act.buyin!==null && act.buyin!==undefined)? act.buyin+' €' : '—');
       setPillText('rake-pill', (act.rake!==null && act.rake!==undefined)? act.rake+' €' : '—');
       setInscritsPill(act.participants_count);
@@ -485,7 +493,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
       currentActivity = act;
       const at = document.getElementById('activity-title'); if(at) at.textContent = act.title || 'Prochaine partie';
       const an = document.getElementById('activity-name'); if(an) an.textContent = act.title || '—';
-      const ad = document.getElementById('activity-date'); if(ad) ad.textContent = formatDisplayDate(act.display_date, act.date);
+      setDateEl(act.display_date, act.date);
       setPillText('buyin-pill', (act.buyin? act.buyin+' €':'—'));
       setPillText('rake-pill', (act.rake? act.rake+' €':'—'));
       setInscritsPill(act.participants_count);
