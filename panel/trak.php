@@ -311,7 +311,7 @@ function renderNotes() {
         } else {
             // Pour les non-admins, ne voir que les notes écrites par soi-même à ce joueur, et dont le pseudo cible correspond exactement
             if (idJoueur) {
-                notes = trak.notes.filter(n => n.id_auteur===myId && n.id_cible===idJoueur && n.cible_pseudo===trak.pseudo);
+                notes = trak.notes.filter(n => n.id_auteur===myId && n.id_cible===idJoueur && n.cible_pseudo && n.cible_pseudo.toLowerCase() === trak.pseudo.toLowerCase());
             } else {
                 notes = [];
             }
