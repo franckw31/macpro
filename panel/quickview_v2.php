@@ -489,10 +489,21 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         Détails de la partie
       </button>
+<?php
+$_is_finished = !empty($serverActivity['date']) && (time() - strtotime($serverActivity['date'])) > 43200;
+$_resume_url  = '/panel/resume.php' . $uid_q;
+?>
+      <?php if ($_is_finished): ?>
+      <a href="<?php echo htmlspecialchars($_resume_url); ?>" class="v2-btn filled" id="v2-resume-btn" style="background:var(--blue);color:#fff;text-decoration:none">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Résumé Partie
+      </a>
+      <?php else: ?>
       <button class="v2-btn filled" id="v2-reg-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
         <?php echo $is_registered ? 'Modifier mon inscription' : "S'inscrire"; ?>
       </button>
+      <?php endif; ?>
     </div>
 
     <!-- Inscrit banner -->
