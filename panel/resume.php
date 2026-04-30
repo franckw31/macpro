@@ -51,13 +51,14 @@ if($activity){
                 $recave = 0; foreach(['recave','rebuys','r'] as $c){ if(isset($r[$c]) && $r[$c] !== ''){ $recave = (int)$r[$c]; break; } }
                 $bounty = 0; foreach(['bounty','bounties'] as $c){ if(isset($r[$c]) && $r[$c] !== ''){ $bounty = (int)$r[$c]; break; } }
 
-                    // If eliminations table exists, compute bounty as number of eliminations by this pseudo for the activity
+                    // If eliminations table exists, compute bounty as number of eliminations by this player for the activity
+                    // Use participation.nom-membre first (this is what player-action.php stores in eliminations.nom_membre)
                     $elimCount = 0;
-                    $name_for_elim = null;
-                    foreach(['pseudo','nom-membre','nom_membre','name','pseudo_membre'] as $c){ if(isset($r[$c]) && $r[$c] !== ''){ $name_for_elim = $r[$c]; break; } }
+                    $name_for_elim = (isset($r['nom-membre']) && $r['nom-membre'] !== '') ? $r['nom-membre'] : null;
+                    if(!$name_for_elim){ foreach(['pseudo','nom_membre','name','pseudo_membre'] as $c){ if(isset($r[$c]) && $r[$c] !== ''){ $name_for_elim = $r[$c]; break; } } }
                     if($name_for_elim && !empty($con)){
                         $esc = mysqli_real_escape_string($con, $name_for_elim);
-                        $eq = "SELECT COUNT(*) AS cnt FROM `eliminations` e JOIN `participation` p2 ON e.`id_participation` = p2.`id-participation` WHERE p2.`id-activite` = '".$aid."' AND e.`nom_membre` = '".$esc."'";
+                        $eq = "SELECT COUNT(*) AS cnt FROM `eliminations` e WHERE e.`id_activite` = '".$aid."' AND e.`nom_membre` = '".$esc."'";
                         $erc = @mysqli_query($con, $eq);
                         if($erc && ($erow = mysqli_fetch_assoc($erc))){ $elimCount = intval($erow['cnt']); }
                         if($elimCount > 0) $bounty = $elimCount;
