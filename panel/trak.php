@@ -101,12 +101,23 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
 </div>
 
 <div class="player-hdr" id="player-hdr">
-  <img class="player-avatar" id="player-avatar" src="https://viendez.com/images/noprofil.jpg" alt="">
-  <div>
-    <div class="player-name" id="player-name">—</div>
-    <div class="player-sub" id="player-sub">Sélectionnez un joueur</div>
-  </div>
+    <img class="player-avatar" id="player-avatar" src="https://viendez.com/images/noprofil.jpg" alt="">
+    <div>
+        <div style="display:flex;align-items:center;gap:8px;">
+            <div class="player-name" id="player-name">—</div>
+            <button id="reset-filter-btn" onclick="resetFilter()" style="display:none;margin-left:4px;background:rgba(255,255,255,0.08);border:0;color:#ff6b6b;font-size:15px;padding:2px 10px;border-radius:16px;cursor:pointer;">×</button>
+        </div>
+        <div class="player-sub" id="player-sub">Sélectionnez un joueur</div>
+    </div>
 </div>
+// Réinitialiser le filtre (retour à mes notes)
+function resetFilter() {
+    trak.allMode = true;
+    trak.pseudo = '';
+    document.getElementById('search-input').value = '';
+    document.getElementById('player-hdr').classList.remove('visible');
+    loadNotes();
+}
 
 <div class="content-area" id="content-area">
   <div class="tabs">
@@ -174,6 +185,7 @@ function selectPlayer(pseudo, photo) {
     document.getElementById('player-sub').textContent = 'Notes sur ' + pseudo;
     document.getElementById('player-hdr').classList.add('visible');
     document.getElementById('content-area').classList.add('visible');
+    document.getElementById('reset-filter-btn').style.display = '';
 
     setTab('auteur');
     loadNotes();
@@ -199,10 +211,12 @@ function loadNotes() {
             document.getElementById('content-area').classList.add('visible');
             document.getElementById('player-name').textContent = 'Mes notes';
             document.getElementById('player-sub').textContent = trak.notes.length + ' note' + (trak.notes.length>1?'s':'') + ' (émises ou reçues)';
+            document.getElementById('reset-filter-btn').style.display = 'none';
         } else {
             var m = membres.find(m=>m.pseudo===trak.pseudo);
             var cnt = trak.notes.length;
             document.getElementById('player-sub').textContent = cnt + ' note' + (cnt>1?'s':'') + ' au total';
+            document.getElementById('reset-filter-btn').style.display = '';
         }
         renderNotes();
     }).catch(()=>{ document.getElementById('notes-wrap').innerHTML='<div class="empty-msg">Erreur réseau</div>'; });
