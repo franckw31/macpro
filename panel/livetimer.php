@@ -21,6 +21,13 @@ $_SESSION["act"] = $id;
 $currentUrl = $_SERVER['REQUEST_URI'] ?? '';
 $resetBlindsUrl = '/panel/creation-blindes.php?zero=1&act=' . $id . '&sou=' . rawurlencode($currentUrl);
 
+// Permission contrôle timer : organisateur ou id=265
+$current_user_id = intval($_SESSION['id']);
+$_org_q = mysqli_query($con, "SELECT `id-membre` FROM `activite` WHERE `id-activite` = '$id' LIMIT 1");
+$_org_row = mysqli_fetch_assoc($_org_q);
+$_organizer_id = intval($_org_row['id-membre'] ?? 0);
+$can_control = ($current_user_id === 265 || $current_user_id === $_organizer_id);
+
 // --- CALCUL DES STATS JOUEURS ---
 $act_query = mysqli_query($con, "SELECT jetons, jetons_activite, recave_jetons FROM activite WHERE `id-activite` = '$id'");
 $act_row = mysqli_fetch_array($act_query);
@@ -645,6 +652,7 @@ if (isset($_GET['action'])) {
         </div>
 
         <!-- CONTROLE PRINCIPAL -->
+        <?php if ($can_control): ?>
         <div class="control-dock">
             <button class="ctrl-btn" id="prevBtn" onclick="doAction('prev')">
                 <span class="ctrl-icon"><svg viewBox="0 0 24 24"><path d="M11 7l-5 5 5 5"/><path d="M18 7l-5 5 5 5"/></svg></span>
@@ -675,6 +683,7 @@ if (isset($_GET['action'])) {
             <button class="act-btn blue" onclick="playRulesMessage()">⚖️ Règles</button>
             <button class="act-btn blue" onclick="playBlindsMessage()">💰 Blindes</button>
         </div>
+        <?php endif; ?>
 
         <?php if (intval($_SESSION['id']) == 265 || intval($_SESSION['id']) == 1): ?>
         <!-- SÉLECTEUR DE PARTIE -->
