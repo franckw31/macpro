@@ -498,14 +498,14 @@ document.getElementById('note-input').addEventListener('keydown', function(e){
             trak.mode = 'auteur';
             loadNotes();
         } else {
+            // si pseudo dans l'URL invalide, ne rien charger
             trak.allMode = true;
             trak.pseudo = '';
-            loadNotes();
         }
     } else {
+        // Ne pas appeler loadNotes par défaut : attente d'une sélection utilisateur
         trak.allMode = true;
         trak.pseudo = '';
-        loadNotes();
     }
 })();
 </script>
