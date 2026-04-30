@@ -300,6 +300,15 @@ function loadNotes() {
     }
     fetch(url, { credentials:'include' })
     .then(r=>r.json()).then(d=>{
+        // Affiche pour debug l'URL appelée et la réponse brute
+        try {
+            var rawDiv = document.getElementById('api-raw-response');
+            if (rawDiv) {
+                rawDiv.style.display = 'block';
+                rawDiv.textContent = 'URL: ' + url + '\n\n' + JSON.stringify(d, null, 2);
+            }
+        } catch(e){}
+
         trak.notes = d.success ? (d.notes||[]) : [];
         // Filtrage strict côté client au moment de la réception : si on est en vue joueur
         if (!trak.allMode && !trak.canSeeRecues && trak.pseudo) {
