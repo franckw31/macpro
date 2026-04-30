@@ -341,7 +341,7 @@ a{color:inherit;text-decoration:none}
 .v2-scroll-hint.hidden{visibility:hidden}
 .v2-blind-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
 .v2-blind-table thead tr{display:table;width:100%;table-layout:fixed}
-.v2-blind-table tbody{display:block;max-height:140px;overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.v2-blind-table tbody{display:block;max-height:140px;overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
 .v2-blind-table tbody tr{display:table;width:100%;table-layout:fixed}
 .v2-blind-table th{color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;font-size:10px;padding:5px 6px;border-bottom:1px solid var(--border);text-align:center}
 .v2-blind-table td{padding:6px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600}
