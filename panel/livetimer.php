@@ -175,9 +175,6 @@ if (isset($_GET['action'])) {
             exit;
         }
 
-        $fin_ts   = intval($current['fin_ts']);
-        $debut_ts = intval($current['debut_ts']);
-
         // Calcul du temps restant (timezone correctement définie en haut)
         if ($is_paused && $heure_pause) {
             $seconds_remaining = max(0, strtotime($current['fin']) - strtotime($heure_pause));
