@@ -183,6 +183,98 @@ window.PAGE_PARTICIPANTS = <?php echo json_encode($participants, JSON_UNESCAPED_
     applyFilters();
 })();
 </script>
+
+<!-- ══════════ TRAK MODAL ══════════ -->
+<div id="trak-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;align-items:flex-end;justify-content:center" onclick="if(event.target===this)closeTrak()">
+  <div style="background:#0d1f2d;border-radius:20px 20px 0 0;width:100%;max-width:600px;max-height:85vh;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)">
+    <div style="width:40px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;margin:10px auto 0"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px 4px">
+      <div id="trak-title" style="font-weight:800;font-size:16px">Notes – joueur</div>
+      <button onclick="closeTrak()" style="background:rgba(255,255,255,0.06);padding:6px 14px;border-radius:20px;border:0;color:#ff9d3b;font-weight:700;font-size:14px;cursor:pointer">Fermer</button>
+    </div>
+    <div style="display:flex;gap:8px;padding:8px 16px 4px">
+      <button id="trak-btn-ecrites" onclick="trakSetMode('auteur')" style="flex:1;padding:7px;border-radius:10px;border:0;font-weight:700;font-size:13px;cursor:pointer;background:#17a34a;color:#fff">✏️ Écrites</button>
+      <button id="trak-btn-recues"  onclick="trakSetMode('cible')"  style="flex:1;padding:7px;border-radius:10px;border:0;font-weight:700;font-size:13px;cursor:pointer;background:rgba(255,255,255,0.07);color:#8fa0b0">📥 Reçues</button>
+    </div>
+    <div id="trak-list" style="flex:1;overflow-y:auto;padding:8px 16px;min-height:80px;color:#eef6fb"></div>
+    <div style="padding:10px 14px;border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:8px;align-items:flex-end">
+      <textarea id="trak-input" placeholder="Ajouter une note…" rows="2" style="flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#eef6fb;font-size:14px;resize:none;font-family:inherit"></textarea>
+      <button onclick="trakSend()" style="padding:10px 14px;border-radius:10px;background:#17a34a;color:#fff;font-weight:700;border:0;cursor:pointer;font-size:18px">➤</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var trakS = { pseudo:'', actId:<?php echo intval($activity_id ?: ($activity['id-activite'] ?? 0)); ?>, mode:'auteur', notes:[], myId:<?php echo intval($_SESSION['id'] ?? 0); ?>, token:'<?php echo addslashes($_SESSION["token"] ?? ""); ?>' };
+
+function openTrak(pseudo) {
+  trakS.pseudo = pseudo;
+  trakS.mode = 'auteur';
+  document.getElementById('trak-title').textContent = 'Notes – ' + pseudo;
+  document.getElementById('trak-input').value = '';
+  document.getElementById('trak-overlay').style.display = 'flex';
+  trakSetMode('auteur');
+  trakLoad();
+}
+function closeTrak() { document.getElementById('trak-overlay').style.display = 'none'; }
+
+function trakSetMode(mode) {
+  trakS.mode = mode;
+  var bE = document.getElementById('trak-btn-ecrites'), bR = document.getElementById('trak-btn-recues');
+  bE.style.background = mode==='auteur'?'#17a34a':'rgba(255,255,255,0.07)'; bE.style.color = mode==='auteur'?'#fff':'#8fa0b0';
+  bR.style.background = mode==='cible' ?'#17a34a':'rgba(255,255,255,0.07)'; bR.style.color = mode==='cible' ?'#fff':'#8fa0b0';
+  trakRenderNotes();
+}
+
+function trakLoad() {
+  document.getElementById('trak-list').innerHTML = '<div style="text-align:center;padding:20px;color:#8fa0b0">Chargement…</div>';
+  fetch('/api/trak-notes.php?pseudo='+encodeURIComponent(trakS.pseudo), { headers:{'Authorization':'Bearer '+trakS.token} })
+  .then(r=>r.json()).then(d => {
+    trakS.notes = d.success ? (d.notes||[]) : [];
+    trakS.idCible = d.id_cible || 0;
+    trakRenderNotes();
+  }).catch(()=>{ document.getElementById('trak-list').innerHTML='<div style="color:#ff6b6b;padding:12px">Erreur réseau</div>'; });
+}
+
+function trakRenderNotes() {
+  var mode = trakS.mode, myId = trakS.myId;
+  var notes = trakS.notes.filter(n => mode==='auteur' ? n.id_auteur===myId : n.id_cible===myId);
+  if (!notes.length) { document.getElementById('trak-list').innerHTML = '<div style="color:#8fa0b0;padding:12px;text-align:center">'+(trakS.notes.length?'Aucun résultat':'Aucune note pour ce joueur')+'</div>'; return; }
+  document.getElementById('trak-list').innerHTML = notes.map(n => {
+    var dp = mode==='auteur' ? n.cible_pseudo : n.auteur_pseudo;
+    var al = n.date_activite ? n.date_activite+(n.titre_activite?' — '+n.titre_activite:'') : n.titre_activite;
+    var canDel = n.id_auteur===myId;
+    return '<div style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)">'
+      +'<div style="display:flex;justify-content:space-between;margin-bottom:4px">'
+        +'<span style="font-size:12px;font-weight:700;color:#4dd0e1">'+tEsc(dp)+'</span>'
+        +'<div style="display:flex;gap:8px;align-items:center">'
+          +'<span style="font-size:11px;color:#8fa0b0">'+tFmt(n.created_at)+'</span>'
+          +(canDel?'<button onclick="trakDel('+n.id+')" style="background:none;border:0;color:#ff6b6b;cursor:pointer;font-size:13px;padding:0">🗑</button>':'')
+        +'</div>'
+      +'</div>'
+      +'<div style="font-size:14px;line-height:1.5">'+tEsc(n.note)+'</div>'
+      +(al?'<div style="font-size:11px;color:#8fa0b0;margin-top:4px">📅 '+tEsc(al)+'</div>':'')
+    +'</div>';
+  }).join('');
+}
+
+function trakSend() {
+  var text=(document.getElementById('trak-input').value||'').trim(); if(!text)return;
+  fetch('/api/trak-notes.php',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+trakS.token},
+    body:JSON.stringify({action:'add',pseudo_cible:trakS.pseudo,note:text,id_activite:trakS.actId})})
+  .then(r=>r.json()).then(d=>{ if(d.success&&d.note){ trakS.notes.unshift(d.note); document.getElementById('trak-input').value=''; trakSetMode('auteur'); trakRenderNotes(); } });
+}
+
+function trakDel(id) {
+  if(!confirm('Supprimer ?')) return;
+  fetch('/api/trak-notes.php',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+trakS.token},
+    body:JSON.stringify({action:'delete',id:id})})
+  .then(r=>r.json()).then(d=>{ if(d.success){ trakS.notes=trakS.notes.filter(n=>n.id!==id); trakRenderNotes(); } });
+}
+
+function tFmt(s){ if(!s)return''; var d=new Date(s.replace(' ','T')); if(isNaN(d))return s; return('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+String(d.getFullYear()).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2); }
+function tEsc(s){ if(!s)return''; return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+</script>
 </body>
 </html>
 
