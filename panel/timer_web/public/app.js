@@ -197,17 +197,15 @@ function formatEur(v){ return v + ' €'; }
 
 // Format display date: prefer server-provided `display`, otherwise format `dateStr` to French readable string
 function formatDisplayDate(display, dateStr){
-  if(display && String(display).trim()) return display;
-  if(!dateStr) return '';
+  if(!dateStr) return display || '';
   let d = dateStr;
   if(typeof d === 'string' && d.indexOf(' ') !== -1 && d.indexOf('T') === -1) d = d.replace(' ', 'T');
-  // Forcer UTC pour éviter les décalages de fuseau horaire (ex: "30+10 (1 Mai)")
+  // Forcer UTC pour éviter les décalages de fuseau horaire
   if(typeof d === 'string' && d.indexOf('Z') === -1 && d.indexOf('+') === -1) d = d + 'Z';
   const dt = new Date(d);
-  if(isNaN(dt.getTime())) return dateStr;
+  if(isNaN(dt.getTime())) return display || dateStr;
   try{
-    let s = new Intl.DateTimeFormat('fr-FR', { weekday:'long', day:'numeric', month:'long', timeZone:'UTC' }).format(dt);
-    // Capitalize first letter of each word to match visual style (Vendredi 27 Mars)
+    let s = new Intl.DateTimeFormat('fr-FR', { weekday:'long', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit', timeZone:'UTC' }).format(dt);
     s = s.replace(/\b\w/g, c => c.toUpperCase());
     return s;
   }catch(e){
