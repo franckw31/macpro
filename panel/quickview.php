@@ -257,7 +257,7 @@ error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id(
 		z-index: 9999;
 		pointer-events: none;
 		background-image:
-			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ctext x='4' y='28' font-size='22' fill='%23c0392b' opacity='0.18'%3E%E2%99%A5%3C/text%3E%3Ctext x='34' y='28' font-size='22' fill='%23ecf0f1' opacity='0.12'%3E%E2%99%A0%3C/text%3E%3Ctext x='19' y='56' font-size='22' fill='%23c0392b' opacity='0.18'%3E%E2%99%A6%3C/text%3E%3Ctext x='49' y='56' font-size='22' fill='%23ecf0f1' opacity='0.12'%3E%E2%99%A3%3C/text%3E%3C/svg%3E");
+			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ctext x='4' y='28' font-size='22' fill='%23c0392b' opacity='0.45'%3E%E2%99%A5%3C/text%3E%3Ctext x='34' y='28' font-size='22' fill='%23ecf0f1' opacity='0.35'%3E%E2%99%A0%3C/text%3E%3Ctext x='19' y='56' font-size='22' fill='%23c0392b' opacity='0.45'%3E%E2%99%A6%3C/text%3E%3Ctext x='49' y='56' font-size='22' fill='%23ecf0f1' opacity='0.35'%3E%E2%99%A3%3C/text%3E%3C/svg%3E");
 		background-size: 60px 60px;
 		background-repeat: repeat;
 	}
