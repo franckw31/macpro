@@ -478,20 +478,21 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
       <div class="v2-date-big"><?php echo htmlspecialchars($date_only_str); ?><?php if($time_str): ?> <span style="font-size:19px;font-weight:700;color:var(--green)"><?php echo htmlspecialchars($time_str); ?></span><?php endif; ?></div>
       <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog" style="width:46px;height:46px;border-radius:12px;background:rgba(10,132,255,0.18);border:1px solid #e03030;box-shadow:0 0 5px rgba(224,48,48,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:-18px">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="3" y="4" width="18" height="17" rx="3" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.5)" stroke-width="1.4"/>
-          <path d="M3 9h18" stroke="rgba(255,255,255,0.5)" stroke-width="1.4"/>
-          <path d="M8 2v4M16 2v4" stroke="rgba(255,255,255,0.5)" stroke-width="1.6" stroke-linecap="round"/>
-          <rect x="6" y="12" width="3" height="2.5" rx="0.6" fill="rgba(255,255,255,0.6)"/>
-          <rect x="10.5" y="12" width="3" height="2.5" rx="0.6" fill="rgba(255,255,255,0.6)"/>
-          <rect x="15" y="12" width="3" height="2.5" rx="0.6" fill="rgba(255,255,255,0.3)"/>
-          <rect x="6" y="16" width="3" height="2.5" rx="0.6" fill="rgba(255,255,255,0.3)"/>
-          <rect x="10.5" y="16" width="3" height="2.5" rx="0.6" fill="rgba(255,255,255,0.3)"/>
-          <!-- point rouge animé -->
-          <circle cx="19" cy="5" r="3.5" fill="#e03030"/>
-          <circle cx="19" cy="5" r="3.5" fill="#ff4444" opacity="0.6">
-            <animate attributeName="r" values="3.5;5;3.5" dur="1.8s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0.6;0;0.6" dur="1.8s" repeatCount="indefinite"/>
-          </circle>
+          <defs>
+            <linearGradient id="cal_c" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1e2e1e"/>
+              <stop offset="100%" stop-color="#0a120a"/>
+            </linearGradient>
+          </defs>
+          <!-- fond -->
+          <rect x="2.5" y="3.5" width="19" height="19" rx="3.5" fill="url(#cal_c)" stroke="#3a9a3a" stroke-width="1.5"/>
+          <!-- barre top verte -->
+          <rect x="2.5" y="3.5" width="19" height="5.5" rx="3.5" fill="#2a7a2a"/>
+          <rect x="2.5" y="7" width="19" height="2" fill="#2a7a2a"/>
+          <!-- crochets -->
+          <path d="M8 2v3.5M16 2v3.5" stroke="#7afa7a" stroke-width="1.6" stroke-linecap="round"/>
+          <!-- as de pique ♠ -->
+          <text x="12" y="19.5" font-size="10" text-anchor="middle" fill="#ffffff" font-family="Georgia, serif" opacity="0.95">♠</text>
         </svg>
       </button>
     </div>
