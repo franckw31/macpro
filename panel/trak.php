@@ -136,7 +136,8 @@ var trak = {
     mode: 'auteur',
     notes: [],
     myId: <?php echo $my_id; ?>,
-    actId: 0
+    actId: 0,
+    allMode: true // true = vue "mes notes" (toutes), false = vue sur un joueur
 };
 
 // ── Search ──
@@ -163,6 +164,7 @@ document.addEventListener('click', function(e){
 function selectPlayer(pseudo, photo) {
     trak.pseudo = pseudo;
     trak.mode = 'auteur';
+    trak.allMode = false;
     searchEl.value = pseudo;
     sugEl.classList.remove('open');
 
@@ -188,12 +190,20 @@ function setTab(mode) {
 // ── Load ──
 function loadNotes() {
     document.getElementById('notes-wrap').innerHTML = '<div class="spinner">Chargement…</div>';
-    fetch('/api/trak-notes.php?pseudo=' + encodeURIComponent(trak.pseudo), { credentials:'include' })
+    var url = trak.allMode ? '/api/trak-notes.php?all=1' : ('/api/trak-notes.php?pseudo=' + encodeURIComponent(trak.pseudo));
+    fetch(url, { credentials:'include' })
     .then(r=>r.json()).then(d=>{
         trak.notes = d.success ? (d.notes||[]) : [];
-        var m = membres.find(m=>m.pseudo===trak.pseudo);
-        var cnt = trak.notes.length;
-        document.getElementById('player-sub').textContent = cnt + ' note' + (cnt>1?'s':'') + ' au total';
+        if (trak.allMode) {
+            document.getElementById('player-hdr').classList.remove('visible');
+            document.getElementById('content-area').classList.add('visible');
+            document.getElementById('player-name').textContent = 'Mes notes';
+            document.getElementById('player-sub').textContent = trak.notes.length + ' note' + (trak.notes.length>1?'s':'') + ' (émises ou reçues)';
+        } else {
+            var m = membres.find(m=>m.pseudo===trak.pseudo);
+            var cnt = trak.notes.length;
+            document.getElementById('player-sub').textContent = cnt + ' note' + (cnt>1?'s':'') + ' au total';
+        }
         renderNotes();
     }).catch(()=>{ document.getElementById('notes-wrap').innerHTML='<div class="empty-msg">Erreur réseau</div>'; });
 }
@@ -261,13 +271,17 @@ document.getElementById('note-input').addEventListener('keydown', function(e){
     if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendNote(); }
 });
 
-// Pre-select if ?pseudo= in URL
+// Par défaut : afficher toutes les notes du joueur connecté
 (function(){
     var params = new URLSearchParams(window.location.search);
     var p = params.get('pseudo');
     if (p) {
         var m = membres.find(m=>m.pseudo===p);
         if(m) selectPlayer(m.pseudo, m.photo||'');
+    } else {
+        trak.allMode = true;
+        trak.pseudo = '';
+        loadNotes();
     }
 })();
 </script>
