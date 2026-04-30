@@ -142,17 +142,17 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
 
 
 <div class="content-area" id="content-area">
-  <div class="tabs">
-    <button class="tab-btn active" id="tab-ecrites" onclick="setTab('auteur')">✏️ Écrites</button>
-    <button class="tab-btn inactive" id="tab-recues"  onclick="setTab('cible')">📥 Reçues</button>
-  </div>
-  <div class="notes-wrap" id="notes-wrap">
-    <div class="spinner">Chargement…</div>
-  </div>
-  <div class="add-area">
-    <textarea class="add-textarea" id="note-input" placeholder="Ajouter une note…" rows="2"></textarea>
-    <button class="add-btn" id="send-btn" onclick="sendNote()">➤</button>
-  </div>
+    <div class="tabs">
+        <button class="tab-btn active" id="tab-ecrites" onclick="setTab('auteur')">✏️ Écrites</button>
+        <button class="tab-btn inactive" id="tab-recues"  onclick="setTab('cible')">📥 Reçues</button>
+    </div>
+    <div class="add-area">
+        <textarea class="add-textarea" id="note-input" placeholder="Ajouter une note…" rows="2"></textarea>
+        <button class="add-btn" id="send-btn" onclick="sendNote()">➤</button>
+    </div>
+    <div class="notes-wrap" id="notes-wrap">
+        <div class="spinner">Chargement…</div>
+    </div>
 </div>
 
 <script>
