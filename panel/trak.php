@@ -138,7 +138,6 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
   <div class="hdr-title">📝 Traker</div>
 </div>
 
-<div id="debug-pseudos" style="color:#ff6b6b;font-size:13px;padding:4px 16px 0 16px;"></div>
 <div class="search-wrap">
   <div class="search-rel">
     <span class="search-icon">🔍</span>
