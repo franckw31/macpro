@@ -747,7 +747,7 @@ if ($_cur) {
     $_iln  = $_inm ?: ($_ci + 1);
     $_inxt = '';
     if (isset($_bl[$_ci+1])) { $_in=$_bl[$_ci+1]; $_ins=intval($_in['sb']??0); $_inb=intval($_in['bb']??0); $_inxt=($_ins==0&&$_inb==0)?'PAUSE':$_ins.'/'.$_inb; }
-    $INIT_TIMER = json_encode(['status'=>$_init_paused?'paused':'running','seconds_remaining'=>intval($_isec),'duration_seconds'=>intval($_idur),'blinds_text'=>$_ibt,'blinds_raw'=>$_isb.'/'.$_ibb,'ante_text'=>$_iat,'level_name'=>(string)$_iln,'level_index'=>$_ci,'level_total'=>count($_bl),'is_paused'=>$_init_paused,'next_blinds_raw'=>$_inxt,'next_blinds_text'=>$_inxt]);
+    $INIT_TIMER = json_encode(['status'=>$_init_paused?'paused':'running','seconds_remaining'=>intval($_isec),'duration_seconds'=>intval($_idur),'blinds_text'=>$_ibt,'blinds_raw'=>$_isb.'/'.$_ibb,'ante_text'=>$_iat,'level_name'=>(string)$_iln,'level_index'=>$_ci,'level_total'=>count($_bl),'is_paused'=>$_init_paused,'next_blinds_raw'=>$_inxt,'next_blinds_text'=>$_inxt,'avg_stack'=>number_format($avg_stack,0,',',' '),'players_active'=>$active_players,'players_total'=>$total_players]);
 } else {
     $INIT_TIMER = json_encode(['status'=>'finished']);
 }
@@ -932,6 +932,11 @@ if ($_cur) {
                 lastPlayersTotal = data.players_total;
                 document.getElementById('stats-active').textContent = data.players_active;
                 document.getElementById('stats-total').textContent = data.players_total;
+            }
+            if (data.avg_stack) {
+                lastAvgStack = data.avg_stack;
+                const sv = document.getElementById('stack-value');
+                if (sv) sv.textContent = data.avg_stack;
             }
 
             updateDisplay();
