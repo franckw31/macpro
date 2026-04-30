@@ -478,11 +478,21 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
       <div class="v2-date-big"><?php echo htmlspecialchars($date_only_str); ?><?php if($time_str): ?> <span style="font-size:19px;font-weight:700;color:var(--green)"><?php echo htmlspecialchars($time_str); ?></span><?php endif; ?></div>
       <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog" style="width:46px;height:46px;border-radius:12px;background:rgba(10,132,255,0.18);border:1px solid #e03030;box-shadow:0 0 5px rgba(224,48,48,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:-18px">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="3" y="4" width="18" height="18" rx="3" stroke="#0a84ff" stroke-width="1.8"/>
-          <path d="M16 2v4M8 2v4M3 10h18" stroke="#0a84ff" stroke-width="1.8" stroke-linecap="round"/>
-          <circle cx="16" cy="16" r="2.5" fill="#ff9f0a"/>
-          <circle cx="8" cy="16" r="1.5" fill="#0a84ff" opacity=".7"/>
-          <circle cx="12" cy="16" r="1.5" fill="#0a84ff" opacity=".7"/>
+          <!-- fond calendrier dégradé -->
+          <defs>
+            <linearGradient id="cal_grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#1a3a6a"/>
+              <stop offset="100%" stop-color="#0a1e3a"/>
+            </linearGradient>
+          </defs>
+          <rect x="2.5" y="3.5" width="19" height="19" rx="3.5" fill="url(#cal_grad)" stroke="#3a7fd4" stroke-width="1.5"/>
+          <!-- barre du haut colorée -->
+          <rect x="2.5" y="3.5" width="19" height="6" rx="3.5" fill="#1a6edb"/>
+          <rect x="2.5" y="7" width="19" height="2.5" fill="#1a6edb"/>
+          <!-- crochets -->
+          <path d="M8 2v3.5M16 2v3.5" stroke="#7dc4ff" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- étoile dorée centrale -->
+          <polygon points="12,11.5 12.9,14.2 15.8,14.2 13.5,15.9 14.3,18.6 12,16.9 9.7,18.6 10.5,15.9 8.2,14.2 11.1,14.2" fill="#f0c040" opacity="0.95"/>
         </svg>
       </button>
     </div>
