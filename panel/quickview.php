@@ -352,6 +352,9 @@ a{color:inherit;text-decoration:none}
 .v2-cal-day.is-past.has-event{color:var(--green);background:rgba(255,69,58,.10);box-shadow:0 0 0 2px #ff453a}
 /* Event list below grid */
 .v2-cal-list{overflow-y:auto;padding:8px 14px 8px;max-height:320px;min-height:0}
+.v2-cal-list-wrap{position:relative}
+.v2-cal-list-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(to bottom,transparent,#0d1520);pointer-events:none;transition:opacity .2s}
+.v2-cal-list-wrap.at-bottom::after{opacity:0}
 .v2-cal-list-title{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;margin-top:4px}
 .v2-cal-event{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;border-radius:8px;margin-bottom:3px;cursor:pointer;border:1px solid var(--border);transition:background .15s}
 .v2-cal-event:active{background:rgba(255,255,255,.04)}
