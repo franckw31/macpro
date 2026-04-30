@@ -326,7 +326,14 @@ function sendNote() {
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({action:'add', pseudo_cible:trak.pseudo, note:text, id_activite:trak.actId})
     }).then(r=>r.json()).then(d=>{
-        if(d.success && d.note){ window.location.reload(); return; }
+        if(d.success && d.note){
+            if (trak.pseudo) {
+                window.location.search = '?pseudo=' + encodeURIComponent(trak.pseudo);
+            } else {
+                window.location.reload();
+            }
+            return;
+        }
         btn.disabled=false;
     }).catch(()=>{ btn.disabled=false; });
 }
