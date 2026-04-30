@@ -329,9 +329,9 @@ a{color:inherit;text-decoration:none}
 #v2-countdown{font-size:28px;font-weight:900;color:var(--green);letter-spacing:1px;line-height:1}
 
 /* ─── CALENDAR PICKER MODAL ─── */
-.v2-cal-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;display:none;align-items:flex-end;justify-content:center}
+.v2-cal-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;display:none;align-items:center;justify-content:center;padding:20px}
 .v2-cal-modal-overlay.open{display:flex}
-.v2-cal-sheet{background:#0d1520;border-top-left-radius:22px;border-top-right-radius:22px;width:100%;max-width:440px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
+.v2-cal-sheet{background:#0d1520;border-radius:22px;width:100%;max-width:440px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column}
 .v2-cal-header{padding:12px 14px 0;flex-shrink:0}
 .v2-cal-handle{width:28px;height:3px;background:rgba(255,255,255,.15);border-radius:4px;margin:0 auto 10px}
 .v2-cal-title{font-size:15px;font-weight:800;margin-bottom:10px;text-align:center}
