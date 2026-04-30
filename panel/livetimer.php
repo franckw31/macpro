@@ -182,7 +182,10 @@ if (isset($_GET['action'])) {
             $seconds_remaining = max(0, strtotime($current['fin']) - $now);
         }
 
-        $duration_seconds = max(1, strtotime($current['fin']) - strtotime($current['debut']));
+        $debut_ts = strtotime($current['debut']);
+        $fin_ts   = strtotime($current['fin']);
+        $dur_raw  = ($debut_ts && $debut_ts > 86400) ? ($fin_ts - $debut_ts) : 0;
+        $duration_seconds = ($dur_raw > 0 && $dur_raw <= 7200) ? $dur_raw : $seconds_remaining;
 
         $sb   = intval($current['sb'] ?? 0);
         $bb   = intval($current['bb'] ?? 0);
@@ -733,7 +736,9 @@ if ($_cur) {
     } else {
         $_isec = max(0, strtotime($_cur['fin']) - $_now);
     }
-    $_idur = max(1, strtotime($_cur['fin']) - strtotime($_cur['debut']));
+    $_debut_ts = strtotime($_cur['debut']); $_fin_ts = strtotime($_cur['fin']);
+    $_dur_raw = ($_debut_ts && $_debut_ts > 86400) ? ($_fin_ts - $_debut_ts) : 0;
+    $_idur = ($_dur_raw > 0 && $_dur_raw <= 7200) ? $_dur_raw : intval($_isec);
     $_isb = intval($_cur['sb'] ?? 0); $_ibb = intval($_cur['bb'] ?? 0); $_iant = intval($_cur['ante'] ?? 0);
     $_ibrk = ($_isb == 0 && $_ibb == 0);
     $_ibt  = $_ibrk ? 'PAUSE' : number_format($_isb,0,',',' ') . ' / ' . number_format($_ibb,0,',',' ');
