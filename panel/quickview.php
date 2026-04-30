@@ -335,10 +335,11 @@ a{color:inherit;text-decoration:none}
 .v2-detail-value{font-size:14px;font-weight:700}
 
 /* ─── STRUCTURE TABLE ─── */
-#dd-structure-wrap{width:100%;margin-top:4px}
+#dd-structure-wrap{width:100%;margin-top:4px;position:relative}
+#dd-structure-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:28px;background:linear-gradient(to bottom,transparent,rgba(13,21,32,0.92));pointer-events:none;border-radius:0 0 6px 6px}
 .v2-blind-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
 .v2-blind-table thead tr{display:table;width:100%;table-layout:fixed}
-.v2-blind-table tbody{display:block;max-height:140px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.v2-blind-table tbody{display:block;max-height:140px;overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch}
 .v2-blind-table tbody tr{display:table;width:100%;table-layout:fixed}
 .v2-blind-table th{color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;font-size:10px;padding:5px 6px;border-bottom:1px solid var(--border);text-align:center}
 .v2-blind-table td{padding:6px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600}
