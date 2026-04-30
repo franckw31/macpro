@@ -676,7 +676,19 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   <div class="v2-modal-sheet" role="dialog" aria-modal="true">
     <div class="v2-modal-handle"></div>
     <button class="v2-modal-close" id="v2-details-close">Fermer</button>
-    <div class="v2-modal-sub" id="v2-modal-sub">—</div>
+    <div class="v2-modal-sub" id="v2-modal-sub" style="display:flex;align-items:center;gap:8px">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:0.85">
+        <rect x="3" y="4" width="18" height="17" rx="3" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.5)" stroke-width="1.4"/>
+        <path d="M3 9h18" stroke="rgba(255,255,255,0.5)" stroke-width="1.4"/>
+        <path d="M8 2v4M16 2v4" stroke="rgba(255,255,255,0.5)" stroke-width="1.6" stroke-linecap="round"/>
+        <rect x="6" y="12" width="3" height="2.5" rx="0.6" fill="rgba(255,255,255,0.6)"/>
+        <rect x="10.5" y="12" width="3" height="2.5" rx="0.6" fill="rgba(255,255,255,0.6)"/>
+        <rect x="15" y="12" width="3" height="2.5" rx="0.6" fill="rgba(255,255,255,0.3)"/>
+        <rect x="6" y="16" width="3" height="2.5" rx="0.6" fill="rgba(255,255,255,0.3)"/>
+        <rect x="10.5" y="16" width="3" height="2.5" rx="0.6" fill="rgba(255,255,255,0.3)"/>
+      </svg>
+      <span id="v2-modal-sub-text">—</span>
+    </div>
 
     <div class="v2-detail-section">
       <div class="v2-detail-section-title">Infos Partie</div>
