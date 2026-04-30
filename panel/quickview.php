@@ -977,10 +977,22 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     var telWrap = document.getElementById('dd-tel-wrap');
     var telEl = document.getElementById('dd-tel');
     if (telWrap && telEl) {
-      if (act.phone) {
-        telEl.textContent = '📞 ' + act.phone;
-        telEl.href = 'tel:' + act.phone.replace(/\s/g,'');
-        telWrap.style.display = 'inline';
+      var loc = act.location || '';
+      var telMatch = loc.match(/(?:^|\s|[,\-\/])\s*((?:0|\+33)[0-9\s\.\-]{8,14}[0-9])/);
+      var phone = null;
+      if (telMatch) {
+        phone = telMatch[1].replace(/[\s\.\-]/g,'');
+        if (phone.length === 10 || (phone.startsWith('+33') && phone.length === 12)) {
+          // affiche le lieu sans le numéro
+          var cleanLoc = loc.replace(telMatch[0], '').replace(/[,\-\/\s]+$/, '').trim();
+          var lieuEl = document.getElementById('dd-lieu');
+          if (lieuEl) lieuEl.textContent = cleanLoc || loc;
+          telEl.textContent = '📞 ' + phone;
+          telEl.href = 'tel:' + phone;
+          telWrap.style.display = 'inline';
+        } else {
+          telWrap.style.display = 'none';
+        }
       } else {
         telWrap.style.display = 'none';
       }
