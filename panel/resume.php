@@ -363,12 +363,6 @@ if($activity){
                                     $score = (int)ceil($score_raw);
                                     $score_color = ($score >= 18) ? 'var(--gold)' : (($score >= 15) ? 'var(--green)' : (($score >= 10) ? 'var(--blue)' : 'var(--muted)'));
                                     echo '<span style="font-size:11px;color:'.$score_color.';font-weight:700">Score '.$score.'</span>';
-                                    echo '<div style="font-size:10px;color:var(--muted);margin-top:4px">';
-                                    echo 'Formule : ceil((1 - (rang / (inscrits + recaves_all - recaves_joueur))) × 20)<br>';
-                                    echo '= ceil((1 - ('.$rank.' / ('.$total_count.' + '.$total_recaves_all.' - '.$recave_count.'))) × 20)<br>';
-                                    echo '= ceil((1 - '.round($rank / $score_denom, 6).') × 20)<br>';
-                                    echo '= ceil('.round($score_raw, 4).') = '.$score;
-                                    echo '</div>';
                                 }
                             ?>
                         </div>
