@@ -33,7 +33,13 @@ $participants = array();
 if($activity){
     $aid = intval($activity['id-activite']);
     if(!empty($con)){
-        $pq = mysqli_query($con, "SELECT p.*, COALESCE(p.`jetons_bonus_ins`, p.`jetons`, 0) AS jetons, COALESCE(m.pseudo, '') AS pseudo, COALESCE(m.`photo`, '') AS photo, a.date_depart AS activity_date FROM participation p LEFT JOIN membres m ON m.`id-membre` = p.`id-membre` LEFT JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE p.`id-activite` = '".$aid."' ORDER BY COALESCE(p.`ds`, a.`date_depart`) ASC");
+        // DEBUG: find join column name in participation
+        $col_check = mysqli_query($con, "SHOW COLUMNS FROM participation");
+        $pcols = [];
+        if($col_check) while($c=mysqli_fetch_assoc($col_check)) $pcols[]=$c['Field'];
+        $join_col = in_array('id-membre',$pcols) ? '`id-membre`' : (in_array('id_membre',$pcols) ? '`id_membre`' : (in_array('membre_id',$pcols) ? '`membre_id`' : null));
+        if(!$join_col){ /* fallback, try direct */ $join_col='`id-membre`'; }
+        $pq = mysqli_query($con, "SELECT p.*, COALESCE(p.`jetons_bonus_ins`, p.`jetons`, 0) AS jetons, COALESCE(m.pseudo, '') AS pseudo, COALESCE(m.`photo`, '') AS photo, a.date_depart AS activity_date FROM participation p LEFT JOIN membres m ON m.`id-membre` = p.$join_col LEFT JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE p.`id-activite` = '".$aid."' ORDER BY COALESCE(p.`ds`, a.`date_depart`) ASC");
         if($pq){
             while($row = mysqli_fetch_assoc($pq)){
                 $participants[] = array(
