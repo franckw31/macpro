@@ -90,7 +90,7 @@ if (isset($_GET['action'])) {
         exit;
     }
 
-    if ($action === 'next' || $action === 'prev' || $action === 'reset') {
+    if ($action === 'next' || $action === 'prev' || $action === 'reset' || $action === 'restart') {
         $now = time();
         $q = mysqli_query($con, "SELECT * FROM `blindes-live` WHERE `id-activite` = '$act_id' ORDER BY `ordre` ASC");
         $blinds = [];
@@ -113,6 +113,10 @@ if (isset($_GET['action'])) {
             else $targetIndex = 0;
         } elseif ($action === 'reset') {
             $targetIndex = ($currentIndex == -1) ? count($blinds) - 1 : $currentIndex;
+        } elseif ($action === 'restart') {
+            // Repart du niveau 1 et dépause
+            $targetIndex = 0;
+            mysqli_query($con, "UPDATE `blindes-live` SET `en_pause` = 0, `pause_at` = NULL WHERE `id-activite` = '$act_id'");
         }
 
         if ($targetIndex >= 0 && $targetIndex < count($blinds)) {
@@ -543,7 +547,7 @@ if (isset($_GET['action'])) {
 
         <!-- ACTIONS SECONDAIRES -->
         <div class="action-dock">
-            <button class="act-btn red" onclick="doAction('reset')">🔁 Reset Blinde</button>
+            <button class="act-btn red" onclick="confirmRestart()">🔁 Reset Blinde</button>
             <button class="act-btn blue" onclick="playWelcomeMessage()">👋 Bienvenue</button>
             <button class="act-btn blue" onclick="playRulesMessage()">⚖️ Règles</button>
             <button class="act-btn blue" onclick="playBlindsMessage()">💰 Blindes</button>
@@ -792,6 +796,12 @@ if (isset($_GET['action'])) {
             console.warn('Action error', e);
             actionInProgress = false;
         }
+    }
+
+    // ---- RESTART (niveau 1 + timer) ----
+    function confirmRestart() {
+        if (!confirm('Redémarrer les blindes depuis le niveau 1 ?')) return;
+        doAction('restart');
     }
 
     // ---- ANNONCE STACK ----
