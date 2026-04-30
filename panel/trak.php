@@ -326,7 +326,7 @@ function sendNote() {
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({action:'add', pseudo_cible:trak.pseudo, note:text, id_activite:trak.actId})
     }).then(r=>r.json()).then(d=>{
-        if(d.success && d.note){ trak.notes.unshift(d.note); document.getElementById('note-input').value=''; setTab('auteur'); renderNotes(); }
+        if(d.success && d.note){ window.location.reload(); return; }
         btn.disabled=false;
     }).catch(()=>{ btn.disabled=false; });
 }
