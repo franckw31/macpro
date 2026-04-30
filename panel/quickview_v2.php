@@ -133,7 +133,7 @@ $date_str = '—';
 $time_str = '';
 if (!empty($serverActivity['date'])) {
 	$_d = new DateTime($serverActivity['date'], new DateTimeZone('Europe/Paris'));
-	$date_str = $_jours[$_d->format('l')] . ' ' . $_d->format('j') . ' ' . $_mois[$_d->format('F')];
+	$date_str = $_jours[$_d->format('l')] . ' ' . $_d->format('j') . ' ' . $_mois[$_d->format('F')] . ' ' . $_d->format('H:i');
 	$time_str = $_d->format('H:i');
 }
 
@@ -422,8 +422,8 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
     <!-- Date + Calendar button -->
     <div class="v2-date-row">
       <div class="v2-date-big"><?php echo htmlspecialchars($date_str); ?></div>
-      <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog" style="width:38px;height:38px;border-radius:10px;background:rgba(10,132,255,0.18);border:1px solid rgba(10,132,255,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog" style="width:46px;height:46px;border-radius:12px;background:rgba(10,132,255,0.18);border:1px solid rgba(10,132,255,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="4" width="18" height="18" rx="3" stroke="#0a84ff" stroke-width="1.8"/>
           <path d="M16 2v4M8 2v4M3 10h18" stroke="#0a84ff" stroke-width="1.8" stroke-linecap="round"/>
           <circle cx="16" cy="16" r="2.5" fill="#ff9f0a"/>
