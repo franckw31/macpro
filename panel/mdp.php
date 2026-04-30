@@ -84,17 +84,17 @@ $qres = @mysqli_query($con, $sql);
             td:nth-child(4),td:nth-child(5){font-size:10px;font-family:monospace}
         }
 
-        /* Small screens: stack rows into cards and show labels via data-label */
+        /* Small screens portrait: tableau compact comme en paysage */
         @media (max-width:480px){
-            .table-wrap{overflow:auto}
-            table, thead, tbody, th, td, tr{display:block}
-            thead tr{display:none}
-            tbody tr{margin:0 0 12px;padding:10px;background:rgba(255,255,255,0.02);border-radius:8px}
-            tbody td{padding:5px 6px;display:flex;justify-content:center;align-items:flex-start;font-size:12px;white-space:normal;overflow:visible;max-width:none;text-overflow:unset;text-align:center}
-            tbody td::before{content:attr(data-label);color:#9aa6b1;margin-right:10px;flex:0 0 38%;font-weight:700;font-size:11px}
-            tbody td[data-label="ID"]{font-weight:800}
-            tbody td[data-label="Mot de passe"],
-            tbody td[data-label="Mot de passe ext"]{word-break:break-all;font-family:monospace;font-size:11px}
+            .table-wrap{overflow-x:auto}
+            table{min-width:0;width:100%;font-size:10px;table-layout:fixed}
+            th,td{padding:4px 3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
+            th:nth-child(1),td:nth-child(1){width:30px}
+            th:nth-child(2),td:nth-child(2){width:18%}
+            th:nth-child(3),td:nth-child(3){width:24%}
+            th:nth-child(4),td:nth-child(4){width:25%}
+            th:nth-child(5),td:nth-child(5){width:25%}
+            td:nth-child(4),td:nth-child(5){font-size:9px;font-family:monospace}
         }
     </style>
 </head>
