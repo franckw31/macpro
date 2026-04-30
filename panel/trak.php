@@ -482,6 +482,8 @@ document.getElementById('note-input').addEventListener('keydown', function(e){
 
 // Par défaut : afficher toutes les notes du joueur connecté
 (function(){
+    // Eviter double chargement : marquer si on a déjà lancé loadNotes()
+    var autoLoaded = false;
     // N'exécute l'auto-init que si aucune sélection utilisateur n'a eu lieu
     if (trak.pseudo) return;
     var params = new URLSearchParams(window.location.search);
@@ -502,6 +504,7 @@ document.getElementById('note-input').addEventListener('keydown', function(e){
             document.getElementById('reset-filter-btn').style.display = '';
             trak.mode = 'auteur';
             loadNotes();
+            autoLoaded = true;
         } else {
             // si pseudo dans l'URL invalide, ne rien charger
             trak.allMode = true;
@@ -512,7 +515,7 @@ document.getElementById('note-input').addEventListener('keydown', function(e){
         trak.pseudo = '';
     }
     // Charger par défaut les notes du membre connecté (vue "Mes notes")
-    loadNotes();
+    if (!autoLoaded) loadNotes();
 })();
 </script>
 </body>
