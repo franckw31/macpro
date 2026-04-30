@@ -178,10 +178,8 @@ try {
 } catch (Exception $e) { error_log('allActivities fetch error: ' . $e->getMessage()); }
 
 $uid_q = !empty($serverActivity['id']) ? '?uid=' . intval($serverActivity['id']) : '';
-$participants_href = (
-	!empty($serverActivity['date']) &&
-	strtotime($serverActivity['date']) < time()
-) ? '/panel/resultats.php' . $uid_q : '/panel/participants.php' . $uid_q;
+$is_past = !empty($serverActivity['date']) && strtotime($serverActivity['date']) < time();
+$participants_href = $is_past ? '/panel/resultats.php' . $uid_q : '/panel/participants.php' . $uid_q;
 ?>
 <!doctype html>
 <html lang="fr">
