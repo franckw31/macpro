@@ -230,6 +230,8 @@ var trak = {
     allMode: true, // true = vue "mes notes" (toutes), false = vue sur un joueur
     canSeeRecues: <?php echo ($my_id === 2 || $my_id === 265) ? 'true' : 'false'; ?>
 };
+// request sequencing to avoid race between initial all=1 load and later selection fetches
+trak.requestId = 0;
 
 // ── Search ──
 var searchEl  = document.getElementById('search-input');
