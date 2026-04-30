@@ -151,7 +151,7 @@ window.PAGE_PARTICIPANTS = <?php echo json_encode($participants, JSON_UNESCAPED_
             if(optVal === 'Option') suffix.push('(Opt)');
             if(p.latereg && String(p.latereg) === '1') suffix.push('(Late)');
             if(suffix.length) pseudo += ' ' + suffix.join(' ');
-            const avatarSrc = (p.photo_url && !p.anonyme) ? p.photo_url : 'https://viendez.com/images/noprofil.jpg';
+            const avatarSrc = (p.photo_url && String(p.anonyme) !== '1') ? p.photo_url : 'https://viendez.com/images/noprofil.jpg';
             return `<div class="item" role="listitem"><div class="left"><img class="p-avatar" src="${avatarSrc}" alt="" onerror="this.src='https://viendez.com/images/noprofil.jpg'"><div class="pseudo">${escapeHtml(pseudo)}</div></div><div style="display:flex;align-items:center;gap:12px"><div class="muted">${escapeHtml(date)}</div><div class="accent">${escapeHtml(jet)}</div></div></div>`;
         }).join('');
     }
