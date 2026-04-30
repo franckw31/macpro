@@ -623,7 +623,6 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   <div class="v2-modal-sheet" role="dialog" aria-modal="true">
     <div class="v2-modal-handle"></div>
     <button class="v2-modal-close" id="v2-details-close">Fermer</button>
-    <div class="v2-modal-title" id="v2-modal-title">—</div>
     <div class="v2-modal-sub" id="v2-modal-sub">—</div>
 
     <div class="v2-detail-section">
