@@ -360,7 +360,7 @@ if($activity){
                                 $score_denom = intval($total_count) + $total_recaves_all - $recave_count;
                                 if($score_denom > 0){
                                     $score_raw = (1 - ($rank / $score_denom)) * 20;
-                                    $score = (int)ceil($score_raw);
+                                    $score = round($score_raw, 2);
                                     $score_color = ($score >= 18) ? 'var(--gold)' : (($score >= 15) ? 'var(--green)' : (($score >= 10) ? 'var(--blue)' : 'var(--muted)'));
                                     echo '<span style="font-size:14px;color:'.$score_color.';font-weight:700">(SergioScore = '.$score.')</span>';
                                 }
