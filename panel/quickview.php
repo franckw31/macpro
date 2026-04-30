@@ -353,7 +353,7 @@ a{color:inherit;text-decoration:none}
 /* Event list below grid */
 .v2-cal-list{overflow-y:auto;padding:12px 18px 32px;flex:1;min-height:0}
 .v2-cal-list-title{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;margin-top:4px}
-.v2-cal-event{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:12px;margin-bottom:8px;cursor:pointer;border:1px solid var(--border);transition:background .15s}
+.v2-cal-event{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;border-radius:8px;margin-bottom:3px;cursor:pointer;border:1px solid var(--border);transition:background .15s}
 .v2-cal-event:active{background:rgba(255,255,255,.04)}
 .v2-cal-event.is-next-ev{border-color:var(--green);background:rgba(52,199,89,.08)}
 .v2-cal-event.is-selected-ev{border-color:var(--orange);background:rgba(255,159,10,.08)}
@@ -796,7 +796,6 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         listHtml += '<div class="'+cls2+'" data-id="'+a.id+'">';
         listHtml += '<div class="v2-cal-ev-left"><div class="v2-cal-ev-dot '+dotCls+'"></div><div>';
         listHtml += '<div class="v2-cal-ev-label">'+escHtml(a.label)+tag+'</div>';
-        if(a.titre) listHtml += '<div class="v2-cal-ev-sub">'+escHtml(a.titre)+'</div>';
         listHtml += '</div></div>';
         listHtml += '<div class="v2-cal-ev-right">'+(a.buyin ? a.buyin+' €' : '')+'</div>';
         listHtml += '</div>';
