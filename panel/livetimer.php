@@ -670,7 +670,7 @@ if (isset($_GET['action'])) {
 
         <!-- ACTIONS SECONDAIRES -->
         <div class="action-dock">
-            <a href="<?php echo htmlspecialchars($resetBlindsUrl, ENT_QUOTES, 'UTF-8'); ?>" class="act-btn red" onclick="return confirm('Réinitialiser les blindes ?');" style="text-decoration:none;">🔁 Reset Blinde</a>
+            <a href="<?php echo htmlspecialchars($resetBlindsUrl, ENT_QUOTES, 'UTF-8'); ?>" class="act-btn red" onclick="return confirm('Réinitialiser les blindes ?');" style="text-decoration:none;">🔁 Restart Partie</a>
             <button class="act-btn blue" onclick="playWelcomeMessage()">👋 Bienvenue</button>
             <button class="act-btn blue" onclick="playRulesMessage()">⚖️ Règles</button>
             <button class="act-btn blue" onclick="playBlindsMessage()">💰 Blindes</button>
