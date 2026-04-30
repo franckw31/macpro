@@ -313,9 +313,9 @@ if($activity){
                             $elim_time_label = date('H:i', $elim_ts);
                         }
                     } else {
-                        // no elimination = winner → use the last elimination of the activity (= when 2nd place was eliminated)
+                        // no elimination = winner → use the last definitive elimination of the activity (= when 2nd place was eliminated)
                         if($gains > 0 && !empty($con)){
-                            $last_elim_q = @mysqli_query($con, "SELECT MAX(e.`created_at`) AS last_elim FROM `eliminations` e JOIN `participation` p2 ON e.`id_participation` = p2.`id-participation` WHERE p2.`id-activite` = '".$aid."' AND e.`is_definitive` = 1");
+                            $last_elim_q = @mysqli_query($con, "SELECT MAX(created_at) AS last_elim FROM `eliminations` WHERE `id_activite` = '".$aid."' AND `is_definitive` = 1");
                             if($last_elim_q && ($last_elim_r = mysqli_fetch_assoc($last_elim_q)) && !empty($last_elim_r['last_elim'])){
                                 $elim_ts = strtotime($last_elim_r['last_elim']);
                                 if($elim_ts && $activity_start){
