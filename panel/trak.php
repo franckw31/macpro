@@ -157,7 +157,7 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
     </div>
 </div>
 
-<div id="api-raw-response" style="padding:8px 16px;color:#f5f5f5;font-size:12px;display:none;white-space:pre-wrap;background:#071019;border-top:1px solid rgba(255,255,255,0.02)"></div>
+<!-- raw API debug removed -->
 
 
 <div class="content-area" id="content-area">
@@ -278,18 +278,9 @@ function selectPlayer(pseudo, photo) {
     // mark pending selection so initial load does not overwrite
     trak.pendingSelection = true;
     var reqIdSel = ++trak.requestId;
-    try { var rawDiv = document.getElementById('api-raw-response'); if (rawDiv) { rawDiv.style.display='block'; rawDiv.textContent = 'URL: ' + url2 + '\n\n(fetching...)'; } } catch(e){}
     fetch(url2, { credentials:'include' })
     .then(r=>r.json()).then(d=>{
         if (reqIdSel !== trak.requestId) return; // stale response
-        // update raw response block so user sees the actual URL/JSON used for this selection
-        try {
-            var rawDiv = document.getElementById('api-raw-response');
-            if (rawDiv) {
-                rawDiv.style.display = 'block';
-                rawDiv.textContent = 'URL: ' + url2 + '\n\n' + JSON.stringify(d, null, 2);
-            }
-        } catch(e){}
         trak.pendingSelection = false;
         trak.notes = d.success ? (d.notes||[]) : [];
         renderNotes();
@@ -328,14 +319,7 @@ function loadNotes() {
     .then(r=>r.json()).then(d=>{
         if (reqId !== trak.requestId) return; // stale response
         if (trak.pendingSelection) return; // don't overwrite selection-in-progress
-        // Affiche pour debug l'URL appelée et la réponse brute
-        try {
-            var rawDiv = document.getElementById('api-raw-response');
-            if (rawDiv) {
-                rawDiv.style.display = 'block';
-                rawDiv.textContent = 'URL: ' + url + '\n\n' + JSON.stringify(d, null, 2);
-            }
-        } catch(e){}
+        // debug display removed
 
         trak.notes = d.success ? (d.notes||[]) : [];
         // Filtrage strict côté client au moment de la réception : si on est en vue joueur
