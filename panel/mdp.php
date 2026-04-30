@@ -90,7 +90,7 @@ $qres = @mysqli_query($con, $sql);
             table, thead, tbody, th, td, tr{display:block}
             thead tr{display:none}
             tbody tr{margin:0 0 12px;padding:10px;background:rgba(255,255,255,0.02);border-radius:8px}
-            tbody td{padding:5px 6px;display:flex;justify-content:space-between;align-items:flex-start;font-size:12px;white-space:normal;overflow:visible;max-width:none;text-overflow:unset}
+            tbody td{padding:5px 6px;display:flex;justify-content:center;align-items:flex-start;font-size:12px;white-space:normal;overflow:visible;max-width:none;text-overflow:unset;text-align:center}
             tbody td::before{content:attr(data-label);color:#9aa6b1;margin-right:10px;flex:0 0 38%;font-weight:700;font-size:11px}
             tbody td[data-label="ID"]{font-weight:800}
             tbody td[data-label="Mot de passe"],
