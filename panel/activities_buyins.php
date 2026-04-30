@@ -36,7 +36,33 @@ $q = @mysqli_query($con, $sql);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Activités — Dépenses</title>
-    <style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#071019;color:#eef6fb;padding:16px}table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:left}th{color:#9aa6b1;font-weight:700}a{color:#08b0ff}</style>
+    <style>
+        *{box-sizing:border-box}
+        body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#071019;color:#eef6fb;padding:16px;margin:0}
+        h2{margin:0 0 12px;font-size:16px}
+        a{color:#08b0ff}
+        .back{margin:0 0 12px;display:block}
+
+        /* Desktop table */
+        table{width:100%;border-collapse:collapse}
+        th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:left;white-space:nowrap}
+        th{color:#9aa6b1;font-weight:700}
+        td.total{text-align:right;color:#9aa6b1;font-weight:800}
+
+        /* Card layout on mobile */
+        @media(max-width:600px){
+            table thead{display:none}
+            table,tbody,tr,td{display:block;width:100%}
+            tr{background:rgba(255,255,255,0.03);border-radius:10px;margin-bottom:10px;padding:10px 12px;border:1px solid rgba(255,255,255,0.06)}
+            td{padding:4px 0;border:none;white-space:normal;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px}
+            td::before{content:attr(data-label);color:#9aa6b1;font-weight:700;font-size:12px;flex-shrink:0}
+            td.total{justify-content:space-between;color:#eef6fb}
+            td:first-child{font-size:12px;color:#9aa6b1}
+        }
+
+        .pagination{margin-top:12px;display:flex;gap:12px;align-items:center}
+        .pagination span{color:#9aa6b1}
+    </style>
 </head>
 <body>
     <h2 style="margin:0 0 12px">Activités — Dépenses — <?php echo intval($uid); ?></h2>
