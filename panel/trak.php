@@ -83,6 +83,35 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
 .content-area.visible{display:flex;flex-direction:column;min-height:calc(100dvh - 160px)}
 
 .spinner{text-align:center;padding:24px;color:#8fa0b0}
+.spinner{text-align:center;padding:24px;color:#8fa0b0}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .hdr, .search-wrap, .player-hdr, .tabs, .notes-wrap, .add-area {
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+    }
+    .player-avatar { width: 38px; height: 38px; }
+    .player-name { font-size: 15px; }
+    .player-sub { font-size: 11px; }
+    .tab-btn { font-size: 12px; padding: 7px; }
+    .note-item { padding: 8px 0; }
+    .note-text { font-size: 13px; }
+    .add-textarea { font-size: 13px; padding: 8px 8px; }
+    .add-btn { font-size: 16px; padding: 8px 10px; }
+}
+@media (max-width: 400px) {
+    .hdr-title { font-size: 15px; }
+    .player-name { font-size: 13px; }
+    .tab-btn { font-size: 11px; }
+    .add-btn { font-size: 14px; }
+}
+
+@media (min-width: 700px) {
+    body { font-size: 15px; }
+    .content-area.visible { max-width: 520px; margin: 0 auto; border-radius: 18px; box-shadow: 0 2px 16px 0 #0002; background: #0d1f2d; }
+    .hdr, .search-wrap, .player-hdr, .tabs, .notes-wrap, .add-area { max-width: 520px; margin-left: auto; margin-right: auto; }
+}
 </style>
 </head>
 <body>
