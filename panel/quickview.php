@@ -303,7 +303,7 @@ a{color:inherit;text-decoration:none}
 .v2-modal-sheet{background:#0d1520;border-top-left-radius:20px;border-top-right-radius:20px;padding:20px 20px 36px;width:100%;max-width:440px;max-height:92vh;overflow-y:auto;position:relative}
 .v2-modal-handle{width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:4px;margin:0 auto 16px}
 .v2-modal-title{font-size:22px;font-weight:800;margin-bottom:4px;color:var(--green)}
-.v2-modal-sub{font-size:13px;color:var(--muted);margin-bottom:16px}
+.v2-modal-sub{font-size:20px;font-weight:700;color:var(--green);margin-bottom:16px}
 .v2-modal-close{position:absolute;top:14px;right:16px;background:var(--orange);border-radius:20px;padding:5px 12px;font-size:13px;font-weight:700;color:#000}
 .v2-detail-section{margin-bottom:14px}
 .v2-detail-section-title{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
@@ -623,7 +623,6 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   <div class="v2-modal-sheet" role="dialog" aria-modal="true">
     <div class="v2-modal-handle"></div>
     <button class="v2-modal-close" id="v2-details-close">Fermer</button>
-    <div class="v2-modal-title" id="v2-modal-title">—</div>
     <div class="v2-modal-sub" id="v2-modal-sub">—</div>
 
     <div class="v2-detail-section">
