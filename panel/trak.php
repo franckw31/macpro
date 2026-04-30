@@ -136,7 +136,7 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
             <div class="player-name" id="player-name">—</div>
             <button id="reset-filter-btn" onclick="resetFilter()" style="display:none;margin-left:4px;background:rgba(255,255,255,0.08);border:0;color:#ff6b6b;font-size:15px;padding:2px 10px;border-radius:16px;cursor:pointer;">×</button>
         </div>
-        <div class="player-sub" id="player-sub">Sélectionnez un joueur</div>
+        <div class="player-sub" id="player-sub" style="text-align:center;width:100%">Sélectionnez un joueur</div>
     </div>
 </div>
 
