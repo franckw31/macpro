@@ -218,11 +218,14 @@ function renderNotes() {
     }
     document.getElementById('notes-wrap').innerHTML = notes.map(n => {
         var dp = mode==='auteur' ? n.cible_pseudo : n.auteur_pseudo;
+        var dpPhoto = '';
+        var m = membres.find(m=>m.pseudo===dp);
+        if(m) dpPhoto = m.photo || 'https://viendez.com/images/noprofil.jpg';
         var al = n.date_activite ? n.date_activite+(n.titre_activite?' — '+n.titre_activite:'') : n.titre_activite;
         var canDel = n.id_auteur===myId;
         return '<div class="note-item">'
             +'<div class="note-meta">'
-                +'<span class="note-pseudo">'+escH(dp)+'</span>'
+                +'<span class="note-pseudo" style="cursor:pointer;text-decoration:underline" onclick="selectPlayer(\''+escH(dp)+'\',\''+escH(dpPhoto)+'\')">'+escH(dp)+'</span>'
                 +'<div style="display:flex;align-items:center;gap:6px">'
                     +'<span class="note-date">'+fmtDate(n.created_at)+'</span>'
                     +(canDel?'<button class="note-del" onclick="delNote('+n.id+')">🗑</button>':'')
