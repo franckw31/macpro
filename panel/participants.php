@@ -179,14 +179,6 @@ window.PAGE_PARTICIPANTS = <?php echo json_encode($participants, JSON_UNESCAPED_
     // Export CSV removed by user request
 
     // initial render (apply default filters/sort)
-    console.log('participants sample:', data.slice(0,3));
-    // DEBUG VISIBLE - à supprimer après
-    if(data.length > 0){
-        var dbg = document.createElement('div');
-        dbg.style='background:#1a0;color:#fff;padding:8px;font-size:11px;word-break:break-all;margin-bottom:8px;border-radius:6px';
-        dbg.textContent = 'DEBUG photo_url[0]: "' + (data[0].photo_url||'VIDE') + '" | pseudo: ' + (data[0].pseudo||'?');
-        document.querySelector('.page').prepend(dbg);
-    }
     applyFilters();
 })();
 </script>
