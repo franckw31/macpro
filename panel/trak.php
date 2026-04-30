@@ -124,7 +124,7 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
 <div class="search-wrap">
   <div class="search-rel">
     <span class="search-icon">🔍</span>
-    <input class="search-box" id="search-input" placeholder="Rechercher un joueur…" autocomplete="off">
+    <input class="search-box" id="search-input" placeholder="Choisir un joueur cible ici …" autocomplete="off">
     <div class="suggestions" id="suggestions"></div>
   </div>
 </div>
