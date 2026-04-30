@@ -676,7 +676,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
 <!-- ══════════ DETAILS MODAL ══════════ -->
 <div class="v2-modal-overlay" id="v2-details-modal" aria-hidden="true">
-  <div class="v2-modal-sheet" role="dialog" aria-modal="true">
+  <div class="v2-modal-sheet" role="dialog" aria-modal="true" style="position:relative">
+    <button class="v2-modal-close" id="v2-details-close" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.06);padding:6px 14px;border-radius:20px;border:0;color:#ff9d3b;font-weight:700;font-size:14px;cursor:pointer;z-index:10">Fermer</button>
     <div class="v2-modal-handle"></div>
     <div class="v2-modal-sub" id="v2-modal-sub" style="display:flex;align-items:center;gap:8px">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:0.85">
