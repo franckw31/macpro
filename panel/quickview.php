@@ -816,6 +816,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       });
     }
     eventsEl.innerHTML = listHtml;
+    updateScrollFade();
     eventsEl.querySelectorAll('.v2-cal-event[data-id]').forEach(function(el){
       el.addEventListener('click', function(){ navigate(parseInt(el.getAttribute('data-id'))); });
     });
