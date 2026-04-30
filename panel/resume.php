@@ -292,7 +292,7 @@ if($activity){
                 $eliminated_by = [];
                 $part_id_for_elim = $r['id'] ?? null;
                 if($part_id_for_elim && !empty($con)){
-                    $eby_q = "SELECT e.`nom_membre` FROM `eliminations` e WHERE e.`id_participation` = '".intval($part_id_for_elim)."' ORDER BY e.`created_at` ASC";
+                    $eby_q = "SELECT e.`nom_membre` FROM `eliminations` e WHERE e.`id_participation` = '".intval($part_id_for_elim)."' AND e.`is_definitive` = 1 ORDER BY e.`created_at` ASC";
                     $eby_r = @mysqli_query($con, $eby_q);
                     if($eby_r){ while($er2 = mysqli_fetch_assoc($eby_r)){ if($er2['nom_membre'] !== '') $eliminated_by[] = $er2['nom_membre']; } }
                 }
@@ -302,7 +302,7 @@ if($activity){
                 $part_id = $r['id'] ?? null;
                 $activity_start = !empty($activity['date_depart']) ? strtotime($activity['date_depart']) : null;
                 if($part_id && !empty($con)){
-                    $dq = @mysqli_query($con, "SELECT MAX(created_at) AS last_elim FROM `eliminations` WHERE `id_participation` = '".intval($part_id)."'");
+                    $dq = @mysqli_query($con, "SELECT MAX(created_at) AS last_elim FROM `eliminations` WHERE `id_participation` = '".intval($part_id)."' AND `is_definitive` = 1");
                     if($dq && ($dr = mysqli_fetch_assoc($dq)) && !empty($dr['last_elim'])){
                         $elim_ts = strtotime($dr['last_elim']);
                         if($elim_ts && $activity_start){
