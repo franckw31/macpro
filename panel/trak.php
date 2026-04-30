@@ -327,6 +327,7 @@ function loadNotes() {
     fetch(url, { credentials:'include' })
     .then(r=>r.json()).then(d=>{
         if (reqId !== trak.requestId) return; // stale response
+        if (trak.pendingSelection) return; // don't overwrite selection-in-progress
         // Affiche pour debug l'URL appelée et la réponse brute
         try {
             var rawDiv = document.getElementById('api-raw-response');
