@@ -1,1255 +1,943 @@
 <?php
 session_start();
-// Debug-only: when ?debug=1 is present, log runtime errors to the PHP error log
-// (do NOT print debug HTML to the page to avoid leaking info to users)
-if (isset($_GET['debug']) && $_GET['debug'] === '1') {
-	ini_set('display_errors', '0');
-	ini_set('display_startup_errors', '0');
-	error_reporting(E_ALL);
-	set_error_handler(function($errno, $errstr, $errfile, $errline){
-		error_log("PHP Error: [". (string)$errno ."] " . $errstr . " in " . $errfile . " on line " . (string)$errline);
-		return false; // allow normal error handler as well
-	});
-	register_shutdown_function(function(){
-		$err = error_get_last();
-		if($err){
-			error_log("Shutdown Error: " . json_encode($err, JSON_UNESCAPED_UNICODE));
-		}
-	});
-}
-// Prevent intermediate caches (CDN/proxy) from serving stale, personalized pages
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 header('Expires: 0');
-// Vary on Cookie so shared caches know the response depends on the session cookie
 header('Vary: Cookie');
-// Mirror the pixel-perfect web layout while keeping the PHP version tag
-// Also: inject server-side activity data (from MySQL) so the client can show live timer
-// without relying on the remote /api endpoints.
-// This queries the same DB used elsewhere in /panel and writes `window.SERVER_ACTIVITY`.
-	try{
-		include __DIR__ . '/include/config.php'; // provides $con (mysqli)
-		// Authentification automatique via URL si paramètres fournis
-		$pseudo_get = isset($_GET['pseudo']) ? (isset($con) ? mysqli_real_escape_string($con, $_GET['pseudo']) : null) : null;
-		$pass_get = isset($_GET['passwd']) ? (isset($con) ? mysqli_real_escape_string($con, $_GET['passwd']) : null) : null;
-		if ($pseudo_get && $pass_get) {
-			if (!function_exists('log_activity') && file_exists(__DIR__ . '/../include/functions_logs.php')) {
-				@include_once __DIR__ . '/../include/functions_logs.php';
-			}
-			if (!empty($con)) {
-				$q_auth = @mysqli_query($con, "SELECT `id-membre`, `pseudo` FROM membres WHERE (pseudo = '$pseudo_get' OR email = '$pseudo_get') AND (password = '$pass_get' OR password_ext = '$pass_get') LIMIT 1");
-				if ($q_auth && ($r_auth = mysqli_fetch_array($q_auth))) {
-					$_SESSION['login'] = $r_auth['pseudo'];
-					$_SESSION['id'] = $r_auth['id-membre'];
-					$_SESSION['login_source'] = 'CardEvent/QR';
-					if (function_exists('log_activity')) log_activity($con, "Auto-Login CardEvent", "User: $pseudo_get via URL");
-				} else {
-					if (function_exists('log_activity')) log_activity($con, "Auto-Login Failed CardEvent", "Attempted User: $pseudo_get");
-				}
-			}
+
+try {
+	include __DIR__ . '/include/config.php';
+	$pseudo_get = isset($_GET['pseudo']) ? (isset($con) ? mysqli_real_escape_string($con, $_GET['pseudo']) : null) : null;
+	$pass_get   = isset($_GET['passwd']) ? (isset($con) ? mysqli_real_escape_string($con, $_GET['passwd']) : null) : null;
+	if ($pseudo_get && $pass_get && !empty($con)) {
+		if (!function_exists('log_activity') && file_exists(__DIR__ . '/../include/functions_logs.php'))
+			@include_once __DIR__ . '/../include/functions_logs.php';
+		$q_auth = @mysqli_query($con, "SELECT `id-membre`, `pseudo` FROM membres WHERE (pseudo='$pseudo_get' OR email='$pseudo_get') AND (password='$pass_get' OR password_ext='$pass_get') LIMIT 1");
+		if ($q_auth && ($r_auth = mysqli_fetch_array($q_auth))) {
+			$_SESSION['login'] = $r_auth['pseudo'];
+			$_SESSION['id']    = $r_auth['id-membre'];
 		}
+	}
+
 	$act = null;
 	$selected_id = null;
-	if (isset($_GET['uid']) && is_numeric($_GET['uid'])) {
-		$selected_id = intval($_GET['uid']);
-	}
-	// Log vue quickview pour utilisateur connecte
-	if (!empty($_SESSION['id']) && function_exists('log_activity') && isset($con)) {
-		$_logDetails = $selected_id ? "Activite #$selected_id" : 'Activite auto';
-		log_activity($con, 'vue_quickview', $_logDetails);
-	}
-	if(isset($con)){
+	if (isset($_GET['uid']) && is_numeric($_GET['uid'])) $selected_id = intval($_GET['uid']);
+
+	if (isset($con)) {
 		if ($selected_id) {
-			// Use the selected activity from ?uid=xxx (select all columns)
-			$q = mysqli_query($con, "SELECT * FROM activite WHERE `id-activite` = '$selected_id' LIMIT 1");
+			$q = mysqli_query($con, "SELECT * FROM activite WHERE `id-activite`='$selected_id' LIMIT 1");
 		} else {
-			// Default: next future activity (select all)
 			$q = mysqli_query($con, "SELECT * FROM activite WHERE date_depart >= NOW() ORDER BY date_depart ASC LIMIT 1");
 		}
-		if($q && mysqli_num_rows($q)>0) $act = mysqli_fetch_assoc($q);
-		if(!$act && !$selected_id){
-			// fallback: latest activity (select all)
+		if ($q && mysqli_num_rows($q) > 0) $act = mysqli_fetch_assoc($q);
+		if (!$act && !$selected_id) {
 			$q2 = mysqli_query($con, "SELECT * FROM activite ORDER BY date_depart DESC LIMIT 1");
-			if($q2 && mysqli_num_rows($q2)>0) $act = mysqli_fetch_assoc($q2);
+			if ($q2 && mysqli_num_rows($q2) > 0) $act = mysqli_fetch_assoc($q2);
 		}
-		if($act){
+		if ($act) {
 			$id = (int)$act['id-activite'];
 			$cnt = 0;
-			$r = mysqli_query($con, "SELECT COUNT(*) AS c FROM participation WHERE `id-activite` = '". intval($id) ."' AND COALESCE(`option`, 'None') NOT IN ('None','Desinscrit')");
-			if($r && ($rr = mysqli_fetch_assoc($r))) $cnt = (int)$rr['c'];
+			$r = mysqli_query($con, "SELECT COUNT(*) AS c FROM participation WHERE `id-activite`='".intval($id)."' AND COALESCE(`option`,'None') NOT IN ('None','Desinscrit')");
+			if ($r && ($rr = mysqli_fetch_assoc($r))) $cnt = (int)$rr['c'];
 
-			// prepare a human-friendly French display date (e.g. "Vendredi 1 Mai 20:00")
 			$display_date = $act['date_depart'];
-			try{
-				if(class_exists('IntlDateFormatter')){
+			try {
+				if (class_exists('IntlDateFormatter')) {
 					$dtobj = new DateTime($act['date_depart']);
-					$fmt = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'Europe/Paris', IntlDateFormatter::GREGORIAN, "EEEE d MMMM HH:mm");
+					$fmt = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'Europe/Paris', IntlDateFormatter::GREGORIAN, "EEEE d MMMM");
 					$display_date = $fmt->format($dtobj);
 					$display_date = mb_convert_case($display_date, MB_CASE_TITLE, "UTF-8");
-				} else {
-					setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr');
-					$display_date = strftime('%A %e %B %H:%M', strtotime($act['date_depart']));
-					$display_date = mb_convert_case($display_date, MB_CASE_TITLE, "UTF-8");
 				}
-			}catch(Exception $e){ /* fallback to raw date */ }
-			// map optional fields if present in the DB row using common column names
+			} catch (Exception $e) {}
+
 			$location = null;
-			// prefer explicit `ville` column when present
-			foreach (['ville','lieu','rue','adresse','adresse_lieu','lieu_activite','location','place'] as $c){ if(isset($act[$c]) && strlen(trim($act[$c]))>0){ $location = $act[$c]; break; } }
+			foreach (['ville','lieu','adresse','location','place'] as $c) { if (isset($act[$c]) && strlen(trim($act[$c])) > 0) { $location = $act[$c]; break; } }
 			$tables = null;
-			// prefer `nb-tables` column name if present
-			foreach (['nb-tables','tables','nb_tables','nombre_tables','nb_table','table_count'] as $c){ if(isset($act[$c]) && $act[$c] !== ''){ $tables = $act[$c]; break; } }
-			// max participants (column `places`)
+			foreach (['nb-tables','tables','nb_tables'] as $c) { if (isset($act[$c]) && $act[$c] !== '') { $tables = $act[$c]; break; } }
 			$max_participants = null;
-			foreach(['places','max_places','max_participants'] as $c){ if(isset($act[$c]) && $act[$c] !== ''){ $max_participants = $act[$c]; break; } }
+			foreach (['places','max_places','max_participants'] as $c) { if (isset($act[$c]) && $act[$c] !== '') { $max_participants = $act[$c]; break; } }
 			$start_chips = null;
-			foreach (['jetons_depart','jetons','start_chips','chips','jetons_initial','starting_chips'] as $c){ if(isset($act[$c]) && $act[$c] !== ''){ $start_chips = $act[$c]; break; } }
-			$structure = null;
-			foreach(['structure','structure_modele','structure_detail','structure_nom','structure_text'] as $c){ if(isset($act[$c]) && strlen(trim($act[$c]))>0){ $structure = $act[$c]; break; } }
-			$bounty = null; if(isset($act['bounty'])) $bounty = $act['bounty'];
-			$recave = null; if(isset($act['recave'])) $recave = $act['recave'];
-			// structure id lookup (activite.id_structure variants)
+			foreach (['jetons_depart','jetons','start_chips'] as $c) { if (isset($act[$c]) && $act[$c] !== '') { $start_chips = $act[$c]; break; } }
+			$bounty  = isset($act['bounty'])  ? $act['bounty']  : null;
+			$recave  = isset($act['recave'])  ? $act['recave']  : null;
+
 			$structure_id = null;
-			foreach(['id_structure','id-structure','id-structuree','id_structuree','id-structuree'] as $c){ if(isset($act[$c]) && $act[$c] !== ''){ $structure_id = intval($act[$c]); break; } }
-			$structure_num = null;
+			foreach (['id_structure','id-structure'] as $c) { if (isset($act[$c]) && $act[$c] !== '') { $structure_id = intval($act[$c]); break; } }
 			$structure_detail_text = null;
-			if($structure_id && !empty($con)){
-				$si = intval($structure_id);
-				// Try structure_modele first (common mapping), then fallback to structure table
-				$smq = mysqli_query($con, "SELECT num_structure, Detail FROM structure_modele WHERE id_modele_structure = '". $si ."' LIMIT 1");
-				if($smq && ($smr = mysqli_fetch_assoc($smq))){
-					if(isset($smr['num_structure']) && $smr['num_structure']!=='') $structure_num = $smr['num_structure'];
-					if(isset($smr['Detail']) && $smr['Detail']!=='') $structure_detail_text = $smr['Detail'];
-				} else {
-					$sq2 = mysqli_query($con, "SELECT num_structure, Detail FROM `structure` WHERE `id-structure` = '". $si ."' LIMIT 1");
-					if($sq2 && ($sr2 = mysqli_fetch_assoc($sq2))){
-						if(isset($sr2['num_structure']) && $sr2['num_structure']!=='') $structure_num = $sr2['num_structure'];
-						if(isset($sr2['Detail']) && $sr2['Detail']!=='') $structure_detail_text = $sr2['Detail'];
-					}
-				}
+			if ($structure_id && !empty($con)) {
+				$smq = mysqli_query($con, "SELECT Detail FROM structure_modele WHERE id_modele_structure='".intval($structure_id)."' LIMIT 1");
+				if ($smq && ($smr = mysqli_fetch_assoc($smq))) $structure_detail_text = $smr['Detail'];
 			}
-			// organizer lookup: prefer activite.`id-membre` or activite.`id_membre` (older schemas vary)
+
 			$organizer = null;
 			$organizer_id = null;
-			foreach(['id-membre','id_membre','id_membres','id_membre_organisateur','organisateur'] as $c){ if(isset($act[$c]) && $act[$c] !== ''){ $organizer_id = $act[$c]; break; } }
-			if($organizer_id && !empty($con)){
-				$sanid = intval($organizer_id);
-				$mq = mysqli_query($con, "SELECT `pseudo` FROM membres WHERE `id-membre` = '". $sanid ."' LIMIT 1");
-				if($mq && ($mr = mysqli_fetch_assoc($mq)) && !empty($mr['pseudo'])){
-					$organizer = $mr['pseudo'];
-				}
+			foreach (['id-membre','id_membre'] as $c) { if (isset($act[$c]) && $act[$c] !== '') { $organizer_id = $act[$c]; break; } }
+			if ($organizer_id && !empty($con)) {
+				$mq = mysqli_query($con, "SELECT pseudo FROM membres WHERE `id-membre`='".intval($organizer_id)."' LIMIT 1");
+				if ($mq && ($mr = mysqli_fetch_assoc($mq))) $organizer = $mr['pseudo'];
 			}
 
 			$serverActivity = [
-				'id' => $id,
-				'date' => isset($act['date_depart'])? $act['date_depart'] : (isset($act['date'])? $act['date'] : null),
-				'display_date' => $display_date,
-				'title' => isset($act['titre-activite'])? $act['titre-activite'] : (isset($act['titre_activite'])? $act['titre_activite'] : (isset($act['title'])? $act['title'] : null)),
-				'buyin' => isset($act['buyin'])? (int)$act['buyin'] : null,
-				'rake' => isset($act['rake'])? (int)$act['rake'] : null,
+				'id'                 => $id,
+				'date'               => $act['date_depart'] ?? null,
+				'display_date'       => $display_date,
+				'title'              => $act['titre-activite'] ?? ($act['titre_activite'] ?? null),
+				'buyin'              => isset($act['buyin']) ? (int)$act['buyin'] : null,
+				'rake'               => isset($act['rake'])  ? (int)$act['rake']  : null,
 				'participants_count' => $cnt,
-				'organizer' => $organizer,
-				'organizer_id' => $organizer_id,
-				'location' => $location,
-				'tables' => $tables,
-				'max_participants' => $max_participants,
-				'start_chips' => $start_chips,
-				// structure: expose detail as structure.detail for client-side use
-				'structure' => is_array($structure)? $structure : ['detail' => ($structure_detail_text ?: $structure)],
-				'structure_detail' => ($structure_detail_text ?: $structure),
-				'structure_id' => $structure_id,
-				'structure_num' => $structure_num,
-				'bounty' => $bounty,
-				'recave' => $recave,
+				'max_participants'   => $max_participants,
+				'organizer'         => $organizer,
+				'location'          => $location,
+				'tables'            => $tables,
+				'start_chips'       => $start_chips,
+				'bounty'            => $bounty,
+				'recave'            => $recave,
+				'structure_detail'  => $structure_detail_text,
+				'structure_id'      => $structure_id,
 			];
 
-			// Also fetch current user's participation for this activity (to pre-fill modal)
 			$serverParticipation = null;
 			if (!empty($_SESSION['id']) && !empty($con)) {
 				$uid = intval($_SESSION['id']);
-				$fields_part = "`option`";
-				$has_anonyme = false; $has_latereg = false; $has_option_chapitre = false;
-				if ($res_col = mysqli_query($con, "SHOW COLUMNS FROM participation LIKE 'anonyme'")) {
-					$has_anonyme = mysqli_num_rows($res_col) > 0;
-				}
-				if ($res_col2 = mysqli_query($con, "SHOW COLUMNS FROM participation LIKE 'latereg'")) {
-					$has_latereg = mysqli_num_rows($res_col2) > 0;
-				}
-				if ($res_col3 = mysqli_query($con, "SHOW COLUMNS FROM participation LIKE 'option_chapitre'")) {
-					$has_option_chapitre = mysqli_num_rows($res_col3) > 0;
-				}
-				if ($has_anonyme) $fields_part .= ", `anonyme`";
-				if ($has_latereg) $fields_part .= ", `latereg`";
-				if ($has_option_chapitre) $fields_part .= ", `option_chapitre`";
-				$qpart = mysqli_query($con, "SELECT $fields_part FROM participation WHERE `id-membre` = '$uid' AND `id-activite` = '$id' LIMIT 1");
+				$qpart = mysqli_query($con, "SELECT `option`, COALESCE(`anonyme`,0) AS anonyme, COALESCE(`latereg`,0) AS latereg FROM participation WHERE `id-membre`='$uid' AND `id-activite`='$id' LIMIT 1");
 				if ($qpart && ($rpart = mysqli_fetch_assoc($qpart))) {
-					$serverParticipation = [
-						'status' => isset($rpart['option']) ? $rpart['option'] : 'None',
-						'anonyme' => ($has_anonyme && isset($rpart['anonyme'])) ? (int)$rpart['anonyme'] : 0,
-						'latereg' => ($has_latereg && isset($rpart['latereg'])) ? (int)$rpart['latereg'] : 0,
-						'option_chapitre' => ($has_option_chapitre && isset($rpart['option_chapitre'])) ? $rpart['option_chapitre'] : '',
-					];
+					$serverParticipation = ['status' => $rpart['option'], 'anonyme' => (int)$rpart['anonyme'], 'latereg' => (int)$rpart['latereg']];
 				}
 			}
 		}
 	}
-}catch(Exception $e){ $serverActivity = null; }
-// asset versioning (use file modification time to help bust client cache when assets change)
-$asset_ver = @filemtime(__DIR__ . '/timer_web/public/style.variantA.css') ?: @filemtime(__DIR__ . '/timer_web/public/style.css') ?: time();
-// Use the same avatar resolution logic as /panel/include/header.php:
-// prefer session id -> query `membres` and serve public URLs under https://viendez.com/images/faces/
-// Default fallback uses the public no-profile image on viendez.com.
+} catch (Exception $e) { $serverActivity = null; }
+
+$displayUser = 'Visiteur';
+if (!empty($_SESSION['login'])) $displayUser = $_SESSION['login'];
+elseif (!empty($_SESSION['user'])) $displayUser = $_SESSION['user'];
+elseif (!empty($_COOKIE['uname'])) $displayUser = $_COOKIE['uname'];
+$displayUser = htmlspecialchars($displayUser);
+
 $avatar_url = 'https://viendez.com/images/noprofil.jpg';
-try{
-	if(!empty($con) && !empty($_SESSION['id'])){
+try {
+	if (!empty($con) && !empty($_SESSION['id'])) {
 		$uid = (int)$_SESSION['id'];
-		$r = mysqli_query($con, "SELECT photo FROM membres WHERE `id-membre` = '" . $uid . "' LIMIT 1");
-		if($r && ($row = mysqli_fetch_assoc($r)) && !empty($row['photo'])){
-			$photo = trim($row['photo']);
-			// Always serve the public viendez.com URL path for member photos
-			$avatar_url = 'https://viendez.com/images/faces/' . rawurlencode(basename($photo));
-			$facePath = __DIR__ . '/images/faces/' . $photo;
-			if(file_exists($facePath)){
-				error_log("Avatar: local file exists {$facePath} — serving public URL {$avatar_url} for user_id={$uid}");
-			} else {
-				// Log missing local file but still serve the public URL (filename comes from DB)
-				error_log("Avatar: membres.photo='{$photo}' set but local file missing (checked: {$facePath}); serving public URL {$avatar_url} for user_id={$uid}");
+		$r = mysqli_query($con, "SELECT photo FROM membres WHERE `id-membre`='$uid' LIMIT 1");
+		if ($r && ($row = mysqli_fetch_assoc($r)) && !empty($row['photo']))
+			$avatar_url = 'https://viendez.com/images/faces/' . rawurlencode(basename($row['photo']));
+	}
+} catch (Exception $e) {}
+
+$is_registered = (!empty($serverParticipation) && isset($serverParticipation['status']) && !in_array($serverParticipation['status'], ['None','Desinscrit']));
+
+// Date display helpers
+$_jours = ['Monday'=>'Lundi','Tuesday'=>'Mardi','Wednesday'=>'Mercredi','Thursday'=>'Jeudi','Friday'=>'Vendredi','Saturday'=>'Samedi','Sunday'=>'Dimanche'];
+$_mois  = ['January'=>'Janvier','February'=>'Février','March'=>'Mars','April'=>'Avril','May'=>'Mai','June'=>'Juin','July'=>'Juillet','August'=>'Août','September'=>'Septembre','October'=>'Octobre','November'=>'Novembre','December'=>'Décembre'];
+$date_str = '—';
+$time_str = '';
+if (!empty($serverActivity['date'])) {
+	$_d = new DateTime($serverActivity['date'], new DateTimeZone('Europe/Paris'));
+	$date_str = $_jours[$_d->format('l')] . ' ' . $_d->format('j') . ' ' . $_mois[$_d->format('F')];
+	$time_str = $_d->format('H:i');
+}
+
+// Fetch ALL activities for the calendar picker (past + future, limit 60)
+$allActivities = [];
+try {
+	if (!empty($con)) {
+		$_jours_all = ['Monday'=>'Lundi','Tuesday'=>'Mardi','Wednesday'=>'Mercredi','Thursday'=>'Jeudi','Friday'=>'Vendredi','Saturday'=>'Samedi','Sunday'=>'Dimanche'];
+		$_mois_all  = ['January'=>'Janvier','February'=>'Février','March'=>'Mars','April'=>'Avril','May'=>'Mai','June'=>'Juin','July'=>'Juillet','August'=>'Août','September'=>'Septembre','October'=>'Octobre','November'=>'Novembre','December'=>'Décembre'];
+		// SELECT * to avoid errors on column name variations (titre-activite vs titre_activite)
+		$qa = mysqli_query($con, "SELECT * FROM activite ORDER BY date_depart DESC LIMIT 60");
+		if ($qa) {
+			while ($ra = mysqli_fetch_assoc($qa)) {
+				$_dp = $ra['date_depart'] ?? null;
+				if (!$_dp) continue;
+				$_da = new DateTime($_dp, new DateTimeZone('Europe/Paris'));
+				// Resolve title: try multiple column name variants
+				$_titre = '';
+				foreach (['titre-activite','titre_activite','title','titre'] as $_tc) {
+					if (isset($ra[$_tc]) && strlen(trim($ra[$_tc])) > 0) { $_titre = $ra[$_tc]; break; }
+				}
+				// Resolve buyin
+				$_buyin = 0;
+				foreach (['buyin','buy_in','buy-in'] as $_bc) {
+					if (isset($ra[$_bc]) && $ra[$_bc] !== '') { $_buyin = (int)$ra[$_bc]; break; }
+				}
+				$allActivities[] = [
+					'id'    => (int)$ra['id-activite'],
+					'date'  => $_dp,
+					'label' => $_jours_all[$_da->format('l')] . ' ' . $_da->format('j') . ' ' . $_mois_all[$_da->format('F')] . ' – ' . $_da->format('H:i'),
+					'day'   => (int)$_da->format('j'),
+					'month' => (int)$_da->format('n'),
+					'year'  => (int)$_da->format('Y'),
+					'ts'    => (int)$_da->getTimestamp(),
+					'titre' => $_titre,
+					'buyin' => $_buyin,
+					'past'  => ($_dp < date('Y-m-d H:i:s')),
+				];
 			}
-		} else {
-			error_log("Avatar: no photo set for user_id={$uid} (header.php logic)");
 		}
 	}
-}catch(Exception $e){ error_log('Avatar lookup error (header logic): ' . $e->getMessage()); }
-// Log final resolved avatar for easier debugging
-error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id());
+} catch (Exception $e) { error_log('allActivities fetch error: ' . $e->getMessage()); }
+
+$uid_q = !empty($serverActivity['id']) ? '?uid=' . intval($serverActivity['id']) : '';
+$participants_href = (
+	!empty($serverActivity['date']) &&
+	strtotime($serverActivity['date']) < time()
+) ? '/panel/resultats.php' . $uid_q : '/panel/participants.php' . $uid_q;
 ?>
 <!doctype html>
 <html lang="fr">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>CardEvent - Live</title>
-	<link rel="stylesheet" href="/panel/timer_web/public/style.css?v=<?php echo $asset_ver; ?>">
-
-
-	<!-- Theme stylesheet loader -->
-	<link id="theme-stylesheet" rel="stylesheet" href="/panel/timer_web/public/style.variantA.css?v=<?php echo $asset_ver; ?>">
-	<!-- Fond mosaïque décalé avec symboles de cartes à jouer -->
-	<style>
-	body {
-		background-color: #0f1115;
-		background-image: none;
-		position: relative;
-	}
-	</style>
-
-	<style>
-/* Compact card padding for Quickview page */
-.container > section.card.stroked { padding: 10px 12px !important; }
-.container > section.card.stroked .modal-sheet { padding: 12px !important; }
-@media (max-width:480px){ .container > section.card.stroked { padding:8px 10px !important; } }
-	</style>
-
-	<script>
-	// Partie detail modal logic (bind after DOM ready)
-	document.addEventListener('DOMContentLoaded', function(){
-		function by(id){return document.getElementById(id)}
-		var tile = by('details-tile');
-		var modal = by('partie-modal');
-		var close = by('modal-close');
-		function openModal(){
-			if(!modal) return;
-			modal.style.display='block'; modal.setAttribute('aria-hidden','false');
-			populate();
-			window.scrollTo(0,0);
-		}
-		function closeModal(){ if(!modal) return; modal.style.display='none'; modal.setAttribute('aria-hidden','true'); }
-		function populate(){
-			var act = window.SERVER_ACTIVITY || null;
-			var user = (typeof window.SERVER_USER !== 'undefined')? window.SERVER_USER : null;
-			if(!act) act = { title: (by('activity-name') && by('activity-name').textContent) || '—', date: (by('activity-date') && by('activity-date').textContent) || '—', participants_count: null, buyin: null, rake: null };
-			if(by('modal-title')) by('modal-title').textContent = act.title || '—';
-				if(by('modal-sub')){
-					var md = '—';
-					if(act.date){
-						var ds = act.date;
-						if(typeof ds === 'string' && ds.indexOf(' ') !== -1 && ds.indexOf('T') === -1) ds = ds.replace(' ', 'T');
-						var dObj = new Date(ds);
-						if(!isNaN(dObj.getTime())){
-							try{
-								md = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }).format(dObj);
-								md = md.replace(/\b\w/g, function(c){ return c.toUpperCase(); });
-							}catch(e){
-								md = dObj.toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
-							}
-						} else if(act.display_date) {
-							md = act.display_date;
-						} else {
-							md = act.date;
-						}
-					} else if(act.display_date) {
-						md = act.display_date;
-					}
-					by('modal-sub').textContent = md || '—';
-				}
-			if(by('d-organisateur')) by('d-organisateur').textContent = (act.organizer && act.organizer.length)? act.organizer : (user || (by('user-name') && by('user-name').textContent) || '—');
-			if(by('d-lieu')) by('d-lieu').textContent = act.location || '—';
-			if(by('d-inscrits')) by('d-inscrits').textContent = (act.participants_count!==undefined && act.participants_count!==null)? (act.participants_count + ' / ' + (act.max_participants||'—')) : '—';
-			if(by('d-tables')) by('d-tables').textContent = act.tables || '—';
-			if(by('d-buyin')) by('d-buyin').textContent = (act.buyin!==undefined && act.buyin!==null)? (act.buyin + ' €') : '—';
-			if(by('d-rake')) by('d-rake').textContent = (act.rake!==undefined && act.rake!==null)? (act.rake + ' €') : '—';
-			if(by('d-bounty')) by('d-bounty').textContent = act.bounty? (act.bounty + ' €') : '—';
-			if(by('d-recave')) by('d-recave').textContent = act.recave? act.recave : '—';
-			if(by('d-jetons')) by('d-jetons').textContent = act.start_chips? act.start_chips : '—';
-				// Prefer structure.detail (object) then top-level structure_detail or legacy structure text
-				var structDetail = '—';
-				if(act.structure && typeof act.structure === 'object' && act.structure.detail) structDetail = act.structure.detail;
-				else if(act.structure_detail) structDetail = act.structure_detail;
-				else if(act.structure) structDetail = act.structure;
-				if(by('d-structure-detail')) by('d-structure-detail').textContent = structDetail || '—';
-		}
-		if(tile){
-			tile.addEventListener('click', openModal);
-			tile.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); openModal(); } });
-		}
-		if(close) close.addEventListener('click', closeModal);
-		// close clicking outside sheet
-		var overlay = by('partie-modal');
-		if(overlay) overlay.addEventListener('click', function(e){ if(e.target === overlay) closeModal(); });
-	});
-	</script>
-
-	<style>
-	/* Modal sheet for Partie details (mobile-friendly) - dark sheet for readability */
-	.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;z-index:1200}
-	.modal-overlay.open{display:flex;align-items:flex-end;justify-content:center}
-	.modal-sheet{position:fixed;left:0;right:0;bottom:0;max-height:92vh;background:#071019;color:#eef6fb;border-top-left-radius:18px;border-top-right-radius:18px;padding:18px 18px 28px;overflow:auto;box-shadow:0 -12px 40px rgba(0,0,0,0.45)}
-	.modal-close{position:absolute;right:18px;top:12px;background:rgba(255,255,255,0.06);border-radius:20px;padding:6px 10px;font-weight:700;color:#bfe9ff;border:0}
-	.modal-title{font-weight:800;font-size:16px;margin-bottom:6px;color:#ffffff}
-	.modal-sub{color:#a7c6d6;margin-bottom:8px;font-size:13px}
-	.detail-card{background:rgba(255,255,255,0.02);border-radius:12px;padding:10px;margin-bottom:12px}
-	.detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
-	.detail-row:last-child{border-bottom:none}
-	.detail-label{color:#9db6c6;font-size:12px;display:flex;align-items:center;gap:8px}
-	.detail-value{font-weight:700;color:#ffffff;font-size:14px}
-	/* Right framed box for specific values like Lieu */
-	.detail-value.box{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);padding:6px 10px;border-radius:8px;min-width:120px;text-align:right}
-	/* Ensure no shadow appears under the Lieu value */
-	#d-lieu, #d-lieu.detail-value { box-shadow: none !important; filter: none !important; text-shadow: none !important; }
-	/* Lieu: blue text, no box, align text to right and reserve width like other values */
-	#d-lieu.detail-value { color: var(--cyan); background: transparent; border: none; text-align: right; min-width:120px; }
-	/* Color buy-in and jetons values in gold/orange */
-	#d-buyin.detail-value, #d-jetons.detail-value { color: var(--gold); }
-	/* Color tables value in green */
-	#d-tables.detail-value { color: var(--green); }
-	/* Color structure detail in green */
-	#d-structure-detail.detail-value, #d-structure-detail { color: var(--green); }
-	/* small icons for detail labels, reusing palette from Variant A */
-	.detail-icon{font-size:14px;line-height:1;display:inline-block}
-	.detail-icon.profile{color:#ffd100}
-	.detail-icon.people{color:#b47bff}
-	.detail-icon.location{color:var(--cyan)}
-	.detail-icon.money{color:var(--gold)}
-	.detail-icon.info{color:#ff9d3b}
-	</style>
-
-	<!-- Responsive overrides: adjust fixed-width elements for small screens -->
-	<style>
-	/* Responsive overrides for small screens */
-	@media (max-width: 480px) {
-		.timer-circle-container { width: 48px !important; height: 48px !important; }
-		.timer-content #live-timer-display { font-size: 16px !important; }
-		.timer-content #live-timer-level, .timer-content #live-timer-blinds { font-size: 10px !important; }
-		/* Allow the action column to shrink instead of forcing 52px */
-		.row > div[style*="width:52px"] { width: auto !important; flex: 0 0 auto; display: flex; align-items: center; gap: 6px; padding-left:6px; padding-right:6px; }
-		.chev { width: 40px; height: 40px; font-size: 18px; padding: 0; border-radius: 8px; }
-		/* Make detail boxes wrap and remove rigid min-width */
-		.detail-value.box, #d-lieu.detail-value { min-width: 0 !important; max-width: 50% !important; word-break: break-word; }
-		.modal-sheet { max-width: 100% !important; left: 0 !important; right: 0 !important; border-radius: 12px !important; padding: 14px !important; }
-		.tile { min-width: 0 !important; }
-		.pill { font-size: 13px; padding: 6px 8px; }
-		.container { padding-left: 12px; padding-right: 12px; }
-		.title { font-size: 16px; }
-	}
-	/* Extra-small phones */
-	@media (max-width: 360px) {
-		.timer-circle-container { width: 40px !important; height: 40px !important; }
-		.chev { width: 36px; height: 36px; font-size: 16px; }
-		.timer-content #live-timer-display { font-size: 14px !important; }
-		.detail-value { font-size: 13px; }
-	}
-
-/* Header avatar sizing overrides (desktop + responsive) */
-.header .avatar { width: 48px !important; height: 48px !important; flex: 0 0 auto; border-radius: 6px; overflow: hidden; transform: translateX(-20px); }
-.header .avatar img { width:100%; height:100%; object-fit:cover; display:block; }
-@media (max-width: 600px) {
-    .header .avatar { width: 40px !important; height: 40px !important; }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CardEvent</title>
+<style>
+/* ─── RESET & BASE ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0d14;
+  --card:#111822;
+  --card2:#141e2b;
+  --border:rgba(255,255,255,0.06);
+  --green:#34c759;
+  --orange:#ff9f0a;
+  --blue:#0a84ff;
+  --cyan:#30d5c8;
+  --muted:#6b7a8f;
+  --text:#ffffff;
+  --text2:#c8d6e5;
+  --label:#8e9bae;
+  --radius:16px;
+  --radius-sm:12px;
 }
-@media (max-width: 400px) {
-    .header .avatar { width: 36px !important; height: 36px !important; }
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+
+/* ─── LAYOUT ─── */
+.page{max-width:440px;margin:0 auto;padding:0 0 90px;min-height:100vh;display:flex;flex-direction:column;gap:0}
+
+/* ─── HEADER ─── */
+.v2-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;gap:12px}
+.v2-header-left{display:flex;align-items:center;gap:12px}
+.v2-logo{width:44px;height:44px;background:linear-gradient(135deg,#0a84ff 0%,#0062cc 100%);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.v2-logo svg{width:26px;height:26px;fill:#fff}
+.v2-app-name{font-size:18px;font-weight:800;letter-spacing:-0.3px}
+.v2-app-name span{color:var(--blue)}
+.v2-version{background:rgba(10,132,255,0.18);color:var(--blue);font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px;vertical-align:middle}
+.v2-greeting{font-size:13px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:4px}
+.v2-greeting .name{color:var(--text2);font-weight:600}
+.v2-greeting .chev{color:var(--blue);font-weight:700}
+.v2-avatar{width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,255,255,0.12);flex-shrink:0}
+.v2-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* ─── CARD BASE ─── */
+.v2-card{background:var(--card);border-radius:var(--radius);padding:18px 18px 16px;margin:0 16px 14px}
+
+/* ─── NEXT GAME CARD ─── */
+.v2-next-label{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:1.2px;color:var(--green);text-transform:uppercase;margin-bottom:10px}
+.v2-next-label svg{flex-shrink:0}
+.v2-date-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:16px}
+.v2-date-big{font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1.1}
+.v2-cal-btn{width:46px;height:46px;background:rgba(255,255,255,0.05);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)}
+.v2-cal-btn svg{width:22px;height:22px;stroke:var(--text2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* Stats row */
+.v2-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.v2-stat{background:var(--card2);padding:12px 14px;display:flex;align-items:center;gap:10px}
+.v2-stat-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.v2-stat-icon.green{background:rgba(52,199,89,0.12)}
+.v2-stat-icon.blue{background:rgba(10,132,255,0.12)}
+.v2-stat-label{font-size:10px;font-weight:600;letter-spacing:.8px;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+.v2-stat-val{font-size:20px;font-weight:800;letter-spacing:-0.5px;line-height:1}
+.v2-stat-val.green{color:var(--green)}
+.v2-stat-val.blue{color:var(--text)}
+.v2-stat-val small{font-size:13px;font-weight:600;color:var(--muted);margin-left:1px}
+
+/* Financial row */
+.v2-fin{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:18px}
+.v2-fin-item{background:var(--card2);padding:10px 10px 10px 12px;display:flex;align-items:center;gap:8px}
+.v2-fin-ico{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.v2-fin-ico.gold{background:rgba(255,159,10,0.12)}
+.v2-fin-ico.orange{background:rgba(255,69,58,0.12)}
+.v2-fin-ico.teal{background:rgba(48,213,200,0.12)}
+.v2-fin-lbl{font-size:9px;font-weight:600;letter-spacing:.7px;color:var(--muted);text-transform:uppercase;margin-bottom:2px}
+.v2-fin-val{font-size:15px;font-weight:800}
+
+/* Action buttons */
+.v2-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.v2-btn{padding:13px 10px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .15s}
+.v2-btn:active{opacity:.75}
+.v2-btn.outline{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:var(--text)}
+.v2-btn.filled{background:var(--orange);color:#04131d}
+
+/* Inscrit banner */
+.v2-inscrit{display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(52,199,89,0.08);border:1px solid rgba(52,199,89,0.2);border-radius:12px;padding:12px;color:var(--green);font-weight:700;font-size:14px}
+
+/* ─── ACTIONS RAPIDES ─── */
+.v2-section-title{font-size:11px;font-weight:700;letter-spacing:1.2px;color:var(--muted);text-transform:uppercase;padding:4px 20px 8px;margin-top:4px}
+.v2-list{background:var(--card);border-radius:var(--radius);margin:0 16px 14px;overflow:hidden}
+.v2-list-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);transition:background .15s}
+.v2-list-item:last-child{border-bottom:none}
+.v2-list-item:active{background:rgba(255,255,255,0.04)}
+.v2-list-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.v2-list-icon.blue{background:rgba(10,132,255,0.15)}
+.v2-list-icon.purple{background:rgba(180,123,255,0.15)}
+.v2-list-icon.teal{background:rgba(48,213,200,0.15)}
+.v2-list-body{flex:1;min-width:0}
+.v2-list-name{font-size:15px;font-weight:700;margin-bottom:2px}
+.v2-list-sub{font-size:12px;color:var(--muted)}
+.v2-list-chev{color:var(--muted);font-size:18px;font-weight:300}
+
+/* ─── BOTTOM NAV ─── */
+.v2-bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(10,13,20,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;padding:8px 0 max(8px,env(safe-area-inset-bottom));max-width:440px;margin:0 auto}
+/* fix: center on wide screens */
+@media(min-width:441px){.v2-bottom-nav{left:50%;right:auto;transform:translateX(-50%);width:440px}}
+.v2-nav-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 16px;color:var(--muted);font-size:11px;font-weight:600;transition:color .15s}
+.v2-nav-btn.active{color:var(--blue)}
+.v2-nav-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* ─── MODAL ─── */
+.v2-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:flex-end;justify-content:center}
+.v2-modal-overlay.open{display:flex}
+.v2-modal-sheet{background:#0d1520;border-top-left-radius:20px;border-top-right-radius:20px;padding:20px 20px 36px;width:100%;max-width:440px;max-height:92vh;overflow-y:auto;position:relative}
+.v2-modal-handle{width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:4px;margin:0 auto 16px}
+.v2-modal-title{font-size:17px;font-weight:800;margin-bottom:4px}
+.v2-modal-sub{font-size:13px;color:var(--muted);margin-bottom:16px}
+.v2-modal-close{position:absolute;top:14px;right:16px;background:rgba(255,255,255,0.06);border-radius:20px;padding:5px 12px;font-size:13px;font-weight:700;color:var(--text2)}
+.v2-detail-section{margin-bottom:14px}
+.v2-detail-section-title{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+.v2-detail-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)}
+.v2-detail-row:last-child{border-bottom:none}
+.v2-detail-label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.v2-detail-value{font-size:14px;font-weight:700}
+
+/* ─── INSCRIPTION MODAL ─── */
+.v2-ins-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+.v2-ins-row:last-child{border-bottom:none}
+.v2-ins-left{display:flex;align-items:center;gap:12px}
+.v2-ins-icon{font-size:18px;width:28px;text-align:center}
+.v2-ins-title{font-size:14px;font-weight:700}
+.v2-ins-sub{font-size:12px;color:var(--muted);margin-top:1px}
+/* toggle switch */
+.v2-toggle{position:relative;width:44px;height:26px;flex-shrink:0}
+.v2-toggle input{opacity:0;width:0;height:0;position:absolute}
+.v2-toggle-track{position:absolute;inset:0;background:rgba(255,255,255,0.1);border-radius:13px;transition:background .2s}
+.v2-toggle-thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.v2-toggle input:checked + .v2-toggle-track{background:var(--green)}
+.v2-toggle input:checked ~ .v2-toggle-thumb{transform:translateX(18px)}
+
+/* Countdown display */
+#v2-countdown{font-size:28px;font-weight:900;color:var(--green);letter-spacing:1px;line-height:1}
+
+/* ─── CALENDAR PICKER MODAL ─── */
+.v2-cal-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;display:none;align-items:flex-end;justify-content:center}
+.v2-cal-modal-overlay.open{display:flex}
+.v2-cal-sheet{background:#0d1520;border-top-left-radius:22px;border-top-right-radius:22px;width:100%;max-width:440px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
+.v2-cal-header{padding:18px 18px 0;flex-shrink:0}
+.v2-cal-handle{width:36px;height:4px;background:rgba(255,255,255,.15);border-radius:4px;margin:0 auto 14px}
+.v2-cal-title{font-size:17px;font-weight:800;margin-bottom:14px;text-align:center}
+/* Month nav */
+.v2-cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.v2-cal-nav-btn{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--text2)}
+.v2-cal-month-label{font-size:15px;font-weight:700;color:var(--text)}
+/* Day grid */
+.v2-cal-grid-wrap{padding:0 18px;flex-shrink:0}
+.v2-cal-dow{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px}
+.v2-cal-dow span{text-align:center;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--muted);padding:4px 0}
+.v2-cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.v2-cal-day{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--muted);position:relative;cursor:default}
+.v2-cal-day.has-event{color:var(--text);cursor:pointer;background:rgba(10,132,255,.15)}
+.v2-cal-day.has-event:hover,.v2-cal-day.has-event:active{background:rgba(10,132,255,.3)}
+.v2-cal-day.is-next{background:var(--green) !important;color:#04180a !important;font-weight:900;box-shadow:0 0 0 2px var(--green)}
+.v2-cal-day.is-selected{box-shadow:0 0 0 2px var(--orange);color:var(--orange)}
+.v2-cal-day.is-past.has-event{color:var(--muted);background:rgba(255,255,255,.05)}
+/* Event list below grid */
+.v2-cal-list{overflow-y:auto;padding:12px 18px 32px;flex:1;min-height:0}
+.v2-cal-list-title{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;margin-top:4px}
+.v2-cal-event{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:12px;margin-bottom:8px;cursor:pointer;border:1px solid var(--border);transition:background .15s}
+.v2-cal-event:active{background:rgba(255,255,255,.04)}
+.v2-cal-event.is-next-ev{border-color:var(--green);background:rgba(52,199,89,.08)}
+.v2-cal-event.is-selected-ev{border-color:var(--orange);background:rgba(255,159,10,.08)}
+.v2-cal-event.is-past-ev{opacity:.55}
+.v2-cal-ev-left{display:flex;align-items:center;gap:10px}
+.v2-cal-ev-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--blue)}
+.v2-cal-ev-dot.next{background:var(--green)}
+.v2-cal-ev-dot.past{background:var(--muted)}
+.v2-cal-ev-label{font-size:13px;font-weight:700;line-height:1.3}
+.v2-cal-ev-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.v2-cal-ev-right{font-size:12px;font-weight:700;color:var(--orange);white-space:nowrap}
+
+/* Responsive */
+@media(max-width:360px){
+  .v2-date-big{font-size:22px}
+  .v2-stat-val{font-size:18px}
+  .v2-fin-val{font-size:14px}
+  .v2-btn{font-size:12px;padding:11px 8px}
 }
-
-	/* Disable fixed bottom navigation on small screens to avoid overlap */
-	@media (max-width: 600px) {
-		.bottom-nav, .bottom-nav-backdrop {
-			position: static !important;
-			bottom: auto !important;
-			left: auto !important;
-			right: auto !important;
-			width: 100% !important;
-			box-shadow: none !important;
-		}
-		.bottom-nav-backdrop { display: none !important; }
-		/* Ensure content doesn't get hidden under nav if any theme forces fixed */
-		.container { padding-bottom: 0 !important; }
-	}
-
-/* Ensure space is reserved for fixed bottom nav on larger screens */
-@media (min-width: 601px) {
-	.container { padding-bottom: 72px !important; }
-	.bottom-nav { position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; z-index: 1100 !important; }
-	.bottom-nav-backdrop { display: block !important; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; height: 64px !important; z-index: 1000 !important; }
-}
-	</style>
-	<meta name="referrer" content="no-referrer">
-<?php if(!empty($serverActivity)): ?>
-<script>
-// Provide server-side activity to the client as a fallback (and seed localStorage)
-window.SERVER_ACTIVITY = <?php echo json_encode($serverActivity, JSON_UNESCAPED_UNICODE); ?>;
-window.SERVER_PARTICIPATION = <?php echo json_encode($serverParticipation, JSON_UNESCAPED_UNICODE); ?>;
-try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)); try{ localStorage.setItem('lastParticipation', JSON.stringify(window.SERVER_PARTICIPATION)); }catch(e){} }catch(e){}
-</script>
-<script>
-// Ensure profile links point to the current activity id (may change via client sync)
-function _setProfileLinksFromActivity(actId){
-	try{
-		var href = '/panel/profile.php' + (actId ? ('?uid='+encodeURIComponent(actId)) : '');
-		var h = document.getElementById('header-profile-link'); if(h) h.href = href;
-		var t = document.getElementById('profile-tile'); if(t) t.href = href;
-	}catch(e){}
-}
-try{ if(window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id){ _setProfileLinksFromActivity(window.SERVER_ACTIVITY.id); } }catch(e){}
-</script>
-<script>
-// Ensure participants pill shows count/(places) Inscrits and resist brief client-side overwrites
-document.addEventListener('DOMContentLoaded', function(){
-	var span = document.querySelector('#inscrits-pill span');
-	if(!span) return;
-	function renderInscrits(){
-		try{
-			if(window.SERVER_ACTIVITY && typeof window.SERVER_ACTIVITY.participants_count !== 'undefined'){
-				var pc = window.SERVER_ACTIVITY.participants_count;
-				var mp = window.SERVER_ACTIVITY.max_participants || window.SERVER_ACTIVITY.places || null;
-				span.textContent = mp ? pc + '/' + mp + ' In' : pc + ' In';
-			}
-		}catch(e){}
-	}
-	renderInscrits();
-	var tries = 0;
-	var t = setInterval(function(){ renderInscrits(); tries++; if(tries>8) clearInterval(t); }, 200);
-});
-</script>
-<script>
-// Open inscription modal instead of redirecting
-document.addEventListener('DOMContentLoaded', function() {
-	var regBtn = document.getElementById('reg-action');
-	if (!regBtn) return;
-
-	function getActivityId() {
-		if (window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id) return window.SERVER_ACTIVITY.id;
-		var urlParams = new URLSearchParams(window.location.search);
-		if (urlParams.has('uid')) return urlParams.get('uid');
-		return null;
-	}
-
-	regBtn.addEventListener('click', function(e) {
-		e.preventDefault();
-		var actId = getActivityId();
-		var modal = document.getElementById('inscription-modal');
-		var form  = document.getElementById('ins-form');
-		if (!modal || !form) {
-			// fallback si le modal n'existe pas
-			var dest = '/panel/inscription.php';
-			if (actId) dest += '?uid=' + encodeURIComponent(actId);
-			window.location.href = dest;
-			return;
-		}
-		// Pré-remplir l'activité
-		var uidInput = form.querySelector('input[name="uid"]');
-		if (uidInput && actId) uidInput.value = actId;
-		// Pré-remplir depuis SERVER_PARTICIPATION (participation existante)
-		if (window.SERVER_PARTICIPATION) {
-			var p = window.SERVER_PARTICIPATION;
-			var inAnon = document.getElementById('ins-anon');
-			var inOpt  = document.getElementById('ins-opt');
-			var inLate = document.getElementById('ins-late');
-			var inChap = form.querySelector('input[name="option_chapitre"]');
-			if (inAnon) inAnon.checked = (p.anonyme == '1' || p.anonyme === true);
-			if (inOpt)  inOpt.checked  = (p.status === 'Option');
-			if (inLate) inLate.checked = (p.latereg == '1' || p.latereg === true);
-			if (inChap) inChap.value   = p.option_chapitre || '';
-		}
-		modal.classList.add('open');
-		modal.removeAttribute('style');
-		modal.setAttribute('aria-hidden', 'false');
-	});
-
-	// No auto-open: dedicated inscription page is preferred
-
-	// close modal on background click or close button
-	document.addEventListener('click', function(e){
-		var modal = document.getElementById('inscription-modal');
-		if(!modal) return;
-		if(e.target.classList && e.target.classList.contains('inscription-modal-close')){
-			modal.style.display='none'; modal.setAttribute('aria-hidden','true');
-		}
-	});
-});
-</script>
-<?php endif; ?>
-	<script>
-	// If server knows the API base, set it here. Otherwise client will try to derive it from origin.
-	window.API_BASE = '<?php echo htmlspecialchars(getenv("API_BASE_URL")?:""); ?>';
-	if(!window.API_BASE && location.protocol !== 'file:'){
-		// Default API base (remote production)
-		window.API_BASE = 'https://viendez.com/api';
-	}
-	</script>
-
-	<script>
-	(function(){
-		try{
-			var serverUser = <?php echo json_encode($displayUser, JSON_UNESCAPED_UNICODE); ?>;
-			var el = document.getElementById('user-name');
-			if(el && el.textContent !== serverUser){
-				el.textContent = serverUser;
-			}
-			// Remove legacy client override if present
-			try{ if(window.localStorage && localStorage.getItem('timer_user')) localStorage.removeItem('timer_user'); }catch(e){}
-		}catch(e){}
-	})();
-	</script>
+</style>
 </head>
 <body>
 
-<?php if(isset($_GET['debug']) && $_GET['debug'] === '1'){
-	$dbgUser = 'Visiteur';
-	if(!empty($_SESSION['user'])) $dbgUser = $_SESSION['user'];
-	elseif(!empty($_SESSION['login'])) $dbgUser = $_SESSION['login'];
-	elseif(!empty($_COOKIE['uname'])) $dbgUser = $_COOKIE['uname'];
-	$dbgUser = htmlspecialchars($dbgUser);
-	$sid = session_id();
-	error_log('DEBUG: session_id=' . $sid . ' | user=' . $dbgUser);
-} ?>
-	<!-- Variant controls removed; Variant A is active by default -->
-		<header class="card header">
-			<div style="display:flex;align-items:center;gap:12px;width:100%">
-				<div class="logo"><img src="/panel/timer_web/public/assets/spade.svg" alt="logo" class="logo-svg"></div>
-					<?php
-				  $displayUser = 'Visiteur';
-				  if(!empty($_SESSION['user'])) $displayUser = $_SESSION['user'];
-				  elseif(!empty($_SESSION['login'])) $displayUser = $_SESSION['login'];
-				  elseif(!empty($_COOKIE['uname'])) $displayUser = $_COOKIE['uname'];
-				  $displayUser = htmlspecialchars($displayUser);
-				?>
-				<div style="display:flex;flex-direction:column;justify-content:center">
-					<div class="title"><svg class="title-spade" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="As de pique"><!-- spade filled (currentColor) + small A mark -->
-						<path d="M16 2 C11 8 8 11 8 15 C8 19 12 21 15 21 L15 26 C15 27.2 16.2 28 17.2 28 C18.2 28 19.4 27.2 19.4 26 L19.4 21 C22.4 21 26 19 26 15 C26 11 23 8 16 2 Z" fill="currentColor"/>
-						<text x="5" y="10" font-family="Helvetica, Arial, sans-serif" font-size="8" font-weight="800" fill="#ffffff">A</text>
-					</svg> CardEvent <span class="small">v<?php echo htmlspecialchars(getenv('CFBundleShortVersionString')?:'2.0'); ?></span></div>
-					<div class="greeting">Bonjour, <span id="user-name"><?php echo $displayUser; ?></span> <span style="color:var(--cyan);margin-left:6px">›</span></div>
-				</div>
-				<div style="margin-left:auto;display:flex;align-items:center;gap:12px">
-					<div id="offline-badge" class="offline-badge" aria-hidden="true"></div>
-					<a id="header-profile-link" href="/panel/profile.php<?php echo (!empty($serverActivity['id'])? '?uid=' . intval($serverActivity['id']): ''); ?>" role="link" title="Mon Profil" style="text-decoration:none;color:inherit;display:inline-flex;align-items:center;justify-content:center">
-						<div class="avatar" style="width:48px!important;height:48px!important;border-radius:6px;overflow:hidden;display:inline-block;">
-							<img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar" style="width:48px!important;height:48px!important;object-fit:cover;display:block;border-radius:6px">
-						</div>
-					</a>
-				</div>
-			</div>
-			</div>
-						<!-- Token prompt (hidden by default) -->
-						<div id="token-prompt" class="token-prompt" style="display:none">
-							<div style="font-weight:700;margin-bottom:6px">Connexion API</div>
-							<input id="api-token-input" placeholder="Collez le token API" />
-							<div style="display:flex;gap:8px;margin-top:8px">
-								<button id="save-api-token" class="button primary">Enregistrer</button>
-								<button id="clear-api-token" class="button">Effacer</button>
-							</div>
-							<div class="small" style="margin-top:8px;color:var(--muted)">Le token est stocké en local</div>
-						</div>
-				<!-- debug-info removed to prevent on-screen JSON debug output -->
-		</header>
-
-		<div class="container">
-				<section id="activity-card" class="card stroked" style="padding:10px 12px;">
-			<div class="section-title">Prochaine(s) partie(s)</div>
-			<hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
-			<!-- removed duplicate small label to avoid repeating the title -->
-			<div class="row" style="margin-top:6px">
-				<div style="flex:1">
-					<div id="activity-name" style="display:none"></div>
-					<div id="activity-date" style="display:none"></div>
-				<div style="display:flex;align-items:center;gap:6px;margin-top:6px;line-height:1">
-						<svg style="flex-shrink:0;vertical-align:middle;position:relative;top:0px" width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="var(--gold)" opacity="0.85"/><path d="M12.5 8v5l3 1" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-						<span class="small" style="color:#ffffff;font-weight:700;vertical-align:middle;font-size:16px"><?php
-							$_jours = ['Monday'=>'Lundi','Tuesday'=>'Mardi','Wednesday'=>'Mercredi','Thursday'=>'Jeudi','Friday'=>'Vendredi','Saturday'=>'Samedi','Sunday'=>'Dimanche'];
-							$_mois  = ['January'=>'Janvier','February'=>'Février','March'=>'Mars','April'=>'Avril','May'=>'Mai','June'=>'Juin','July'=>'Juillet','August'=>'Août','September'=>'Septembre','October'=>'Octobre','November'=>'Novembre','December'=>'Décembre'];
-							$_raw   = !empty($serverActivity['date']) ? $serverActivity['date'] : null;
-							if($_raw){
-								$_d = new DateTime($_raw, new DateTimeZone('Europe/Paris'));
-								echo htmlspecialchars($_jours[$_d->format('l')] . ' ' . $_d->format('j') . ' ' . $_mois[$_d->format('F')] . ' ' . $_d->format('H:i'));
-							} else { echo '—'; }
-						?></span>
-					</div>
-					<div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:nowrap;white-space:nowrap;overflow:hidden">
-						<div class="pill" id="buyin-pill" style="padding:6px 8px;font-size:13px;min-width:0"><span><?php echo isset($serverActivity['buyin'])? htmlspecialchars($serverActivity['buyin']).' €':'—'; ?></span></div>
-						<div class="pill" id="rake-pill" style="padding:6px 8px;font-size:13px;min-width:0">
-							<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
-								<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
-								<path d="M9 6v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-								<path d="M10.5 6v6" stroke="currentColor" stroke-width="1.0" stroke-linecap="round"/>
-								<path d="M15 5l-1.5 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-							</svg>
-							<span><?php echo isset($serverActivity['rake'])? htmlspecialchars($serverActivity['rake']).' €':'—'; ?></span>
-						</div>
-						<div class="pill" id="recave-pill" style="padding:6px 8px;font-size:13px;min-width:0"><span><?php echo isset($serverActivity['recave'])? htmlspecialchars($serverActivity['recave']).' Rec':'—'; ?></span></div>
-						<div class="pill" id="inscrits-pill" style="padding:6px 8px;font-size:13px;min-width:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><text x="2" y="16" font-size="16" fill="#B47BFF">👥</text></svg>
-							<span><?php
-								if (isset($serverActivity['participants_count'])) {
-									$pc = htmlspecialchars($serverActivity['participants_count']);
-									if (!empty($serverActivity['max_participants'])) {
-										$mp = htmlspecialchars($serverActivity['max_participants']);
-										echo $pc . '/' . $mp . ' Inscrits';
-									} else {
-										echo $pc . ' Inscrits';
-									}
-								} else {
-									echo '— Inscrits';
-								}
-							?></span>
-						</div>
-
-					</div>
-					<div style="margin-top:8px;color:#ff6b6b;font-weight:700"><?php echo (empty($serverActivity) || empty($serverActivity['participants_count']))? '● Pas encore inscrit(e)' : ''; ?></div>
-
-				</div>
-					<div style="width:110px;display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center">
-					   <div style="display:flex;align-items:center;gap:8px">
-						   <button class="chev" id="next-act" onclick="navigateActivity(1)">›</button>
-						   <div class="chev-label" style="font-size:12px;color:var(--muted);">Suiv</div>
-					   </div>
-					   <div style="display:flex;align-items:center;gap:8px">
-						   <button class="chev" id="prev-act" onclick="navigateActivity(-1)">‹</button>
-						   <div class="chev-label" style="font-size:12px;color:var(--muted);">Prec</div>
-					   </div>
-					</div>
-			</div>
-		</section>
-
-		<section id="shortcuts-card" class="card stroked">
-			   <div class="section-title">Raccourcis</div>
-			   <hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
-			   <style>
-				   /* Force uniform tile sizing and alignment */
-				   .shortcuts-grid { align-items:stretch; }
-				   .shortcuts-grid .tile { height:70px !important; display:flex !important; flex-direction:column !important; justify-content:space-between !important; align-items:center !important; box-sizing:border-box !important; }
-                   /* Reduce fonts for compact shortcuts view */
-                   .shortcuts-grid .tile { font-size: 13px; }
-                   .shortcuts-grid .tile-top { font-size: 13px; }
-                   .shortcuts-grid .tile-bottom { font-size: 12px; }
-                   .shortcuts-grid .tile .icon-circle { width:38px; height:38px; }
-				   /* Fixed zones so tops and bottoms align across tiles */
-				   .shortcuts-grid .tile-top{height:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:center;padding:0;margin:0}
-				   .shortcuts-grid .tile-bottom{height:26px;flex:0 0 26px;display:flex;align-items:center;justify-content:center;padding:0;margin:0;width:100%;box-sizing:border-box}
-				   /* Ensure icons are vertically centered inside the top zone */
-				   .shortcuts-grid .tile .icon-circle, .shortcuts-grid .timer-circle-container{margin:0;align-self:center}
-				   .shortcuts-grid .tile .icon-circle{margin:0}
-				   .shortcuts-grid .timer-circle-container{margin:0;}
-			   </style>
-			   <div class="shortcuts-grid">
-	<?php
-	// --- ADVANCED TIMER LOGIC (fullscreen-timer.php style, with JS sync) ---
-	$timer_level = '--';
-	$timer_blinds = '-- / --';
-	$timer_duration = 0;
-	$timer_seconds_left = 0;
-	$timer_end = null;
-	$timer_start = null;
-	$timer_ordre = 1;
-	$blinds_json = '[]';
-	if (!empty($serverActivity['id'])) {
-		$id = intval($serverActivity['id']);
-		$now = time();
-		$q = mysqli_query($con, "SELECT * FROM `blindes-live` WHERE `id-activite` = '$id' ORDER BY `ordre` ASC");
-		$blinds = [];
-		while($row = mysqli_fetch_assoc($q)) { $blinds[] = $row; }
-		$blinds_json = json_encode($blinds, JSON_UNESCAPED_UNICODE);
-		$currentIndex = -1;
-		foreach($blinds as $k => $b) {
-			if (strtotime($b['fin']) > $now) {
-				$currentIndex = $k;
-				break;
-			}
-		}
-		if ($currentIndex === -1 && count($blinds) > 0) {
-			// All levels finished, show last
-			$currentIndex = count($blinds) - 1;
-		}
-		if ($currentIndex !== -1) {
-			$b = $blinds[$currentIndex];
-			$timer_level = 'Niveau ' . htmlspecialchars($b['ordre']);
-			$timer_blinds = htmlspecialchars($b['sb']) . ' / ' . htmlspecialchars($b['bb']);
-			$timer_end = $b['fin'];
-			$timer_start = $b['debut'];
-			$timer_duration = max(1, strtotime($b['fin']) - strtotime($b['debut']));
-			$timer_seconds_left = max(0, strtotime($b['fin']) - $now);
-			$timer_ordre = intval($b['ordre']);
-		}
-	}
-	?>
-		<div class="tile" id="qs-timer-tile" style="height:70px;display:none;flex-direction:column;justify-content:space-between;cursor:default;" onclick="if(window._qsTimerLiveActive){var uid=new URLSearchParams(window.location.search).get('uid');if(uid)window.location.href='/panel/fullscreen-timer.php?uid='+encodeURIComponent(uid);}">
-		       <div class="tile-top" style="padding-top:0;">
-				   <div class="timer-circle-container" style="width:56px;height:56px;position:relative;margin:0 auto;">
-					       <svg class="timer-svg" viewBox="0 0 80 80" style="width:100%;height:100%;position:absolute;top:0;left:0;">
-						       <circle class="timer-bg" cx="40" cy="40" r="36" style="stroke-width:4;"></circle>
-						       <circle class="timer-progress" id="qs-timer-progress" cx="40" cy="40" r="36" style="stroke-width:4;"></circle>
-				       </svg>
-					       <div class="timer-content" style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;">
-							       <div id="qs-timer-level" style="font-size:10px;font-weight:600;color:#fff;letter-spacing:1px;text-transform:uppercase;"></div>
-							       <div id="qs-timer-display" style="font-size:18px;font-weight:900;color:#00d2ff;line-height:1;"></div>
-							       <div id="qs-timer-blinds" style="font-size:10px;color:#ffc107;font-weight:700;margin-top:2px;"></div>
-					       </div>
-			       </div>
-					       <!-- <div class="count-label" id="live-timer-label" style="margin-top:8px;">Live Timer</div> -->
-		</div>
-						<div class="tile-bottom" id="live-timer-title"></div>
-					   <!-- <div class="tile-bottom" id="live-timer-status">—</div> -->
-	</div>
-	<script>
-	(function(){
-		var display = document.getElementById('qs-timer-display');
-		var progressCircle = document.getElementById('qs-timer-progress');
-		var levelEl = document.getElementById('qs-timer-level');
-		var blindsEl = document.getElementById('qs-timer-blinds');
-		var seconds = 0;
-		var total = 0;
-		var timerPaused = false;
-
-		// Date brute depuis la DB (ex: "2026-04-29 20:00:00") — parsée côté client en heure locale
-		var activityStartStr = <?php echo (isset($serverActivity['date']) && $serverActivity['date']) ? '"'.addslashes($serverActivity['date']).'"' : 'null'; ?>;
-		var activityStartTs = 0;
-		if(activityStartStr) {
-			// Remplacer l'espace par T pour un parsing ISO fiable, sans suffixe Z (heure locale)
-			var activityStartTs = Math.floor(new Date(activityStartStr.replace(' ','T')).getTime() / 1000);
-		}
-		var serverClientOffset = 0; // pas nécessaire : on parse en heure locale directement
-		var countdownInterval = null;
-
-		function showCountdown() {
-			var tile = document.getElementById('qs-timer-tile');
-			var nowTs = Math.floor(Date.now() / 1000) + serverClientOffset;
-			var diff = activityStartTs - nowTs;
-			if(diff <= 0 || activityStartTs === 0) {
-				// Partie démarrée : arrêter le compte à rebours
-				if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
-				if(tile) tile.style.display = 'none';
-				return;
-			}
-			var h = Math.floor(diff / 3600).toString().padStart(2,'0');
-			var m = Math.floor((diff % 3600) / 60).toString().padStart(2,'0');
-			var s = (diff % 60).toString().padStart(2,'0');
-			if(tile) tile.style.display = 'flex';
-			display.textContent = h+':'+m+':'+s;
-			display.style.color = '#00d2ff';
-			display.style.fontSize = '14px';
-			progressCircle.style.strokeDashoffset = 0;
-			progressCircle.style.stroke = 'transparent';
-			progressCircle.style.filter = 'none';
-			// Masquer aussi le cercle de fond
-			var svgBg = document.querySelector('#qs-timer-tile .timer-bg');
-			if(svgBg) svgBg.style.stroke = 'transparent';
-			if(levelEl) levelEl.textContent = 'Démarre dans';
-			if(blindsEl) blindsEl.textContent = '';
-		}
-
-		function updateDisplay() {
-			var tile = document.getElementById('qs-timer-tile');
-			var timerValid = (seconds > 0 && seconds <= 7200);
-			var nowTs = Math.floor(Date.now() / 1000) + serverClientOffset;
-			var hasCountdown = (activityStartTs > 0 && nowTs < activityStartTs);
-			if(!timerValid) {
-				if(hasCountdown) return; // le compte à rebours gère l'affichage
-				// Ni live timer ni compte à rebours : afficher 'Partie Terminée' seulement si > 24h
-				if(activityStartTs > 0 && (nowTs - activityStartTs) > 86400) {
-					if(tile) tile.style.display = 'flex';
-					display.textContent = 'Terminée';
-					display.style.color = '#888';
-					display.style.fontSize = '11px';
-					progressCircle.style.strokeDashoffset = 0;
-					progressCircle.style.stroke = 'transparent';
-					progressCircle.style.filter = 'none';
-					var svgBg2 = document.querySelector('#qs-timer-tile .timer-bg');
-					if(svgBg2) svgBg2.style.stroke = 'transparent';
-					if(levelEl) levelEl.textContent = 'Partie';
-					if(blindsEl) blindsEl.textContent = '';
-				} else {
-					if(tile) tile.style.display = 'none';
-				}
-				window._qsTimerLiveActive = false;
-				return;
-			}
-			// Timer live actif : arrêter le compte à rebours et restaurer le cercle
-			window._qsTimerLiveActive = true;
-			if(tile) tile.style.cursor = 'pointer';
-			if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
-			display.style.fontSize = '';
-			if(blindsEl && blindsEl.textContent === 'Démarre dans') blindsEl.textContent = '';
-			var svgBg = document.querySelector('#qs-timer-tile .timer-bg');
-			if(svgBg) svgBg.style.stroke = '';
-			var m = Math.floor(seconds/60).toString().padStart(2,'0');
-			var s = (seconds%60).toString().padStart(2,'0');
-			display.textContent = m+':'+s;
-			if(total > 0){
-				var elapsed = total - seconds;
-				var progress = Math.max(0, Math.min(1, elapsed/total));
-				var circumference = 2 * Math.PI * 50;
-				var offset = circumference * (1 - progress);
-				progressCircle.style.strokeDashoffset = offset;
-				if(seconds <= 120){
-					display.style.color = '#ff0000';
-					progressCircle.style.stroke = '#ff0000';
-					progressCircle.style.filter = 'drop-shadow(0 0 6px #ff0000)';
-				} else {
-					display.style.color = '#00d2ff';
-					progressCircle.style.stroke = '#00d2ff';
-					progressCircle.style.filter = 'drop-shadow(0 0 6px #00d2ff)';
-				}
-			}
-		}
-
-		function tick() {
-			if(!timerPaused && seconds > 0){ seconds--; updateDisplay(); }
-		}
-
-		function syncTimer() {
-			var params = new URLSearchParams(window.location.search);
-			var uid = params.get('uid');
-			if(!uid) return;
-			fetch('/panel/timer-api.php?uid='+encodeURIComponent(uid)+'&_='+Date.now())
-			.then(r=>r.json())
-			.then(function(data){
-				if(data.status!=='success') return;
-			var sec = parseInt(data.seconds_remaining)||0;
-			// Ignorer si valeur aberrante (> 2h = timer pas encore démarré)
-			if(sec <= 0 || sec > 7200) return;
-			seconds = sec;
-			total = parseInt(data.duration_seconds)||0;
-				if(levelEl){
-					var txt = data.level_name ? data.level_name.replace(/^Niveau\s*/i,'').trim() : '--';
-					levelEl.textContent = txt;
-				}
-				if(blindsEl) blindsEl.textContent = data.blinds_text || '-- / --';
-				timerPaused = !!data.is_paused;
-				updateDisplay();
-				// Refresh profile links to point to the active activity id (use URL uid or fallback to lastActivity)
-				try{
-					var actId = null;
-					if(window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id) actId = window.SERVER_ACTIVITY.id;
-					var params = new URLSearchParams(window.location.search);
-					if(!actId && params.has('uid')) actId = params.get('uid');
-					if(!actId){ try{ var la = localStorage.getItem('lastActivity'); if(la){ var obj = JSON.parse(la); if(obj && obj.id) actId = obj.id; } }catch(e){}
-					}
-					_setProfileLinksFromActivity(actId);
-				}catch(e){}
-		       });
-	       }
-		setInterval(tick, 1000);
-		setInterval(syncTimer, 5000);
-		syncTimer();
-		// Démarrer le compte à rebours si la partie n'a pas encore commencé
-		if(activityStartTs > 0 && (Math.floor(Date.now()/1000) + serverClientOffset) < activityStartTs) {
-			showCountdown();
-			countdownInterval = setInterval(showCountdown, 1000);
-		} else {
-			// Appel immédiat pour afficher 'Partie Terminée' si applicable
-			updateDisplay();
-		}
-		   // Force full page reload every 30 seconds for robustness
-		   setInterval(function(){
-			   // Force cache refresh by appending a random query param
-			   var url = new URL(window.location.href);
-			   url.searchParams.set('cachebust', Math.floor(Math.random()*1e8));
-			   window.location.replace(url.toString());
-		   }, 300000);
-	})();
-	<?php
-	// If timer_sync=1, return JSON for JS sync
-	if (isset($_GET['timer_sync']) && $_GET['timer_sync'] == 1 && !empty($serverActivity['id'])) {
-		header('Content-Type: application/json');
-		echo json_encode(['blinds' => $blinds], JSON_UNESCAPED_UNICODE);
-		exit;
-	}
-	?>
-	</script>
-				<div class="tile" id="details-tile" role="button" tabindex="0" style="cursor:pointer;height:70px;display:flex;flex-direction:column;justify-content:space-between;">
-					<div class="tile-top"><div class="icon-circle info">i</div></div>
-					<div class="tile-bottom">Détails Partie</div>
-				</div>
-				<a id="profile-tile" class="tile" role="link" href="/panel/profile.php<?php echo (!empty($serverActivity['id'])? '?uid=' . intval($serverActivity['id']): ''); ?>" style="text-decoration:none;color:inherit;height:70px;display:flex;flex-direction:column;justify-content:space-between;">
-					<div class="tile-top"><div class="icon-circle profile">👤</div></div>
-					<div class="tile-bottom">Mon Profil / Traker</div>
-				</a>
-				<?php
-					// If the activity date is in the past, link to results; otherwise link to participants
-					$participants_href = '/panel/participants.php';
-					if (!empty($serverActivity['id'])) {
-						$uid_q = '?uid=' . intval($serverActivity['id']);
-					} else {
-						$uid_q = '';
-					}
-					if (!empty($serverActivity['date']) && @strtotime($serverActivity['date']) !== false && strtotime($serverActivity['date']) < time()) {
-						$participants_href = '/panel/resultats.php' . $uid_q;
-					} else {
-						$participants_href = '/panel/participants.php' . $uid_q;
-					}
-				?>
-				<a id="participants-tile" class="tile" role="link" href="<?php echo htmlspecialchars($participants_href); ?>" style="text-decoration:none;color:inherit;height:70px;display:flex;flex-direction:column;justify-content:space-between;" onclick="logPanelAction('vue_liste_participants')">
-					<div class="tile-top"><div class="icon-circle people">👥</div></div>
-					<div class="tile-bottom"><?php echo (strpos($participants_href, 'resultats.php') !== false) ? 'Classement' : 'Liste participants'; ?></div>
-				</a>
-			</div>
-		</section>
-
-		<style>
-		/* Reduce podium font size for compact display */
-		#podium-section { font-size: 13px; }
-		#podium-section .podium-item { display:flex; justify-content:space-between; gap:12px; font-size:13px; }
-		#podium-section .podium-item div { line-height:1.1; }
-		@media (max-width:480px){ #podium-section { font-size:12px; } }
-		</style>
-		<section id="podium-section" class="card stroked" style="display:none;cursor:pointer" aria-hidden="true" onclick="window.location.href='/panel/resume.php?uid=<?php echo isset($serverActivity['id']) ? intval($serverActivity['id']) : (isset($act) && $act ? intval($act['id-activite']) : ''); ?>'">
-			<div style="font-weight:700;color:var(--gold);text-transform:uppercase;font-size:12px">Podium payés</div>
-			<div style="text-align:center;margin-top:4px"><span style="font-size:11px;color:#08b0ff;font-weight:600;text-decoration:underline">Cliquer pour voir VOS Stats Partie </span></div>
-			<hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
-			<div id="podium-list">
-						<?php
-						// Server-side fallback: render podium entries if any players have a positive gain
-						if (!empty($con) && !empty($serverActivity) && !empty($serverActivity['id'])) {
-							$aid = intval($serverActivity['id']);
-							$podq = mysqli_query($con, "SELECT COALESCE(p.classement,999) AS classement, COALESCE(p.gain,0) AS gain, COALESCE(p.`nom-membre`, m.pseudo) AS pseudo FROM participation p JOIN membres m ON p.`id-membre` = m.`id-membre` WHERE p.`id-activite` = '". $aid ."' AND COALESCE(p.gain,0) > 0 ORDER BY classement ASC, gain DESC LIMIT 20");
-							if ($podq && mysqli_num_rows($podq) > 0) {
-								while ($prow = mysqli_fetch_assoc($podq)) {
-									$ps = htmlspecialchars($prow['pseudo']);
-									$g = intval($prow['gain']);
-									echo "<div class=\"podium-item\"><div style=\"font-weight:700\">{$ps}</div><div style=\"color:var(--green);font-weight:700\">" . number_format($g, 0, ',', ' ') . " €</div></div>";
-								}
-							} else {
-								echo '<div class="small">Aucun joueur payé</div>';
-							}
-						} else {
-							echo '<div class="small">Chargement...</div>';
-						}
-						?>
-			</div>
-		</section>
-
-		   <section id="reg-section" class="card quick-action">
-						 <div style="display:flex;align-items:center;justify-content:space-between">
-							 <div id="reg-text" style="font-weight:600;font-size:14px">Votre Inscription : </div>
-							<?php
-								$is_registered = (!empty($serverParticipation) && isset($serverParticipation['status']) && !in_array($serverParticipation['status'], array('None','Desinscrit')));
-								$reg_label = $is_registered ? 'Modifier' : 'S Inscrire';
-								$reg_style = 'padding:8px 12px;border-radius:10px;font-weight:700';
-								if ($is_registered) { $reg_style .= ';background:#ff9d00;color:#04131d'; }
-							?>
-							<button id="reg-action" class="button primary" style="<?php echo $reg_style; ?>"><?php echo $reg_label; ?></button>
-						</div>
-
-				<!-- Partie Detail modal -->
-				<div id="partie-modal" class="modal-overlay" aria-hidden="true">
-					<div class="modal-sheet" role="dialog" aria-modal="true">
-						<button id="modal-close" class="modal-close">Fermer</button>
-						<div class="modal-title" id="modal-title">Titre activité</div>
-						<div class="modal-sub" id="modal-sub">—</div>
-
-						<div class="detail-card">
-							<div style="font-weight:700;margin-bottom:8px">Infos Partie</div>
-							<div class="detail-row"><div class="detail-label"><span class="detail-icon profile">👤</span>Organisateur</div><div class="detail-value" id="d-organisateur">—</div></div>
-							<div class="detail-row"><div class="detail-label"><span class="detail-icon location">📍</span>Lieu</div><div class="detail-value" id="d-lieu">—</div></div>
-							<div class="detail-row"><div class="detail-label"><span class="detail-icon people">👥</span>Inscrits / Max</div><div class="detail-value" id="d-inscrits">—</div></div>
-							<div class="detail-row"><div class="detail-label"><span class="detail-icon info">▦</span>Tables</div><div class="detail-value" id="d-tables">—</div></div>
-						</div>
-
-						<div class="detail-card">
-							<div style="font-weight:700;margin-bottom:8px">Financier</div>
-							<div class="detail-row"><div class="detail-label"><span class="detail-icon money">💶</span>Buy-in</div><div class="detail-value" id="d-buyin">—</div></div>
-							<div class="detail-row"><div class="detail-label"><span class="detail-icon money">✦</span>Rake (Mini)</div><div class="detail-value" id="d-rake">—</div></div>
-							<div class="detail-row"><div class="detail-label"><span class="detail-icon money">🎯</span>Bounty</div><div class="detail-value" id="d-bounty">—</div></div>
-							<div class="detail-row"><div class="detail-label"><span class="detail-icon money">🔁</span>Recave (×2)</div><div class="detail-value" id="d-recave">—</div></div>
-							<div class="detail-row"><div class="detail-label"><span class="detail-icon location">🎲</span>Jetons départ</div><div class="detail-value" id="d-jetons">—</div></div>
-						</div>
-
-						<div class="detail-card">
-							<div style="font-weight:700;margin-bottom:8px">Structure Semaine</div>
-							<div class="detail-row" style="justify-content:flex-end"><div class="detail-value box" id="d-structure-detail">—</div></div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Inscription modal (mobile-style switches + actions) -->
-				<div id="inscription-modal" class="modal-overlay" aria-hidden="true" style="display:none">
-					<div class="modal-sheet" role="dialog" aria-modal="true" style="max-width:420px;padding:18px;">
-						<button class="modal-close inscription-modal-close" style="float:right">Fermer</button>
-						<div style="font-weight:700;color:var(--gold);margin-bottom:6px">Options</div>
-						<form id="ins-form" method="post" action="/panel/inscription.php" style="margin-top:8px">
-							<input type="hidden" name="quick_reg" value="1">
-							<input type="hidden" name="ajax" value="1">
-							<input type="hidden" name="uid" value="">
-							<input type="hidden" name="status" value="Inscrit">
-							<input type="hidden" name="anonyme" value="0">
-							<input type="hidden" name="latereg" value="0">
-							<div style="display:flex;flex-direction:column;gap:12px">
-								<!-- Anonyme -->
-								<label style="display:flex;align-items:center;justify-content:space-between">
-									<div style="display:flex;align-items:center;gap:12px">
-										<span style="opacity:0.9">👁️</span>
-										<div>
-											<div style="font-weight:700">Anonyme</div>
-											<div class="small" style="color:var(--muted)">Votre nom ne sera pas affiché publiquement</div>
-										</div>
-									</div>
-									<input id="ins-anon" type="checkbox" />
-								</label>
-
-								<!-- Option -->
-								<label style="display:flex;align-items:center;justify-content:space-between">
-									<div style="display:flex;align-items:center;gap:12px">
-										<span style="color:var(--gold);">★</span>
-										<div>
-											<div style="font-weight:700">Option</div>
-											<div class="small" style="color:var(--muted)">Inscription sous réserve de confirmation</div>
-										</div>
-									</div>
-									<input id="ins-opt" type="checkbox" />
-								</label>
-
-								<!-- Latereg -->
-								<label style="display:flex;align-items:center;justify-content:space-between">
-									<div style="display:flex;align-items:center;gap:12px">
-										<span style="opacity:0.7">⏱️</span>
-										<div>
-											<div style="font-weight:700">Latereg</div>
-											<div class="small" style="color:var(--muted)">Inscription tardive</div>
-										</div>
-									</div>
-									<input id="ins-late" type="checkbox" />
-								</label>
-
-								<!-- Option / chapitre text -->
-								<div>
-									<input type="text" name="option_chapitre" placeholder="Option / Chapitre" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit">
-								</div>
-
-								<!-- Actions -->
-								<div style="display:flex;gap:12px;margin-top:6px">
-									<button type="submit" id="ins-validate" class="button" style="flex:1;background:#17a34a;color:#fff;border-radius:10px;padding:12px 14px;font-weight:700">Valider</button>
-									<button type="button" id="ins-unregister" class="button" style="flex:1;background:#c92b2b;color:#fff;border-radius:10px;padding:12px 14px;font-weight:700">Désinscrire</button>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-
-				<script>
-				// Modal behavior: sync toggles with hidden inputs and handle unregister
-				document.addEventListener('DOMContentLoaded', function(){
-					var modal = document.getElementById('inscription-modal');
-					if(!modal) return;
-					var form = document.getElementById('ins-form');
-					var inAnon = modal.querySelector('#ins-anon');
-					var inOpt = modal.querySelector('#ins-opt');
-					var inLate = modal.querySelector('#ins-late');
-					var hidAnon = form.querySelector('input[name="anonyme"]');
-					var hidLate = form.querySelector('input[name="latereg"]');
-					var hidStatus = form.querySelector('input[name="status"]');
-
-					function syncHidden(){
-						hidAnon.value = inAnon && inAnon.checked ? '1' : '0';
-						hidLate.value = inLate && inLate.checked ? '1' : '0';
-						hidStatus.value = inOpt && inOpt.checked ? 'Option' : 'Inscrit';
-					}
-					[inAnon,inOpt,inLate].forEach(function(el){ if(el) el.addEventListener('change', syncHidden); });
-					syncHidden();
-
-					// Desinscrire button
-					var btnUn = document.getElementById('ins-unregister');
-					if(btnUn){
-						btnUn.addEventListener('click', function(){
-							form.querySelector('input[name="status"]').value = 'None';
-							form.querySelector('input[name="anonyme"]').value = '0';
-							form.querySelector('input[name="latereg"]').value = '0';
-							submitInscriptionAjax();
-						});
-					}
-
-					// Intercept form submit -> AJAX
-					form.addEventListener('submit', function(e){
-						e.preventDefault();
-						syncHidden();
-						submitInscriptionAjax();
-					});
-
-					function submitInscriptionAjax(){
-						var btn = document.getElementById('ins-validate');
-						var btnDes = document.getElementById('ins-unregister');
-						if(btn) btn.disabled = true;
-						if(btnDes) btnDes.disabled = true;
-						var data = new URLSearchParams(new FormData(form));
-						fetch('/panel/inscription.php', {
-							method: 'POST',
-							headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-							body: data.toString()
-						})
-						.then(function(r){ return r.json(); })
-						.then(function(d){
-							if(btn) btn.disabled = false;
-							if(btnDes) btnDes.disabled = false;
-							modal.classList.remove('open');
-							modal.style.display = 'none';
-							modal.setAttribute('aria-hidden','true');
-							// mise à jour visuelle du bouton d'inscription
-							var insBtn = document.getElementById('btn-inscription');
-							if(insBtn && d.participation){
-								var s = d.participation.status;
-								if(s === 'Desinscrit' || s === 'None'){
-									insBtn.textContent = "S'inscrire";
-									insBtn.style.background = '';
-								} else if(s === 'Option'){
-									insBtn.textContent = 'Modifier (Option)';
-									insBtn.style.background = '#b8860b';
-								} else {
-									insBtn.textContent = 'Modifier';
-									insBtn.style.background = '#17a34a';
-								}
-							}
-						})
-						.catch(function(){
-							if(btn) btn.disabled = false;
-							if(btnDes) btnDes.disabled = false;
-							alert('Erreur réseau, veuillez réessayer.');
-						});
-					}
-
-					// Close modal when clicking close button
-					var closeBtns = modal.querySelectorAll('.inscription-modal-close');
-					closeBtns.forEach(function(b){ b.addEventListener('click', function(){ modal.classList.remove('open'); modal.style.display='none'; modal.setAttribute('aria-hidden','true'); }); });
-				});
-				</script>
-
-
-
-				<script src="/panel/timer_web/public/app.js"></script>
-			   </div>
-		   </section>
-
-	</div>
-
-	<!-- Bottom navigation backdrop to ensure a solid black background under the nav -->
-	<div class="bottom-nav-backdrop" aria-hidden="true"></div>
-	<!-- Bottom navigation (mobile) matching simulator: Accueil, Local Timer, Répartition -->
-	<style>
-	.bottom-nav { margin-top: 20px !important; }
-	</style>
-	<nav class="bottom-nav" role="navigation" aria-label="Main navigation">
-		<button id="nav-home" class="" title="Accueil" onclick="window.location.href='/panel/quickview.php';">
-			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 21h14a1 1 0 0 0 1-1v-7H4v7a1 1 0 0 0 1 1z"/></svg>
-			<div class="nav-label">Accueil</div>
-		</button>
-		<button id="nav-local" class="active" title="Local Timer" onclick="window.location.href='/newtimer/index.php';">
-			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
-			<div class="nav-label">Local Timer</div>
-		</button>
-		<button id="nav-split" class="" title="Répartition" onclick="window.location.href='/panel/repartition.php';">
-			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-			<div class="nav-label">Répartition</div>
-		</button>
-	</nav>
-
-
-	   <script src="/panel/timer_web/public/app.js?v=<?php echo $asset_ver . '-' . rand(100000,999999); ?>"></script>
-
-	   <script>
-	   // Navigation: reload with ?uid=xxx for selected activity
-	   function navigateActivity(delta) {
-		   if (!window.activitiesList || !window.currentActivity) return;
-		   let idx = window.activitiesList.findIndex(a => String(a.id) === String(window.currentActivity.id));
-		   if (idx === -1) idx = 0;
-		   let newIdx = idx + delta;
-		   if (newIdx < 0 || newIdx >= window.activitiesList.length) return;
-		   let newId = window.activitiesList[newIdx].id;
-		   // Reload with ?uid=xxx
-		   const url = new URL(window.location.href);
-		   url.searchParams.set('uid', newId);
-		   window.location.href = url.toString();
-	   }
-	   </script>
-
-	<script>
-	// Toggle podium vs registration: show podium when paid players exist
-	document.addEventListener('DOMContentLoaded', function(){
-		var podiumSection = document.getElementById('podium-section');
-		var regSection = document.getElementById('reg-section');
-		var podiumList = document.getElementById('podium-list');
-		function updateVisibility(){
-			if(!podiumList) return;
-			// consider podium present when an element with class .podium-item exists
-			var hasItems = !!podiumList.querySelector('.podium-item');
-			// also accept table rows or non-empty paid content
-			if(!hasItems){
-				// trim text and check for known empty messages
-				var txt = (podiumList.textContent||'').trim();
-				if(txt && !/chargement|aucun joueur payé|erreur réseau/i.test(txt)) hasItems = true;
-			}
-			if(hasItems){
-				if(podiumSection){ podiumSection.style.display='block'; podiumSection.removeAttribute('aria-hidden'); }
-				if(regSection){ regSection.style.display='none'; regSection.setAttribute('aria-hidden','true'); }
-			} else {
-				if(podiumSection){ podiumSection.style.display='none'; podiumSection.setAttribute('aria-hidden','true'); }
-				if(regSection){ regSection.style.display='block'; regSection.removeAttribute('aria-hidden'); }
-			}
-		}
-		if(podiumList){
-			var mo = new MutationObserver(function(){ setTimeout(updateVisibility, 50); });
-			mo.observe(podiumList, { childList: true, subtree: true, characterData: true });
-		}
-		// initial check in case app.js already populated podium
-		setTimeout(updateVisibility, 700);
-	});
-	</script>
-
-
-	<script>
-		(function(){
-			const link = document.getElementById('theme-stylesheet');
-			const apply = v=>{ link.href = (v==='B')? '/panel/timer_web/public/style.variantB.css':'/panel/timer_web/public/style.variantA.css'; localStorage.setItem('uiVariant', v); };
-			const variantABtn = document.getElementById('variantA');
-			if(variantABtn) variantABtn.addEventListener('click', ()=>apply('A'));
-			const variantBBtn = document.getElementById('variantB');
-			if(variantBBtn) variantBBtn.addEventListener('click', ()=>apply('B'));
-			const saved = localStorage.getItem('uiVariant') || 'A'; apply(saved);
-		})();
-	</script>
+<?php if (!empty($serverActivity)): ?>
 <script>
-// Log panel actions (clic sur tuiles) via fetch silencieux
-function logPanelAction(action) {
-	try {
-		var uid = (window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id) ? window.SERVER_ACTIVITY.id : (new URLSearchParams(window.location.search).get('uid') || '');
-		var details = uid ? 'Activite #' + uid : '';
-		navigator.sendBeacon('/panel/log-action.php', JSON.stringify({action: action, details: details}));
-	} catch(e) {}
-}
+window.SERVER_ACTIVITY = <?php echo json_encode($serverActivity, JSON_UNESCAPED_UNICODE); ?>;
+window.SERVER_PARTICIPATION = <?php echo json_encode($serverParticipation ?? null, JSON_UNESCAPED_UNICODE); ?>;
+window.ALL_ACTIVITIES = <?php echo json_encode($allActivities, JSON_UNESCAPED_UNICODE); ?>;
+try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)); }catch(e){}
+</script>
+<?php endif; ?>
+
+<div class="page">
+
+  <!-- ══════════ HEADER ══════════ -->
+  <header class="v2-header">
+    <div class="v2-header-left">
+      <div class="v2-logo">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 2C11 8 8 11 8 15c0 4 4 6 7 6v5c0 1.2 1.2 2 2.2 2s2.2-.8 2.2-2v-5c3 0 6.6-2 6.6-6 0-4-3-7-10-13z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="v2-app-name">Card<span>Event</span><span class="v2-version">v2.0</span></div>
+        <div class="v2-greeting">Bonjour, <span class="name"><?php echo $displayUser; ?></span> <span class="chev">›</span></div>
+      </div>
+    </div>
+    <a href="/panel/profile.php<?php echo $uid_q; ?>">
+      <div class="v2-avatar">
+        <img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="avatar">
+      </div>
+    </a>
+  </header>
+
+  <!-- ══════════ PROCHAINE PARTIE ══════════ -->
+  <div class="v2-card">
+
+    <!-- Label -->
+    <div class="v2-next-label">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/>
+      </svg>
+      Prochaine Partie
+    </div>
+
+    <!-- Date + Calendar button -->
+    <div class="v2-date-row">
+      <div class="v2-date-big"><?php echo htmlspecialchars($date_str); ?></div>
+      <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      </button>
+    </div>
+
+    <!-- DÉMARRE DANS / JOUEURS -->
+    <div class="v2-stats">
+      <div class="v2-stat">
+        <div class="v2-stat-icon green">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l3 2"/></svg>
+        </div>
+        <div>
+          <div class="v2-stat-label">Démarre dans</div>
+          <div id="v2-countdown" class="v2-stat-val green">--:--:--</div>
+        </div>
+      </div>
+      <div class="v2-stat">
+        <div class="v2-stat-icon blue">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div>
+          <div class="v2-stat-label">Joueurs</div>
+          <div class="v2-stat-val blue">
+            <span id="v2-joueurs-count"><?php echo htmlspecialchars($serverActivity['participants_count'] ?? '—'); ?></span><?php if (!empty($serverActivity['max_participants'])): ?> <small>/ <?php echo htmlspecialchars($serverActivity['max_participants']); ?></small><?php endif; ?>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUY-IN / RAKE / RE-ENTRIES -->
+    <div class="v2-fin">
+      <div class="v2-fin-item">
+        <div class="v2-fin-ico gold">
+          <!-- stack of coins -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff9f0a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="8" rx="8" ry="3"/><path d="M4 8v5c0 1.66 3.58 3 8 3s8-1.34 8-3V8"/><path d="M4 13v4c0 1.66 3.58 3 8 3s8-1.34 8-3v-4"/></svg>
+        </div>
+        <div>
+          <div class="v2-fin-lbl">Buy-in</div>
+          <div class="v2-fin-val" style="color:var(--orange)"><?php echo isset($serverActivity['buyin']) ? htmlspecialchars($serverActivity['buyin']).' €' : '—'; ?></div>
+        </div>
+      </div>
+      <div class="v2-fin-item">
+        <div class="v2-fin-ico orange">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff453a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 6v6"/><path d="M10.5 6v6"/><path d="M15 5l-1.5 12"/></svg>
+        </div>
+        <div>
+          <div class="v2-fin-lbl">Rake</div>
+          <div class="v2-fin-val" style="color:#ff453a"><?php echo isset($serverActivity['rake']) ? htmlspecialchars($serverActivity['rake']).' €' : '—'; ?></div>
+        </div>
+      </div>
+      <div class="v2-fin-item">
+        <div class="v2-fin-ico teal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        </div>
+        <div>
+          <div class="v2-fin-lbl">Re-entries</div>
+          <div class="v2-fin-val" style="color:var(--cyan)"><?php echo isset($serverActivity['recave']) ? htmlspecialchars($serverActivity['recave']) : '—'; ?></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="v2-actions">
+      <button class="v2-btn outline" id="v2-details-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Détails de la partie
+      </button>
+<?php
+$_is_finished = !empty($serverActivity['date']) && (time() - strtotime($serverActivity['date'])) > 43200;
+$_resume_url  = '/panel/resume.php' . $uid_q;
+?>
+      <?php if ($_is_finished): ?>
+      <a href="<?php echo htmlspecialchars($_resume_url); ?>" class="v2-btn filled" id="v2-resume-btn" style="background:var(--blue);color:#fff;text-decoration:none">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Résumé Partie
+      </a>
+      <?php else: ?>
+      <button class="v2-btn filled" id="v2-reg-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+        <?php echo $is_registered ? 'Modifier mon inscription' : "S'inscrire"; ?>
+      </button>
+      <?php endif; ?>
+    </div>
+
+    <!-- Inscrit banner -->
+    <?php if ($is_registered): ?>
+    <div class="v2-inscrit">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Vous êtes inscrit
+    </div>
+    <?php endif; ?>
+
+  </div><!-- /v2-card -->
+
+  <!-- ══════════ ACTIONS RAPIDES ══════════ -->
+  <div class="v2-section-title">Actions Rapides</div>
+  <div class="v2-list">
+
+    <a class="v2-list-item" href="<?php echo htmlspecialchars($participants_href); ?>">
+      <div class="v2-list-icon blue">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="v2-list-body">
+        <div class="v2-list-name">Liste des participants</div>
+        <div class="v2-list-sub">Voir les joueurs inscrits</div>
+      </div>
+      <div class="v2-list-chev">›</div>
+    </a>
+
+    <a class="v2-list-item" href="/panel/profile.php<?php echo $uid_q; ?>">
+      <div class="v2-list-icon purple">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b47bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="v2-list-body">
+        <div class="v2-list-name">Mon profil / Tracker</div>
+        <div class="v2-list-sub">Voir mes stats et historique</div>
+      </div>
+      <div class="v2-list-chev">›</div>
+    </a>
+
+    <a class="v2-list-item" href="/panel/repartition.php">
+      <div class="v2-list-icon teal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </div>
+      <div class="v2-list-body">
+        <div class="v2-list-name">Répartition</div>
+        <div class="v2-list-sub">Voir la structure du tournoi</div>
+      </div>
+      <div class="v2-list-chev">›</div>
+    </a>
+
+  </div>
+
+</div><!-- /page -->
+
+<!-- ══════════ BOTTOM NAV ══════════ -->
+<nav class="v2-bottom-nav">
+  <button class="v2-nav-btn active" onclick="window.location.href='/panel/quickview_v2.php'">
+    <svg viewBox="0 0 24 24"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 21h14a1 1 0 0 0 1-1v-7H4v7a1 1 0 0 0 1 1z"/></svg>
+    Accueil
+  </button>
+  <button class="v2-nav-btn" onclick="window.location.href='/newtimer/index.php'">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
+    Local Timer
+  </button>
+  <button class="v2-nav-btn" onclick="window.location.href='/panel/repartition.php'">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    Répartition
+  </button>
+</nav>
+
+<!-- ══════════ CALENDAR PICKER MODAL ══════════ -->
+<div class="v2-cal-modal-overlay" id="v2-cal-modal" aria-hidden="true">
+  <div class="v2-cal-sheet" role="dialog" aria-modal="true" aria-label="Choisir une partie">
+    <div class="v2-cal-header">
+      <div class="v2-cal-handle"></div>
+      <div class="v2-cal-title">Choisir une partie</div>
+      <div class="v2-cal-nav">
+        <button class="v2-cal-nav-btn" id="v2-cal-prev">‹</button>
+        <div class="v2-cal-month-label" id="v2-cal-month-label">—</div>
+        <button class="v2-cal-nav-btn" id="v2-cal-next">›</button>
+      </div>
+    </div>
+    <div class="v2-cal-grid-wrap">
+      <div class="v2-cal-dow">
+        <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
+      </div>
+      <div class="v2-cal-days" id="v2-cal-days"></div>
+    </div>
+    <div class="v2-cal-list">
+      <div class="v2-cal-list-title">Parties du mois</div>
+      <div id="v2-cal-events"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DETAILS MODAL ══════════ -->
+<div class="v2-modal-overlay" id="v2-details-modal" aria-hidden="true">
+  <div class="v2-modal-sheet" role="dialog" aria-modal="true">
+    <div class="v2-modal-handle"></div>
+    <button class="v2-modal-close" id="v2-details-close">Fermer</button>
+    <div class="v2-modal-title" id="v2-modal-title">—</div>
+    <div class="v2-modal-sub" id="v2-modal-sub">—</div>
+
+    <div class="v2-detail-section">
+      <div class="v2-detail-section-title">Infos Partie</div>
+      <div class="v2-detail-row"><div class="v2-detail-label">👤 Organisateur</div><div class="v2-detail-value" id="dd-organisateur">—</div></div>
+      <div class="v2-detail-row"><div class="v2-detail-label">📍 Lieu</div><div class="v2-detail-value" style="color:var(--cyan)" id="dd-lieu">—</div></div>
+      <div class="v2-detail-row"><div class="v2-detail-label">👥 Inscrits / Max</div><div class="v2-detail-value" id="dd-inscrits">—</div></div>
+      <div class="v2-detail-row"><div class="v2-detail-label">▦ Tables</div><div class="v2-detail-value" style="color:var(--green)" id="dd-tables">—</div></div>
+    </div>
+
+    <div class="v2-detail-section">
+      <div class="v2-detail-section-title">Financier</div>
+      <div class="v2-detail-row"><div class="v2-detail-label">💶 Buy-in</div><div class="v2-detail-value" style="color:var(--orange)" id="dd-buyin">—</div></div>
+      <div class="v2-detail-row"><div class="v2-detail-label">✦ Rake</div><div class="v2-detail-value" id="dd-rake">—</div></div>
+      <div class="v2-detail-row"><div class="v2-detail-label">🎯 Bounty</div><div class="v2-detail-value" id="dd-bounty">—</div></div>
+      <div class="v2-detail-row"><div class="v2-detail-label">🔁 Re-entries</div><div class="v2-detail-value" id="dd-recave">—</div></div>
+      <div class="v2-detail-row"><div class="v2-detail-label">🎲 Jetons départ</div><div class="v2-detail-value" style="color:var(--orange)" id="dd-jetons">—</div></div>
+    </div>
+
+    <div class="v2-detail-section">
+      <div class="v2-detail-section-title">Structure</div>
+      <div class="v2-detail-row" style="justify-content:flex-end"><div class="v2-detail-value" style="color:var(--green);text-align:right" id="dd-structure">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ INSCRIPTION MODAL ══════════ -->
+<div class="v2-modal-overlay" id="v2-ins-modal" aria-hidden="true">
+  <div class="v2-modal-sheet" role="dialog" aria-modal="true">
+    <div class="v2-modal-handle"></div>
+    <button class="v2-modal-close" id="v2-ins-close">Fermer</button>
+    <div class="v2-modal-title">Options d'inscription</div>
+    <div class="v2-modal-sub" style="margin-bottom:20px">Configurez votre inscription</div>
+
+    <form id="v2-ins-form" method="post" action="/panel/inscription.php">
+      <input type="hidden" name="quick_reg" value="1">
+      <input type="hidden" name="ajax" value="1">
+      <input type="hidden" name="uid" value="">
+      <input type="hidden" name="status" value="Inscrit">
+      <input type="hidden" name="anonyme" value="0">
+      <input type="hidden" name="latereg" value="0">
+
+      <div class="v2-ins-row">
+        <div class="v2-ins-left">
+          <div class="v2-ins-icon">👁️</div>
+          <div><div class="v2-ins-title">Anonyme</div><div class="v2-ins-sub">Nom masqué publiquement</div></div>
+        </div>
+        <label class="v2-toggle">
+          <input type="checkbox" id="v2-anon">
+          <div class="v2-toggle-track"></div>
+          <div class="v2-toggle-thumb"></div>
+        </label>
+      </div>
+
+      <div class="v2-ins-row">
+        <div class="v2-ins-left">
+          <div class="v2-ins-icon" style="color:var(--orange)">★</div>
+          <div><div class="v2-ins-title">Option</div><div class="v2-ins-sub">Inscription sous réserve</div></div>
+        </div>
+        <label class="v2-toggle">
+          <input type="checkbox" id="v2-opt">
+          <div class="v2-toggle-track"></div>
+          <div class="v2-toggle-thumb"></div>
+        </label>
+      </div>
+
+      <div class="v2-ins-row">
+        <div class="v2-ins-left">
+          <div class="v2-ins-icon">⏱️</div>
+          <div><div class="v2-ins-title">Latereg</div><div class="v2-ins-sub">Inscription tardive</div></div>
+        </div>
+        <label class="v2-toggle">
+          <input type="checkbox" id="v2-late">
+          <div class="v2-toggle-track"></div>
+          <div class="v2-toggle-thumb"></div>
+        </label>
+      </div>
+
+      <div class="v2-ins-row" style="border-bottom:none;padding-top:14px">
+        <input type="text" name="option_chapitre" placeholder="Option / Chapitre" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text);font-size:14px">
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px">
+        <button type="submit" id="v2-ins-validate" style="padding:14px;border-radius:12px;background:#17a34a;color:#fff;font-weight:800;font-size:15px">Valider</button>
+        <button type="button" id="v2-ins-unregister" style="padding:14px;border-radius:12px;background:#c92b2b;color:#fff;font-weight:800;font-size:15px">Désinscrire</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// ─── CALENDAR PICKER ───
+(function(){
+  var overlay  = document.getElementById('v2-cal-modal');
+  var openBtn  = document.getElementById('v2-cal-open');
+  var daysEl   = document.getElementById('v2-cal-days');
+  var eventsEl = document.getElementById('v2-cal-events');
+  var monthLbl = document.getElementById('v2-cal-month-label');
+  var prevBtn  = document.getElementById('v2-cal-prev');
+  var nextBtn  = document.getElementById('v2-cal-next');
+
+  var acts = window.ALL_ACTIVITIES || [];
+  var current = window.SERVER_ACTIVITY || {};
+  var nowTs = Math.floor(Date.now()/1000);
+
+  // Find next activity (smallest future ts)
+  var nextAct = null;
+  acts.forEach(function(a){ if(!a.past && (!nextAct || a.ts < nextAct.ts)) nextAct = a; });
+
+  var moisNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+  // State: current displayed month/year
+  var viewDate = nextAct ? new Date(nextAct.ts*1000) : new Date();
+  var viewMonth = viewDate.getMonth(); // 0-based
+  var viewYear  = viewDate.getFullYear();
+
+  function getActsForMonth(m, y){
+    return acts.filter(function(a){ return a.month-1===m && a.year===y; });
+  }
+
+  function render(){
+    monthLbl.textContent = moisNames[viewMonth] + ' ' + viewYear;
+
+    // Build day grid
+    var firstDay = new Date(viewYear, viewMonth, 1);
+    var dow = firstDay.getDay(); // 0=Sun
+    // Convert to Mon-first (0=Mon … 6=Sun)
+    var offset = (dow === 0) ? 6 : dow - 1;
+    var daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+
+    var monthActs = getActsForMonth(viewMonth, viewYear);
+    // Build map day -> array of acts
+    var dayMap = {};
+    monthActs.forEach(function(a){ (dayMap[a.day] = dayMap[a.day]||[]).push(a); });
+
+    var html = '';
+    // Empty cells
+    for(var i=0;i<offset;i++) html += '<div class="v2-cal-day"></div>';
+    for(var d=1;d<=daysInMonth;d++){
+      var cls = 'v2-cal-day';
+      var hasActs = dayMap[d] && dayMap[d].length;
+      if(hasActs) cls += ' has-event';
+      // Check if any act on this day is past
+      if(hasActs && dayMap[d].every(function(a){ return a.past; })) cls += ' is-past';
+      // Focus: is-next
+      if(hasActs && nextAct && dayMap[d].some(function(a){ return a.id===nextAct.id; })) cls += ' is-next';
+      // Selected
+      if(hasActs && current.id && dayMap[d].some(function(a){ return a.id===current.id; })) cls += ' is-selected';
+      var dataIds = hasActs ? 'data-day="'+d+'"' : '';
+      html += '<div class="'+cls+'" '+dataIds+'>'+d+'</div>';
+    }
+    daysEl.innerHTML = html;
+
+    // Click on day cell
+    daysEl.querySelectorAll('.v2-cal-day.has-event').forEach(function(el){
+      el.addEventListener('click', function(){
+        var day = parseInt(el.getAttribute('data-day'));
+        var dayActs = dayMap[day] || [];
+        if(dayActs.length === 1){
+          navigate(dayActs[0].id);
+        } else {
+          // scroll to events list
+          el.closest('.v2-cal-sheet').querySelector('.v2-cal-list').scrollIntoView({behavior:'smooth'});
+        }
+      });
+    });
+
+    // Render event list
+    var listHtml = '';
+    if(monthActs.length === 0){
+      listHtml = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:16px 0">Aucune partie ce mois-ci</div>';
+    } else {
+      // Sort ascending
+      var sorted = monthActs.slice().sort(function(a,b){ return a.ts-b.ts; });
+      sorted.forEach(function(a){
+        var isNext = nextAct && a.id === nextAct.id;
+        var isSel  = current.id && a.id === current.id;
+        var cls2 = 'v2-cal-event';
+        if(isNext) cls2 += ' is-next-ev';
+        if(isSel)  cls2 += ' is-selected-ev';
+        if(a.past) cls2 += ' is-past-ev';
+        var dotCls = a.past ? 'past' : (isNext ? 'next' : '');
+        var tag = isNext ? ' <span style="background:var(--green);color:#04180a;font-size:9px;font-weight:800;padding:2px 6px;border-radius:20px;vertical-align:middle;margin-left:4px">PROCHAIN</span>' : '';
+        listHtml += '<div class="'+cls2+'" data-id="'+a.id+'">';
+        listHtml += '<div class="v2-cal-ev-left"><div class="v2-cal-ev-dot '+dotCls+'"></div><div>';
+        listHtml += '<div class="v2-cal-ev-label">'+escHtml(a.label)+tag+'</div>';
+        if(a.titre) listHtml += '<div class="v2-cal-ev-sub">'+escHtml(a.titre)+'</div>';
+        listHtml += '</div></div>';
+        listHtml += '<div class="v2-cal-ev-right">'+(a.buyin ? a.buyin+' €' : '')+'</div>';
+        listHtml += '</div>';
+      });
+    }
+    eventsEl.innerHTML = listHtml;
+    eventsEl.querySelectorAll('.v2-cal-event[data-id]').forEach(function(el){
+      el.addEventListener('click', function(){ navigate(parseInt(el.getAttribute('data-id'))); });
+    });
+    // Auto-scroll list to selected/next
+    setTimeout(function(){
+      var focused = eventsEl.querySelector('.is-next-ev, .is-selected-ev');
+      if(focused) focused.scrollIntoView({block:'nearest',behavior:'smooth'});
+    }, 80);
+  }
+
+  function navigate(id){
+    var url = new URL(window.location.href);
+    url.searchParams.set('uid', id);
+    window.location.href = url.toString();
+  }
+
+  function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function open(){
+    // Jump to month of next activity by default, or current selected
+    var target = acts.find(function(a){ return current.id && a.id===current.id; }) || nextAct;
+    if(target){ viewMonth = target.month-1; viewYear = target.year; }
+    render();
+    overlay.classList.add('open'); overlay.setAttribute('aria-hidden','false');
+  }
+  function close(){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); }
+
+  if(openBtn) openBtn.addEventListener('click', open);
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) close(); });
+  if(prevBtn) prevBtn.addEventListener('click', function(){ viewMonth--; if(viewMonth<0){viewMonth=11;viewYear--;} render(); });
+  if(nextBtn) nextBtn.addEventListener('click', function(){ viewMonth++; if(viewMonth>11){viewMonth=0;viewYear++;} render(); });
+})();
+</script>
+
+<script>
+// ─── COUNTDOWN ───
+(function(){
+  var actStr = <?php echo (!empty($serverActivity['date'])) ? '"'.addslashes($serverActivity['date']).'"' : 'null'; ?>;
+  var el = document.getElementById('v2-countdown');
+  if(!el || !actStr) return;
+  var ts = Math.floor(new Date(actStr.replace(' ','T')).getTime() / 1000);
+  function tick(){
+    var diff = ts - Math.floor(Date.now()/1000);
+    if(diff <= 0){
+      if(diff < -43200){ el.textContent = 'Terminée'; el.style.color = 'var(--muted)'; }
+      else { el.textContent = 'En cours'; el.style.color = 'var(--orange)'; }
+      return;
+    }
+    var h = Math.floor(diff/3600).toString().padStart(2,'0');
+    var m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
+    var s = (diff%60).toString().padStart(2,'0');
+    el.textContent = h+':'+m+':'+s;
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+// ─── DETAILS MODAL ───
+(function(){
+  var btn    = document.getElementById('v2-details-btn');
+  var modal  = document.getElementById('v2-details-modal');
+  var close  = document.getElementById('v2-details-close');
+  function open(){
+    var act = window.SERVER_ACTIVITY || {};
+    var f = function(id,v){ var e=document.getElementById(id); if(e) e.textContent = v||'—'; };
+    f('v2-modal-title', act.title || '—');
+    f('v2-modal-sub', act.display_date || '—');
+    f('dd-organisateur', act.organizer || '—');
+    f('dd-lieu', act.location || '—');
+    f('dd-inscrits', (act.participants_count!=null) ? act.participants_count+(act.max_participants?' / '+act.max_participants:'') : '—');
+    f('dd-tables', act.tables || '—');
+    f('dd-buyin', act.buyin!=null ? act.buyin+' €' : '—');
+    f('dd-rake', act.rake!=null ? act.rake+' €' : '—');
+    f('dd-bounty', act.bounty ? act.bounty+' €' : '—');
+    f('dd-recave', act.recave || '—');
+    f('dd-jetons', act.start_chips || '—');
+    f('dd-structure', act.structure_detail || '—');
+    modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+  }
+  if(btn) btn.addEventListener('click', open);
+  if(close) close.addEventListener('click', function(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); });
+  if(modal) modal.addEventListener('click', function(e){ if(e.target===modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); } });
+})();
+
+// ─── INSCRIPTION MODAL ───
+(function(){
+  var btn    = document.getElementById('v2-reg-btn');
+  var modal  = document.getElementById('v2-ins-modal');
+  var close  = document.getElementById('v2-ins-close');
+  var form   = document.getElementById('v2-ins-form');
+  var inAnon = document.getElementById('v2-anon');
+  var inOpt  = document.getElementById('v2-opt');
+  var inLate = document.getElementById('v2-late');
+
+  function syncHidden(){
+    form.querySelector('[name=anonyme]').value = inAnon&&inAnon.checked ? '1':'0';
+    form.querySelector('[name=latereg]').value  = inLate&&inLate.checked ? '1':'0';
+    form.querySelector('[name=status]').value   = inOpt&&inOpt.checked  ? 'Option':'Inscrit';
+  }
+  [inAnon,inOpt,inLate].forEach(function(el){ if(el) el.addEventListener('change', syncHidden); });
+
+  function openModal(){
+    var act = window.SERVER_ACTIVITY || {};
+    var uid = act.id || (new URLSearchParams(window.location.search).get('uid'))||'';
+    form.querySelector('[name=uid]').value = uid;
+    var p = window.SERVER_PARTICIPATION;
+    if(p){
+      if(inAnon) inAnon.checked = (p.anonyme=='1'||p.anonyme===true);
+      if(inOpt)  inOpt.checked  = (p.status==='Option');
+      if(inLate) inLate.checked = (p.latereg=='1'||p.latereg===true);
+    }
+    syncHidden();
+    modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+  }
+  if(btn) btn.addEventListener('click', openModal);
+  if(close) close.addEventListener('click', function(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); });
+  if(modal) modal.addEventListener('click', function(e){ if(e.target===modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); } });
+
+  // Unregister
+  var unBtn = document.getElementById('v2-ins-unregister');
+  if(unBtn) unBtn.addEventListener('click', function(){
+    form.querySelector('[name=status]').value='None';
+    form.querySelector('[name=anonyme]').value='0';
+    form.querySelector('[name=latereg]').value='0';
+    submitAjax();
+  });
+
+  form && form.addEventListener('submit', function(e){ e.preventDefault(); syncHidden(); submitAjax(); });
+
+  function submitAjax(){
+    var data = new URLSearchParams(new FormData(form));
+    fetch('/panel/inscription.php',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:data.toString()})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+      // Refresh page to update status
+      setTimeout(function(){ window.location.reload(); }, 400);
+    })
+    .catch(function(){ alert('Erreur réseau, veuillez réessayer.'); });
+  }
+})();
 </script>
 </body>
 </html>
