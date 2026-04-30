@@ -38,6 +38,28 @@ try {
 
     // ── Auth helper ───────────────────────────────────────────────
     function requireAuth(PDO $pdo): array {
+        // 1) Session PHP (web browser)
+        if (session_status() !== PHP_SESSION_ACTIVE) @session_start();
+        if (!empty($_SESSION['id'])) {
+            $userId = (int)$_SESSION['id'];
+            $stmt = $pdo->prepare("SELECT `id-membre` AS membre_id, pseudo FROM membres WHERE `id-membre` = ? LIMIT 1");
+            $stmt->execute([$userId]);
+            $user = $stmt->fetch();
+            if ($user) {
+                $isAdmin = ($userId === 265);
+                if (!$isAdmin) {
+                    try {
+                        $sd = $pdo->prepare("SELECT `droits` FROM `membres` WHERE `id-membre` = ? LIMIT 1");
+                        $sd->execute([$userId]);
+                        $isAdmin = ((int)$sd->fetchColumn() === 2);
+                    } catch (PDOException $e) {}
+                }
+                $user['is_admin'] = $isAdmin;
+                return $user;
+            }
+        }
+
+        // 2) Bearer token (app mobile)
         $token = '';
         foreach (getallheaders() as $k => $v) {
             if (strtolower($k) === 'authorization') {
