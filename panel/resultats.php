@@ -53,25 +53,16 @@ if($activity){
 
                     // If eliminations table exists, compute bounty as number of eliminations by this pseudo for the activity
                     $elimCount = 0;
-                    $name_for_elim = null;
-                    foreach(['pseudo','nom-membre','nom_membre','name','pseudo_membre'] as $c){ if(isset($r[$c]) && $r[$c] !== ''){ $name_for_elim = $r[$c]; break; } }
-                    if(!empty($con)){
-                        // Prefer matching by id_membre (exact), fallback to nom_membre OR nom-membre from participation
-                        $member_id_for_elim = isset($r['id-membre']) ? intval($r['id-membre']) : 0;
-                        if($member_id_for_elim > 0){
-                            $eq = "SELECT COUNT(*) AS cnt FROM `eliminations` e WHERE e.`id_activite` = '".$aid."' AND e.`id_membre` = '".$member_id_for_elim."'";
-                        } elseif($name_for_elim){
-                            $esc = mysqli_real_escape_string($con, $name_for_elim);
-                            // Also try matching against participation.nom-membre in case pseudo differs from stored eliminator name
-                            $eq = "SELECT COUNT(*) AS cnt FROM `eliminations` e LEFT JOIN `participation` p2 ON p2.`id-activite` = '".$aid."' AND (p2.`pseudo` = '".$esc."' OR p2.`nom-membre` = '".$esc."') WHERE e.`id_activite` = '".$aid."' AND (e.`nom_membre` = '".$esc."' OR e.`id_membre` = p2.`id-membre`)";
-                        } else {
-                            $eq = null;
-                        }
-                        if(!empty($eq)){
-                            $erc = @mysqli_query($con, $eq);
-                            if($erc && ($erow = mysqli_fetch_assoc($erc))){ $elimCount = intval($erow['cnt']); }
-                            if($elimCount > 0) $bounty = $elimCount;
-                        }
+                    // Use participation.nom-membre first (this is what player-action.php stores in eliminations.nom_membre)
+                    // Fall back to pseudo only if nom-membre is empty
+                    $name_for_elim = (isset($r['nom-membre']) && $r['nom-membre'] !== '') ? $r['nom-membre'] : null;
+                    if(!$name_for_elim){ foreach(['pseudo','nom_membre','name','pseudo_membre'] as $c){ if(isset($r[$c]) && $r[$c] !== ''){ $name_for_elim = $r[$c]; break; } } }
+                    if($name_for_elim && !empty($con)){
+                        $esc = mysqli_real_escape_string($con, $name_for_elim);
+                        $eq = "SELECT COUNT(*) AS cnt FROM `eliminations` e WHERE e.`id_activite` = '".$aid."' AND e.`nom_membre` = '".$esc."'";
+                        $erc = @mysqli_query($con, $eq);
+                        if($erc && ($erow = mysqli_fetch_assoc($erc))){ $elimCount = intval($erow['cnt']); }
+                        if($elimCount > 0) $bounty = $elimCount;
                     }
 
                 $rows[] = [
