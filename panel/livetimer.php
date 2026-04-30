@@ -139,6 +139,111 @@ if (isset($_GET['action'])) {
         exit;
     }
 
+    if ($action === 'status') {
+        $now = time();
+        // Récupère le niveau en cours (premier dont fin > maintenant)
+        $q = mysqli_query($con, "SELECT * FROM `blindes-live` WHERE `id-activite` = '$act_id' ORDER BY `ordre` ASC");
+        $blinds = [];
+        while ($b = mysqli_fetch_assoc($q)) { $blinds[] = $b; }
+
+        $current = null;
+        $currentIdx = -1;
+        foreach ($blinds as $k => $b) {
+            if (strtotime($b['fin']) > $now) {
+                $current = $b;
+                $currentIdx = $k;
+                break;
+            }
+        }
+
+        if (!$current) {
+            echo json_encode(['status' => 'finished', 'seconds_remaining' => 0, 'duration_seconds' => 0,
+                'blinds_text' => 'Fin', 'blinds_raw' => '0/0', 'level_name' => 'Fin',
+                'level_index' => count($blinds), 'level_total' => count($blinds),
+                'is_paused' => false, 'next_pause' => '', 'next_blinds_raw' => '']);
+            exit;
+        }
+
+        $is_paused = (intval($current['en_pause']) == 1);
+        if ($is_paused) {
+            $pause_at = $current['pause_at'] ? strtotime($current['pause_at']) : $now;
+            $seconds_remaining = strtotime($current['fin']) - $pause_at;
+        } else {
+            $seconds_remaining = max(0, strtotime($current['fin']) - $now);
+        }
+        $duration_seconds = max(1, strtotime($current['fin']) - strtotime($current['debut']));
+
+        $sb = $current['small_blinde'] ?? $current['sb'] ?? 0;
+        $bb = $current['big_blinde'] ?? $current['bb'] ?? 0;
+        $ante = $current['ante'] ?? 0;
+        $blinds_raw = $sb . '/' . $bb;
+        $is_break = ($sb == 0 && $bb == 0);
+        $blinds_text = $is_break ? 'PAUSE' : number_format($sb, 0, ',', ' ') . ' / ' . number_format($bb, 0, ',', ' ');
+        $ante_text = ($ante > 0) ? 'Ante : ' . number_format($ante, 0, ',', ' ') : '';
+        $level_name = $current['niveau'] ?? $current['level'] ?? ($currentIdx + 1);
+
+        // Niveau suivant
+        $next_raw = '';
+        if (isset($blinds[$currentIdx + 1])) {
+            $n = $blinds[$currentIdx + 1];
+            $nsb = $n['small_blinde'] ?? $n['sb'] ?? 0;
+            $nbb = $n['big_blinde'] ?? $n['bb'] ?? 0;
+            $next_raw = ($nsb == 0 && $nbb == 0) ? 'PAUSE' : $nsb . '/' . $nbb;
+        }
+
+        // Prochaine pause
+        $next_pause = '';
+        $acc = $seconds_remaining;
+        for ($i = $currentIdx + 1; $i < count($blinds); $i++) {
+            $nb = $blinds[$i];
+            $nsb2 = $nb['small_blinde'] ?? $nb['sb'] ?? 0;
+            $nbb2 = $nb['big_blinde'] ?? $nb['bb'] ?? 0;
+            $ndur = max(0, strtotime($nb['fin']) - strtotime($nb['debut']));
+            if ($nsb2 == 0 && $nbb2 == 0) {
+                $pmins = floor($acc / 60);
+                $ph = floor($pmins / 60); $pm = $pmins % 60;
+                $next_pause = ($ph > 0 ? $ph . 'h' . str_pad($pm, 2, '0', STR_PAD_LEFT) : 'dans ' . $pmins . 'm');
+                break;
+            }
+            $acc += $ndur;
+        }
+
+        // Stats joueurs (recalcul rapide)
+        $pq = mysqli_query($con, "SELECT `id-participation`, `recave`, `addon` FROM `participation` WHERE `id-activite` = '$act_id'");
+        $tp = 0; $ap = 0;
+        $act_r = mysqli_query($con, "SELECT jetons, jetons_activite, recave_jetons FROM activite WHERE `id-activite` = '$act_id'");
+        $ar = mysqli_fetch_array($act_r);
+        $sc = intval($ar['jetons_activite'] ?? $ar['jetons']); $rc = intval($ar['recave_jetons']);
+        $tc = 0; $tr = 0; $ta = 0;
+        while ($pr = mysqli_fetch_array($pq)) {
+            $tp++; $tr += intval($pr['recave']); $ta += intval($pr['addon']);
+            $eq = mysqli_query($con, "SELECT is_definitive FROM eliminations WHERE id_participation = '{$pr['id-participation']}' AND is_definitive = 1");
+            if (mysqli_num_rows($eq) == 0) $ap++;
+        }
+        $tc = ($tp * $sc) + ($tr * $rc) + ($ta * $rc);
+        $as_val = ($ap > 0) ? floor($tc / $ap) : 0;
+
+        echo json_encode([
+            'status' => $is_paused ? 'paused' : 'running',
+            'seconds_remaining' => intval($seconds_remaining),
+            'duration_seconds' => intval($duration_seconds),
+            'blinds_text' => $blinds_text,
+            'blinds_raw' => $blinds_raw,
+            'ante_text' => $ante_text,
+            'level_name' => (string)$level_name,
+            'level_index' => $currentIdx,
+            'level_total' => count($blinds),
+            'is_paused' => $is_paused,
+            'next_pause' => $next_pause,
+            'next_blinds_raw' => $next_raw,
+            'next_blinds_text' => $next_raw,
+            'avg_stack' => number_format($as_val, 0, ',', ' '),
+            'players_active' => $ap,
+            'players_total' => $tp
+        ]);
+        exit;
+    }
+
     echo json_encode(['success' => false, 'error' => 'Unknown action']);
     exit;
 }
@@ -599,7 +704,7 @@ if (isset($_GET['action'])) {
 <script>
     const ACT_ID = <?php echo $id; ?>;
     const IS_ADMIN = <?php echo $is_admin ? 'true' : 'false'; ?>;
-    const API_URL = 'cardevent-api.php?uid=' + ACT_ID;
+    const API_URL = 'livetimer.php?uid=' + ACT_ID + '&action=status';
     const ACTION_URL = 'livetimer.php?uid=' + ACT_ID + '&action=';
 
     // ---- STATE ----
@@ -679,7 +784,12 @@ if (isset($_GET['action'])) {
             const res = await fetch(API_URL + '&t=' + Date.now());
             if (!res.ok) return;
             const data = await res.json();
-            if (data.status === 'error') return;
+            if (data.status === 'error' || data.status === 'finished') {
+                if (data.status === 'finished') {
+                    document.getElementById('timer-display').textContent = 'FIN';
+                }
+                return;
+            }
 
             isPaused = !!data.is_paused;
             currentBlindsName = data.blinds_raw || '';
@@ -696,13 +806,21 @@ if (isset($_GET['action'])) {
             }
             lastAvgStack = data.avg_stack || '';
 
+            const serverSecs = data.seconds_remaining || 0;
             if (!isPaused) {
-                secondsLeft = data.seconds_remaining || 0;
+                // Tolérance de 3s pour éviter les sauts visuels
+                if (Math.abs(secondsLeft - serverSecs) > 3 || secondsLeft === 0) {
+                    secondsLeft = serverSecs;
+                }
                 startLocalTick();
             } else {
                 if (localInterval) { clearInterval(localInterval); localInterval = null; }
-                secondsLeft = data.seconds_remaining || 0;
+                secondsLeft = serverSecs;
             }
+
+            // Niveau
+            if (data.level_index !== undefined) document.getElementById('level-num').textContent = data.level_index + 1;
+            if (data.level_total !== undefined) document.getElementById('level-total').textContent = data.level_total;
 
             // Mise à jour pause/resume btn
             const pauseIcon = document.getElementById('pause-icon');
