@@ -334,11 +334,11 @@ function renderNotes() {
         } else {
             // Pour les non-admins, ne voir que les notes écrites par soi-même à ce joueur, et dont le pseudo cible correspond exactement
             if (idJoueur) {
-                    var mSel = membres.find(m=>m.pseudo.toLowerCase()===trak.pseudo.toLowerCase());
-                    var idSel = mSel ? mSel.id : null;
-                    notes = trak.notes.filter(n => n.id_auteur===myId && n.id_cible===idSel && n.cible_pseudo && n.cible_pseudo.toLowerCase() === trak.pseudo.toLowerCase());
-                // DEBUG: log les notes filtrées et le pseudo cible
-                console.log('Filtrage sur pseudo:', trak.pseudo, 'Résultat:', notes.map(n => n.cible_pseudo));
+                var mSel = membres.find(m=>m.pseudo.toLowerCase()===trak.pseudo.toLowerCase());
+                var idSel = mSel ? mSel.id : null;
+                notes = trak.notes.filter(n => n.id_auteur===myId && n.id_cible===idSel && n.cible_pseudo && n.cible_pseudo.toLowerCase() === trak.pseudo.toLowerCase());
+                // Filtrage strict même si l'API retourne trop : on garde uniquement les notes dont id_cible === idSel et cible_pseudo === trak.pseudo
+                notes = notes.filter(n => n.id_cible === idSel && n.cible_pseudo && n.cible_pseudo.toLowerCase() === trak.pseudo.toLowerCase());
             } else {
                 notes = [];
             }
