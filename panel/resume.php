@@ -313,8 +313,23 @@ if($activity){
                             $elim_time_label = date('H:i', $elim_ts);
                         }
                     } else {
-                        // no elimination = still alive / winner
-                        $duree_label = ($gains > 0) ? 'Vainqueur 🏆' : 'En jeu';
+                        // no elimination = winner → use the last elimination of the activity (= when 2nd place was eliminated)
+                        if($gains > 0 && !empty($con)){
+                            $last_elim_q = @mysqli_query($con, "SELECT MAX(e.`created_at`) AS last_elim FROM `eliminations` e JOIN `participation` p2 ON e.`id_participation` = p2.`id-participation` WHERE p2.`id-activite` = '".$aid."' AND e.`is_definitive` = 1");
+                            if($last_elim_q && ($last_elim_r = mysqli_fetch_assoc($last_elim_q)) && !empty($last_elim_r['last_elim'])){
+                                $elim_ts = strtotime($last_elim_r['last_elim']);
+                                if($elim_ts && $activity_start){
+                                    $diff = max(0, $elim_ts - $activity_start - 1200);
+                                    $h_dur = intdiv($diff, 3600);
+                                    $m_dur = intdiv($diff % 3600, 60);
+                                    $duree_label = ($h_dur > 0) ? $h_dur.' Heure'.($h_dur > 1 ? 's' : '').' '.$m_dur.' Minute'.($m_dur > 1 ? 's' : '') : $m_dur.' Minute'.($m_dur > 1 ? 's' : '');
+                                    $elim_time_label = date('H:i', $elim_ts);
+                                }
+                            }
+                            if(empty($duree_label)) $duree_label = 'Vainqueur 🏆';
+                        } else {
+                            $duree_label = 'En jeu';
+                        }
                     }
                 }
                 // position color depends on PricePool gains (green when >0, red otherwise)
