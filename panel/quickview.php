@@ -351,7 +351,10 @@ a{color:inherit;text-decoration:none}
 .v2-cal-day.is-selected{box-shadow:0 0 0 2px var(--orange);color:var(--orange)}
 .v2-cal-day.is-past.has-event{color:var(--green);background:rgba(255,69,58,.10);box-shadow:0 0 0 2px #ff453a}
 /* Event list below grid */
-.v2-cal-list{overflow-y:auto;padding:8px 14px 8px;max-height:320px;min-height:0}
+.v2-cal-list{overflow-y:scroll;padding:8px 14px 8px;max-height:320px;min-height:0;scrollbar-width:thin;scrollbar-color:#ff9f0a #1a2535}
+.v2-cal-list::-webkit-scrollbar{width:5px}
+.v2-cal-list::-webkit-scrollbar-track{background:#1a2535;border-radius:4px}
+.v2-cal-list::-webkit-scrollbar-thumb{background:#ff9f0a;border-radius:4px}
 .v2-cal-list-wrap{position:relative}
 .v2-cal-list-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(to bottom,transparent,#0d1520);pointer-events:none;transition:opacity .2s}
 .v2-cal-list-wrap.at-bottom::after{opacity:0}
