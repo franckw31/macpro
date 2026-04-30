@@ -591,9 +591,9 @@ document.addEventListener('DOMContentLoaded', function() {
 				<div style="flex:1">
 					<div id="activity-name" style="display:none"></div>
 					<div id="activity-date" style="display:none"></div>
-				<div style="display:flex;align-items:center;gap:8px;margin-top:6px">
-						<div class="date-pill"><svg class="date-pill-icon" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12.5 8v5l3 1" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
-						<div class="small" style="color:var(--gold);font-weight:700"><?php
+				<div style="display:flex;align-items:center;gap:6px;margin-top:6px;line-height:1">
+						<svg style="flex-shrink:0;vertical-align:middle" width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="var(--gold)" opacity="0.85"/><path d="M12.5 8v5l3 1" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+						<span class="small" style="color:var(--gold);font-weight:700;vertical-align:middle"><?php
 							$_jours = ['Monday'=>'Lundi','Tuesday'=>'Mardi','Wednesday'=>'Mercredi','Thursday'=>'Jeudi','Friday'=>'Vendredi','Saturday'=>'Samedi','Sunday'=>'Dimanche'];
 							$_mois  = ['January'=>'Janvier','February'=>'Février','March'=>'Mars','April'=>'Avril','May'=>'Mai','June'=>'Juin','July'=>'Juillet','August'=>'Août','September'=>'Septembre','October'=>'Octobre','November'=>'Novembre','December'=>'Décembre'];
 							$_raw   = !empty($serverActivity['date']) ? $serverActivity['date'] : null;
@@ -601,7 +601,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								$_d = new DateTime($_raw, new DateTimeZone('Europe/Paris'));
 								echo htmlspecialchars($_jours[$_d->format('l')] . ' ' . $_d->format('j') . ' ' . $_mois[$_d->format('F')] . ' ' . $_d->format('H:i'));
 							} else { echo '—'; }
-						?></div>
+						?></span>
 					</div>
 					<div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:nowrap;white-space:nowrap;overflow:hidden">
 						<div class="pill" id="buyin-pill" style="padding:6px 8px;font-size:13px;min-width:0"><span><?php echo isset($serverActivity['buyin'])? htmlspecialchars($serverActivity['buyin']).' €':'—'; ?></span></div>
