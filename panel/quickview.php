@@ -131,10 +131,12 @@ $_jours = ['Monday'=>'Lundi','Tuesday'=>'Mardi','Wednesday'=>'Mercredi','Thursda
 $_mois  = ['January'=>'Janvier','February'=>'Février','March'=>'Mars','April'=>'Avril','May'=>'Mai','June'=>'Juin','July'=>'Juillet','August'=>'Août','September'=>'Septembre','October'=>'Octobre','November'=>'Novembre','December'=>'Décembre'];
 $date_str = '—';
 $time_str = '';
+$date_only_str = '—';
 if (!empty($serverActivity['date'])) {
 	$_d = new DateTime($serverActivity['date'], new DateTimeZone('Europe/Paris'));
-	$date_str = $_jours[$_d->format('l')] . ' ' . $_d->format('j') . ' ' . $_mois[$_d->format('F')] . ' ' . $_d->format('H:i');
+	$date_only_str = $_jours[$_d->format('l')] . ' ' . $_d->format('j') . ' ' . $_mois[$_d->format('F')];
 	$time_str = $_d->format('H:i');
+	$date_str = $date_only_str . ' ' . $time_str;
 }
 
 // Fetch ALL activities for the calendar picker (past + future, limit 60)
@@ -428,7 +430,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
 
     <!-- Date + Calendar button -->
     <div class="v2-date-row">
-      <div class="v2-date-big"><?php echo htmlspecialchars($date_str); ?></div>
+      <div class="v2-date-big"><?php echo htmlspecialchars($date_only_str); ?><?php if($time_str): ?> <span style="font-size:16px;font-weight:600;color:var(--muted)"><?php echo htmlspecialchars($time_str); ?></span><?php endif; ?></div>
       <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog" style="width:46px;height:46px;border-radius:12px;background:rgba(10,132,255,0.18);border:1px solid rgba(10,132,255,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:-18px">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="4" width="18" height="18" rx="3" stroke="#0a84ff" stroke-width="1.8"/>
