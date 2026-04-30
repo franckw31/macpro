@@ -291,6 +291,8 @@ function loadNotes() {
 function renderNotes() {
     var mode = trak.mode, myId = trak.myId;
     var notes;
+    var m = !trak.allMode ? membres.find(m=>m.pseudo===trak.pseudo) : null;
+    var idJoueur = m ? m.id : null;
     if (trak.allMode) {
         // Mes notes :
         if (trak.canSeeRecues) {
@@ -301,8 +303,6 @@ function renderNotes() {
     } else {
         // Filtre joueur :
         if (trak.canSeeRecues) {
-            var m = membres.find(m=>m.pseudo===trak.pseudo);
-            var idJoueur = m ? m.id : null;
             if (idJoueur) {
                 notes = trak.notes.filter(n => n.id_auteur===idJoueur || n.id_cible===idJoueur);
             } else {
@@ -310,8 +310,6 @@ function renderNotes() {
             }
         } else {
             // Pour les non-admins, ne voir que les notes écrites par soi-même à ce joueur
-            var m = membres.find(m=>m.pseudo===trak.pseudo);
-            var idJoueur = m ? m.id : null;
             if (idJoueur) {
                 notes = trak.notes.filter(n => n.id_auteur===myId && n.id_cible===idJoueur);
             } else {
@@ -324,7 +322,19 @@ function renderNotes() {
         return;
     }
     document.getElementById('notes-wrap').innerHTML = notes.map(n => {
-        var dp = (trak.allMode ? (mode==='auteur' ? n.cible_pseudo : n.auteur_pseudo) : (n.id_auteur===idJoueur ? n.cible_pseudo : n.auteur_pseudo));
+        var dp;
+        if (trak.allMode) {
+            dp = (mode==='auteur' ? n.cible_pseudo : n.auteur_pseudo);
+        } else if (idJoueur) {
+            // Pour le filtre joueur, on veut afficher l'autre pseudo (celui qui n'est pas moi)
+            if (n.id_auteur === myId) {
+                dp = n.cible_pseudo;
+            } else {
+                dp = n.auteur_pseudo;
+            }
+        } else {
+            dp = '';
+        }
         var dpPhoto = '';
         var m2 = membres.find(m=>m.pseudo===dp);
         if(m2) dpPhoto = m2.photo || 'https://viendez.com/images/noprofil.jpg';
