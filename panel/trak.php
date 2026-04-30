@@ -354,6 +354,9 @@ function renderNotes() {
         var idSel = mSel ? mSel.id : 'N/A';
         debugState += '<br>[DEBUG] membres = [' + membres.map(m=>escH(m.pseudo)).join(', ') + ']';
         debugState += '<br>[DEBUG] id du pseudo sélectionné : ' + idSel;
+        debugState += '<br>[DEBUG] notes API (avant filtrage) :<br>' + trak.notes.map(n =>
+            'id='+n.id+', auteur='+n.id_auteur+', cible='+n.id_cible+', cible_pseudo='+escH(n.cible_pseudo)+', auteur_pseudo='+escH(n.auteur_pseudo)+', note='+escH(n.note)
+        ).join('<br>');
         debugState += '<br>[DEBUG] notes filtrées : ' + notes.map(n => '('+n.id_cible+','+escH(n.cible_pseudo)+')').join(', ');
         if (debugDiv) {
             if (!trak.allMode && !trak.canSeeRecues) {
