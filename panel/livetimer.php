@@ -141,11 +141,20 @@ if (isset($_GET['action'])) {
 
     if ($action === 'status') {
         $now = time();
-        // Récupère le niveau en cours (premier dont fin > maintenant)
+
+        // Lire le flag pause sur ordre=1
+        $q_pause = mysqli_query($con, "SELECT `en_pause`, `heure_pause`, `delta` FROM `blindes-live` WHERE `id-activite` = '$act_id' AND `ordre` = '1' LIMIT 1");
+        $row_pause = mysqli_fetch_assoc($q_pause);
+        $is_paused = (intval($row_pause['en_pause'] ?? 0) == 1);
+        $heure_pause = $row_pause['heure_pause'] ?? null;
+        $delta_acc = intval($row_pause['delta'] ?? 0); // secondes de pause déjà accumulées
+
+        // Tous les niveaux
         $q = mysqli_query($con, "SELECT * FROM `blindes-live` WHERE `id-activite` = '$act_id' ORDER BY `ordre` ASC");
         $blinds = [];
         while ($b = mysqli_fetch_assoc($q)) { $blinds[] = $b; }
 
+        // Niveau courant = premier dont fin > maintenant
         $current = null;
         $currentIdx = -1;
         foreach ($blinds as $k => $b) {
@@ -164,40 +173,45 @@ if (isset($_GET['action'])) {
             exit;
         }
 
-        $is_paused = (intval($current['en_pause']) == 1);
-        if ($is_paused) {
-            $pause_at = $current['pause_at'] ? strtotime($current['pause_at']) : $now;
-            $seconds_remaining = strtotime($current['fin']) - $pause_at;
+        // Calcul du temps restant
+        if ($is_paused && $heure_pause) {
+            // En pause : les fins ne bougent plus, on soustrait la durée de pause courante
+            $pause_elapsed = $now - strtotime($heure_pause);
+            $seconds_remaining = max(0, strtotime($current['fin']) - $now - $pause_elapsed);
+            // Alternative plus simple : fin - heure_pause (les fins n'ont pas encore été décalées)
+            $seconds_remaining = max(0, strtotime($current['fin']) - strtotime($heure_pause));
         } else {
             $seconds_remaining = max(0, strtotime($current['fin']) - $now);
         }
+
         $duration_seconds = max(1, strtotime($current['fin']) - strtotime($current['debut']));
 
-        $sb = $current['small_blinde'] ?? $current['sb'] ?? 0;
-        $bb = $current['big_blinde'] ?? $current['bb'] ?? 0;
-        $ante = $current['ante'] ?? 0;
-        $blinds_raw = $sb . '/' . $bb;
-        $is_break = ($sb == 0 && $bb == 0);
+        $sb   = intval($current['sb'] ?? 0);
+        $bb   = intval($current['bb'] ?? 0);
+        $ante = intval($current['ante'] ?? 0);
+        $nom  = $current['nom'] ?? '';
+        $blinds_raw  = $sb . '/' . $bb;
+        $is_break    = ($sb == 0 && $bb == 0);
         $blinds_text = $is_break ? 'PAUSE' : number_format($sb, 0, ',', ' ') . ' / ' . number_format($bb, 0, ',', ' ');
-        $ante_text = ($ante > 0) ? 'Ante : ' . number_format($ante, 0, ',', ' ') : '';
-        $level_name = $current['niveau'] ?? $current['level'] ?? ($currentIdx + 1);
+        $ante_text   = ($ante > 0) ? 'Ante : ' . number_format($ante, 0, ',', ' ') : '';
+        $level_name  = $nom ?: ($currentIdx + 1);
 
         // Niveau suivant
         $next_raw = '';
         if (isset($blinds[$currentIdx + 1])) {
-            $n = $blinds[$currentIdx + 1];
-            $nsb = $n['small_blinde'] ?? $n['sb'] ?? 0;
-            $nbb = $n['big_blinde'] ?? $n['bb'] ?? 0;
+            $n   = $blinds[$currentIdx + 1];
+            $nsb = intval($n['sb'] ?? 0);
+            $nbb = intval($n['bb'] ?? 0);
             $next_raw = ($nsb == 0 && $nbb == 0) ? 'PAUSE' : $nsb . '/' . $nbb;
         }
 
-        // Prochaine pause
+        // Prochaine pause (en secondes depuis maintenant)
         $next_pause = '';
         $acc = $seconds_remaining;
         for ($i = $currentIdx + 1; $i < count($blinds); $i++) {
-            $nb = $blinds[$i];
-            $nsb2 = $nb['small_blinde'] ?? $nb['sb'] ?? 0;
-            $nbb2 = $nb['big_blinde'] ?? $nb['bb'] ?? 0;
+            $nb   = $blinds[$i];
+            $nsb2 = intval($nb['sb'] ?? 0);
+            $nbb2 = intval($nb['bb'] ?? 0);
             $ndur = max(0, strtotime($nb['fin']) - strtotime($nb['debut']));
             if ($nsb2 == 0 && $nbb2 == 0) {
                 $pmins = floor($acc / 60);
@@ -208,38 +222,38 @@ if (isset($_GET['action'])) {
             $acc += $ndur;
         }
 
-        // Stats joueurs (recalcul rapide)
-        $pq = mysqli_query($con, "SELECT `id-participation`, `recave`, `addon` FROM `participation` WHERE `id-activite` = '$act_id'");
-        $tp = 0; $ap = 0;
+        // Stats joueurs
+        $pq  = mysqli_query($con, "SELECT `id-participation`, `recave`, `addon` FROM `participation` WHERE `id-activite` = '$act_id'");
         $act_r = mysqli_query($con, "SELECT jetons, jetons_activite, recave_jetons FROM activite WHERE `id-activite` = '$act_id'");
-        $ar = mysqli_fetch_array($act_r);
-        $sc = intval($ar['jetons_activite'] ?? $ar['jetons']); $rc = intval($ar['recave_jetons']);
-        $tc = 0; $tr = 0; $ta = 0;
+        $ar  = mysqli_fetch_array($act_r);
+        $sc  = intval($ar['jetons_activite'] ?: $ar['jetons']);
+        $rc  = intval($ar['recave_jetons']);
+        $tp = 0; $ap = 0; $tr = 0; $ta = 0; $tc = 0;
         while ($pr = mysqli_fetch_array($pq)) {
             $tp++; $tr += intval($pr['recave']); $ta += intval($pr['addon']);
             $eq = mysqli_query($con, "SELECT is_definitive FROM eliminations WHERE id_participation = '{$pr['id-participation']}' AND is_definitive = 1");
             if (mysqli_num_rows($eq) == 0) $ap++;
         }
-        $tc = ($tp * $sc) + ($tr * $rc) + ($ta * $rc);
+        $tc     = ($tp * $sc) + ($tr * $rc) + ($ta * $rc);
         $as_val = ($ap > 0) ? floor($tc / $ap) : 0;
 
         echo json_encode([
-            'status' => $is_paused ? 'paused' : 'running',
+            'status'            => $is_paused ? 'paused' : 'running',
             'seconds_remaining' => intval($seconds_remaining),
-            'duration_seconds' => intval($duration_seconds),
-            'blinds_text' => $blinds_text,
-            'blinds_raw' => $blinds_raw,
-            'ante_text' => $ante_text,
-            'level_name' => (string)$level_name,
-            'level_index' => $currentIdx,
-            'level_total' => count($blinds),
-            'is_paused' => $is_paused,
-            'next_pause' => $next_pause,
-            'next_blinds_raw' => $next_raw,
-            'next_blinds_text' => $next_raw,
-            'avg_stack' => number_format($as_val, 0, ',', ' '),
-            'players_active' => $ap,
-            'players_total' => $tp
+            'duration_seconds'  => intval($duration_seconds),
+            'blinds_text'       => $blinds_text,
+            'blinds_raw'        => $blinds_raw,
+            'ante_text'         => $ante_text,
+            'level_name'        => (string)$level_name,
+            'level_index'       => $currentIdx,
+            'level_total'       => count($blinds),
+            'is_paused'         => $is_paused,
+            'next_pause'        => $next_pause,
+            'next_blinds_raw'   => $next_raw,
+            'next_blinds_text'  => $next_raw,
+            'avg_stack'         => number_format($as_val, 0, ',', ' '),
+            'players_active'    => $ap,
+            'players_total'     => $tp
         ]);
         exit;
     }
