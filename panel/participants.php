@@ -179,6 +179,7 @@ window.PAGE_PARTICIPANTS = <?php echo json_encode($participants, JSON_UNESCAPED_
     // Export CSV removed by user request
 
     // initial render (apply default filters/sort)
+    console.log('participants sample:', data.slice(0,3));
     applyFilters();
 })();
 </script>
