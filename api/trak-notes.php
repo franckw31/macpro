@@ -185,7 +185,7 @@ try {
             $whereClause  = '(t.id_cible = ? OR t.id_auteur = ?)';
             $params       = [$id_cible, $id_cible];
         } else {
-            // Non-admin : seulement les notes écrites par moi à ce joueur
+            // Non-admin : seulement les notes écrites par moi à ce joueur (filtrage strict)
             $whereClause  = '(t.id_auteur = ? AND t.id_cible = ?)';
             $params       = [$userId, $id_cible];
         }
