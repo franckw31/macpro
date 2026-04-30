@@ -369,6 +369,9 @@ document.getElementById('note-input').addEventListener('keydown', function(e){
         if(m) {
             trak.pseudo = m.pseudo;
             trak.allMode = false;
+            // Forcer la valeur du champ de recherche avant selectPlayer
+            var searchEl = document.getElementById('search-input');
+            if (searchEl) searchEl.value = m.pseudo;
             selectPlayer(m.pseudo, m.photo||'');
         } else {
             trak.allMode = true;
