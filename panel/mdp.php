@@ -74,13 +74,14 @@ $qres = @mysqli_query($con, $sql);
         /* Portrait orientation: colonnes compactes */
         @media (orientation:portrait) and (max-width:900px){
             body{padding:10px}
-            table{min-width:0;width:100%;font-size:11px}
-            th,td{padding:5px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px}
-            td[data-label="Mot de passe"],
-            td[data-label="Mot de passe ext"]{max-width:90px;font-size:10px}
-            td[data-label="Email"]{max-width:100px}
-            td[data-label="Pseudo"]{max-width:80px}
-            td[data-label="ID"]{max-width:40px}
+            table{min-width:0;width:100%;font-size:11px;table-layout:fixed}
+            th,td{padding:5px 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+            th:nth-child(1),td:nth-child(1){width:36px}
+            th:nth-child(2),td:nth-child(2){width:18%}
+            th:nth-child(3),td:nth-child(3){width:24%}
+            th:nth-child(4),td:nth-child(4){width:25%}
+            th:nth-child(5),td:nth-child(5){width:25%}
+            td:nth-child(4),td:nth-child(5){font-size:10px;font-family:monospace}
         }
 
         /* Small screens: stack rows into cards and show labels via data-label */
