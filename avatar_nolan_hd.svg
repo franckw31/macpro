@@ -65,7 +65,7 @@
   <polygon points="900,358 908,370 900,382 892,370" fill="#c9a84c" opacity="0.35"/>
 
   <!-- COACHING -->
-  <text x="600" y="348" font-size="52" fill="rgba(240,208,96,0.75)" font-family="'Arial', 'Helvetica', sans-serif" font-weight="300" text-anchor="middle" letter-spacing="22">COACHING</text>
+  <text x="600" y="348" font-size="82" fill="rgba(240,208,96,0.85)" font-family="'Arial', 'Helvetica', sans-serif" font-weight="600" text-anchor="middle" letter-spacing="18">COACHING</text>
 
   <!-- POKER - texte principal -->
   <text x="600" y="690" font-size="260" fill="url(#gold_text)" font-family="'Arial Black', 'Arial', sans-serif" font-weight="900" text-anchor="middle" filter="url(#white_glow)" letter-spacing="8">POKER</text>
