@@ -351,10 +351,13 @@ a{color:inherit;text-decoration:none}
 .v2-cal-day.is-selected{box-shadow:0 0 0 2px var(--orange);color:var(--orange)}
 .v2-cal-day.is-past.has-event{color:var(--green);background:rgba(255,69,58,.10);box-shadow:0 0 0 2px #ff453a}
 /* Event list below grid */
-.v2-cal-list{overflow-y:scroll;padding:8px 14px 8px;max-height:320px;min-height:0;scrollbar-width:thin;scrollbar-color:#ff9f0a #1a2535}
+.v2-cal-list{overflow-y:scroll;padding:8px 6px 8px 14px;max-height:320px;min-height:0;scrollbar-width:thin;scrollbar-color:#ff9f0a #1a2535}
 .v2-cal-list::-webkit-scrollbar{width:5px}
 .v2-cal-list::-webkit-scrollbar-track{background:#1a2535;border-radius:4px}
 .v2-cal-list::-webkit-scrollbar-thumb{background:#ff9f0a;border-radius:4px}
+.v2-cal-list-container{position:relative;padding-right:10px}
+.v2-cal-scrollbar-track{position:absolute;top:0;right:0;width:5px;height:100%;background:#1a2535;border-radius:4px}
+.v2-cal-scrollbar-thumb{position:absolute;right:0;width:5px;background:#ff9f0a;border-radius:4px;min-height:20px;transition:top .05s}
 .v2-cal-scroll-indicator{text-align:center;font-size:11px;color:var(--orange);padding:4px 0 2px;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:4px;transition:opacity .2s}
 .v2-cal-scroll-indicator.hidden{opacity:0;pointer-events:none}
 .v2-cal-list-wrap{position:relative}
@@ -605,11 +608,14 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       </div>
       <div class="v2-cal-days" id="v2-cal-days"></div>
     </div>
-    <div class="v2-cal-list" id="v2-cal-list">
-      <div class="v2-cal-list-title">Parties du mois</div>
-      <div class="v2-cal-list-wrap" id="v2-cal-list-wrap">
-        <div id="v2-cal-events"></div>
+    <div class="v2-cal-list-container">
+      <div class="v2-cal-list" id="v2-cal-list">
+        <div class="v2-cal-list-title">Parties du mois</div>
+        <div class="v2-cal-list-wrap" id="v2-cal-list-wrap">
+          <div id="v2-cal-events"></div>
+        </div>
       </div>
+      <div class="v2-cal-scrollbar-track" id="v2-cal-sb-track"><div class="v2-cal-scrollbar-thumb" id="v2-cal-sb-thumb"></div></div>
     </div>
     <div class="v2-cal-scroll-indicator hidden" id="v2-cal-scroll-ind">↓ défiler pour voir plus</div>
   </div>
@@ -730,6 +736,18 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     listWrap.classList.toggle('at-bottom', atBottom);
     var ind = document.getElementById('v2-cal-scroll-ind');
     if(ind) ind.classList.toggle('hidden', atBottom || listEl.scrollHeight <= listEl.clientHeight);
+    var track = document.getElementById('v2-cal-sb-track');
+    var thumb = document.getElementById('v2-cal-sb-thumb');
+    if(track && thumb && listEl.scrollHeight > listEl.clientHeight){
+      var ratio = listEl.clientHeight / listEl.scrollHeight;
+      var thumbH = Math.max(20, track.clientHeight * ratio);
+      var thumbTop = (listEl.scrollTop / (listEl.scrollHeight - listEl.clientHeight)) * (track.clientHeight - thumbH);
+      thumb.style.height = thumbH + 'px';
+      thumb.style.top = thumbTop + 'px';
+      track.style.display = 'block';
+    } else if(track){
+      track.style.display = 'none';
+    }
   }
   if(listEl) listEl.addEventListener('scroll', updateScrollFade);
 
