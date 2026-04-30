@@ -362,7 +362,7 @@ if($activity){
                                     $score_raw = (1 - ($rank / $score_denom)) * 20;
                                     $score = (int)ceil($score_raw);
                                     $score_color = ($score >= 18) ? 'var(--gold)' : (($score >= 15) ? 'var(--green)' : (($score >= 10) ? 'var(--blue)' : 'var(--muted)'));
-                                    echo '<span style="font-size:14px;color:'.$score_color.';font-weight:700">(SergioScore = '.$score.')</span>';
+                                    echo '<span style="font-size:11px;color:'.$score_color.';font-weight:700">SergioScore = '.$score.'</span>';
                                 }
                             ?>
                         </div>
