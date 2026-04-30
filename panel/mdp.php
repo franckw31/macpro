@@ -138,8 +138,7 @@ $qres = @mysqli_query($con, $sql);
         } ?>
         </tbody>
     </table>
-
-    
+    </div>
 
 </body>
 </html>
