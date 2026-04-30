@@ -590,8 +590,8 @@ if (isset($_GET['action'])) {
             .control-dock { gap: 8px; padding: 10px; }
             .ctrl-btn { min-height: 72px; font-size: 12px; }
             .ctrl-btn small { font-size: 9px; }
-            .action-dock { grid-template-columns: repeat(2, 1fr); }
-            .act-btn { min-height: 52px; }
+            .action-dock { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+            .act-btn { min-height: 48px; font-size: 11px; padding: 8px 4px; }
         }
     </style>
 </head>
