@@ -237,7 +237,7 @@ error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id(
 	<!-- Fond mosaïque décalé avec symboles de cartes à jouer -->
 	<style>
 	body {
-		background-color: #0a1628;
+		background-color: #0f1115;
 		background-image: none;
 		position: relative;
 	}
@@ -247,7 +247,7 @@ error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id(
 		position: fixed;
 		inset: 0;
 		z-index: -1;
-		background-color: #0a1628;
+		background-color: #0f1115;
 	}
 	/* Pattern cartes EN OVERLAY au-dessus de tout, pointer-events désactivés */
 	body::after {
