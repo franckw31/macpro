@@ -704,7 +704,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     <div class="v2-detail-section">
       <div class="v2-detail-section-title" style="text-align:center">Infos Financières</div>
       <div class="v2-detail-row"><div class="v2-detail-label">💶 Buy-in</div><div class="v2-detail-value" style="color:var(--orange)" id="dd-buyin">—</div></div>
-      <div class="v2-detail-row"><div class="v2-detail-label">✦ Rake</div><div class="v2-detail-value" id="dd-rake">—</div></div>
+      <div class="v2-detail-row"><div class="v2-detail-label">🍽️ Rake</div><div class="v2-detail-value" id="dd-rake">—</div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">🎯 Bounty</div><div class="v2-detail-value" id="dd-bounty">—</div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">🔁 Re-entries</div><div class="v2-detail-value" id="dd-recave">—</div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">🎲 Jetons départ</div><div class="v2-detail-value" style="color:var(--orange)" id="dd-jetons">—</div></div>
