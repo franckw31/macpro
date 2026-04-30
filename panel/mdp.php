@@ -75,7 +75,7 @@ $qres = @mysqli_query($con, $sql);
         @media (orientation:portrait) and (max-width:900px){
             body{padding:10px}
             table{min-width:0;width:100%;font-size:11px;table-layout:fixed}
-            th,td{padding:5px 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+            th,td{padding:5px 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
             th:nth-child(1),td:nth-child(1){width:36px}
             th:nth-child(2),td:nth-child(2){width:18%}
             th:nth-child(3),td:nth-child(3){width:24%}
