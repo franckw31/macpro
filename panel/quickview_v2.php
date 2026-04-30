@@ -829,7 +829,11 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
   var ts = Math.floor(new Date(actStr.replace(' ','T')).getTime() / 1000);
   function tick(){
     var diff = ts - Math.floor(Date.now()/1000);
-    if(diff <= 0){ el.textContent = 'En cours'; el.style.color = 'var(--orange)'; return; }
+    if(diff <= 0){
+      if(diff < -43200){ el.textContent = 'Terminée'; el.style.color = 'var(--muted)'; }
+      else { el.textContent = 'En cours'; el.style.color = 'var(--orange)'; }
+      return;
+    }
     var h = Math.floor(diff/3600).toString().padStart(2,'0');
     var m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
     var s = (diff%60).toString().padStart(2,'0');
