@@ -336,7 +336,9 @@ a{color:inherit;text-decoration:none}
 
 /* ─── STRUCTURE TABLE ─── */
 #dd-structure-wrap{width:100%;margin-top:4px;position:relative}
-#dd-structure-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:28px;background:linear-gradient(to bottom,transparent,rgba(13,21,32,0.92));pointer-events:none;border-radius:0 0 6px 6px}
+#dd-structure-wrap::after{content:'';position:absolute;bottom:22px;left:0;right:0;height:28px;background:linear-gradient(to bottom,transparent,rgba(13,21,32,0.92));pointer-events:none}
+.v2-scroll-hint{text-align:center;font-size:11px;color:rgba(255,255,255,0.35);padding:3px 0;letter-spacing:.5px;user-select:none}
+.v2-scroll-hint.hidden{visibility:hidden}
 .v2-blind-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
 .v2-blind-table thead tr{display:table;width:100%;table-layout:fixed}
 .v2-blind-table tbody{display:block;max-height:140px;overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch}
@@ -687,6 +689,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     <div class="v2-detail-section">
       <div class="v2-detail-section-title">Structure</div>
       <div id="dd-structure-wrap"><div style="color:var(--muted);font-size:13px;padding:8px 0" id="dd-structure-empty">—</div></div>
+      <div class="v2-scroll-hint hidden" id="dd-structure-hint">▼ défiler</div>
     </div>
   </div>
 </div>
@@ -980,6 +983,21 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       }
       html += '</tbody></table>';
       structWrap.innerHTML = html;
+      // Show scroll hint if content overflows
+      var hint = document.getElementById('dd-structure-hint');
+      var tbody = structWrap.querySelector('tbody');
+      if (hint && tbody) {
+        if (tbody.scrollHeight > tbody.clientHeight) {
+          hint.classList.remove('hidden');
+          tbody.addEventListener('scroll', function(){
+            if (tbody.scrollTop + tbody.clientHeight >= tbody.scrollHeight - 4) {
+              hint.classList.add('hidden');
+            } else {
+              hint.classList.remove('hidden');
+            }
+          });
+        }
+      }
     } else if (structEmpty) {
       structEmpty.textContent = act.structure_detail || '—';
     }
