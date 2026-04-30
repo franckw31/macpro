@@ -47,6 +47,13 @@ if (!empty($act_row['date_depart'])) {
     $activity_date_simple = date('Y-m-d', strtotime($act_row['date_depart']));
 }
 
+// Permission bust : organisateur de la partie ou id=265
+$current_user_id = intval($_SESSION['id']);
+$org_q = mysqli_query($con, "SELECT `id-membre` FROM `activite` WHERE `id-activite` = '$id' LIMIT 1");
+$org_row = mysqli_fetch_assoc($org_q);
+$organizer_id = intval($org_row['id-membre']);
+$can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -437,14 +444,16 @@ if (!empty($act_row['date_depart'])) {
                     
                     // Colonne Actions
                         echo '<td class="action-cell">';
-                        echo '<button class="btn-delete" onclick="confirmDeletePlayer(this)" 
-                            data-id="' . intval($row['id-participation']) . '" 
-                            data-member-id="' . $membre_id . '" 
-                            data-name="' . htmlspecialchars($row['nom-membre'], ENT_QUOTES) . '"
-                            data-activity-id="' . $id . '"
-                            data-phonetic="' . htmlspecialchars($membre_phonetique, ENT_QUOTES) . '">
-                            <i class="fa fa-sign-out"></i>
-                          </button>';
+                        if ($can_bust) {
+                            echo '<button class="btn-delete" onclick="confirmDeletePlayer(this)" 
+                                data-id="' . intval($row['id-participation']) . '" 
+                                data-member-id="' . $membre_id . '" 
+                                data-name="' . htmlspecialchars($row['nom-membre'], ENT_QUOTES) . '"
+                                data-activity-id="' . $id . '"
+                                data-phonetic="' . htmlspecialchars($membre_phonetique, ENT_QUOTES) . '">
+                                <i class="fa fa-sign-out"></i>
+                              </button>';
+                        }
                     echo '</td>';
                     
                     echo '</tr>';
