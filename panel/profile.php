@@ -444,7 +444,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         .stat{background:rgba(255,255,255,0.02);padding:10px;border-radius:10px;text-align:center}
         .stat .num{font-weight:800;font-size:18px}
         .stat .sub{color:#9aa6b1;font-size:12px}
-        .top-actions{position:fixed;right:18px;top:18px;display:flex;gap:10px;z-index:20}
+        .top-actions{position:fixed;right:18px;top:max(18px, env(safe-area-inset-top, 18px));display:flex;gap:10px;z-index:20}
         .top-action{background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:20px;border:0;color:#ff9d3b;font-weight:700;backdrop-filter:blur(4px);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
         .profile-footer-action{display:flex;justify-content:center;margin-top:18px}
         .profile-footer-action .top-action.logout{color:#ff6b6b;min-width:160px;justify-content:center}
@@ -464,6 +464,9 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
     </style>
 </head>
 <body>
+    <div class="top-actions">
+        <button class="top-action" onclick="window.location.href='/panel/quickview.php';">Fermer</button>
+    </div>
     <div class="sheet">
         <?php if (!empty($profile_flash['message'])): ?>
             <div class="flash <?php echo (($profile_flash['type'] ?? '') === 'success') ? 'success' : 'error'; ?>"><?php echo htmlspecialchars($profile_flash['message']); ?></div>
@@ -613,9 +616,6 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             </div>
         </div>
 
-        <div class="profile-footer-action" style="margin-bottom:10px">
-            <button class="top-action" onclick="window.location.href='/panel/quickview.php';" style="min-width:160px;justify-content:center">Fermer</button>
-        </div>
         <div class="profile-footer-action">
             <a class="top-action logout" href="/panel/logout.php">Déconnexion</a>
         </div>
