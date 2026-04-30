@@ -270,7 +270,14 @@ function selectPlayer(pseudo, photo) {
     document.getElementById('reset-filter-btn').style.display = '';
 
     setTab('auteur');
-    loadNotes();
+    // Force fetch by id_cible to avoid any race with initial load
+    var msel = membres.find(m=>m.pseudo===pseudo);
+    var url2 = msel && msel.id ? ('/api/trak-notes.php?id_cible=' + encodeURIComponent(msel.id)) : ('/api/trak-notes.php?pseudo=' + encodeURIComponent(pseudo));
+    fetch(url2, { credentials:'include' })
+    .then(r=>r.json()).then(d=>{
+        trak.notes = d.success ? (d.notes||[]) : [];
+        renderNotes();
+    }).catch(()=>{ document.getElementById('notes-wrap').innerHTML='<div class="empty-msg">Erreur réseau</div>'; });
 }
 
 // ── Tabs ──
