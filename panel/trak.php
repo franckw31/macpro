@@ -309,8 +309,14 @@ function renderNotes() {
                 notes = [];
             }
         } else {
-            // Pour les non-admins, ne voir que les notes écrites par soi-même
-            notes = trak.notes.filter(n => n.id_auteur===myId);
+            // Pour les non-admins, ne voir que les notes écrites par soi-même à ce joueur
+            var m = membres.find(m=>m.pseudo===trak.pseudo);
+            var idJoueur = m ? m.id : null;
+            if (idJoueur) {
+                notes = trak.notes.filter(n => n.id_auteur===myId && n.id_cible===idJoueur);
+            } else {
+                notes = [];
+            }
         }
     }
     if (!notes.length) {
