@@ -78,17 +78,17 @@ header('Vary: Cookie');
 			$r = mysqli_query($con, "SELECT COUNT(*) AS c FROM participation WHERE `id-activite` = '". intval($id) ."' AND COALESCE(`option`, 'None') NOT IN ('None','Desinscrit')");
 			if($r && ($rr = mysqli_fetch_assoc($r))) $cnt = (int)$rr['c'];
 
-			// prepare a human-friendly French display date (e.g. "Lundi 23 Mars")
+			// prepare a human-friendly French display date (e.g. "Vendredi 1 Mai 20:00")
 			$display_date = $act['date_depart'];
 			try{
 				if(class_exists('IntlDateFormatter')){
 					$dtobj = new DateTime($act['date_depart']);
-					$fmt = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::NONE, $dtobj->getTimezone()->getName(), IntlDateFormatter::GREGORIAN, "EEEE d MMMM");
+					$fmt = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'Europe/Paris', IntlDateFormatter::GREGORIAN, "EEEE d MMMM HH:mm");
 					$display_date = $fmt->format($dtobj);
 					$display_date = mb_convert_case($display_date, MB_CASE_TITLE, "UTF-8");
 				} else {
 					setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr');
-					$display_date = strftime('%A %e %B', strtotime($act['date_depart']));
+					$display_date = strftime('%A %e %B %H:%M', strtotime($act['date_depart']));
 					$display_date = mb_convert_case($display_date, MB_CASE_TITLE, "UTF-8");
 				}
 			}catch(Exception $e){ /* fallback to raw date */ }
