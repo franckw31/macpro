@@ -354,42 +354,6 @@ function renderNotes() {
             }
         }
     }
-    // DEBUG: Affiche la liste des pseudos cibles filtrés
-    // Affiche le debug en haut de page
-    try {
-        var debugDiv = document.getElementById('debug-pseudos');
-        var debugState = '[DEBUG] canSeeRecues=' + trak.canSeeRecues + ', allMode=' + trak.allMode + ', pseudo=' + trak.pseudo;
-        // Cherche l'id du pseudo sélectionné
-        var mSel = membres.find(m=>m.pseudo.toLowerCase()===trak.pseudo.toLowerCase());
-        var idSel = mSel ? mSel.id : 'N/A';
-        debugState += '<br>[DEBUG] membres = [' + membres.map(m=>escH(m.pseudo)).join(', ') + ']';
-        debugState += '<br>[DEBUG] id du pseudo sélectionné : ' + idSel;
-        debugState += '<br>[DEBUG] notes API (avant filtrage) :<br>' + trak.notes.map(n =>
-            'id='+n.id+', auteur='+n.id_auteur+', cible='+n.id_cible+', cible_pseudo='+escH(n.cible_pseudo)+', auteur_pseudo='+escH(n.auteur_pseudo)+', note='+escH(n.note)
-        ).join('<br>');
-        debugState += '<br>[DEBUG] notes filtrées : ' + notes.map(n => '('+n.id_cible+','+escH(n.cible_pseudo)+')').join(', ');
-        if (debugDiv) {
-            if (!trak.allMode && !trak.canSeeRecues) {
-                debugDiv.innerHTML = debugState + '<br>[DEBUG] Pseudos cibles filtrés : ' + notes.map(n => escH(n.cible_pseudo)).join(', ');
-            } else {
-                debugDiv.innerHTML = debugState + '<br>[DEBUG] (aucun filtrage ou admin)';
-            }
-        } else {
-            // Bloc non trouvé
-            var hdr = document.querySelector('.hdr');
-            if (hdr) {
-                var d = document.createElement('div');
-                d.id = 'debug-pseudos';
-                d.style = 'color:#ff6b6b;font-size:13px;padding:4px 16px 0 16px;';
-                d.innerHTML = debugState + '<br>[DEBUG] (bloc debug non trouvé)';
-                hdr.parentNode.insertBefore(d, hdr.nextSibling);
-            }
-        }
-    } catch(e) {
-        // Affiche une erreur JS dans le debug
-        var debugDiv = document.getElementById('debug-pseudos');
-        if (debugDiv) debugDiv.innerHTML = '[DEBUG] ERREUR JS : ' + e;
-    }
     var debugList = '';
     if (!notes.length) {
         document.getElementById('notes-wrap').innerHTML = debugList + '<div class="empty-msg">'+(trak.notes.length?'Aucun résultat pour ce filtre.':'Aucune note pour ce joueur.')+'</div>';
