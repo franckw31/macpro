@@ -157,6 +157,8 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
     </div>
 </div>
 
+<div id="api-raw-response" style="padding:8px 16px;color:#f5f5f5;font-size:12px;display:none;white-space:pre-wrap;background:#071019;border-top:1px solid rgba(255,255,255,0.02)"></div>
+
 
 <div class="content-area" id="content-area">
     <div class="tabs">
