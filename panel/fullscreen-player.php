@@ -128,7 +128,7 @@ if (!empty($act_row['date_depart'])) {
             text-transform: uppercase;
             padding: 8px 5px;
             vertical-align: middle;
-            font-size: 1.5vw;
+            font-size: 2vw;
             border-bottom: 2px solid #444;
             text-align: left;
         }
@@ -154,8 +154,8 @@ if (!empty($act_row['date_depart'])) {
         }
 
         .player-table td {
-            padding: 1px 4px;
-            font-size: 2.2vw;
+            padding: 0px 4px;
+            font-size: 3vw;
             vertical-align: middle;
             line-height: 1;
         }
@@ -165,7 +165,7 @@ if (!empty($act_row['date_depart'])) {
             color: var(--color-yellow);
             width: 80px;
             text-align: center;
-            font-size: 2.5vw !important;
+            font-size: 3.2vw !important;
         }
 
         .name-cell {
@@ -181,12 +181,12 @@ if (!empty($act_row['date_depart'])) {
         .info-cell {
             text-align: center;
             color: #ccc;
-            font-size: 1.5vw !important;
+            font-size: 2.2vw !important;
         }
         
         /* Style pour la colonne Sorti(e) Par */
         .player-table td:nth-child(4) {
-            font-size: 1.8vw;
+            font-size: 2.5vw;
             color: #aaa;
         }
 
