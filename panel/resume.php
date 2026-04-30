@@ -349,7 +349,23 @@ if($activity){
                     <!-- Place line removed as requested -->
                     <div class="line" style="display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
                         <div class="label">Position / Inscrits</div>
-                        <div class="value"><span style="color:<?php echo $position_color; ?>"><?php echo h($rank); ?></span> / <?php echo intval($total_count); ?></div>
+                        <div class="value" style="display:flex;align-items:center;gap:10px">
+                            <span><span style="color:<?php echo $position_color; ?>"><?php echo h($rank); ?></span> / <?php echo intval($total_count); ?></span>
+                            <?php
+                                // Score = (100 - (rank / (inscrits + total_recaves_all - player_recaves)) * 2) / 100
+                                $total_recaves_all = 0;
+                                if(isset($all_rows) && is_array($all_rows)){
+                                    foreach($all_rows as $_sr){ $total_recaves_all += intval($_sr['recave'] ?? 0); }
+                                }
+                                $score_denom = intval($total_count) + $total_recaves_all - $recave_count;
+                                if($score_denom > 0){
+                                    $score = (100 - ($rank / $score_denom) * 2) / 100;
+                                    $score_pct = round($score * 100, 1);
+                                    $score_color = ($score_pct >= 90) ? 'var(--gold)' : (($score_pct >= 70) ? 'var(--green)' : (($score_pct >= 50) ? 'var(--blue)' : 'var(--muted)'));
+                                    echo '<span style="font-size:11px;color:'.$score_color.';font-weight:700">Score '.$score_pct.'%</span>';
+                                }
+                            ?>
+                        </div>
                     </div>
                     <?php if(!empty($eliminated_by)): ?>
                     <div class="line" style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.02)">
