@@ -55,12 +55,26 @@ if($activity){
                     $elimCount = 0;
                     $name_for_elim = null;
                     foreach(['pseudo','nom-membre','nom_membre','name','pseudo_membre'] as $c){ if(isset($r[$c]) && $r[$c] !== ''){ $name_for_elim = $r[$c]; break; } }
-                    if($name_for_elim && !empty($con)){
-                        $esc = mysqli_real_escape_string($con, $name_for_elim);
-                        $eq = "SELECT COUNT(*) AS cnt FROM `eliminations` e JOIN `participation` p2 ON e.`id_participation` = p2.`id-participation` WHERE p2.`id-activite` = '".$aid."' AND e.`nom_membre` = '".$esc."'";
-                        $erc = @mysqli_query($con, $eq);
-                        if($erc && ($erow = mysqli_fetch_assoc($erc))){ $elimCount = intval($erow['cnt']); }
-                        if($elimCount > 0) $bounty = $elimCount;
+                    if(!empty($con)){
+                        // Use id_membre if available for exact match, fallback to nom_membre text match
+                        $member_id_for_elim = isset($r['id-membre']) ? intval($r['id-membre']) : 0;
+                        if($member_id_for_elim > 0){
+                            $eq = "SELECT COUNT(*) AS cnt FROM `eliminations` e WHERE e.`id_activite` = '".$aid."' AND e.`id_membre` = '".$member_id_for_elim."'";
+                        } elseif($name_for_elim){
+                            $esc = mysqli_real_escape_string($con, $name_for_elim);
+                            // Match against both nom_membre in eliminations AND nom-membre in participation
+                            $eq = "SELECT COUNT(*) AS cnt FROM `eliminations` e WHERE e.`id_activite` = '".$aid."' AND (e.`nom_membre` = '".$esc."' OR e.`nom_membre` = (SELECT `nom-membre` FROM `participation` p3 WHERE p3.`id-participation` = e.`id_participation` LIMIT 1))";
+                            // Simpler: match eliminator by nom_membre stored at insert time against participation.nom-membre
+                            $pid_for_member = isset($r['id-participation']) ? intval($r['id-participation']) : 0;
+                            $eq = "SELECT COUNT(*) AS cnt FROM `eliminations` e WHERE e.`id_activite` = '".$aid."' AND e.`nom_membre` = '".$esc."'";
+                        } else {
+                            $eq = null;
+                        }
+                        if(!empty($eq)){
+                            $erc = @mysqli_query($con, $eq);
+                            if($erc && ($erow = mysqli_fetch_assoc($erc))){ $elimCount = intval($erow['cnt']); }
+                            if($elimCount > 0) $bounty = $elimCount;
+                        }
                     }
 
                 $rows[] = [
