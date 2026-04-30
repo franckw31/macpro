@@ -258,7 +258,7 @@ a{color:inherit;text-decoration:none}
 .v2-next-label svg{flex-shrink:0}
 .v2-date-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:16px}
 .v2-date-big{font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1.1}
-.v2-cal-btn{width:46px;height:46px;background:rgba(255,255,255,0.05);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)}
+.v2-cal-btn{width:46px;height:46px;background:rgba(255,255,255,0.05);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid #e03030;box-shadow:0 0 8px rgba(224,48,48,0.4)}
 .v2-cal-btn svg{width:22px;height:22px;stroke:var(--text2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
 /* Stats row */
