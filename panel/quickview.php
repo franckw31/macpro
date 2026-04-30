@@ -645,7 +645,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
     <div class="v2-detail-section">
       <div class="v2-detail-section-title">Structure</div>
-      <div class="v2-detail-row" style="justify-content:flex-end"><div class="v2-detail-value" style="color:var(--green);text-align:right" id="dd-structure">—</div></div>
+      <div class="v2-detail-row" style="justify-content:flex-start"><div class="v2-detail-value" style="color:var(--green);text-align:left" id="dd-structure">—</div></div>
     </div>
   </div>
 </div>
