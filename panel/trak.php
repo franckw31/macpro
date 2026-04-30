@@ -278,6 +278,9 @@ function selectPlayer(pseudo, photo) {
     // mark pending selection so initial load does not overwrite
     trak.pendingSelection = true;
     var reqIdSel = ++trak.requestId;
+    // Clear current notes and show spinner to avoid displaying stale results
+    trak.notes = [];
+    var nw = document.getElementById('notes-wrap'); if (nw) nw.innerHTML = '<div class="spinner">Chargement…</div>';
     fetch(url2, { credentials:'include' })
     .then(r=>r.json()).then(d=>{
         if (reqIdSel !== trak.requestId) return; // stale response
