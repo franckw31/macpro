@@ -790,6 +790,28 @@ if ($_cur) {
     updateClock();
 
     // ---- DISPLAY UPDATE ----
+    let _animFrame = null;
+    let _progressFrom = 0;
+    let _progressTo = 0;
+    let _animStart = null;
+    const ANIM_DURATION = 900; // ms
+
+    function animateProgress(toVal) {
+        _progressFrom = _progressTo;
+        _progressTo = toVal;
+        _animStart = null;
+        if (_animFrame) cancelAnimationFrame(_animFrame);
+        function step(ts) {
+            if (!_animStart) _animStart = ts;
+            const t = Math.min(1, (ts - _animStart) / ANIM_DURATION);
+            const cur = _progressFrom + (_progressTo - _progressFrom) * t;
+            const ring = document.getElementById('timer-ring');
+            if (ring) ring.style.setProperty('--progress', cur.toFixed(4));
+            if (t < 1) _animFrame = requestAnimationFrame(step);
+        }
+        _animFrame = requestAnimationFrame(step);
+    }
+
     function updateDisplay() {
         const ring = document.getElementById('timer-ring');
         const display = document.getElementById('timer-display');
@@ -799,6 +821,7 @@ if ($_cur) {
             display.className = 'paused';
             ring.className = 'timer-ring paused';
             ring.style.setProperty('--progress', '0');
+            _progressTo = 0;
         } else {
             const m = Math.floor(Math.max(0, secondsLeft) / 60).toString().padStart(2, '0');
             const s = (Math.max(0, secondsLeft) % 60).toString().padStart(2, '0');
@@ -808,7 +831,9 @@ if ($_cur) {
             if (totalDuration > 0) {
                 const elapsed = totalDuration - secondsLeft;
                 const progress = Math.max(0, Math.min(1, elapsed / totalDuration));
+                // Animer seulement lors d'un sync (pas du tick local)
                 ring.style.setProperty('--progress', progress.toFixed(4));
+                _progressTo = progress;
             } else {
                 ring.style.setProperty('--progress', '0');
             }
