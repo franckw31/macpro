@@ -252,6 +252,9 @@ document.addEventListener('click', function(e){
 });
 
 function selectPlayer(pseudo, photo) {
+        // DEBUG : Affiche l'appel à selectPlayer et l'état
+        var debugDiv = document.getElementById('debug-pseudos');
+        if (debugDiv) debugDiv.innerHTML = '[DEBUG SELECT] pseudo=' + pseudo + ', photo=' + photo;
     trak.pseudo = pseudo;
     trak.mode = 'auteur';
     trak.allMode = false;
