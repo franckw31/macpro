@@ -175,13 +175,17 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
 </div>
 
 <script>
+// ── Search ──
+var searchEl  = document.getElementById('search-input');
+var sugEl     = document.getElementById('suggestions');
+
 // Supprimer le placeholder quand le champ est focus
 searchEl.addEventListener('focus', function() {
     this.dataset.placeholder = this.getAttribute('placeholder');
     this.setAttribute('placeholder', '');
 });
 searchEl.addEventListener('blur', function() {
-    this.setAttribute('placeholder', this.dataset.placeholder || 'Rechercher un joueur…');
+    this.setAttribute('placeholder', this.dataset.placeholder || 'Choisir un joueur cible ici …');
 });
 // Réinitialiser le filtre (retour à mes notes)
 function resetFilter() {
