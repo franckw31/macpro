@@ -94,6 +94,7 @@ $qres = @mysqli_query($con, $sql);
 
     <div style="margin-bottom:8px;color:#9aa6b1">Total <?php echo $total; ?> joueurs</div>
 
+    <div class="table-wrap">
     <table>
         <thead>
             <tr>
