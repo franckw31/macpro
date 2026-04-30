@@ -37,7 +37,7 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
 
 /* ── Search ── */
 .search-wrap{padding:0 16px 12px}
-.search-box{width:100%;padding:10px 14px 10px 38px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#eef6fb;font-size:14px;outline:none;font-family:inherit}
+.search-box{width:100%;padding:10px 14px 10px 38px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#eef6fb;font-size:14px;outline:none;font-family:inherit;text-align:right}
 .search-icon{position:absolute;left:26px;top:50%;transform:translateY(-50%);color:#8fa0b0;font-size:15px;pointer-events:none}
 .search-rel{position:relative}
 .suggestions{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#0d1f2d;border:1px solid rgba(255,255,255,0.1);border-radius:12px;z-index:100;max-height:220px;overflow-y:auto;display:none}
