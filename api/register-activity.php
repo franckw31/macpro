@@ -176,16 +176,23 @@ try {
                 $stmt->execute([$actId]);
                 $ordData = $stmt->fetch();
                 $nextOrdre = intval($ordData['maxord'] ?? 0) + 1;
-                
-                // Fetch jetons de départ from activite
-                $stmtJ = $pdo->prepare("SELECT COALESCE(`jetons_depart`, `jetons`, 0) AS jeton_val FROM `activite` WHERE `id-activite` = ? LIMIT 1");
-                $stmtJ->execute([$actId]);
-                $jRow = $stmtJ->fetch();
-                $jetonsBonus = intval($jRow['jeton_val'] ?? 0);
-                
-                error_log("[reg-api] Inserting: user=$userId, act=$actId, pseudo=$pseudo, ordre=$nextOrdre, jetons_bonus_ins=$jetonsBonus");
-                $stmt = $pdo->prepare("INSERT INTO `participation` (`id-membre`, `id-activite`, `nom-membre`, `option`, `ordre`, `ds`, `jetons_bonus_ins`, `jetons`) VALUES (?, ?, ?, 'Inscrit', ?, NOW(), ?, ?)");
-                $stmt->execute([$userId, $actId, $pseudo, $nextOrdre, $jetonsBonus, $jetonsBonus]);
+
+                // Fetch activite defaults (same as quick-part.php)
+                $stmtA = $pdo->prepare("SELECT COALESCE(`jetons`,0) AS jetons, COALESCE(`rake`,0) AS rake, COALESCE(`buyin`,0) AS buyin, COALESCE(`bounty`,0) AS bounty FROM `activite` WHERE `id-activite` = ? LIMIT 1");
+                $stmtA->execute([$actId]);
+                $actRow = $stmtA->fetch();
+                $act_jetons  = intval($actRow['jetons'] ?? 0);
+                $act_rake    = floatval($actRow['rake'] ?? 0);
+                $act_buyin   = floatval($actRow['buyin'] ?? 0);
+                $act_bounty  = floatval($actRow['bounty'] ?? 0);
+                $cout_in     = $act_buyin + $act_bounty + $act_rake + 5;
+                // jetons_bonus_ins = activite.jetons ; jetons_total = jetons + bonus_ins + bonus_arrivee(0)
+                $jetons_bonus_ins = $act_jetons;
+                $jetons_total     = $act_jetons;
+
+                error_log("[reg-api] Inserting: user=$userId, act=$actId, pseudo=$pseudo, ordre=$nextOrdre, jetons_bonus_ins=$jetons_bonus_ins");
+                $stmt = $pdo->prepare("INSERT INTO `participation` (`id-membre`, `id-activite`, `nom-membre`, `option`, `ordre`, `ds`, `rake`, `cout_in`, `challenger`, `jetons`, `jetons_bonus_ins`, `jetons_total`) VALUES (?, ?, ?, 'Inscrit', ?, NOW(), ?, ?, 1, 0, ?, ?)");
+                $stmt->execute([$userId, $actId, $pseudo, $nextOrdre, $act_rake, $cout_in, $jetons_bonus_ins, $jetons_total]);
                 error_log("[reg-api] Inserted new participation record");
                 $newStatus = 'Inscrit';
                 $newIsRegistered = true;
@@ -224,16 +231,22 @@ try {
                 $stmt->execute([$actId]);
                 $ordData = $stmt->fetch();
                 $nextOrdre = intval($ordData['maxord'] ?? 0) + 1;
-                
-                // Fetch jetons de départ from activite
-                $stmtJ = $pdo->prepare("SELECT COALESCE(`jetons_depart`, `jetons`, 0) AS jeton_val FROM `activite` WHERE `id-activite` = ? LIMIT 1");
-                $stmtJ->execute([$actId]);
-                $jRow = $stmtJ->fetch();
-                $jetonsBonus = intval($jRow['jeton_val'] ?? 0);
-                
-                error_log("[reg-api] Inserting: user=$userId, act=$actId, pseudo=$pseudo, ordre=$nextOrdre, status=$newStatus, jetons_bonus_ins=$jetonsBonus");
-                $stmt = $pdo->prepare("INSERT INTO `participation` (`id-membre`, `id-activite`, `nom-membre`, `option`, `ordre`, `ds`, `jetons_bonus_ins`, `jetons`) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)");
-                $stmt->execute([$userId, $actId, $pseudo, $newStatus, $nextOrdre, $jetonsBonus, $jetonsBonus]);
+
+                // Fetch activite defaults (same as quick-part.php)
+                $stmtA = $pdo->prepare("SELECT COALESCE(`jetons`,0) AS jetons, COALESCE(`rake`,0) AS rake, COALESCE(`buyin`,0) AS buyin, COALESCE(`bounty`,0) AS bounty FROM `activite` WHERE `id-activite` = ? LIMIT 1");
+                $stmtA->execute([$actId]);
+                $actRow = $stmtA->fetch();
+                $act_jetons  = intval($actRow['jetons'] ?? 0);
+                $act_rake    = floatval($actRow['rake'] ?? 0);
+                $act_buyin   = floatval($actRow['buyin'] ?? 0);
+                $act_bounty  = floatval($actRow['bounty'] ?? 0);
+                $cout_in     = $act_buyin + $act_bounty + $act_rake + 5;
+                $jetons_bonus_ins = $act_jetons;
+                $jetons_total     = $act_jetons;
+
+                error_log("[reg-api] Inserting: user=$userId, act=$actId, pseudo=$pseudo, ordre=$nextOrdre, status=$newStatus, jetons_bonus_ins=$jetons_bonus_ins");
+                $stmt = $pdo->prepare("INSERT INTO `participation` (`id-membre`, `id-activite`, `nom-membre`, `option`, `ordre`, `ds`, `rake`, `cout_in`, `challenger`, `jetons`, `jetons_bonus_ins`, `jetons_total`) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, 1, 0, ?, ?)");
+                $stmt->execute([$userId, $actId, $pseudo, $newStatus, $nextOrdre, $act_rake, $cout_in, $jetons_bonus_ins, $jetons_total]);
                 error_log("[reg-api] Inserted new participation with status $newStatus");
             }
             
