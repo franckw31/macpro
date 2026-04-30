@@ -88,7 +88,7 @@ if ($activity) {
     .btn{padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,#2ecc71,#00d2ff);color:#041011;border:none;cursor:pointer}
     .list{margin-top:8px;border-radius:8px;overflow:hidden;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)}
     .item{display:flex;align-items:center;justify-content:space-between;padding:1px 10px;border-bottom:1px solid rgba(255,255,255,0.03);line-height:1.15}
-    .item .left{display:flex;align-items:center;gap:8px}
+    .item .left{display:flex;align-items:center;gap:10px}
     .p-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(255,255,255,0.12);flex-shrink:0;background:#1a2a35}
     .item .pseudo{font-weight:700; font-size:14px; color: var(--green, #2ecc71)}
     .muted{color:var(--muted)}
