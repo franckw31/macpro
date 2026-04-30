@@ -33,7 +33,7 @@ $participants = array();
 if($activity){
     $aid = intval($activity['id-activite']);
     if(!empty($con)){
-        $pq = mysqli_query($con, "SELECT p.*, COALESCE(p.`jetons_bonus_ins`, p.`jetons`, 0) AS jetons, COALESCE(m.pseudo, '') AS pseudo, a.date_depart AS activity_date FROM participation p LEFT JOIN membres m ON m.`id-membre` = p.`id-membre` LEFT JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE p.`id-activite` = '".$aid."' ORDER BY COALESCE(p.`ds`, a.`date_depart`) ASC");
+        $pq = mysqli_query($con, "SELECT p.*, COALESCE(p.`jetons_bonus_ins`, p.`jetons`, 0) AS jetons, COALESCE(m.pseudo, '') AS pseudo, COALESCE(m.`photo`, '') AS photo, a.date_depart AS activity_date FROM participation p LEFT JOIN membres m ON m.`id-membre` = p.`id-membre` LEFT JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE p.`id-activite` = '".$aid."' ORDER BY COALESCE(p.`ds`, a.`date_depart`) ASC");
         if($pq){
             while($row = mysqli_fetch_assoc($pq)){
                 $participants[] = array(
@@ -43,7 +43,8 @@ if($activity){
                     'date' => isset($row['ds'])? $row['ds'] : (isset($row['activity_date'])? $row['activity_date'] : null),
                     'jetons' => isset($row['jetons'])? $row['jetons'] : 0,
                     'latereg' => isset($row['latereg']) ? $row['latereg'] : 0,
-                    'anonyme' => isset($row['anonyme']) ? $row['anonyme'] : 0
+                    'anonyme' => isset($row['anonyme']) ? $row['anonyme'] : 0,
+                    'photo' => isset($row['photo']) ? $row['photo'] : ''
                 );
             }
         }
@@ -82,6 +83,7 @@ if ($activity) {
     .list{margin-top:8px;border-radius:8px;overflow:hidden;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)}
     .item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.03);line-height:1.15}
     .item .left{display:flex;align-items:center;gap:8px}
+    .p-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(255,255,255,0.12);flex-shrink:0;background:#1a2a35}
     .item .pseudo{font-weight:700; font-size:14px; color: var(--green, #2ecc71)}
     .muted{color:var(--muted)}
     .accent{color:var(--cyan);font-weight:800}
@@ -143,7 +145,8 @@ window.PAGE_PARTICIPANTS = <?php echo json_encode($participants, JSON_UNESCAPED_
             if(optVal === 'Option') suffix.push('(Opt)');
             if(p.latereg && String(p.latereg) === '1') suffix.push('(Late)');
             if(suffix.length) pseudo += ' ' + suffix.join(' ');
-            return `<div class="item" role="listitem"><div class="left"><div class="pseudo">${escapeHtml(pseudo)}</div></div><div style="display:flex;align-items:center;gap:12px"><div class="muted">${escapeHtml(date)}</div><div class="accent">${escapeHtml(jet)}</div></div></div>`;
+            const avatarSrc = (p.photo && p.photo !== '' && !p.anonyme) ? 'https://viendez.com/images/faces/' + encodeURIComponent(p.photo) : 'https://viendez.com/images/noprofil.jpg';
+            return `<div class="item" role="listitem"><div class="left"><img class="p-avatar" src="${avatarSrc}" alt="" onerror="this.src='https://viendez.com/images/noprofil.jpg'"><div class="pseudo">${escapeHtml(pseudo)}</div></div><div style="display:flex;align-items:center;gap:12px"><div class="muted">${escapeHtml(date)}</div><div class="accent">${escapeHtml(jet)}</div></div></div>`;
         }).join('');
     }
 
