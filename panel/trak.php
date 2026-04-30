@@ -319,11 +319,16 @@ function renderNotes() {
             }
         }
     }
+    // DEBUG: Affiche la liste des pseudos cibles filtrés
+    var debugList = '';
+    if (!trak.allMode && !trak.canSeeRecues && idJoueur) {
+        debugList = '<div style="color:#ff6b6b;font-size:12px;padding:4px 0;">[DEBUG] Pseudos cibles filtrés : ' + notes.map(n => escH(n.cible_pseudo)).join(', ') + '</div>';
+    }
     if (!notes.length) {
-        document.getElementById('notes-wrap').innerHTML = '<div class="empty-msg">'+(trak.notes.length?'Aucun résultat pour ce filtre.':'Aucune note pour ce joueur.')+'</div>';
+        document.getElementById('notes-wrap').innerHTML = debugList + '<div class="empty-msg">'+(trak.notes.length?'Aucun résultat pour ce filtre.':'Aucune note pour ce joueur.')+'</div>';
         return;
     }
-    document.getElementById('notes-wrap').innerHTML = notes.map(n => {
+    document.getElementById('notes-wrap').innerHTML = debugList + notes.map(n => {
         var dp;
         if (trak.allMode) {
             dp = (mode==='auteur' ? n.cible_pseudo : n.auteur_pseudo);
