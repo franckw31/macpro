@@ -328,9 +328,9 @@ a{color:inherit;text-decoration:none}
 #v2-countdown{font-size:clamp(14px,4.5vw,24px);font-weight:900;color:var(--green);letter-spacing:0;line-height:1}
 
 /* ─── CALENDAR PICKER MODAL ─── */
-.v2-cal-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;display:none;align-items:flex-end;justify-content:center}
+.v2-cal-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;display:none;align-items:center;justify-content:center;padding:20px}
 .v2-cal-modal-overlay.open{display:flex}
-.v2-cal-sheet{background:#0d1520;border-top-left-radius:22px;border-top-right-radius:22px;width:100%;max-width:440px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
+.v2-cal-sheet{background:#0d1520;border-radius:22px;width:100%;max-width:440px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column}
 .v2-cal-header{padding:12px 14px 0;flex-shrink:0}
 .v2-cal-handle{width:28px;height:3px;background:rgba(255,255,255,.15);border-radius:4px;margin:0 auto 10px}
 .v2-cal-title{font-size:15px;font-weight:800;margin-bottom:10px;text-align:center}
@@ -343,14 +343,17 @@ a{color:inherit;text-decoration:none}
 .v2-cal-dow{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:2px}
 .v2-cal-dow span{text-align:center;font-size:9px;font-weight:700;letter-spacing:.5px;color:var(--muted);padding:2px 0}
 .v2-cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.v2-cal-day{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--muted);position:relative;cursor:default;max-width:32px;max-height:32px;justify-self:center;width:100%}
+.v2-cal-day{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--muted);position:relative;cursor:default;max-width:28px;max-height:28px;justify-self:center;width:100%}
 .v2-cal-day.has-event{color:var(--text);cursor:pointer;background:rgba(10,132,255,.15)}
 .v2-cal-day.has-event:hover,.v2-cal-day.has-event:active{background:rgba(10,132,255,.3)}
 .v2-cal-day.is-next{background:var(--green) !important;color:#04180a !important;font-weight:900;box-shadow:0 0 0 2px var(--green)}
 .v2-cal-day.is-selected{box-shadow:0 0 0 2px var(--orange);color:var(--orange)}
 .v2-cal-day.is-past.has-event{color:var(--green);background:rgba(255,69,58,.10);box-shadow:0 0 0 2px #ff453a}
 /* Event list below grid */
-.v2-cal-list{overflow-y:auto;padding:12px 18px 32px;flex:1;min-height:0}
+.v2-cal-list{overflow-y:auto;padding:8px 14px 8px;max-height:320px;min-height:0}
+.v2-cal-list-wrap{position:relative}
+.v2-cal-list-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(to bottom,transparent,#0d1520);pointer-events:none;transition:opacity .2s}
+.v2-cal-list-wrap.at-bottom::after{opacity:0}
 .v2-cal-list-title{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;margin-top:4px}
 .v2-cal-event{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;border-radius:8px;margin-bottom:3px;cursor:pointer;border:1px solid var(--border);transition:background .15s}
 .v2-cal-event:active{background:rgba(255,255,255,.04)}
@@ -596,9 +599,12 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       </div>
       <div class="v2-cal-days" id="v2-cal-days"></div>
     </div>
-    <div class="v2-cal-list">
+    <div class="v2-cal-list" id="v2-cal-list">
       <div class="v2-cal-list-title">Parties du mois</div>
-      <div id="v2-cal-events"></div>
+      <div class="v2-cal-list-wrap" id="v2-cal-list-wrap">
+        <div id="v2-cal-events"></div>
+      </div>
+    </div>
     </div>
   </div>
 </div>
@@ -706,9 +712,18 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   var openBtn  = document.getElementById('v2-cal-open');
   var daysEl   = document.getElementById('v2-cal-days');
   var eventsEl = document.getElementById('v2-cal-events');
+  var listEl   = document.getElementById('v2-cal-list');
+  var listWrap = document.getElementById('v2-cal-list-wrap');
   var monthLbl = document.getElementById('v2-cal-month-label');
   var prevBtn  = document.getElementById('v2-cal-prev');
   var nextBtn  = document.getElementById('v2-cal-next');
+
+  function updateScrollFade(){
+    if(!listEl || !listWrap) return;
+    var atBottom = listEl.scrollTop + listEl.clientHeight >= listEl.scrollHeight - 4;
+    listWrap.classList.toggle('at-bottom', atBottom);
+  }
+  if(listEl) listEl.addEventListener('scroll', updateScrollFade);
 
   var acts = window.ALL_ACTIVITIES || [];
   var current = window.SERVER_ACTIVITY || {};
@@ -801,6 +816,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       });
     }
     eventsEl.innerHTML = listHtml;
+    updateScrollFade();
     eventsEl.querySelectorAll('.v2-cal-event[data-id]').forEach(function(el){
       el.addEventListener('click', function(){ navigate(parseInt(el.getAttribute('data-id'))); });
     });
