@@ -847,7 +847,20 @@ if ($_cur) {
             localInterval = setInterval(() => {
                 if (!isPaused && secondsLeft > 0) {
                     secondsLeft--;
-                    updateDisplay();
+                    // Mettre à jour le cercle à chaque seconde
+                    const display = document.getElementById('timer-display');
+                    const ring = document.getElementById('timer-ring');
+                    const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+                    const s = (secondsLeft % 60).toString().padStart(2, '0');
+                    if (display) {
+                        display.textContent = m + ':' + s;
+                        display.className = secondsLeft <= 120 && secondsLeft > 0 ? 'warning' : '';
+                    }
+                    if (ring && totalDuration > 0) {
+                        const elapsed = totalDuration - secondsLeft;
+                        const progress = Math.max(0, Math.min(1, elapsed / totalDuration));
+                        ring.style.setProperty('--progress', progress.toFixed(4));
+                    }
                 }
             }, 1000);
         }
