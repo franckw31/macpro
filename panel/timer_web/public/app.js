@@ -201,10 +201,12 @@ function formatDisplayDate(display, dateStr){
   if(!dateStr) return '';
   let d = dateStr;
   if(typeof d === 'string' && d.indexOf(' ') !== -1 && d.indexOf('T') === -1) d = d.replace(' ', 'T');
+  // Forcer UTC pour éviter les décalages de fuseau horaire (ex: "30+10 (1 Mai)")
+  if(typeof d === 'string' && d.indexOf('Z') === -1 && d.indexOf('+') === -1) d = d + 'Z';
   const dt = new Date(d);
   if(isNaN(dt.getTime())) return dateStr;
   try{
-    let s = new Intl.DateTimeFormat('fr-FR', { weekday:'long', day:'numeric', month:'long' }).format(dt);
+    let s = new Intl.DateTimeFormat('fr-FR', { weekday:'long', day:'numeric', month:'long', timeZone:'UTC' }).format(dt);
     // Capitalize first letter of each word to match visual style (Vendredi 27 Mars)
     s = s.replace(/\b\w/g, c => c.toUpperCase());
     return s;
