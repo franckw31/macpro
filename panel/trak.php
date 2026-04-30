@@ -275,8 +275,10 @@ function selectPlayer(pseudo, photo) {
     // Force fetch by id_cible to avoid any race with initial load
     var msel = membres.find(m=>m.pseudo===pseudo);
     var url2 = msel && msel.id ? ('/api/trak-notes.php?id_cible=' + encodeURIComponent(msel.id)) : ('/api/trak-notes.php?pseudo=' + encodeURIComponent(pseudo));
+    var reqIdSel = ++trak.requestId;
     fetch(url2, { credentials:'include' })
     .then(r=>r.json()).then(d=>{
+        if (reqIdSel !== trak.requestId) return; // stale response
         // update raw response block so user sees the actual URL/JSON used for this selection
         try {
             var rawDiv = document.getElementById('api-raw-response');
@@ -317,8 +319,10 @@ function loadNotes() {
     } else {
         url = '/api/trak-notes.php?all=1';
     }
+    var reqId = ++trak.requestId;
     fetch(url, { credentials:'include' })
     .then(r=>r.json()).then(d=>{
+        if (reqId !== trak.requestId) return; // stale response
         // Affiche pour debug l'URL appelée et la réponse brute
         try {
             var rawDiv = document.getElementById('api-raw-response');
