@@ -196,6 +196,14 @@ function setInscritsPill(count) {
 function formatEur(v){ return v + ' €'; }
 
 // Format display date: prefer server-provided `display`, otherwise format `dateStr` to French readable string
+function setDateEl(display, dateStr){
+  const el = document.getElementById('activity-date');
+  if(!el) return;
+  const val = formatDisplayDate(display, dateStr);
+  // Ne remplace que si la valeur contient une heure (ex: "20:00")
+  if(val && /\d{2}:\d{2}/.test(val)) el.textContent = val;
+}
+
 function formatDisplayDate(display, dateStr){
   if(!dateStr) return display || '';
   let d = dateStr;
@@ -251,7 +259,7 @@ function applyActivityToUI(act){
   currentActivity = act;
   const titleEl = document.getElementById('activity-title'); if(titleEl) titleEl.textContent = act.title || 'Prochaine partie';
   const nameEl = document.getElementById('activity-name'); if(nameEl) nameEl.textContent = act.title || '—';
-  const dateEl = document.getElementById('activity-date'); if(dateEl) dateEl.textContent = formatDisplayDate(act.display_date, act.date);
+  setDateEl(act.display_date, act.date);
   setPillText('buyin-pill', (act.buyin!==null && act.buyin!==undefined)? act.buyin+' €' : '—');
   setPillText('rake-pill', (act.rake!==null && act.rake!==undefined)? act.rake+' €' : '—');
   setInscritsPill(act.participants_count !== undefined ? act.participants_count : act.count);
@@ -342,7 +350,7 @@ async function fetchNext(){
       try{ localStorage.setItem('lastActivity', JSON.stringify(act)); }catch(e){}
       document.getElementById('activity-title').textContent = act.title || 'Prochaine partie';
       document.getElementById('activity-name').textContent = act.title || '—';
-      document.getElementById('activity-date').textContent = formatDisplayDate(act.display_date, act.date);
+      setDateEl(act.display_date, act.date);
       setPillText('buyin-pill', (act.buyin!==null && act.buyin!==undefined)? act.buyin+' €' : '—');
       setPillText('rake-pill', (act.rake!==null && act.rake!==undefined)? act.rake+' €' : '—');
       setInscritsPill(act.participants_count);
@@ -487,7 +495,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
       currentActivity = act;
       const at = document.getElementById('activity-title'); if(at) at.textContent = act.title || 'Prochaine partie';
       const an = document.getElementById('activity-name'); if(an) an.textContent = act.title || '—';
-      const ad = document.getElementById('activity-date'); if(ad) ad.textContent = formatDisplayDate(act.display_date, act.date);
+      setDateEl(act.display_date, act.date);
       setPillText('buyin-pill', (act.buyin? act.buyin+' €':'—'));
       setPillText('rake-pill', (act.rake? act.rake+' €':'—'));
       setInscritsPill(act.participants_count);
