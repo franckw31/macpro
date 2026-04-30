@@ -773,6 +773,7 @@ if ($_cur) {
     let speechVoice = null;
     let localInterval = null;
     let actionInProgress = false;
+    let currentLevelIndex = -1;
     let resumeIndicatorTimeout = null;
 
     // ---- CLOCK ----
