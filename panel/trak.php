@@ -451,6 +451,8 @@ document.getElementById('note-input').addEventListener('keydown', function(e){
 
 // Par défaut : afficher toutes les notes du joueur connecté
 (function(){
+    // N'exécute l'auto-init que si aucune sélection utilisateur n'a eu lieu
+    if (trak.pseudo) return;
     var params = new URLSearchParams(window.location.search);
     var p = params.get('pseudo');
     if (p) {
