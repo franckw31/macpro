@@ -287,16 +287,18 @@ function setTab(mode) {
 function loadNotes() {
     document.getElementById('notes-wrap').innerHTML = '<div class="spinner">Chargement…</div>';
     var url;
-    if (trak.allMode) {
-        url = '/api/trak-notes.php?all=1';
-    } else {
-        // Préfère envoyer l'id_cible pour un filtrage SQL strict côté serveur
+    // Si un pseudo est sélectionné on l'utilise en priorité (id_cible si possible)
+    if (trak.pseudo) {
         var m = membres.find(m=>m.pseudo===trak.pseudo);
         if (m && m.id) {
             url = '/api/trak-notes.php?id_cible=' + encodeURIComponent(m.id);
         } else {
             url = '/api/trak-notes.php?pseudo=' + encodeURIComponent(trak.pseudo);
         }
+    } else if (trak.allMode) {
+        url = '/api/trak-notes.php?all=1';
+    } else {
+        url = '/api/trak-notes.php?all=1';
     }
     fetch(url, { credentials:'include' })
     .then(r=>r.json()).then(d=>{
