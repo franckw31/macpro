@@ -275,7 +275,10 @@ function selectPlayer(pseudo, photo) {
     // Force fetch by id_cible to avoid any race with initial load
     var msel = membres.find(m=>m.pseudo===pseudo);
     var url2 = msel && msel.id ? ('/api/trak-notes.php?id_cible=' + encodeURIComponent(msel.id)) : ('/api/trak-notes.php?pseudo=' + encodeURIComponent(pseudo));
+    // mark pending selection so initial load does not overwrite
+    trak.pendingSelection = true;
     var reqIdSel = ++trak.requestId;
+    try { var rawDiv = document.getElementById('api-raw-response'); if (rawDiv) { rawDiv.style.display='block'; rawDiv.textContent = 'URL: ' + url2 + '\n\n(fetching...)'; } } catch(e){}
     fetch(url2, { credentials:'include' })
     .then(r=>r.json()).then(d=>{
         if (reqIdSel !== trak.requestId) return; // stale response
@@ -287,6 +290,7 @@ function selectPlayer(pseudo, photo) {
                 rawDiv.textContent = 'URL: ' + url2 + '\n\n' + JSON.stringify(d, null, 2);
             }
         } catch(e){}
+        trak.pendingSelection = false;
         trak.notes = d.success ? (d.notes||[]) : [];
         renderNotes();
     }).catch(()=>{ document.getElementById('notes-wrap').innerHTML='<div class="empty-msg">Erreur réseau</div>'; });
