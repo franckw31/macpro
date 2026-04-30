@@ -94,7 +94,26 @@ try {
 				'recave'            => $recave,
 				'structure_detail'  => $structure_detail_text,
 				'structure_id'      => $structure_id,
+				'structure_levels'  => [],
 			];
+
+			// Fetch blind levels for the structure table
+			$structure_levels = [];
+			if (!empty($con)) {
+				$blq = mysqli_query($con, "SELECT `ordre`,`nom`,`sb`,`bb`,`ante`,`minutes` FROM `blindes-live` WHERE `id-activite`='".intval($id)."' ORDER BY `ordre` ASC");
+				if ($blq) {
+					while ($blr = mysqli_fetch_assoc($blq)) {
+						$structure_levels[] = [
+							'ordre'   => (int)$blr['ordre'],
+							'nom'     => $blr['nom'] ?? null,
+							'sb'      => (int)$blr['sb'],
+							'bb'      => (int)$blr['bb'],
+							'ante'    => (int)$blr['ante'],
+							'minutes' => (int)$blr['minutes'],
+						];
+					}
+				}
+			}
 
 			$serverParticipation = null;
 			if (!empty($_SESSION['id']) && !empty($con)) {
@@ -313,6 +332,19 @@ a{color:inherit;text-decoration:none}
 .v2-detail-row:last-child{border-bottom:none}
 .v2-detail-label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .v2-detail-value{font-size:14px;font-weight:700}
+
+/* ─── STRUCTURE TABLE ─── */
+#dd-structure-wrap{width:100%;overflow-x:auto;margin-top:4px}
+.v2-blind-table{width:100%;border-collapse:collapse;font-size:12px}
+.v2-blind-table th{color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;font-size:10px;padding:5px 6px;border-bottom:1px solid var(--border);text-align:center}
+.v2-blind-table td{padding:6px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600}
+.v2-blind-table tr:last-child td{border-bottom:none}
+.v2-blind-table td.lvl-num{color:var(--muted);font-size:11px;font-weight:400}
+.v2-blind-table td.lvl-sb{color:#fff}
+.v2-blind-table td.lvl-bb{color:var(--orange)}
+.v2-blind-table td.lvl-ante{color:var(--green)}
+.v2-blind-table td.lvl-min{color:var(--muted)}
+.v2-blind-table tr.lvl-pause td{color:var(--muted);font-style:italic;font-weight:400}
 
 /* ─── INSCRIPTION MODAL ─── */
 .v2-ins-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
@@ -645,7 +677,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
     <div class="v2-detail-section">
       <div class="v2-detail-section-title">Structure</div>
-      <div class="v2-detail-row" style="justify-content:flex-start"><div class="v2-detail-value" style="color:var(--green);text-align:left" id="dd-structure">—</div></div>
+      <div id="dd-structure-wrap"><div style="color:var(--muted);font-size:13px;padding:8px 0" id="dd-structure-empty">—</div></div>
     </div>
   </div>
 </div>
@@ -914,7 +946,34 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     f('dd-bounty', act.bounty ? act.bounty+' €' : '—');
     f('dd-recave', act.recave || '—');
     f('dd-jetons', act.start_chips || '—');
-    f('dd-structure', act.structure_detail || '—');
+    // Build blind levels table
+    var structWrap = document.getElementById('dd-structure-wrap');
+    var structEmpty = document.getElementById('dd-structure-empty');
+    var levels = act.structure_levels || [];
+    if (structWrap && levels.length > 0) {
+      var html = '<table class="v2-blind-table"><thead><tr>';
+      html += '<th>#</th><th>SB</th><th>BB</th><th>Ante</th><th>Min</th>';
+      html += '</tr></thead><tbody>';
+      for (var li = 0; li < levels.length; li++) {
+        var lv = levels[li];
+        var isPause = lv.sb === 0 || (lv.nom && /pause|break/i.test(lv.nom));
+        if (isPause) {
+          html += '<tr class="lvl-pause"><td colspan="5">' + (lv.nom || 'Pause') + ' — ' + (lv.minutes ? lv.minutes + ' min' : '') + '</td></tr>';
+        } else {
+          html += '<tr>';
+          html += '<td class="lvl-num">' + lv.ordre + '</td>';
+          html += '<td class="lvl-sb">' + lv.sb + '</td>';
+          html += '<td class="lvl-bb">' + lv.bb + '</td>';
+          html += '<td class="lvl-ante">' + (lv.ante || '—') + '</td>';
+          html += '<td class="lvl-min">' + (lv.minutes || '—') + '</td>';
+          html += '</tr>';
+        }
+      }
+      html += '</tbody></table>';
+      structWrap.innerHTML = html;
+    } else if (structEmpty) {
+      structEmpty.textContent = act.structure_detail || '—';
+    }
     modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
   }
   if(btn) btn.addEventListener('click', open);
