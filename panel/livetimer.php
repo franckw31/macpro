@@ -746,7 +746,17 @@ if ($_cur) {
     $_iln  = $_inm ?: ($_ci + 1);
     $_inxt = '';
     if (isset($_bl[$_ci+1])) { $_in=$_bl[$_ci+1]; $_ins=intval($_in['sb']??0); $_inb=intval($_in['bb']??0); $_inxt=($_ins==0&&$_inb==0)?'PAUSE':$_ins.'/'.$_inb; }
-    $INIT_TIMER = json_encode(['status'=>$_init_paused?'paused':'running','seconds_remaining'=>intval($_isec),'duration_seconds'=>intval($_idur),'blinds_text'=>$_ibt,'blinds_raw'=>$_isb.'/'.$_ibb,'ante_text'=>$_iat,'level_name'=>(string)$_iln,'level_index'=>$_ci,'level_total'=>count($_bl),'is_paused'=>$_init_paused,'next_blinds_raw'=>$_inxt,'next_blinds_text'=>$_inxt,'avg_stack'=>number_format($avg_stack,0,',',' '),'players_active'=>$active_players,'players_total'=>$total_players]);
+    // Calcul next_pause pour INIT_TIMER
+    $_inp = '';
+    for ($_pi = $_ci + 1; $_pi < count($_bl); $_pi++) {
+        $_pb = $_bl[$_pi];
+        if (intval($_pb['sb']??0) == 0 && intval($_pb['bb']??0) == 0) {
+            $_ps = strtotime($_bl[$_pi-1]['fin']) - $_now;
+            if ($_ps > 0) { $_ph=floor($_ps/3600); $_pm=floor(($_ps%3600)/60); $_inp=$_ph>0?'dans '.$_ph.'h'.str_pad($_pm,2,'0',STR_PAD_LEFT):'dans '.$_pm.'m'; }
+            break;
+        }
+    }
+    $INIT_TIMER = json_encode(['status'=>$_init_paused?'paused':'running','seconds_remaining'=>intval($_isec),'duration_seconds'=>intval($_idur),'blinds_text'=>$_ibt,'blinds_raw'=>$_isb.'/'.$_ibb,'ante_text'=>$_iat,'level_name'=>(string)$_iln,'level_index'=>$_ci,'level_total'=>count($_bl),'is_paused'=>$_init_paused,'next_blinds_raw'=>$_inxt,'next_blinds_text'=>$_inxt,'next_pause'=>$_inp,'avg_stack'=>number_format($avg_stack,0,',',' '),'players_active'=>$active_players,'players_total'=>$total_players]);
 } else {
     $INIT_TIMER = json_encode(['status'=>'finished']);
 }
