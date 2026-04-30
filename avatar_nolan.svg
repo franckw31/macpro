@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <clipPath id="circle">
+      <circle cx="200" cy="200" r="200"/>
+    </clipPath>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#1a2a3a"/>
+      <stop offset="100%" stop-color="#040d14"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Fond rond -->
+  <circle cx="200" cy="200" r="200" fill="url(#bg)"/>
+
+  <!-- Bordure dorée -->
+  <circle cx="200" cy="200" r="194" fill="none" stroke="#c9a84c" stroke-width="4"/>
+  <circle cx="200" cy="200" r="186" fill="none" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+
+  <!-- Symboles cartes en fond (décoratif) -->
+  <text x="72" y="148" font-size="72" fill="rgba(201,168,76,0.08)" font-family="serif">♠</text>
+  <text x="240" y="148" font-size="72" fill="rgba(201,168,76,0.08)" font-family="serif">♦</text>
+  <text x="72" y="280" font-size="72" fill="rgba(201,168,76,0.08)" font-family="serif">♣</text>
+  <text x="240" y="280" font-size="72" fill="rgba(201,168,76,0.08)" font-family="serif">♥</text>
+
+  <!-- Grand symbole central -->
+  <text x="200" y="218" font-size="110" fill="rgba(201,168,76,0.13)" font-family="serif" text-anchor="middle">♠</text>
+
+  <!-- Ligne déco haut -->
+  <line x1="80" y1="138" x2="320" y2="138" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
+
+  <!-- COACHING -->
+  <text x="200" y="132" font-size="18" fill="rgba(201,168,76,0.7)" font-family="'Arial', sans-serif" font-weight="300" text-anchor="middle" letter-spacing="6">COACHING</text>
+
+  <!-- POKER -->
+  <text x="200" y="230" font-size="68" fill="#ffffff" font-family="'Arial Black', 'Arial', sans-serif" font-weight="900" text-anchor="middle" filter="url(#glow)" letter-spacing="2">POKER</text>
+
+  <!-- Ligne déco bas -->
+  <line x1="80" y1="252" x2="320" y2="252" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
+
+  <!-- NOLAN -->
+  <text x="200" y="295" font-size="30" fill="#c9a84c" font-family="'Arial', sans-serif" font-weight="700" text-anchor="middle" letter-spacing="8">NOLAN</text>
+
+  <!-- Instagram -->
+  <text x="200" y="334" font-size="13" fill="rgba(255,255,255,0.38)" font-family="'Arial', sans-serif" font-weight="400" text-anchor="middle" letter-spacing="1">@lavolaille31</text>
+
+</svg>
