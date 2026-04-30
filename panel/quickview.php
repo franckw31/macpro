@@ -284,6 +284,7 @@ a{color:inherit;text-decoration:none}
 .v2-list-icon.blue{background:rgba(10,132,255,0.15)}
 .v2-list-icon.purple{background:rgba(180,123,255,0.15)}
 .v2-list-icon.teal{background:rgba(48,213,200,0.15)}
+.v2-list-icon.orange{background:rgba(255,159,10,0.15)}
 .v2-list-body{flex:1;min-width:0}
 .v2-list-name{font-size:15px;font-weight:700;margin-bottom:2px}
 .v2-list-sub{font-size:12px;color:var(--muted)}
