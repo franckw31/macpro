@@ -178,10 +178,8 @@ try {
 } catch (Exception $e) { error_log('allActivities fetch error: ' . $e->getMessage()); }
 
 $uid_q = !empty($serverActivity['id']) ? '?uid=' . intval($serverActivity['id']) : '';
-$participants_href = (
-	!empty($serverActivity['date']) &&
-	strtotime($serverActivity['date']) < time()
-) ? '/panel/resultats.php' . $uid_q : '/panel/participants.php' . $uid_q;
+$is_past = !empty($serverActivity['date']) && strtotime($serverActivity['date']) < time();
+$participants_href = $is_past ? '/panel/resultats.php' . $uid_q : '/panel/participants.php' . $uid_q;
 ?>
 <!doctype html>
 <html lang="fr">
@@ -532,8 +530,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       </div>
       <div class="v2-list-body">
-        <div class="v2-list-name">Liste des participants</div>
-        <div class="v2-list-sub">Voir les joueurs inscrits</div>
+        <div class="v2-list-name"><?php echo $is_past ? 'Résultat de la partie' : 'Liste des participants'; ?></div>
+        <div class="v2-list-sub"><?php echo $is_past ? 'Voir les résultats' : 'Voir les joueurs inscrits'; ?></div>
       </div>
       <div class="v2-list-chev">›</div>
     </a>
