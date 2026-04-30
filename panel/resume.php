@@ -352,22 +352,22 @@ if($activity){
                         <div class="value" style="display:flex;align-items:center;gap:10px">
                             <span><span style="color:<?php echo $position_color; ?>"><?php echo h($rank); ?></span> / <?php echo intval($total_count); ?></span>
                             <?php
-                                // Score = (100 - (rank / (inscrits + total_recaves_all - player_recaves)) * 2) / 100
+                                // Score = (100 - (rank / (inscrits + total_recaves_all - player_recaves))) * (2/100)
                                 $total_recaves_all = 0;
                                 if(isset($all_rows) && is_array($all_rows)){
                                     foreach($all_rows as $_sr){ $total_recaves_all += intval($_sr['recave'] ?? 0); }
                                 }
                                 $score_denom = intval($total_count) + $total_recaves_all - $recave_count;
                                 if($score_denom > 0){
-                                    $score = (100 - ($rank / $score_denom) * 2) / 100;
-                                    $score_pct = round($score * 100, 1);
-                                    $score_color = ($score_pct >= 90) ? 'var(--gold)' : (($score_pct >= 70) ? 'var(--green)' : (($score_pct >= 50) ? 'var(--blue)' : 'var(--muted)'));
-                                    echo '<span style="font-size:11px;color:'.$score_color.';font-weight:700">Score '.$score_pct.'%</span>';
+                                    $score = (100 - ($rank / $score_denom)) * (2 / 100);
+                                    $score_pct = round($score, 4);
+                                    $score_color = ($score >= 1.8) ? 'var(--gold)' : (($score >= 1.5) ? 'var(--green)' : (($score >= 1.0) ? 'var(--blue)' : 'var(--muted)'));
+                                    echo '<span style="font-size:11px;color:'.$score_color.';font-weight:700">Score '.$score_pct.'</span>';
                                     echo '<div style="font-size:10px;color:var(--muted);margin-top:4px">';
-                                    echo 'Formule : (100 - (rang / (inscrits + recaves_all - recaves_joueur)) × 2) / 100<br>';
-                                    echo '= (100 - ('.$rank.' / ('.$total_count.' + '.$total_recaves_all.' - '.$recave_count.')) × 2) / 100<br>';
-                                    echo '= (100 - ('.$rank.' / '.$score_denom.') × 2) / 100<br>';
-                                    echo '= (100 - '.round(($rank / $score_denom) * 2, 4).') / 100 = '.$score_pct.'%';
+                                    echo 'Formule : (100 - (rang / (inscrits + recaves_all - recaves_joueur))) × (2/100)<br>';
+                                    echo '= (100 - ('.$rank.' / ('.$total_count.' + '.$total_recaves_all.' - '.$recave_count.'))) × (2/100)<br>';
+                                    echo '= (100 - '.round($rank / $score_denom, 4).') × 0.02<br>';
+                                    echo '= '.round(100 - ($rank / $score_denom), 4).' × 0.02 = '.$score_pct;
                                     echo '</div>';
                                 }
                             ?>
