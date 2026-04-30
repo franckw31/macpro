@@ -941,7 +941,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		</style>
 		<section id="podium-section" class="card stroked" style="display:none;cursor:pointer" aria-hidden="true" onclick="window.location.href='/panel/resume.php?uid=<?php echo isset($serverActivity['id']) ? intval($serverActivity['id']) : (isset($act) && $act ? intval($act['id-activite']) : ''); ?>'">
 			<div style="font-weight:700;color:var(--gold);text-transform:uppercase;font-size:12px">Podium payés</div>
-			<div style="text-align:center;margin-top:4px"><span style="font-size:11px;color:#08b0ff;font-weight:600;text-decoration:underline">Vos Stats Partie </span></div>
+			<div style="text-align:center;margin-top:4px"><span style="font-size:11px;color:#08b0ff;font-weight:600;text-decoration:underline">Cliquer pour voir Vos Stats Partie </span></div>
 			<hr style="border:none;border-top:1px solid rgba(255,215,0,0.08);margin:8px 0">
 			<div id="podium-list">
 						<?php
