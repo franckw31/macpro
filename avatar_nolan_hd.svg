@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200">
+  <defs>
+    <clipPath id="circle">
+      <circle cx="600" cy="600" r="580"/>
+    </clipPath>
+    <radialGradient id="bg" cx="50%" cy="35%" r="75%">
+      <stop offset="0%" stop-color="#1c2e42"/>
+      <stop offset="60%" stop-color="#0a1620"/>
+      <stop offset="100%" stop-color="#020810"/>
+    </radialGradient>
+    <radialGradient id="glow_center" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(201,168,76,0.12)"/>
+      <stop offset="100%" stop-color="rgba(201,168,76,0)"/>
+    </radialGradient>
+    <filter id="text_glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#c9a84c" flood-opacity="0.5" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="white_glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10" result="blur"/>
+      <feFlood flood-color="#ffffff" flood-opacity="0.4" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="gold_text" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0d060"/>
+      <stop offset="50%" stop-color="#c9a84c"/>
+      <stop offset="100%" stop-color="#a07830"/>
+    </linearGradient>
+    <linearGradient id="border_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0d060"/>
+      <stop offset="50%" stop-color="#c9a84c"/>
+      <stop offset="100%" stop-color="#8a6020"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fond rond -->
+  <circle cx="600" cy="600" r="600" fill="#020810"/>
+  <circle cx="600" cy="600" r="580" fill="url(#bg)"/>
+
+  <!-- Lueur centrale décorative -->
+  <circle cx="600" cy="600" r="400" fill="url(#glow_center)"/>
+
+  <!-- Bordures dorées -->
+  <circle cx="600" cy="600" r="572" fill="none" stroke="url(#border_grad)" stroke-width="10"/>
+  <circle cx="600" cy="600" r="554" fill="none" stroke="rgba(201,168,76,0.20)" stroke-width="2"/>
+  <circle cx="600" cy="600" r="540" fill="none" stroke="rgba(201,168,76,0.08)" stroke-width="1"/>
+
+  <!-- Symboles cartes en filigrane fond -->
+  <text x="130" y="360" font-size="220" fill="rgba(201,168,76,0.06)" font-family="Georgia, serif">♠</text>
+  <text x="720" y="360" font-size="220" fill="rgba(201,168,76,0.06)" font-family="Georgia, serif">♦</text>
+  <text x="130" y="900" font-size="220" fill="rgba(201,168,76,0.06)" font-family="Georgia, serif">♣</text>
+  <text x="720" y="900" font-size="220" fill="rgba(201,168,76,0.06)" font-family="Georgia, serif">♥</text>
+
+  <!-- Grand pique central en filigrane -->
+  <text x="600" y="680" font-size="560" fill="rgba(201,168,76,0.07)" font-family="Georgia, serif" text-anchor="middle">♠</text>
+
+  <!-- Ligne déco haut -->
+  <line x1="180" y1="370" x2="1020" y2="370" stroke="rgba(201,168,76,0.50)" stroke-width="2"/>
+  <!-- Petits losanges décoratifs sur la ligne -->
+  <polygon points="600,358 612,370 600,382 588,370" fill="#c9a84c" opacity="0.7"/>
+  <polygon points="300,358 308,370 300,382 292,370" fill="#c9a84c" opacity="0.35"/>
+  <polygon points="900,358 908,370 900,382 892,370" fill="#c9a84c" opacity="0.35"/>
+
+  <!-- COACHING -->
+  <text x="600" y="348" font-size="52" fill="rgba(240,208,96,0.75)" font-family="'Arial', 'Helvetica', sans-serif" font-weight="300" text-anchor="middle" letter-spacing="22">COACHING</text>
+
+  <!-- POKER - texte principal -->
+  <text x="600" y="690" font-size="260" fill="url(#gold_text)" font-family="'Arial Black', 'Arial', sans-serif" font-weight="900" text-anchor="middle" filter="url(#white_glow)" letter-spacing="8">POKER</text>
+
+  <!-- Ligne déco bas -->
+  <line x1="180" y1="740" x2="1020" y2="740" stroke="rgba(201,168,76,0.50)" stroke-width="2"/>
+  <polygon points="600,728 612,740 600,752 588,740" fill="#c9a84c" opacity="0.7"/>
+  <polygon points="300,728 308,740 300,752 292,740" fill="#c9a84c" opacity="0.35"/>
+  <polygon points="900,728 908,740 900,752 892,740" fill="#c9a84c" opacity="0.35"/>
+
+  <!-- NOLAN -->
+  <text x="600" y="860" font-size="110" fill="url(#gold_text)" font-family="'Arial', 'Helvetica', sans-serif" font-weight="700" text-anchor="middle" filter="url(#text_glow)" letter-spacing="28">NOLAN</text>
+
+  <!-- Séparateur fin -->
+  <line x1="380" y1="900" x2="820" y2="900" stroke="rgba(201,168,76,0.30)" stroke-width="1"/>
+
+  <!-- instagram.com/lavolaille31 -->
+  <text x="600" y="958" font-size="38" fill="rgba(201,168,76,0.65)" font-family="'Arial', 'Helvetica', sans-serif" font-weight="400" text-anchor="middle" letter-spacing="3">instagram.com/lavolaille31</text>
+
+  <!-- coaching poker NOLAN en tout petit -->
+  <text x="600" y="1010" font-size="30" fill="rgba(255,255,255,0.22)" font-family="'Arial', 'Helvetica', sans-serif" font-weight="300" text-anchor="middle" letter-spacing="4">coaching poker NOLAN</text>
+
+</svg>
