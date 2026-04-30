@@ -275,6 +275,14 @@ function selectPlayer(pseudo, photo) {
     var url2 = msel && msel.id ? ('/api/trak-notes.php?id_cible=' + encodeURIComponent(msel.id)) : ('/api/trak-notes.php?pseudo=' + encodeURIComponent(pseudo));
     fetch(url2, { credentials:'include' })
     .then(r=>r.json()).then(d=>{
+        // update raw response block so user sees the actual URL/JSON used for this selection
+        try {
+            var rawDiv = document.getElementById('api-raw-response');
+            if (rawDiv) {
+                rawDiv.style.display = 'block';
+                rawDiv.textContent = 'URL: ' + url2 + '\n\n' + JSON.stringify(d, null, 2);
+            }
+        } catch(e){}
         trak.notes = d.success ? (d.notes||[]) : [];
         renderNotes();
     }).catch(()=>{ document.getElementById('notes-wrap').innerHTML='<div class="empty-msg">Erreur réseau</div>'; });
