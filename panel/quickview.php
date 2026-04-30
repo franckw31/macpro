@@ -836,6 +836,7 @@ function trakSetMode(mode) {
 function trakLoad() {
   document.getElementById('v2-trak-list').innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Chargement…</div>';
   fetch('/api/trak-notes.php?pseudo=' + encodeURIComponent(trakState.pseudo), {
+    credentials: 'include',
     headers: { 'Authorization': 'Bearer <?php echo addslashes($_SESSION["token"] ?? ""); ?>' }
   })
   .then(r => r.json())
@@ -894,6 +895,7 @@ function trakSend() {
   btn.disabled = true;
   fetch('/api/trak-notes.php', {
     method: 'POST',
+    credentials: 'include',
     headers: { 'Content-Type':'application/json', 'Authorization':'Bearer <?php echo addslashes($_SESSION["token"] ?? ""); ?>' },
     body: JSON.stringify({ action:'add', pseudo_cible: trakState.pseudo, note: text, id_activite: trakState.activityId })
   })
@@ -914,6 +916,7 @@ function trakDelete(id) {
   if (!confirm('Supprimer cette note ?')) return;
   fetch('/api/trak-notes.php', {
     method: 'POST',
+    credentials: 'include',
     headers: { 'Content-Type':'application/json', 'Authorization':'Bearer <?php echo addslashes($_SESSION["token"] ?? ""); ?>' },
     body: JSON.stringify({ action:'delete', id: id })
   })
