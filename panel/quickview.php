@@ -320,7 +320,7 @@ a{color:inherit;text-decoration:none}
 .v2-nav-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 
 /* ─── MODAL ─── */
-.v2-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:flex-end;justify-content:center;padding-bottom:30px}
+.v2-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:flex-end;justify-content:center;padding-bottom:60px}
 .v2-modal-overlay.open{display:flex}
 .v2-modal-sheet{background:#0d1520;border-top-left-radius:20px;border-top-right-radius:20px;padding:20px 20px 16px;width:100%;max-width:440px;max-height:80vh;overflow-y:auto;position:relative}
 .v2-modal-handle{width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:4px;margin:0 auto 16px}
