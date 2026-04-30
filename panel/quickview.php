@@ -304,7 +304,7 @@ a{color:inherit;text-decoration:none}
 .v2-modal-handle{width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:4px;margin:0 auto 16px}
 .v2-modal-title{font-size:17px;font-weight:800;margin-bottom:4px}
 .v2-modal-sub{font-size:13px;color:var(--muted);margin-bottom:16px}
-.v2-modal-close{position:absolute;top:14px;right:16px;background:rgba(255,255,255,0.06);border-radius:20px;padding:5px 12px;font-size:13px;font-weight:700;color:var(--text2)}
+.v2-modal-close{position:absolute;top:14px;right:16px;background:var(--orange);border-radius:20px;padding:5px 12px;font-size:13px;font-weight:700;color:#fff}
 .v2-detail-section{margin-bottom:14px}
 .v2-detail-section-title{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
 .v2-detail-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)}
