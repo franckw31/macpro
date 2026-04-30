@@ -143,8 +143,8 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
 
 <div class="content-area" id="content-area">
     <div class="tabs">
-        <button class="tab-btn active" id="tab-ecrites" onclick="setTab('auteur')">✏️ Écrites</button>
         <?php if ($my_id === 2 || $my_id === 265): ?>
+            <button class="tab-btn active" id="tab-ecrites" onclick="setTab('auteur')">✏️ Écrites</button>
             <button class="tab-btn inactive" id="tab-recues"  onclick="setTab('cible')">📥 Reçues</button>
         <?php endif; ?>
     </div>
