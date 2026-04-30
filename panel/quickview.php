@@ -353,6 +353,9 @@ a{color:inherit;text-decoration:none}
 /* Event list below grid */
 .v2-cal-list{overflow-y:scroll;padding:8px 6px 8px 14px;max-height:320px;min-height:0;scrollbar-width:none}
 .v2-cal-list::-webkit-scrollbar{display:none}
+.v2-cal-list-container{position:relative;padding-right:10px}
+.v2-cal-scrollbar-track{position:absolute;top:0;right:0;width:5px;height:100%;background:#1a2535;border-radius:4px}
+.v2-cal-scrollbar-thumb{position:absolute;right:0;width:5px;background:#ff9f0a;border-radius:4px;min-height:20px;transition:top .05s}
 .v2-cal-list-wrap{position:relative}
 .v2-cal-list-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(to bottom,transparent,#0d1520);pointer-events:none;transition:opacity .2s}
 .v2-cal-list-wrap.at-bottom::after{opacity:0}
