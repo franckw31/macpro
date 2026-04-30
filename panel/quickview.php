@@ -590,9 +590,19 @@ document.addEventListener('DOMContentLoaded', function() {
 			<div class="row" style="margin-top:6px">
 				<div style="flex:1">
 					<div id="activity-name" style="display:none"></div>
+					<div id="activity-date" style="display:none"></div>
 				<div style="display:flex;align-items:center;gap:8px;margin-top:6px">
 						<div class="date-pill"><svg class="date-pill-icon" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12.5 8v5l3 1" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
-						<div id="activity-date" data-locked="1" class="small" style="color:var(--gold);font-weight:700"><?php echo !empty($serverActivity['display_date'])? htmlspecialchars($serverActivity['display_date']) : (!empty($serverActivity['date'])? htmlspecialchars($serverActivity['date']) : '—'); ?></div>
+						<div class="small" style="color:var(--gold);font-weight:700"><?php
+							$dtobj2 = new DateTime($serverActivity['date'], new DateTimeZone('Europe/Paris'));
+							echo $dtobj2->format('l j F H\hi');
+							// Format manuel FR
+							$jours = ['Monday'=>'Lundi','Tuesday'=>'Mardi','Wednesday'=>'Mercredi','Thursday'=>'Jeudi','Friday'=>'Vendredi','Saturday'=>'Samedi','Sunday'=>'Dimanche'];
+							$mois = ['January'=>'Janvier','February'=>'Février','March'=>'Mars','April'=>'Avril','May'=>'Mai','June'=>'Juin','July'=>'Juillet','August'=>'Août','September'=>'Septembre','October'=>'Octobre','November'=>'Novembre','December'=>'Décembre'];
+							$d2 = new DateTime($serverActivity['date'], new DateTimeZone('Europe/Paris'));
+							$txt = $jours[$d2->format('l')] . ' ' . $d2->format('j') . ' ' . $mois[$d2->format('F')] . ' ' . $d2->format('H:i');
+							echo '';
+						?><?php echo htmlspecialchars($txt); ?></div>
 					</div>
 					<div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:nowrap;white-space:nowrap;overflow:hidden">
 						<div class="pill" id="buyin-pill" style="padding:6px 8px;font-size:13px;min-width:0"><span><?php echo isset($serverActivity['buyin'])? htmlspecialchars($serverActivity['buyin']).' €':'—'; ?></span></div>
