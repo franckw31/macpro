@@ -292,16 +292,25 @@ function renderNotes() {
     var mode = trak.mode, myId = trak.myId;
     var notes;
     if (trak.allMode) {
-        // Mes notes : seulement celles où je suis impliqué
-        notes = trak.notes.filter(n => mode==='auteur' ? n.id_auteur===myId : n.id_cible===myId);
-    } else {
-        // Filtre joueur : toutes les notes où le joueur sélectionné est auteur ou cible
-        var m = membres.find(m=>m.pseudo===trak.pseudo);
-        var idJoueur = m ? m.id : null;
-        if (idJoueur) {
-            notes = trak.notes.filter(n => n.id_auteur===idJoueur || n.id_cible===idJoueur);
+        // Mes notes :
+        if (trak.canSeeRecues) {
+            notes = trak.notes.filter(n => mode==='auteur' ? n.id_auteur===myId : n.id_cible===myId);
         } else {
-            notes = [];
+            notes = trak.notes.filter(n => n.id_auteur===myId);
+        }
+    } else {
+        // Filtre joueur :
+        if (trak.canSeeRecues) {
+            var m = membres.find(m=>m.pseudo===trak.pseudo);
+            var idJoueur = m ? m.id : null;
+            if (idJoueur) {
+                notes = trak.notes.filter(n => n.id_auteur===idJoueur || n.id_cible===idJoueur);
+            } else {
+                notes = [];
+            }
+        } else {
+            // Pour les non-admins, ne voir que les notes écrites par soi-même
+            notes = trak.notes.filter(n => n.id_auteur===myId);
         }
     }
     if (!notes.length) {
