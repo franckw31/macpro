@@ -533,7 +533,6 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   </div><!-- /v2-card -->
 
   <!-- ══════════ ACTIONS RAPIDES ══════════ -->
-  <div class="v2-section-title">Actions Rapides</div>
   <div class="v2-list">
 
     <a class="v2-list-item" href="<?php echo htmlspecialchars($participants_href); ?>">
