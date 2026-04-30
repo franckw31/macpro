@@ -177,9 +177,15 @@ try {
                 $ordData = $stmt->fetch();
                 $nextOrdre = intval($ordData['maxord'] ?? 0) + 1;
                 
-                error_log("[reg-api] Inserting: user=$userId, act=$actId, pseudo=$pseudo, ordre=$nextOrdre");
-                $stmt = $pdo->prepare("INSERT INTO `participation` (`id-membre`, `id-activite`, `nom-membre`, `option`, `ordre`, `ds`) VALUES (?, ?, ?, 'Inscrit', ?, NOW())");
-                $stmt->execute([$userId, $actId, $pseudo, $nextOrdre]);
+                // Fetch jetons de départ from activite
+                $stmtJ = $pdo->prepare("SELECT COALESCE(`jetons_depart`, `jetons`, 0) AS jeton_val FROM `activite` WHERE `id-activite` = ? LIMIT 1");
+                $stmtJ->execute([$actId]);
+                $jRow = $stmtJ->fetch();
+                $jetonsBonus = intval($jRow['jeton_val'] ?? 0);
+                
+                error_log("[reg-api] Inserting: user=$userId, act=$actId, pseudo=$pseudo, ordre=$nextOrdre, jetons_bonus_ins=$jetonsBonus");
+                $stmt = $pdo->prepare("INSERT INTO `participation` (`id-membre`, `id-activite`, `nom-membre`, `option`, `ordre`, `ds`, `jetons_bonus_ins`, `jetons`) VALUES (?, ?, ?, 'Inscrit', ?, NOW(), ?, ?)");
+                $stmt->execute([$userId, $actId, $pseudo, $nextOrdre, $jetonsBonus, $jetonsBonus]);
                 error_log("[reg-api] Inserted new participation record");
                 $newStatus = 'Inscrit';
                 $newIsRegistered = true;
@@ -219,9 +225,15 @@ try {
                 $ordData = $stmt->fetch();
                 $nextOrdre = intval($ordData['maxord'] ?? 0) + 1;
                 
-                error_log("[reg-api] Inserting: user=$userId, act=$actId, pseudo=$pseudo, ordre=$nextOrdre, status=$newStatus");
-                $stmt = $pdo->prepare("INSERT INTO `participation` (`id-membre`, `id-activite`, `nom-membre`, `option`, `ordre`, `ds`) VALUES (?, ?, ?, ?, ?, NOW())");
-                $stmt->execute([$userId, $actId, $pseudo, $newStatus, $nextOrdre]);
+                // Fetch jetons de départ from activite
+                $stmtJ = $pdo->prepare("SELECT COALESCE(`jetons_depart`, `jetons`, 0) AS jeton_val FROM `activite` WHERE `id-activite` = ? LIMIT 1");
+                $stmtJ->execute([$actId]);
+                $jRow = $stmtJ->fetch();
+                $jetonsBonus = intval($jRow['jeton_val'] ?? 0);
+                
+                error_log("[reg-api] Inserting: user=$userId, act=$actId, pseudo=$pseudo, ordre=$nextOrdre, status=$newStatus, jetons_bonus_ins=$jetonsBonus");
+                $stmt = $pdo->prepare("INSERT INTO `participation` (`id-membre`, `id-activite`, `nom-membre`, `option`, `ordre`, `ds`, `jetons_bonus_ins`, `jetons`) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)");
+                $stmt->execute([$userId, $actId, $pseudo, $newStatus, $nextOrdre, $jetonsBonus, $jetonsBonus]);
                 error_log("[reg-api] Inserted new participation with status $newStatus");
             }
             
