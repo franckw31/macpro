@@ -560,8 +560,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
       </div>
       <div class="v2-list-body">
-        <div class="v2-list-name">Répartition</div>
-        <div class="v2-list-sub">Voir la structure du tournoi</div>
+        <div class="v2-list-name">Traker</div>
+        <div class="v2-list-sub">Fonction en cours de Création</div>
       </div>
       <div class="v2-list-chev">›</div>
     </a>
