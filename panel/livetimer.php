@@ -359,6 +359,12 @@ if (isset($_GET['action'])) {
         /* ---- HERO / RING ---- */
         .hero { padding-top: 8px; text-align: center; }
 
+        @property --progress {
+            syntax: '<number>';
+            inherits: false;
+            initial-value: 0;
+        }
+
         .timer-ring {
             --progress: 0;
             width: min(58vw, 340px);
