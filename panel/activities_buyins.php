@@ -65,8 +65,8 @@ $q = @mysqli_query($con, $sql);
     </style>
 </head>
 <body>
-    <h2 style="margin:0 0 12px">Activités — Dépenses — <?php echo intval($uid); ?></h2>
-    <p style="margin:0 0 12px"><a href="/panel/profile.php">← Retour au profil</a></p>
+    <h2>Activités — Dépenses — <?php echo intval($uid); ?></h2>
+    <a class="back" href="/panel/profile.php">← Retour au profil</a>
     <table>
         <thead>
             <tr><th>ID</th><th>Titre</th><th>Date</th><th>Buyin</th><th>Rake</th><th>Recaves</th><th>Addons</th><th style="text-align:right">Total</th><th>Voir</th></tr>
@@ -83,19 +83,29 @@ $q = @mysqli_query($con, $sql);
                 $addon = intval($r['addon']);
                 $recave_m = number_format(intval($r['recave_montant']),0,',',' ');
                 $expense = number_format(intval($r['expense']),0,',',' ');
-                echo "<tr><td>#". $aid ."</td><td>". $title ."</td><td>". $dt ."</td><td>". $buyin ." €</td><td>". $rake ." €</td><td>". $recave ."</td><td>". $addon ."</td><td style='text-align:right;color:#9aa6b1;font-weight:800'>". $expense ." €</td><td><a href=\"/panel/resume.php?uid=". $aid ."\">Voir</a></td></tr>";
+                echo "<tr>
+                    <td data-label='ID'>#". $aid ."</td>
+                    <td data-label='Titre'>". $title ."</td>
+                    <td data-label='Date'>". $dt ."</td>
+                    <td data-label='Buyin'>". $buyin ." €</td>
+                    <td data-label='Rake'>". $rake ." €</td>
+                    <td data-label='Recaves'>". $recave ."</td>
+                    <td data-label='Addons'>". $addon ."</td>
+                    <td data-label='Total' class='total'>". $expense ." €</td>
+                    <td data-label='Voir'><a href='/panel/resume.php?uid=". $aid ."'>Voir</a></td>
+                </tr>";
             }
         } else {
             echo '<tr><td colspan="9">Aucune activité trouvée.</td></tr>';
         } ?></tbody>
     </table>
-    <div style="margin-top:12px;display:flex;gap:12px;align-items:center">
+    <div class="pagination">
         <?php if ($page > 1): ?>
-            <a href="/panel/activities_buyins.php?uid=<?php echo intval($uid); ?>&page=<?php echo $page-1; ?>" style="color:#08b0ff">← Préc</a>
+            <a href="/panel/activities_buyins.php?uid=<?php echo intval($uid); ?>&page=<?php echo $page-1; ?>">← Préc</a>
         <?php endif; ?>
-        <span style="color:#9aa6b1">Page <?php echo $page; ?> / <?php echo $total_pages; ?></span>
+        <span>Page <?php echo $page; ?> / <?php echo $total_pages; ?></span>
         <?php if ($page < $total_pages): ?>
-            <a href="/panel/activities_buyins.php?uid=<?php echo intval($uid); ?>&page=<?php echo $page+1; ?>" style="color:#08b0ff">Suiv →</a>
+            <a href="/panel/activities_buyins.php?uid=<?php echo intval($uid); ?>&page=<?php echo $page+1; ?>">Suiv →</a>
         <?php endif; ?>
     </div>
 </body>
