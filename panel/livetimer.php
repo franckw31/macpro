@@ -53,26 +53,28 @@ if (isset($_GET['action'])) {
     $act_id = intval($_GET['uid']);
 
     if ($action === 'pause') {
-        $check = mysqli_query($con, "SELECT `en_pause` FROM `blindes-live` WHERE `id-activite` = '$act_id' LIMIT 1");
-        $r = mysqli_fetch_array($check);
-        if (intval($r['en_pause']) == 0) {
-            include('en-pause-inline.php'); // fallback: direct query
-            // En-pause inline
-            $now_sql = date("Y-m-d H:i:s");
-            mysqli_query($con, "UPDATE `blindes-live` SET `en_pause` = 1, `pause_at` = '$now_sql' WHERE `id-activite` = '$act_id'");
+        $actu = date("Y-m-d H:i:s");
+        $check = mysqli_query($con, "SELECT `en_pause`, `heure_pause` FROM `blindes-live` WHERE `id-activite` = '$act_id' AND `ordre` = '1' LIMIT 1");
+        $r = mysqli_fetch_assoc($check);
+        if (intval($r['en_pause'] ?? 0) == 0) {
+            // Mise en pause (comme en-pause.php)
+            mysqli_query($con, "UPDATE `blindes-live` SET `heure_pause` = '$actu', `delta` = '0', `en_pause` = '1' WHERE `ordre` = '1' AND `id-activite` = '$act_id'");
         } else {
-            // De-pause inline
-            $check2 = mysqli_query($con, "SELECT `pause_at` FROM `blindes-live` WHERE `id-activite` = '$act_id' LIMIT 1");
-            $r2 = mysqli_fetch_array($check2);
-            if ($r2['pause_at']) {
-                $pause_duration = time() - strtotime($r2['pause_at']);
-                $blinds_q = mysqli_query($con, "SELECT `id`, `fin` FROM `blindes-live` WHERE `id-activite` = '$act_id' AND `fin` > NOW() ORDER BY `ordre` ASC");
+            // Dépause (comme de-pause.php)
+            $debpause = $r['heure_pause'];
+            if ($debpause) {
+                $delta = strtotime($actu) - strtotime($debpause);
+                mysqli_query($con, "UPDATE `blindes-live` SET `heure_depause` = '$actu', `delta` = '$delta', `en_pause` = '0' WHERE `ordre` = '1' AND `id-activite` = '$act_id'");
+                $blinds_q = mysqli_query($con, "SELECT `ordre`, `fin` FROM `blindes-live` WHERE `id-activite` = '$act_id'");
                 while ($b = mysqli_fetch_assoc($blinds_q)) {
-                    $new_fin = date("Y-m-d H:i:s", strtotime($b['fin']) + $pause_duration);
-                    mysqli_query($con, "UPDATE `blindes-live` SET `fin` = '$new_fin' WHERE `id` = '{$b['id']}'");
+                    $fin_ts = date_create($b['fin']);
+                    date_add($fin_ts, date_interval_create_from_date_string($delta . ' seconds'));
+                    $new_fin = date_format($fin_ts, 'Y-m-d H:i:s');
+                    mysqli_query($con, "UPDATE `blindes-live` SET `fin` = '$new_fin' WHERE `ordre` = '{$b['ordre']}' AND `id-activite` = '$act_id'");
                 }
+            } else {
+                mysqli_query($con, "UPDATE `blindes-live` SET `en_pause` = '0' WHERE `ordre` = '1' AND `id-activite` = '$act_id'");
             }
-            mysqli_query($con, "UPDATE `blindes-live` SET `en_pause` = 0, `pause_at` = NULL WHERE `id-activite` = '$act_id'");
         }
         echo json_encode(['success' => true]);
         exit;
@@ -116,7 +118,7 @@ if (isset($_GET['action'])) {
         } elseif ($action === 'restart') {
             // Repart du niveau 1 et dépause
             $targetIndex = 0;
-            mysqli_query($con, "UPDATE `blindes-live` SET `en_pause` = 0, `pause_at` = NULL WHERE `id-activite` = '$act_id'");
+            mysqli_query($con, "UPDATE `blindes-live` SET `en_pause` = 0, `heure_pause` = NULL, `heure_depause` = NULL WHERE `ordre` = '1' AND `id-activite` = '$act_id'");
         }
 
         if ($targetIndex >= 0 && $targetIndex < count($blinds)) {
@@ -715,11 +717,46 @@ if (isset($_GET['action'])) {
     </section>
 </div>
 
+<?php
+// --- DONNÉES INITIALES POUR LE TIMER (PHP inline) ---
+$_now = time();
+$_qp = mysqli_query($con, "SELECT `en_pause`, `heure_pause` FROM `blindes-live` WHERE `id-activite` = '$id' AND `ordre` = '1' LIMIT 1");
+$_rp = mysqli_fetch_assoc($_qp);
+$_init_paused = (intval($_rp['en_pause'] ?? 0) == 1);
+$_init_hpause = $_rp['heure_pause'] ?? null;
+$_qb = mysqli_query($con, "SELECT * FROM `blindes-live` WHERE `id-activite` = '$id' ORDER BY `ordre` ASC");
+$_bl = [];
+while ($_b = mysqli_fetch_assoc($_qb)) { $_bl[] = $_b; }
+$_cur = null; $_ci = -1;
+foreach ($_bl as $_k => $_b) {
+    if (strtotime($_b['fin']) > $_now) { $_cur = $_b; $_ci = $_k; break; }
+}
+if ($_cur) {
+    if ($_init_paused && $_init_hpause) {
+        $_isec = max(0, strtotime($_cur['fin']) - strtotime($_init_hpause));
+    } else {
+        $_isec = max(0, strtotime($_cur['fin']) - $_now);
+    }
+    $_idur = max(1, strtotime($_cur['fin']) - strtotime($_cur['debut']));
+    $_isb = intval($_cur['sb'] ?? 0); $_ibb = intval($_cur['bb'] ?? 0); $_iant = intval($_cur['ante'] ?? 0);
+    $_ibrk = ($_isb == 0 && $_ibb == 0);
+    $_ibt  = $_ibrk ? 'PAUSE' : number_format($_isb,0,',',' ') . ' / ' . number_format($_ibb,0,',',' ');
+    $_iat  = ($_iant > 0) ? 'Ante : ' . number_format($_iant,0,',',' ') : '';
+    $_inm  = $_cur['nom'] ?? '';
+    $_iln  = $_inm ?: ($_ci + 1);
+    $_inxt = '';
+    if (isset($_bl[$_ci+1])) { $_in=$_bl[$_ci+1]; $_ins=intval($_in['sb']??0); $_inb=intval($_in['bb']??0); $_inxt=($_ins==0&&$_inb==0)?'PAUSE':$_ins.'/'.$_inb; }
+    $INIT_TIMER = json_encode(['status'=>$_init_paused?'paused':'running','seconds_remaining'=>intval($_isec),'duration_seconds'=>intval($_idur),'blinds_text'=>$_ibt,'blinds_raw'=>$_isb.'/'.$_ibb,'ante_text'=>$_iat,'level_name'=>(string)$_iln,'level_index'=>$_ci,'level_total'=>count($_bl),'is_paused'=>$_init_paused,'next_blinds_raw'=>$_inxt,'next_blinds_text'=>$_inxt]);
+} else {
+    $INIT_TIMER = json_encode(['status'=>'finished']);
+}
+?>
 <script>
     const ACT_ID = <?php echo $id; ?>;
     const IS_ADMIN = <?php echo $is_admin ? 'true' : 'false'; ?>;
     const API_URL = 'livetimer.php?uid=' + ACT_ID + '&action=status';
     const ACTION_URL = 'livetimer.php?uid=' + ACT_ID + '&action=';
+    const INIT_TIMER = <?php echo $INIT_TIMER; ?>;
 
     // ---- STATE ----
     let isPaused = false;
@@ -792,12 +829,17 @@ if (isset($_GET['action'])) {
     }
 
     // ---- SYNC DEPUIS API ----
-    async function sync() {
-        if (actionInProgress) return;
+    async function sync(initialData) {
+        if (actionInProgress && !initialData) return;
         try {
-            const res = await fetch(API_URL + '&t=' + Date.now());
-            if (!res.ok) return;
-            const data = await res.json();
+            let data;
+            if (initialData) {
+                data = initialData;
+            } else {
+                const res = await fetch(API_URL + '&t=' + Date.now());
+                if (!res.ok) return;
+                data = await res.json();
+            }
             if (data.status === 'error' || data.status === 'finished') {
                 if (data.status === 'finished') {
                     document.getElementById('timer-display').textContent = 'FIN';
@@ -897,9 +939,10 @@ if (isset($_GET['action'])) {
         }
     }
 
-    // Sync toutes les 5 secondes
+    // Seed immédiat depuis PHP (pas de fetch nécessaire)
+    sync(INIT_TIMER);
+    // Sync réseau toutes les 5 secondes
     setInterval(sync, 5000);
-    sync();
 
     // ---- ACTIONS ----
     async function doAction(action, param) {
