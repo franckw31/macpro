@@ -142,57 +142,6 @@ function setInscritsPill(count) {
   }
 }
 
-// Instrumentation: intercept textContent/innerHTML writes to diagnose who replaces pill contents
-(function instrumentPills(){
-  try{
-    const watch = new Set(['inscrits-pill','buyin-pill','rake-pill','activity-date']);
-    const nodeDesc = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
-    if(nodeDesc && nodeDesc.set){
-      const origSet = nodeDesc.set.bind(Node.prototype);
-      Object.defineProperty(Node.prototype, 'textContent', {
-        get: nodeDesc.get,
-        set: function(v){
-          try{
-            if(this && this.id && watch.has(this.id)){
-              console.warn('[PILL DEBUG] textContent set on', this.id, 'value=', v);
-              console.trace();
-              // If activity-date is being set to a raw timestamp, ignore to preserve formatted display
-              if(this.id === 'activity-date' && typeof v === 'string' && /^(\d{4}-\d{2}-\d{2})([ T]\d{2}:\d{2}:\d{2})?$/.test(v)){
-                console.warn('[PILL DEBUG] Blocking raw timestamp write to activity-date:', v);
-                return; // do not perform the original set
-              }
-            }
-          }catch(e){}
-          return nodeDesc.set.call(this, v);
-        },
-        configurable: true,
-        enumerable: nodeDesc.enumerable
-      });
-    }
-    const htmlDesc = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
-    if(htmlDesc && htmlDesc.set){
-      Object.defineProperty(Element.prototype, 'innerHTML', {
-        get: htmlDesc.get,
-        set: function(v){
-          try{
-            if(this && this.id && watch.has(this.id)){
-              console.warn('[PILL DEBUG] innerHTML set on', this.id, 'value=', v);
-              console.trace();
-              if(this.id === 'activity-date' && typeof v === 'string' && /^(\d{4}-\d{2}-\d{2})([ T]\d{2}:\d{2}:\d{2})?$/.test(v)){
-                console.warn('[PILL DEBUG] Blocking raw timestamp innerHTML on activity-date');
-                return;
-              }
-            }
-          }catch(e){}
-          return htmlDesc.set.call(this, v);
-        },
-        configurable: true,
-        enumerable: htmlDesc.enumerable
-      });
-    }
-  }catch(e){ console.error('instrumentPills failed', e); }
-})();
-
 function formatEur(v){ return v + ' €'; }
 
 // Format display date: prefer server-provided `display`, otherwise format `dateStr` to French readable string
