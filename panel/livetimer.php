@@ -788,6 +788,10 @@ if ($_cur) {
         const display = document.getElementById('timer-display');
         if (!ring || !display) return;
 
+        // DEBUG VISIBLE
+        const dbg = document.getElementById('dbg-info');
+        if (dbg) dbg.textContent = 'dur=' + totalDuration + ' left=' + secondsLeft + ' paused=' + isPaused;
+
         if (isPaused) {
             display.textContent = 'PAUSE';
             display.className = 'paused';
@@ -937,6 +941,13 @@ if ($_cur) {
     }
 
     // Seed immédiat depuis PHP (pas de fetch nécessaire)
+    // Pré-initialiser totalDuration AVANT sync pour que le premier updateDisplay() fonctionne
+    if (INIT_TIMER && INIT_TIMER.duration_seconds) {
+        totalDuration = parseInt(INIT_TIMER.duration_seconds);
+    }
+    if (INIT_TIMER && INIT_TIMER.seconds_remaining) {
+        secondsLeft = parseInt(INIT_TIMER.seconds_remaining);
+    }
     sync(INIT_TIMER);
     // Sync réseau toutes les 5 secondes
     setInterval(sync, 5000);
