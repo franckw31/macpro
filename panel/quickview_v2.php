@@ -422,7 +422,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
     <!-- Date + Calendar button -->
     <div class="v2-date-row">
       <div class="v2-date-big"><?php echo htmlspecialchars($date_str); ?></div>
-      <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog" style="width:46px;height:46px;border-radius:12px;background:rgba(10,132,255,0.18);border:1px solid rgba(10,132,255,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:-15px">
+      <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog" style="width:46px;height:46px;border-radius:12px;background:rgba(10,132,255,0.18);border:1px solid rgba(10,132,255,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:-18px">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="4" width="18" height="18" rx="3" stroke="#0a84ff" stroke-width="1.8"/>
           <path d="M16 2v4M8 2v4M3 10h18" stroke="#0a84ff" stroke-width="1.8" stroke-linecap="round"/>
