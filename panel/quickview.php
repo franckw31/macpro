@@ -610,7 +610,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			<div class="row" style="margin-top:6px">
 				<div style="flex:1">
 					<div id="activity-name" style="font-weight:800;font-size:18px"><?php echo !empty($serverActivity['title'])? htmlspecialchars($serverActivity['title']) : '—'; ?></div>
-					<div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+					<div style="display:flex;align-items:center;gap:8px;margin-top:6px;display:none">
 						<div class="date-pill"><svg class="date-pill-icon" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12.5 8v5l3 1" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
 						<div id="activity-date" class="small" style="color:var(--gold);font-weight:700"><?php echo !empty($serverActivity['display_date'])? htmlspecialchars($serverActivity['display_date']) : (!empty($serverActivity['date'])? htmlspecialchars($serverActivity['date']) : '—'); ?></div>
 					</div>
