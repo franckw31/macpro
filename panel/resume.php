@@ -314,7 +314,7 @@ if($activity){
                         }
                     } else {
                         // no elimination = winner → use the last definitive elimination of the activity (= when 2nd place was eliminated)
-                        if($gains > 0 && !empty($con)){
+                        if(($gains > 0 || $rank === 1) && !empty($con)){
                             $last_elim_q = @mysqli_query($con, "SELECT MAX(created_at) AS last_elim FROM `eliminations` WHERE `id_activite` = '".$aid."' AND `is_definitive` = 1");
                             if($last_elim_q && ($last_elim_r = mysqli_fetch_assoc($last_elim_q)) && !empty($last_elim_r['last_elim'])){
                                 $elim_ts = strtotime($last_elim_r['last_elim']);
