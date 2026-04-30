@@ -694,7 +694,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     </div>
 
     <div class="v2-detail-section">
-      <div class="v2-detail-section-title">Infos Partie</div>
+      <div class="v2-detail-section-title" style="display:none">Infos Partie</div>
       <div class="v2-detail-row"><div class="v2-detail-label">👤 Organisateur</div><div class="v2-detail-value" id="dd-organisateur">—</div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">📍 Lieu</div><div class="v2-detail-value" style="color:var(--cyan);text-align:right" id="dd-lieu-wrap"><span id="dd-lieu">—</span><span id="dd-tel-wrap" style="display:none"><br><a id="dd-tel" href="#" style="font-size:12px;color:var(--muted);font-weight:500;text-decoration:none"></a></span></div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">👥 Inscrits / Max</div><div class="v2-detail-value" id="dd-inscrits">—</div></div>
