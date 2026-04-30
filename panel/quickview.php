@@ -549,7 +549,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b47bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </div>
       <div class="v2-list-body">
-        <div class="v2-list-name">Mon profil / Tracker</div>
+        <div class="v2-list-name">Mon profil / Historique / Stats</div>
         <div class="v2-list-sub">Voir mes stats et historique</div>
       </div>
       <div class="v2-list-chev">›</div>
