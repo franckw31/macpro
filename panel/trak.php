@@ -365,7 +365,15 @@ document.getElementById('note-input').addEventListener('keydown', function(e){
     var p = params.get('pseudo');
     if (p) {
         var m = membres.find(m=>m.pseudo===p);
-        if(m) selectPlayer(m.pseudo, m.photo||'');
+        if(m) {
+            trak.pseudo = m.pseudo;
+            trak.allMode = false;
+            selectPlayer(m.pseudo, m.photo||'');
+        } else {
+            trak.allMode = true;
+            trak.pseudo = '';
+            loadNotes();
+        }
     } else {
         trak.allMode = true;
         trak.pseudo = '';
