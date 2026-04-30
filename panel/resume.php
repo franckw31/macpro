@@ -363,6 +363,7 @@ if($activity){
                                     $score_pct = round($score * 100, 1);
                                     $score_color = ($score_pct >= 90) ? 'var(--gold)' : (($score_pct >= 70) ? 'var(--green)' : (($score_pct >= 50) ? 'var(--blue)' : 'var(--muted)'));
                                     echo '<span style="font-size:11px;color:'.$score_color.';font-weight:700">Score '.$score_pct.'%</span>';
+                                    echo '<span style="font-size:10px;color:var(--muted);margin-left:6px">(rang='.$rank.' / inscrits='.$total_count.' recaves_all='.$total_recaves_all.' recaves_joueur='.$recave_count.' denom='.$score_denom.')</span>';
                                 }
                             ?>
                         </div>
