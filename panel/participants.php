@@ -228,7 +228,7 @@ function trakSetMode(mode) {
 
 function trakLoad() {
   document.getElementById('trak-list').innerHTML = '<div style="text-align:center;padding:20px;color:#8fa0b0">Chargement…</div>';
-  fetch('/api/trak-notes.php?pseudo='+encodeURIComponent(trakS.pseudo), { headers:{'Authorization':'Bearer '+trakS.token} })
+  fetch('/api/trak-notes.php?pseudo='+encodeURIComponent(trakS.pseudo), { credentials:'include', headers:{'Authorization':'Bearer '+trakS.token} })
   .then(r=>r.json()).then(d => {
     trakS.notes = d.success ? (d.notes||[]) : [];
     trakS.idCible = d.id_cible || 0;
@@ -267,7 +267,7 @@ function trakSend() {
 
 function trakDel(id) {
   if(!confirm('Supprimer ?')) return;
-  fetch('/api/trak-notes.php',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+trakS.token},
+  fetch('/api/trak-notes.php',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json','Authorization':'Bearer '+trakS.token},
     body:JSON.stringify({action:'delete',id:id})})
   .then(r=>r.json()).then(d=>{ if(d.success){ trakS.notes=trakS.notes.filter(n=>n.id!==id); trakRenderNotes(); } });
 }
