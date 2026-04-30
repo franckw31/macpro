@@ -234,32 +234,27 @@ error_log("Avatar: final avatar_url={$avatar_url} for session_id=" . session_id(
 
 	<!-- Theme stylesheet loader -->
 	<link id="theme-stylesheet" rel="stylesheet" href="/panel/timer_web/public/style.variantA.css?v=<?php echo $asset_ver; ?>">
-	<!-- Inline background with version to bust cached bg image on clients -->
+	<!-- Fond mosaïque décalé avec symboles de cartes à jouer -->
 	<style>
-	body{background: linear-gradient(180deg, rgba(0,0,0,0.36) 0%, rgba(0,0,0,0.24) 100%), url('/panel/images/bg.png?v=<?php echo $asset_ver; ?>') center/cover no-repeat; background-blend-mode:overlay;}
-	/* When the background image is too small, force a solid black background */
-	body.bg-small{background-image:none !important;background-color:#000 !important;background-blend-mode:normal !important}
+	body {
+		background-color: #0a1628;
+		background-image: none;
+		position: relative;
+	}
+	body::before {
+		content: '';
+		position: fixed;
+		inset: 0;
+		z-index: -1;
+		background-color: #0a1628;
+		background-image:
+			/* Rangée 1 : ♥ rouge, ♠ blanc */
+			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Ctext x='10' y='45' font-size='28' fill='%23c0392b' opacity='0.18'%3E%E2%99%A5%3C/text%3E%3Ctext x='60' y='45' font-size='28' fill='%23ecf0f1' opacity='0.12'%3E%E2%99%A0%3C/text%3E%3Ctext x='35' y='90' font-size='28' fill='%23c0392b' opacity='0.18'%3E%E2%99%A6%3C/text%3E%3Ctext x='85' y='90' font-size='28' fill='%23ecf0f1' opacity='0.12'%3E%E2%99%A3%3C/text%3E%3C/svg%3E");
+		background-size: 100px 100px;
+		background-repeat: repeat;
+		background-position: 0 0;
+	}
 	</style>
-	<script>
-	// If bg.png is smaller than the viewport, switch to a solid black background
-	window.addEventListener('load', function(){
-		try{
-			var img = new Image();
-			img.src = '/panel/images/bg.png?v=<?php echo $asset_ver; ?>';
-			img.onload = function(){
-				var iw = img.naturalWidth || 0, ih = img.naturalHeight || 0;
-				var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-				var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-				// If image is smaller than viewport in either dimension, consider it too small
-				if(iw < vw || ih < vh){
-					document.documentElement.classList.add('bg-small');
-					document.body.classList.add('bg-small');
-				}
-			};
-			img.onerror = function(){ document.body.classList.add('bg-small'); };
-		}catch(e){/* ignore errors */}
-	});
-	</script>
 
 	<style>
 /* Compact card padding for Quickview page */
