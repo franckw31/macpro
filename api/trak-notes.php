@@ -133,14 +133,41 @@ try {
 
     $method = $_SERVER['REQUEST_METHOD'];
 
+
     // ════════════════════════════════════════════════════════════
-    //  GET – charger les notes reçues d'un joueur
-    //  Accès : admin = tout, sinon uniquement ses propres notes
+    //  GET – charger les notes reçues d'un joueur ou toutes mes notes (all=1)
     // ════════════════════════════════════════════════════════════
     if ($method === 'GET') {
         $user     = requireAuth($pdo);
         $userId   = (int)$user['membre_id'];
         $isAdmin  = $user['is_admin'];
+
+        if (!empty($_GET['all'])) {
+            // Afficher toutes les notes où je suis auteur ou cible
+            $whereClause = '(t.id_auteur = ? OR t.id_cible = ?)';
+            $params = [$userId, $userId];
+            $stmt = $pdo->prepare("
+                SELECT t.id, t.id_auteur, t.id_cible, t.id_activite, t.note, t.created_at,
+                       COALESCE(m.pseudo,  'Inconnu')            AS auteur_pseudo,
+                       COALESCE(mc.pseudo, 'Inconnu')            AS cible_pseudo,
+                       COALESCE(a.`titre-activite`, '')         AS titre_activite,
+                       DATE_FORMAT(a.date_depart,'%d/%m/%Y')   AS date_activite
+                FROM trak t
+                LEFT JOIN membres  m  ON t.id_auteur   = m.`id-membre`
+                LEFT JOIN membres  mc ON t.id_cible    = mc.`id-membre`
+                LEFT JOIN activite a  ON t.id_activite = a.`id-activite`
+                WHERE $whereClause
+                ORDER BY t.created_at DESC
+            ");
+            $stmt->execute($params);
+            $rows = $stmt->fetchAll();
+            echo json_encode([
+                'success'  => true,
+                'is_admin' => $isAdmin,
+                'notes'    => array_map('serializeNote', $rows),
+            ]);
+            exit;
+        }
 
         $pseudo_cible = trim($_GET['pseudo']   ?? '');
         $id_cible     = (int)($_GET['id_cible'] ?? 0);
