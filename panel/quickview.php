@@ -781,6 +781,164 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   </div>
 </div>
 
+<!-- ══════════ TRAK MODAL ══════════ -->
+<div class="v2-modal-overlay" id="v2-trak-modal" aria-hidden="true">
+  <div class="v2-modal-sheet" role="dialog" aria-modal="true" style="position:relative;display:flex;flex-direction:column;max-height:85vh">
+    <button onclick="document.getElementById('v2-trak-modal').setAttribute('aria-hidden','true')" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.06);padding:6px 14px;border-radius:20px;border:0;color:#ff9d3b;font-weight:700;font-size:14px;cursor:pointer;z-index:10">Fermer</button>
+    <div class="v2-modal-handle"></div>
+    <div class="v2-modal-title" id="v2-trak-title" style="padding-right:70px">Notes – joueur</div>
+
+    <!-- Filtre mode Écrites/Reçues -->
+    <div style="display:flex;gap:8px;padding:8px 16px 4px">
+      <button id="v2-trak-btn-ecrites" onclick="trakSetMode('auteur')" style="flex:1;padding:7px;border-radius:10px;border:0;font-weight:700;font-size:13px;cursor:pointer;background:#17a34a;color:#fff">✏️ Écrites</button>
+      <button id="v2-trak-btn-recues"  onclick="trakSetMode('cible')"  style="flex:1;padding:7px;border-radius:10px;border:0;font-weight:700;font-size:13px;cursor:pointer;background:rgba(255,255,255,0.07);color:var(--muted)">📥 Reçues</button>
+    </div>
+
+    <!-- Liste des notes -->
+    <div id="v2-trak-list" style="flex:1;overflow-y:auto;padding:8px 16px;min-height:100px">
+      <div id="v2-trak-loading" style="text-align:center;padding:20px;color:var(--muted)">Chargement…</div>
+    </div>
+
+    <!-- Zone saisie -->
+    <div style="padding:10px 14px;border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:8px;align-items:flex-end">
+      <textarea id="v2-trak-input" placeholder="Ajouter une note…" rows="2" style="flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text);font-size:14px;resize:none;font-family:inherit"></textarea>
+      <button id="v2-trak-send" onclick="trakSend()" style="padding:10px 14px;border-radius:10px;background:#17a34a;color:#fff;font-weight:700;border:0;cursor:pointer;font-size:18px;align-self:flex-end">➤</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── TRAK MODAL ───
+var trakState = { pseudo:'', activityId:0, mode:'auteur', notes:[], myPseudo:'<?php echo addslashes($_SESSION["pseudo"] ?? ""); ?>' };
+
+function trakOpen(pseudo, activityId) {
+  trakState.pseudo = pseudo;
+  trakState.activityId = activityId || 0;
+  trakState.mode = 'auteur';
+  document.getElementById('v2-trak-title').textContent = 'Notes – ' + pseudo;
+  document.getElementById('v2-trak-input').value = '';
+  trakSetMode('auteur');
+  document.getElementById('v2-trak-modal').setAttribute('aria-hidden','false');
+  trakLoad();
+}
+
+function trakSetMode(mode) {
+  trakState.mode = mode;
+  var btnE = document.getElementById('v2-trak-btn-ecrites');
+  var btnR = document.getElementById('v2-trak-btn-recues');
+  btnE.style.background = mode==='auteur' ? '#17a34a' : 'rgba(255,255,255,0.07)';
+  btnE.style.color      = mode==='auteur' ? '#fff' : 'var(--muted)';
+  btnR.style.background = mode==='cible'  ? '#17a34a' : 'rgba(255,255,255,0.07)';
+  btnR.style.color      = mode==='cible'  ? '#fff' : 'var(--muted)';
+  trakRender();
+}
+
+function trakLoad() {
+  document.getElementById('v2-trak-list').innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Chargement…</div>';
+  fetch('/api/trak-notes.php?pseudo=' + encodeURIComponent(trakState.pseudo), {
+    headers: { 'Authorization': 'Bearer <?php echo addslashes($_SESSION["token"] ?? ""); ?>' }
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      trakState.notes    = data.notes || [];
+      trakState.isAdmin  = data.is_admin || false;
+      trakState.idCible  = data.id_cible || 0;
+    } else {
+      trakState.notes = [];
+    }
+    trakRender();
+  })
+  .catch(() => {
+    document.getElementById('v2-trak-list').innerHTML = '<div style="color:#ff6b6b;padding:12px">Erreur réseau</div>';
+  });
+}
+
+function trakRender() {
+  var mode  = trakState.mode;
+  var myId  = <?php echo intval($_SESSION['id'] ?? 0); ?>;
+  var notes = trakState.notes.filter(n =>
+    mode === 'auteur' ? n.id_auteur === myId : n.id_cible === myId
+  );
+  if (!notes.length) {
+    document.getElementById('v2-trak-list').innerHTML =
+      '<div style="color:var(--muted);padding:12px;text-align:center">' +
+      (trakState.notes.length ? 'Aucun résultat' : 'Aucune note pour ce joueur') + '</div>';
+    return;
+  }
+  var html = notes.map(n => {
+    var displayPseudo = mode === 'auteur' ? n.cible_pseudo : n.auteur_pseudo;
+    var actLabel = n.date_activite
+      ? n.date_activite + (n.titre_activite ? ' — ' + n.titre_activite : '')
+      : n.titre_activite;
+    var canDelete = n.id_auteur === myId;
+    return '<div style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">' +
+        '<span style="font-size:12px;font-weight:700;color:var(--cyan)">' + escTrak(displayPseudo) + '</span>' +
+        '<div style="display:flex;gap:8px;align-items:center">' +
+          '<span style="font-size:11px;color:var(--muted)">' + escTrak(trakFormatDate(n.created_at)) + '</span>' +
+          (canDelete ? '<button onclick="trakDelete('+n.id+')" style="background:none;border:0;color:#ff6b6b;cursor:pointer;font-size:13px;padding:0">🗑</button>' : '') +
+        '</div>' +
+      '</div>' +
+      '<div style="font-size:14px;line-height:1.5">' + escTrak(n.note) + '</div>' +
+      (actLabel ? '<div style="font-size:11px;color:var(--muted);margin-top:4px">📅 ' + escTrak(actLabel) + '</div>' : '') +
+    '</div>';
+  }).join('');
+  document.getElementById('v2-trak-list').innerHTML = html;
+}
+
+function trakSend() {
+  var text = (document.getElementById('v2-trak-input').value || '').trim();
+  if (!text) return;
+  var btn = document.getElementById('v2-trak-send');
+  btn.disabled = true;
+  fetch('/api/trak-notes.php', {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'Authorization':'Bearer <?php echo addslashes($_SESSION["token"] ?? ""); ?>' },
+    body: JSON.stringify({ action:'add', pseudo_cible: trakState.pseudo, note: text, id_activite: trakState.activityId })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success && data.note) {
+      trakState.notes.unshift(data.note);
+      document.getElementById('v2-trak-input').value = '';
+      trakSetMode('auteur');
+      trakRender();
+    }
+    btn.disabled = false;
+  })
+  .catch(() => { btn.disabled = false; });
+}
+
+function trakDelete(id) {
+  if (!confirm('Supprimer cette note ?')) return;
+  fetch('/api/trak-notes.php', {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'Authorization':'Bearer <?php echo addslashes($_SESSION["token"] ?? ""); ?>' },
+    body: JSON.stringify({ action:'delete', id: id })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      trakState.notes = trakState.notes.filter(n => n.id !== id);
+      trakRender();
+    }
+  });
+}
+
+function trakFormatDate(str) {
+  if (!str) return '';
+  var d = new Date(str.replace(' ', 'T'));
+  if (isNaN(d)) return str;
+  return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+String(d.getFullYear()).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
+}
+
+function escTrak(s) {
+  if (!s) return '';
+  return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+</script>
+
 <script>
 // ─── CALENDAR PICKER ───
 (function(){
