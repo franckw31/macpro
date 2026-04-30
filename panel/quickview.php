@@ -968,7 +968,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     var act = window.SERVER_ACTIVITY || {};
     var f = function(id,v){ var e=document.getElementById(id); if(e) e.textContent = v||'—'; };
     f('v2-modal-title', act.title || '—');
-    f('v2-modal-sub', act.display_date || '—');
+    f('v2-modal-sub-text', act.display_date || '—');
     f('dd-organisateur', act.organizer || '—');
     f('dd-lieu', act.location || '—');
     f('dd-inscrits', (act.participants_count!=null) ? act.participants_count+(act.max_participants?' / '+act.max_participants:'') : '—');
