@@ -613,7 +613,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-list-chev">›</div>
     </a>
 
-    <a class="v2-list-item" href="/panel/trak.php">
+    <div class="v2-list-item" onclick="trakOpen('<?php echo addslashes($_SESSION['pseudo'] ?? ''); ?>', <?php echo intval($serverActivity['id'] ?? 0); ?>)" style="cursor:pointer">
       <div class="v2-list-icon teal">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
       </div>
@@ -622,7 +622,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         <div class="v2-list-sub">Notes sur les joueurs</div>
       </div>
       <div class="v2-list-chev">›</div>
-    </a>
+    </div>
 
   </div>
 
