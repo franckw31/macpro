@@ -629,7 +629,7 @@ if (isset($_GET['action'])) {
         <div class="blinds-block">
             <div class="blind-info" id="blind-info">-- / --</div>
             <div class="blind-caption">Blindes</div>
-            <div class="blind-info-next">→ <span id="next-blind-info">--</span><span id="pause-line" style="margin-left:14px;opacity:0.6;font-size:0.82em;"></span></div>
+            <div class="blind-info-next">→ <span id="next-blind-info">--</span><span id="pause-line" style="margin-left:14px;color:#12cfff;font-size:0.82em;"></span></div>
             <div class="resume-indicator" id="resume-indicator"></div>
         </div>
 
