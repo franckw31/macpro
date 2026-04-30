@@ -349,7 +349,7 @@ a{color:inherit;text-decoration:none}
 .v2-cal-day.has-event:hover,.v2-cal-day.has-event:active{background:rgba(10,132,255,.3)}
 .v2-cal-day.is-next{background:var(--green) !important;color:#04180a !important;font-weight:900;box-shadow:0 0 0 2px var(--green)}
 .v2-cal-day.is-selected{box-shadow:0 0 0 2px var(--orange);color:var(--orange)}
-.v2-cal-day.is-past.has-event{color:var(--muted);background:rgba(255,255,255,.05)}
+.v2-cal-day.is-past.has-event{color:#ff453a;background:rgba(255,69,58,.10);box-shadow:0 0 0 2px #ff453a}
 /* Event list below grid */
 .v2-cal-list{overflow-y:auto;padding:12px 18px 32px;flex:1;min-height:0}
 .v2-cal-list-title{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;margin-top:4px}
