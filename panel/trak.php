@@ -322,10 +322,29 @@ function renderNotes() {
     }
     // DEBUG: Affiche la liste des pseudos cibles filtrés
     // Affiche le debug en haut de page
-    if (!trak.allMode && !trak.canSeeRecues) {
-        document.getElementById('debug-pseudos').innerHTML = '[DEBUG] Pseudos cibles filtrés : ' + notes.map(n => escH(n.cible_pseudo)).join(', ');
-    } else {
-        document.getElementById('debug-pseudos').innerHTML = '';
+    try {
+        var debugDiv = document.getElementById('debug-pseudos');
+        if (debugDiv) {
+            if (!trak.allMode && !trak.canSeeRecues) {
+                debugDiv.innerHTML = '[DEBUG] Pseudos cibles filtrés : ' + notes.map(n => escH(n.cible_pseudo)).join(', ');
+            } else {
+                debugDiv.innerHTML = '[DEBUG] (aucun filtrage ou admin)';
+            }
+        } else {
+            // Bloc non trouvé
+            var hdr = document.querySelector('.hdr');
+            if (hdr) {
+                var d = document.createElement('div');
+                d.id = 'debug-pseudos';
+                d.style = 'color:#ff6b6b;font-size:13px;padding:4px 16px 0 16px;';
+                d.innerHTML = '[DEBUG] (bloc debug non trouvé)';
+                hdr.parentNode.insertBefore(d, hdr.nextSibling);
+            }
+        }
+    } catch(e) {
+        // Affiche une erreur JS dans le debug
+        var debugDiv = document.getElementById('debug-pseudos');
+        if (debugDiv) debugDiv.innerHTML = '[DEBUG] ERREUR JS : ' + e;
     }
     var debugList = '';
     if (!notes.length) {
