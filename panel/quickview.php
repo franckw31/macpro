@@ -589,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			<!-- removed duplicate small label to avoid repeating the title -->
 			<div class="row" style="margin-top:6px">
 				<div style="flex:1">
-					<div id="activity-name" style="font-weight:800;font-size:18px"><?php echo !empty($serverActivity['title'])? htmlspecialchars($serverActivity['title']) : '—'; ?></div>
+					<div id="activity-name" style="display:none"></div>
 					<div id="activity-date" style="display:none"></div>
                     
 					<div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:nowrap;white-space:nowrap;overflow:hidden">
