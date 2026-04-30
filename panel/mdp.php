@@ -71,15 +71,29 @@ $qres = @mysqli_query($con, $sql);
             table{min-width:600px}
         }
 
+        /* Portrait orientation: colonnes compactes */
+        @media (orientation:portrait) and (max-width:900px){
+            body{padding:10px}
+            table{min-width:0;width:100%;font-size:11px}
+            th,td{padding:5px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px}
+            td[data-label="Mot de passe"],
+            td[data-label="Mot de passe ext"]{max-width:90px;font-size:10px}
+            td[data-label="Email"]{max-width:100px}
+            td[data-label="Pseudo"]{max-width:80px}
+            td[data-label="ID"]{max-width:40px}
+        }
+
         /* Small screens: stack rows into cards and show labels via data-label */
         @media (max-width:480px){
             .table-wrap{overflow:auto}
             table, thead, tbody, th, td, tr{display:block}
             thead tr{display:none}
-            tbody tr{margin:0 0 12px;padding:12px;background:rgba(255,255,255,0.02);border-radius:8px}
-            tbody td{padding:6px 8px;display:flex;justify-content:space-between;align-items:center}
-            tbody td::before{content:attr(data-label);color:#9aa6b1;margin-right:12px;flex:0 0 40%;font-weight:700}
+            tbody tr{margin:0 0 12px;padding:10px;background:rgba(255,255,255,0.02);border-radius:8px}
+            tbody td{padding:5px 6px;display:flex;justify-content:space-between;align-items:flex-start;font-size:12px;white-space:normal;overflow:visible;max-width:none;text-overflow:unset}
+            tbody td::before{content:attr(data-label);color:#9aa6b1;margin-right:10px;flex:0 0 38%;font-weight:700;font-size:11px}
             tbody td[data-label="ID"]{font-weight:800}
+            tbody td[data-label="Mot de passe"],
+            tbody td[data-label="Mot de passe ext"]{word-break:break-all;font-family:monospace;font-size:11px}
         }
     </style>
 </head>
