@@ -344,7 +344,7 @@ a{color:inherit;text-decoration:none}
 .v2-cal-dow{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:2px}
 .v2-cal-dow span{text-align:center;font-size:9px;font-weight:700;letter-spacing:.5px;color:var(--muted);padding:2px 0}
 .v2-cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.v2-cal-day{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--muted);position:relative;cursor:default}
+.v2-cal-day{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--muted);position:relative;cursor:default;max-width:32px;max-height:32px;justify-self:center;width:100%}
 .v2-cal-day.has-event{color:var(--text);cursor:pointer;background:rgba(10,132,255,.15)}
 .v2-cal-day.has-event:hover,.v2-cal-day.has-event:active{background:rgba(10,132,255,.3)}
 .v2-cal-day.is-next{background:var(--green) !important;color:#04180a !important;font-weight:900;box-shadow:0 0 0 2px var(--green)}
