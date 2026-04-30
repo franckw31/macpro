@@ -465,6 +465,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 </head>
 <body>
     <div class="sheet" style="position:relative">
+        <button onclick="window.location.href='/panel/quickview.php';" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.06);padding:6px 14px;border-radius:20px;border:0;color:#ff9d3b;font-weight:700;font-size:14px;cursor:pointer;z-index:10">Fermer</button>
         <?php if (!empty($profile_flash['message'])): ?>
             <div class="flash <?php echo (($profile_flash['type'] ?? '') === 'success') ? 'success' : 'error'; ?>"><?php echo htmlspecialchars($profile_flash['message']); ?></div>
         <?php endif; ?>
