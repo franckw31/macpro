@@ -185,8 +185,9 @@ try {
             $whereClause  = '(t.id_cible = ? OR t.id_auteur = ?)';
             $params       = [$id_cible, $id_cible];
         } else {
-            $whereClause  = '(t.id_cible = ? OR t.id_auteur = ?) AND (t.id_auteur = ? OR t.id_cible = ?)';
-            $params       = [$id_cible, $id_cible, $userId, $userId];
+            // Non-admin : seulement les notes écrites par moi à ce joueur
+            $whereClause  = '(t.id_auteur = ? AND t.id_cible = ?)';
+            $params       = [$userId, $id_cible];
         }
 
         $stmt = $pdo->prepare("
