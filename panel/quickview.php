@@ -713,7 +713,6 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div id="dd-structure-wrap"><div style="color:var(--muted);font-size:13px;padding:8px 0" id="dd-structure-empty">—</div></div>
       <div class="v2-scroll-hint hidden" id="dd-structure-hint">▼ défiler</div>
     </div>
-    <button class="v2-modal-close" id="v2-details-close" style="position:static;display:block;width:100%;margin-top:16px;border-radius:12px;padding:12px;font-size:15px">Fermer</button>
   </div>
 </div>
 
