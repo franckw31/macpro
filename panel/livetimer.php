@@ -707,6 +707,9 @@ if (isset($_GET['action'])) {
         </div>
         <?php endif; ?>
 
+    <!-- DEBUG VISIBLE - à supprimer après fix -->
+    <div id="dbg-info" style="position:fixed;bottom:10px;left:10px;background:rgba(0,0,0,0.85);color:#0f0;font-size:13px;font-family:monospace;padding:8px 12px;border-radius:8px;z-index:9999;border:1px solid #0f0;">...</div>
+
     </section>
 </div>
 
