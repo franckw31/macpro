@@ -1,0 +1,275 @@
+<?php
+session_start();
+include __DIR__ . '/include/config.php';
+
+if (empty($_SESSION['id'])) {
+    header('Location: /panel/login.php');
+    exit;
+}
+
+$my_id     = intval($_SESSION['id']);
+$my_pseudo = $_SESSION['pseudo'] ?? '';
+
+// Récupérer tous les membres pour la recherche
+$membres = [];
+if (!empty($con)) {
+    $mq = mysqli_query($con, "SELECT `id-membre`, pseudo, photo FROM membres WHERE pseudo != '' ORDER BY pseudo ASC");
+    if ($mq) while ($r = mysqli_fetch_assoc($mq)) $membres[] = $r;
+}
+
+$asset_ver = @filemtime(__DIR__ . '/timer_web/public/style.variantA.css') ?: time();
+?>
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Traker — Notes joueurs</title>
+<link rel="stylesheet" href="/panel/timer_web/public/style.variantA.css?v=<?php echo $asset_ver; ?>">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,Arial;font-size:14px;margin:0;padding:0;min-height:100dvh}
+
+/* ── Header ── */
+.hdr{display:flex;align-items:center;gap:12px;padding:16px 16px 10px;padding-top:max(16px,env(safe-area-inset-top,16px))}
+.hdr-back{background:rgba(255,255,255,0.06);border:0;color:#ff9d3b;font-weight:700;font-size:14px;padding:7px 14px;border-radius:20px;cursor:pointer}
+.hdr-title{flex:1;font-weight:800;font-size:18px}
+
+/* ── Search ── */
+.search-wrap{padding:0 16px 12px}
+.search-box{width:100%;padding:10px 14px 10px 38px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#eef6fb;font-size:14px;outline:none;font-family:inherit}
+.search-icon{position:absolute;left:26px;top:50%;transform:translateY(-50%);color:#8fa0b0;font-size:15px;pointer-events:none}
+.search-rel{position:relative}
+.suggestions{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#0d1f2d;border:1px solid rgba(255,255,255,0.1);border-radius:12px;z-index:100;max-height:220px;overflow-y:auto;display:none}
+.suggestions.open{display:block}
+.sug-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04)}
+.sug-item:last-child{border-bottom:0}
+.sug-item:hover,.sug-item:active{background:rgba(255,255,255,0.05)}
+.sug-avatar{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(255,255,255,0.1);flex-shrink:0}
+.sug-pseudo{font-weight:600;font-size:13px}
+
+/* ── Player header ── */
+.player-hdr{display:flex;align-items:center;gap:14px;padding:14px 16px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);display:none}
+.player-hdr.visible{display:flex}
+.player-avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.15)}
+.player-name{font-weight:800;font-size:16px}
+.player-sub{font-size:12px;color:#8fa0b0;margin-top:2px}
+
+/* ── Tabs ── */
+.tabs{display:flex;gap:8px;padding:10px 16px}
+.tab-btn{flex:1;padding:9px;border-radius:10px;border:0;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s}
+.tab-btn.active{background:#17a34a;color:#fff}
+.tab-btn.inactive{background:rgba(255,255,255,0.06);color:#8fa0b0}
+
+/* ── Notes list ── */
+.notes-wrap{padding:0 16px;flex:1;overflow-y:auto}
+.note-item{padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.note-item:last-child{border-bottom:0}
+.note-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.note-pseudo{font-size:12px;font-weight:700;color:#4dd0e1}
+.note-date{font-size:11px;color:#8fa0b0}
+.note-text{font-size:14px;line-height:1.55}
+.note-act{font-size:11px;color:#8fa0b0;margin-top:5px}
+.note-del{background:none;border:0;color:#ff6b6b;cursor:pointer;font-size:14px;padding:0 4px}
+.empty-msg{text-align:center;color:#8fa0b0;padding:32px 16px}
+
+/* ── Add note ── */
+.add-area{padding:10px 14px;border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:8px;align-items:flex-end;background:#071019;position:sticky;bottom:0;padding-bottom:max(10px,env(safe-area-inset-bottom,10px))}
+.add-textarea{flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#eef6fb;font-size:14px;resize:none;font-family:inherit;outline:none}
+.add-btn{padding:10px 16px;border-radius:10px;background:#17a34a;color:#fff;font-weight:700;border:0;cursor:pointer;font-size:18px;align-self:flex-end}
+.add-btn:disabled{opacity:.4;cursor:default}
+
+.content-area{display:none}
+.content-area.visible{display:flex;flex-direction:column;min-height:calc(100dvh - 160px)}
+
+.spinner{text-align:center;padding:24px;color:#8fa0b0}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <button class="hdr-back" onclick="window.location.href='/panel/quickview.php'">‹ Retour</button>
+  <div class="hdr-title">📝 Traker</div>
+</div>
+
+<div class="search-wrap">
+  <div class="search-rel">
+    <span class="search-icon">🔍</span>
+    <input class="search-box" id="search-input" placeholder="Rechercher un joueur…" autocomplete="off">
+    <div class="suggestions" id="suggestions"></div>
+  </div>
+</div>
+
+<div class="player-hdr" id="player-hdr">
+  <img class="player-avatar" id="player-avatar" src="https://viendez.com/images/noprofil.jpg" alt="">
+  <div>
+    <div class="player-name" id="player-name">—</div>
+    <div class="player-sub" id="player-sub">Sélectionnez un joueur</div>
+  </div>
+</div>
+
+<div class="content-area" id="content-area">
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-ecrites" onclick="setTab('auteur')">✏️ Écrites</button>
+    <button class="tab-btn inactive" id="tab-recues"  onclick="setTab('cible')">📥 Reçues</button>
+  </div>
+  <div class="notes-wrap" id="notes-wrap">
+    <div class="spinner">Chargement…</div>
+  </div>
+  <div class="add-area">
+    <textarea class="add-textarea" id="note-input" placeholder="Ajouter une note…" rows="2"></textarea>
+    <button class="add-btn" id="send-btn" onclick="sendNote()">➤</button>
+  </div>
+</div>
+
+<script>
+var membres = <?php echo json_encode(array_map(function($m){
+    return [
+        'id'     => (int)$m['id-membre'],
+        'pseudo' => $m['pseudo'],
+        'photo'  => !empty($m['photo']) ? 'https://viendez.com/images/faces/' . rawurlencode(basename($m['photo'])) : ''
+    ];
+}, $membres), JSON_UNESCAPED_UNICODE); ?>;
+
+var trak = {
+    pseudo: '',
+    mode: 'auteur',
+    notes: [],
+    myId: <?php echo $my_id; ?>,
+    actId: 0
+};
+
+// ── Search ──
+var searchEl  = document.getElementById('search-input');
+var sugEl     = document.getElementById('suggestions');
+
+searchEl.addEventListener('input', function(){
+    var q = this.value.trim().toLowerCase();
+    if (!q) { sugEl.innerHTML=''; sugEl.classList.remove('open'); return; }
+    var matches = membres.filter(m => m.pseudo.toLowerCase().includes(q)).slice(0,10);
+    if (!matches.length) { sugEl.innerHTML=''; sugEl.classList.remove('open'); return; }
+    sugEl.innerHTML = matches.map(m =>
+        '<div class="sug-item" onclick="selectPlayer(\''+escH(m.pseudo)+'\',\''+escH(m.photo || 'https://viendez.com/images/noprofil.jpg')+'\')">' +
+        '<img class="sug-avatar" src="'+(m.photo||'https://viendez.com/images/noprofil.jpg')+'" onerror="this.src=\'https://viendez.com/images/noprofil.jpg\'">' +
+        '<span class="sug-pseudo">'+escH(m.pseudo)+'</span></div>'
+    ).join('');
+    sugEl.classList.add('open');
+});
+
+document.addEventListener('click', function(e){
+    if (!sugEl.contains(e.target) && e.target !== searchEl) sugEl.classList.remove('open');
+});
+
+function selectPlayer(pseudo, photo) {
+    trak.pseudo = pseudo;
+    trak.mode = 'auteur';
+    searchEl.value = pseudo;
+    sugEl.classList.remove('open');
+
+    // Update player header
+    document.getElementById('player-avatar').src = photo || 'https://viendez.com/images/noprofil.jpg';
+    document.getElementById('player-name').textContent = pseudo;
+    document.getElementById('player-sub').textContent = 'Notes sur ' + pseudo;
+    document.getElementById('player-hdr').classList.add('visible');
+    document.getElementById('content-area').classList.add('visible');
+
+    setTab('auteur');
+    loadNotes();
+}
+
+// ── Tabs ──
+function setTab(mode) {
+    trak.mode = mode;
+    document.getElementById('tab-ecrites').className = 'tab-btn ' + (mode==='auteur'?'active':'inactive');
+    document.getElementById('tab-recues').className  = 'tab-btn ' + (mode==='cible' ?'active':'inactive');
+    renderNotes();
+}
+
+// ── Load ──
+function loadNotes() {
+    document.getElementById('notes-wrap').innerHTML = '<div class="spinner">Chargement…</div>';
+    fetch('/api/trak-notes.php?pseudo=' + encodeURIComponent(trak.pseudo), { credentials:'include' })
+    .then(r=>r.json()).then(d=>{
+        trak.notes = d.success ? (d.notes||[]) : [];
+        var m = membres.find(m=>m.pseudo===trak.pseudo);
+        var cnt = trak.notes.length;
+        document.getElementById('player-sub').textContent = cnt + ' note' + (cnt>1?'s':'') + ' au total';
+        renderNotes();
+    }).catch(()=>{ document.getElementById('notes-wrap').innerHTML='<div class="empty-msg">Erreur réseau</div>'; });
+}
+
+// ── Render ──
+function renderNotes() {
+    var mode = trak.mode, myId = trak.myId;
+    var notes = trak.notes.filter(n => mode==='auteur' ? n.id_auteur===myId : n.id_cible===myId);
+    if (!notes.length) {
+        document.getElementById('notes-wrap').innerHTML = '<div class="empty-msg">'+(trak.notes.length?'Aucun résultat pour ce filtre.':'Aucune note pour ce joueur.')+'</div>';
+        return;
+    }
+    document.getElementById('notes-wrap').innerHTML = notes.map(n => {
+        var dp = mode==='auteur' ? n.cible_pseudo : n.auteur_pseudo;
+        var al = n.date_activite ? n.date_activite+(n.titre_activite?' — '+n.titre_activite:'') : n.titre_activite;
+        var canDel = n.id_auteur===myId;
+        return '<div class="note-item">'
+            +'<div class="note-meta">'
+                +'<span class="note-pseudo">'+escH(dp)+'</span>'
+                +'<div style="display:flex;align-items:center;gap:6px">'
+                    +'<span class="note-date">'+fmtDate(n.created_at)+'</span>'
+                    +(canDel?'<button class="note-del" onclick="delNote('+n.id+')">🗑</button>':'')
+                +'</div>'
+            +'</div>'
+            +'<div class="note-text">'+escH(n.note)+'</div>'
+            +(al?'<div class="note-act">📅 '+escH(al)+'</div>':'')
+        +'</div>';
+    }).join('');
+}
+
+// ── Send ──
+function sendNote() {
+    var text = (document.getElementById('note-input').value||'').trim();
+    if (!text || !trak.pseudo) return;
+    var btn = document.getElementById('send-btn');
+    btn.disabled = true;
+    fetch('/api/trak-notes.php', {
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'add', pseudo_cible:trak.pseudo, note:text, id_activite:trak.actId})
+    }).then(r=>r.json()).then(d=>{
+        if(d.success && d.note){ trak.notes.unshift(d.note); document.getElementById('note-input').value=''; setTab('auteur'); renderNotes(); }
+        btn.disabled=false;
+    }).catch(()=>{ btn.disabled=false; });
+}
+
+// ── Delete ──
+function delNote(id) {
+    if (!confirm('Supprimer cette note ?')) return;
+    fetch('/api/trak-notes.php', {
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'delete', id:id})
+    }).then(r=>r.json()).then(d=>{
+        if(d.success){ trak.notes=trak.notes.filter(n=>n.id!==id); renderNotes(); }
+    });
+}
+
+// ── Helpers ──
+function fmtDate(s){ if(!s)return''; var d=new Date(s.replace(' ','T')); if(isNaN(d))return s; return('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+String(d.getFullYear()).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2); }
+function escH(s){ if(!s)return''; return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+// Enter to send
+document.getElementById('note-input').addEventListener('keydown', function(e){
+    if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendNote(); }
+});
+
+// Pre-select if ?pseudo= in URL
+(function(){
+    var params = new URLSearchParams(window.location.search);
+    var p = params.get('pseudo');
+    if (p) {
+        var m = membres.find(m=>m.pseudo===p);
+        if(m) selectPlayer(m.pseudo, m.photo||'');
+    }
+})();
+</script>
+</body>
+</html>
