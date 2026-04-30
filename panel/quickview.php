@@ -600,9 +600,11 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       </div>
       <div class="v2-cal-days" id="v2-cal-days"></div>
     </div>
-    <div class="v2-cal-list">
+    <div class="v2-cal-list" id="v2-cal-list">
       <div class="v2-cal-list-title">Parties du mois</div>
-      <div id="v2-cal-events"></div>
+      <div class="v2-cal-list-wrap" id="v2-cal-list-wrap">
+        <div id="v2-cal-events"></div>
+      </div>
     </div>
   </div>
 </div>
