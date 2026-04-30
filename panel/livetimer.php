@@ -670,17 +670,6 @@ if (isset($_GET['action'])) {
         <!-- ACTIONS SECONDAIRES -->
         <div class="action-dock">
             <button class="act-btn red" onclick="confirmRestart()">🔁 Reset Blinde</button>
-            <button class="act-btn blue" onclick="playWelcomeMessage()">👋 Bienvenue</button>
-            <button class="act-btn blue" onclick="playRulesMessage()">⚖️ Règles</button>
-            <button class="act-btn blue" onclick="playBlindsMessage()">💰 Blindes</button>
-        </div>
-
-        <!-- BOUTONS VOCAUX -->
-        <div class="voice-dock">
-            <button class="voice-btn cyan" onclick="playWelcomeMessage()">📣 Message Bienvenue</button>
-            <button class="voice-btn yellow" onclick="playRulesMessage()">⚖️ Rappel Règles</button>
-            <button class="voice-btn green" onclick="playBlindsMessage()">💵 Rappel Blindes</button>
-            <button class="voice-btn red" onclick="playSirenAlert()">🔔 Alerte Sirène</button>
         </div>
 
         <?php if ($is_admin): ?>
