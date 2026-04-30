@@ -177,8 +177,8 @@ try {
                 $ordData = $stmt->fetch();
                 $nextOrdre = intval($ordData['maxord'] ?? 0) + 1;
 
-                // Fetch activite defaults (same as quick-part.php)
-                $stmtA = $pdo->prepare("SELECT COALESCE(`jetons`,0) AS jetons, COALESCE(`rake`,0) AS rake, COALESCE(`buyin`,0) AS buyin, COALESCE(`bounty`,0) AS bounty FROM `activite` WHERE `id-activite` = ? LIMIT 1");
+                // Fetch activite defaults (same formula as bonus-calculation.js)
+                $stmtA = $pdo->prepare("SELECT COALESCE(`jetons`,0) AS jetons, COALESCE(`rake`,0) AS rake, COALESCE(`buyin`,0) AS buyin, COALESCE(`bounty`,0) AS bounty, `date_depart` FROM `activite` WHERE `id-activite` = ? LIMIT 1");
                 $stmtA->execute([$actId]);
                 $actRow = $stmtA->fetch();
                 $act_jetons  = intval($actRow['jetons'] ?? 0);
@@ -186,9 +186,11 @@ try {
                 $act_buyin   = floatval($actRow['buyin'] ?? 0);
                 $act_bounty  = floatval($actRow['bounty'] ?? 0);
                 $cout_in     = $act_buyin + $act_bounty + $act_rake + 5;
-                // jetons_bonus_ins = activite.jetons ; jetons_total = jetons + bonus_ins + bonus_arrivee(0)
-                $jetons_bonus_ins = $act_jetons;
-                $jetons_total     = $act_jetons;
+                // bonus_ins = 200 * floor(|date_depart - NOW| / 60 min), capped at 5000
+                $date_depart = !empty($actRow['date_depart']) ? strtotime($actRow['date_depart']) : time();
+                $diff_minutes = abs($date_depart - time()) / 60;
+                $jetons_bonus_ins = min(5000, 200 * floor($diff_minutes / 60));
+                $jetons_total = $act_jetons + $jetons_bonus_ins;
 
                 error_log("[reg-api] Inserting: user=$userId, act=$actId, pseudo=$pseudo, ordre=$nextOrdre, jetons_bonus_ins=$jetons_bonus_ins");
                 $stmt = $pdo->prepare("INSERT INTO `participation` (`id-membre`, `id-activite`, `nom-membre`, `option`, `ordre`, `ds`, `rake`, `cout_in`, `challenger`, `jetons`, `jetons_bonus_ins`, `jetons_total`) VALUES (?, ?, ?, 'Inscrit', ?, NOW(), ?, ?, 1, 0, ?, ?)");
@@ -232,8 +234,8 @@ try {
                 $ordData = $stmt->fetch();
                 $nextOrdre = intval($ordData['maxord'] ?? 0) + 1;
 
-                // Fetch activite defaults (same as quick-part.php)
-                $stmtA = $pdo->prepare("SELECT COALESCE(`jetons`,0) AS jetons, COALESCE(`rake`,0) AS rake, COALESCE(`buyin`,0) AS buyin, COALESCE(`bounty`,0) AS bounty FROM `activite` WHERE `id-activite` = ? LIMIT 1");
+                // Fetch activite defaults (same formula as bonus-calculation.js)
+                $stmtA = $pdo->prepare("SELECT COALESCE(`jetons`,0) AS jetons, COALESCE(`rake`,0) AS rake, COALESCE(`buyin`,0) AS buyin, COALESCE(`bounty`,0) AS bounty, `date_depart` FROM `activite` WHERE `id-activite` = ? LIMIT 1");
                 $stmtA->execute([$actId]);
                 $actRow = $stmtA->fetch();
                 $act_jetons  = intval($actRow['jetons'] ?? 0);
@@ -241,8 +243,11 @@ try {
                 $act_buyin   = floatval($actRow['buyin'] ?? 0);
                 $act_bounty  = floatval($actRow['bounty'] ?? 0);
                 $cout_in     = $act_buyin + $act_bounty + $act_rake + 5;
-                $jetons_bonus_ins = $act_jetons;
-                $jetons_total     = $act_jetons;
+                // bonus_ins = 200 * floor(|date_depart - NOW| / 60 min), capped at 5000
+                $date_depart = !empty($actRow['date_depart']) ? strtotime($actRow['date_depart']) : time();
+                $diff_minutes = abs($date_depart - time()) / 60;
+                $jetons_bonus_ins = min(5000, 200 * floor($diff_minutes / 60));
+                $jetons_total = $act_jetons + $jetons_bonus_ins;
 
                 error_log("[reg-api] Inserting: user=$userId, act=$actId, pseudo=$pseudo, ordre=$nextOrdre, status=$newStatus, jetons_bonus_ins=$jetons_bonus_ins");
                 $stmt = $pdo->prepare("INSERT INTO `participation` (`id-membre`, `id-activite`, `nom-membre`, `option`, `ordre`, `ds`, `rake`, `cout_in`, `challenger`, `jetons`, `jetons_bonus_ins`, `jetons_total`) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, 1, 0, ?, ?)");
