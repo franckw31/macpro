@@ -710,7 +710,6 @@ if (isset($_GET['action'])) {
         <?php endif; ?>
 
     <!-- DEBUG VISIBLE - à supprimer après fix -->
-    <div id="dbg-info" style="position:fixed;bottom:10px;left:10px;background:rgba(0,0,0,0.85);color:#0f0;font-size:13px;font-family:monospace;padding:8px 12px;border-radius:8px;z-index:9999;border:1px solid #0f0;">...</div>
 
     </section>
 </div>
@@ -805,10 +804,6 @@ if ($_cur) {
         const ring = document.getElementById('timer-ring');
         const display = document.getElementById('timer-display');
         if (!ring || !display) return;
-
-        // DEBUG VISIBLE
-        const dbg = document.getElementById('dbg-info');
-        if (dbg) dbg.textContent = 'dur=' + totalDuration + ' left=' + secondsLeft + ' paused=' + isPaused;
 
         if (isPaused) {
             display.textContent = 'PAUSE';
