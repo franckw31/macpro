@@ -187,6 +187,22 @@ searchEl.addEventListener('focus', function() {
 });
 searchEl.addEventListener('blur', function() {
     this.setAttribute('placeholder', this.dataset.placeholder || 'Choisir un joueur cible ici …');
+    // Si le champ correspond à un pseudo existant, activer le filtre joueur
+    var val = this.value.trim();
+    var m = membres.find(m=>m.pseudo.toLowerCase()===val.toLowerCase());
+    if (m) selectPlayer(m.pseudo, m.photo || 'https://viendez.com/images/noprofil.jpg');
+});
+// Entrée dans le champ recherche = sélection pseudo si correspond
+searchEl.addEventListener('keydown', function(e) {
+    if (e.key==='Enter') {
+        var val = this.value.trim();
+        var m = membres.find(m=>m.pseudo.toLowerCase()===val.toLowerCase());
+        if (m) {
+            selectPlayer(m.pseudo, m.photo || 'https://viendez.com/images/noprofil.jpg');
+            sugEl.classList.remove('open');
+            e.preventDefault();
+        }
+    }
 });
 // Réinitialiser le filtre (retour à mes notes)
 function resetFilter() {
