@@ -290,16 +290,29 @@ function loadNotes() {
 // ── Render ──
 function renderNotes() {
     var mode = trak.mode, myId = trak.myId;
-    var notes = trak.notes.filter(n => mode==='auteur' ? n.id_auteur===myId : n.id_cible===myId);
+    var notes;
+    if (trak.allMode) {
+        // Mes notes : seulement celles où je suis impliqué
+        notes = trak.notes.filter(n => mode==='auteur' ? n.id_auteur===myId : n.id_cible===myId);
+    } else {
+        // Filtre joueur : toutes les notes où le joueur sélectionné est auteur ou cible
+        var m = membres.find(m=>m.pseudo===trak.pseudo);
+        var idJoueur = m ? m.id : null;
+        if (idJoueur) {
+            notes = trak.notes.filter(n => n.id_auteur===idJoueur || n.id_cible===idJoueur);
+        } else {
+            notes = [];
+        }
+    }
     if (!notes.length) {
         document.getElementById('notes-wrap').innerHTML = '<div class="empty-msg">'+(trak.notes.length?'Aucun résultat pour ce filtre.':'Aucune note pour ce joueur.')+'</div>';
         return;
     }
     document.getElementById('notes-wrap').innerHTML = notes.map(n => {
-        var dp = mode==='auteur' ? n.cible_pseudo : n.auteur_pseudo;
+        var dp = (trak.allMode ? (mode==='auteur' ? n.cible_pseudo : n.auteur_pseudo) : (n.id_auteur===idJoueur ? n.cible_pseudo : n.auteur_pseudo));
         var dpPhoto = '';
-        var m = membres.find(m=>m.pseudo===dp);
-        if(m) dpPhoto = m.photo || 'https://viendez.com/images/noprofil.jpg';
+        var m2 = membres.find(m=>m.pseudo===dp);
+        if(m2) dpPhoto = m2.photo || 'https://viendez.com/images/noprofil.jpg';
         var al = n.date_activite ? n.date_activite+(n.titre_activite?' — '+n.titre_activite:'') : n.titre_activite;
         var canDel = n.id_auteur===myId;
         return '<div class="note-item">'
