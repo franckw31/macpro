@@ -411,17 +411,19 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
   <!-- ══════════ PROCHAINE PARTIE ══════════ -->
   <div class="v2-card">
 
-    <!-- Label + Calendar button -->
-    <div class="v2-next-label" style="justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:6px">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/>
-        </svg>
-        Prochaine Partie
-      </div>
-      <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog" style="width:32px;height:32px;border-radius:9px;background:rgba(10,132,255,0.18);border:1px solid rgba(10,132,255,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <!-- calendar with a colored dot accent -->
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Label -->
+    <div class="v2-next-label">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/>
+      </svg>
+      Prochaine Partie
+    </div>
+
+    <!-- Date + Calendar button -->
+    <div class="v2-date-row">
+      <div class="v2-date-big"><?php echo htmlspecialchars($date_str); ?></div>
+      <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog" style="width:38px;height:38px;border-radius:10px;background:rgba(10,132,255,0.18);border:1px solid rgba(10,132,255,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="4" width="18" height="18" rx="3" stroke="#0a84ff" stroke-width="1.8"/>
           <path d="M16 2v4M8 2v4M3 10h18" stroke="#0a84ff" stroke-width="1.8" stroke-linecap="round"/>
           <circle cx="16" cy="16" r="2.5" fill="#ff9f0a"/>
@@ -429,11 +431,6 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
           <circle cx="12" cy="16" r="1.5" fill="#0a84ff" opacity=".7"/>
         </svg>
       </button>
-    </div>
-
-    <!-- Date -->
-    <div class="v2-date-row">
-      <div class="v2-date-big"><?php echo htmlspecialchars($date_str); ?></div>
     </div>
 
     <!-- DÉMARRE DANS / JOUEURS -->
