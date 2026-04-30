@@ -241,7 +241,7 @@ a{color:inherit;text-decoration:none}
 .v2-cal-btn svg{width:22px;height:22px;stroke:var(--text2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
 /* Stats row */
-.v2-stats{display:grid;grid-template-columns:60% 40%;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.v2-stats{display:grid;grid-template-columns:66% 33%;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}
 .v2-stat{background:var(--card2);padding:12px 14px;display:flex;align-items:center;gap:10px;min-width:0}
 #v2-countdown{font-size:clamp(14px,4.5vw,24px);font-weight:900;color:var(--green);letter-spacing:0;line-height:1;font-variant-numeric:tabular-nums;font-family:'SF Mono',SFMono-Regular,ui-monospace,Menlo,monospace;white-space:nowrap;display:inline-block}
 .v2-stat{background:var(--card2);padding:12px 14px;display:flex;align-items:center;gap:10px}
