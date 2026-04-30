@@ -712,9 +712,18 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   var openBtn  = document.getElementById('v2-cal-open');
   var daysEl   = document.getElementById('v2-cal-days');
   var eventsEl = document.getElementById('v2-cal-events');
+  var listEl   = document.getElementById('v2-cal-list');
+  var listWrap = document.getElementById('v2-cal-list-wrap');
   var monthLbl = document.getElementById('v2-cal-month-label');
   var prevBtn  = document.getElementById('v2-cal-prev');
   var nextBtn  = document.getElementById('v2-cal-next');
+
+  function updateScrollFade(){
+    if(!listEl || !listWrap) return;
+    var atBottom = listEl.scrollTop + listEl.clientHeight >= listEl.scrollHeight - 4;
+    listWrap.classList.toggle('at-bottom', atBottom);
+  }
+  if(listEl) listEl.addEventListener('scroll', updateScrollFade);
 
   var acts = window.ALL_ACTIVITIES || [];
   var current = window.SERVER_ACTIVITY || {};
