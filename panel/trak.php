@@ -252,9 +252,12 @@ document.addEventListener('click', function(e){
 });
 
 function selectPlayer(pseudo, photo) {
-        // DEBUG : Affiche l'appel à selectPlayer et l'état
+        // DEBUG : Affiche l'appel à selectPlayer et l'état + couples id_cible/pseudo
         var debugDiv = document.getElementById('debug-pseudos');
-        if (debugDiv) debugDiv.innerHTML = '[DEBUG SELECT] pseudo=' + pseudo + ', photo=' + photo;
+        var mSel = membres.find(m=>m.pseudo.toLowerCase()===pseudo.toLowerCase());
+        var idSel = mSel ? mSel.id : 'N/A';
+        var notesList = trak.notes.map(n => '('+n.id_cible+','+escH(n.cible_pseudo)+')').join(', ');
+        if (debugDiv) debugDiv.innerHTML = '[DEBUG SELECT] pseudo=' + pseudo + ', idSel=' + idSel + ', photo=' + photo + '<br>[DEBUG] notes filtrées : ' + notesList;
     trak.pseudo = pseudo;
     trak.mode = 'auteur';
     trak.allMode = false;
