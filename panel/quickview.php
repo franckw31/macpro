@@ -696,7 +696,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     <div class="v2-detail-section">
       <div class="v2-detail-section-title" style="display:none">Infos Partie</div>
       <div class="v2-detail-row"><div class="v2-detail-label">👤 Organisateur</div><div class="v2-detail-value" id="dd-organisateur">—</div></div>
-      <div class="v2-detail-row"><div class="v2-detail-label">📍 Lieu</div><div class="v2-detail-value" style="color:var(--cyan);text-align:right" id="dd-lieu-wrap"><span id="dd-lieu">—</span><span id="dd-tel-wrap" style="display:none"><br><a id="dd-tel" href="#" style="font-size:12px;color:var(--muted);font-weight:500;text-decoration:none"></a></span></div></div>
+      <div class="v2-detail-row" id="dd-lieu-row" style="cursor:pointer" onclick="document.getElementById('dd-maps-link').click()"><div class="v2-detail-label"><a id="dd-maps-link" href="#" target="_blank" style="text-decoration:none;color:inherit">📍 Lieu</a></div><div class="v2-detail-value" style="color:var(--cyan);text-align:right" id="dd-lieu-wrap"><span id="dd-lieu">—</span><span id="dd-tel-wrap" style="display:none"><br><a id="dd-tel" href="#" style="font-size:12px;color:var(--muted);font-weight:500;text-decoration:none"></a></span></div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">👥 Inscrits / Max</div><div class="v2-detail-value" id="dd-inscrits">—</div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">▦ Tables</div><div class="v2-detail-value" style="color:var(--green)" id="dd-tables">—</div></div>
     </div>
@@ -974,6 +974,13 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     f('v2-modal-sub-text', act.display_date || '—');
     f('dd-organisateur', act.organizer || '—');
     f('dd-lieu', act.location || '—');
+    // Mise à jour lien maps
+    var mapsLink = document.getElementById('dd-maps-link');
+    if (mapsLink && act.location) {
+      var mapsQuery = encodeURIComponent(act.location);
+      // Sur iOS ouvre Plans, sur Android Google Maps, sinon Google Maps web
+      mapsLink.href = 'https://maps.apple.com/?q=' + mapsQuery;
+    }
     var telWrap = document.getElementById('dd-tel-wrap');
     var telEl = document.getElementById('dd-tel');
     if (telWrap && telEl) {
