@@ -670,12 +670,7 @@ if (isset($_GET['action'])) {
         <!-- ACTIONS SECONDAIRES -->
         <div class="action-dock">
             <button class="act-btn red" onclick="confirmRestart()">🔁 Reset Blinde</button>
-            <button class="act-btn blue" onclick="playWelcomeMessage()">👋 Bienvenue</button>
-            <button class="act-btn blue" onclick="playRulesMessage()">⚖️ Règles</button>
-            <button class="act-btn blue" onclick="playBlindsMessage()">💰 Blindes</button>
         </div>
-
-        
 
         <?php if ($is_admin): ?>
         <!-- RESET BLINDES (Admin) -->
