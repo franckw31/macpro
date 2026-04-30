@@ -138,6 +138,7 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
   <div class="hdr-title">📝 Traker</div>
 </div>
 
+<div id="debug-pseudos" style="color:#ff6b6b;font-size:13px;padding:4px 16px 0 16px;"></div>
 <div class="search-wrap">
   <div class="search-rel">
     <span class="search-icon">🔍</span>
@@ -320,10 +321,13 @@ function renderNotes() {
         }
     }
     // DEBUG: Affiche la liste des pseudos cibles filtrés
-    var debugList = '';
+    // Affiche le debug en haut de page
     if (!trak.allMode && !trak.canSeeRecues) {
-        debugList = '<div style="color:#ff6b6b;font-size:12px;padding:4px 0;">[DEBUG] Pseudos cibles filtrés : ' + notes.map(n => escH(n.cible_pseudo)).join(', ') + '</div>';
+        document.getElementById('debug-pseudos').innerHTML = '[DEBUG] Pseudos cibles filtrés : ' + notes.map(n => escH(n.cible_pseudo)).join(', ');
+    } else {
+        document.getElementById('debug-pseudos').innerHTML = '';
     }
+    var debugList = '';
     if (!notes.length) {
         document.getElementById('notes-wrap').innerHTML = debugList + '<div class="empty-msg">'+(trak.notes.length?'Aucun résultat pour ce filtre.':'Aucune note pour ce joueur.')+'</div>';
         return;
