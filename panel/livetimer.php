@@ -1,6 +1,7 @@
 <?php
 session_start();
 error_reporting(0);
+date_default_timezone_set('Europe/Paris');
 include('include/config.php');
 
 // Vérification de session
@@ -145,21 +146,21 @@ if (isset($_GET['action'])) {
         $now = time();
 
         // Lire le flag pause sur ordre=1
-        $q_pause = mysqli_query($con, "SELECT `en_pause`, `heure_pause`, `delta`, UNIX_TIMESTAMP(`heure_pause`) as hp_ts FROM `blindes-live` WHERE `id-activite` = '$act_id' AND `ordre` = '1' LIMIT 1");
-        $row_pause = mysqli_fetch_assoc($q_pause);
+        $q_pause = mysqli_query($con, "SELECT `en_pause`, `heure_pause` FROM `blindes-live` WHERE `id-activite` = '$act_id' AND `ordre` = '1' LIMIT 1");
+        $row_pause = $q_pause ? mysqli_fetch_assoc($q_pause) : [];
         $is_paused = (intval($row_pause['en_pause'] ?? 0) == 1);
-        $hp_ts = intval($row_pause['hp_ts'] ?? 0);
+        $heure_pause = $row_pause['heure_pause'] ?? null;
 
-        // Tous les niveaux avec timestamps Unix corrects
-        $q = mysqli_query($con, "SELECT *, UNIX_TIMESTAMP(`fin`) as fin_ts, UNIX_TIMESTAMP(`debut`) as debut_ts FROM `blindes-live` WHERE `id-activite` = '$act_id' ORDER BY `ordre` ASC");
+        // Tous les niveaux
+        $q = mysqli_query($con, "SELECT * FROM `blindes-live` WHERE `id-activite` = '$act_id' ORDER BY `ordre` ASC");
         $blinds = [];
-        while ($b = mysqli_fetch_assoc($q)) { $blinds[] = $b; }
+        if ($q) { while ($b = mysqli_fetch_assoc($q)) { $blinds[] = $b; } }
 
         // Niveau courant = premier dont fin > maintenant
         $current = null;
         $currentIdx = -1;
         foreach ($blinds as $k => $b) {
-            if (intval($b['fin_ts']) > $now) {
+            if (strtotime($b['fin']) > $now) {
                 $current = $b;
                 $currentIdx = $k;
                 break;
@@ -177,14 +178,14 @@ if (isset($_GET['action'])) {
         $fin_ts   = intval($current['fin_ts']);
         $debut_ts = intval($current['debut_ts']);
 
-        // Calcul du temps restant (tout en Unix timestamps = pas de pb timezone)
-        if ($is_paused && $hp_ts > 0) {
-            $seconds_remaining = max(0, $fin_ts - $hp_ts);
+        // Calcul du temps restant (timezone correctement définie en haut)
+        if ($is_paused && $heure_pause) {
+            $seconds_remaining = max(0, strtotime($current['fin']) - strtotime($heure_pause));
         } else {
-            $seconds_remaining = max(0, $fin_ts - $now);
+            $seconds_remaining = max(0, strtotime($current['fin']) - $now);
         }
 
-        $duration_seconds = max(1, $fin_ts - $debut_ts);
+        $duration_seconds = max(1, strtotime($current['fin']) - strtotime($current['debut']));
 
         $sb   = intval($current['sb'] ?? 0);
         $bb   = intval($current['bb'] ?? 0);
@@ -212,7 +213,7 @@ if (isset($_GET['action'])) {
             $nb   = $blinds[$i];
             $nsb2 = intval($nb['sb'] ?? 0);
             $nbb2 = intval($nb['bb'] ?? 0);
-            $ndur = max(0, intval($nb['fin_ts']) - intval($nb['debut_ts']));
+            $ndur = max(0, strtotime($nb['fin']) - strtotime($nb['debut']));
             if ($nsb2 == 0 && $nbb2 == 0) {
                 $pmins = floor($acc / 60);
                 $ph = floor($pmins / 60); $pm = $pmins % 60;
@@ -718,25 +719,24 @@ if (isset($_GET['action'])) {
 <?php
 // --- DONNÉES INITIALES POUR LE TIMER (PHP inline) ---
 $_now = time();
-$_qp = mysqli_query($con, "SELECT `en_pause`, UNIX_TIMESTAMP(`heure_pause`) as hp_ts FROM `blindes-live` WHERE `id-activite` = '$id' AND `ordre` = '1' LIMIT 1");
-$_rp = mysqli_fetch_assoc($_qp);
+$_qp = mysqli_query($con, "SELECT `en_pause`, `heure_pause` FROM `blindes-live` WHERE `id-activite` = '$id' AND `ordre` = '1' LIMIT 1");
+$_rp = $_qp ? mysqli_fetch_assoc($_qp) : [];
 $_init_paused = (intval($_rp['en_pause'] ?? 0) == 1);
-$_init_hp_ts  = intval($_rp['hp_ts'] ?? 0);
-$_qb = mysqli_query($con, "SELECT *, UNIX_TIMESTAMP(`fin`) as fin_ts, UNIX_TIMESTAMP(`debut`) as debut_ts FROM `blindes-live` WHERE `id-activite` = '$id' ORDER BY `ordre` ASC");
+$_init_hpause = $_rp['heure_pause'] ?? null;
+$_qb = mysqli_query($con, "SELECT * FROM `blindes-live` WHERE `id-activite` = '$id' ORDER BY `ordre` ASC");
 $_bl = [];
-while ($_b = mysqli_fetch_assoc($_qb)) { $_bl[] = $_b; }
+if ($_qb) { while ($_b = mysqli_fetch_assoc($_qb)) { $_bl[] = $_b; } }
 $_cur = null; $_ci = -1;
 foreach ($_bl as $_k => $_b) {
-    if (intval($_b['fin_ts']) > $_now) { $_cur = $_b; $_ci = $_k; break; }
+    if (strtotime($_b['fin']) > $_now) { $_cur = $_b; $_ci = $_k; break; }
 }
 if ($_cur) {
-    $_fts = intval($_cur['fin_ts']); $_dts = intval($_cur['debut_ts']);
-    if ($_init_paused && $_init_hp_ts > 0) {
-        $_isec = max(0, $_fts - $_init_hp_ts);
+    if ($_init_paused && $_init_hpause) {
+        $_isec = max(0, strtotime($_cur['fin']) - strtotime($_init_hpause));
     } else {
-        $_isec = max(0, $_fts - $_now);
+        $_isec = max(0, strtotime($_cur['fin']) - $_now);
     }
-    $_idur = max(1, $_fts - $_dts);
+    $_idur = max(1, strtotime($_cur['fin']) - strtotime($_cur['debut']));
     $_isb = intval($_cur['sb'] ?? 0); $_ibb = intval($_cur['bb'] ?? 0); $_iant = intval($_cur['ante'] ?? 0);
     $_ibrk = ($_isb == 0 && $_ibb == 0);
     $_ibt  = $_ibrk ? 'PAUSE' : number_format($_isb,0,',',' ') . ' / ' . number_format($_ibb,0,',',' ');
