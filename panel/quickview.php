@@ -355,6 +355,8 @@ a{color:inherit;text-decoration:none}
 .v2-cal-list::-webkit-scrollbar{width:5px}
 .v2-cal-list::-webkit-scrollbar-track{background:#1a2535;border-radius:4px}
 .v2-cal-list::-webkit-scrollbar-thumb{background:#ff9f0a;border-radius:4px}
+.v2-cal-scroll-indicator{text-align:center;font-size:11px;color:var(--orange);padding:4px 0 2px;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:4px;transition:opacity .2s}
+.v2-cal-scroll-indicator.hidden{opacity:0;pointer-events:none}
 .v2-cal-list-wrap{position:relative}
 .v2-cal-list-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(to bottom,transparent,#0d1520);pointer-events:none;transition:opacity .2s}
 .v2-cal-list-wrap.at-bottom::after{opacity:0}
@@ -609,6 +611,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         <div id="v2-cal-events"></div>
       </div>
     </div>
+    <div class="v2-cal-scroll-indicator hidden" id="v2-cal-scroll-ind">↓ défiler pour voir plus</div>
   </div>
 </div>
 
@@ -725,6 +728,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     if(!listEl || !listWrap) return;
     var atBottom = listEl.scrollTop + listEl.clientHeight >= listEl.scrollHeight - 4;
     listWrap.classList.toggle('at-bottom', atBottom);
+    var ind = document.getElementById('v2-cal-scroll-ind');
+    if(ind) ind.classList.toggle('hidden', atBottom || listEl.scrollHeight <= listEl.clientHeight);
   }
   if(listEl) listEl.addEventListener('scroll', updateScrollFade);
 
