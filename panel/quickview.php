@@ -52,6 +52,8 @@ try {
 
 			$location = null;
 			foreach (['ville','lieu','adresse','location','place'] as $c) { if (isset($act[$c]) && strlen(trim($act[$c])) > 0) { $location = $act[$c]; break; } }
+			$phone = null;
+			foreach (['telephone','tel','phone','tel_lieu','contact_tel','num_tel'] as $c) { if (isset($act[$c]) && strlen(trim($act[$c])) > 0) { $phone = $act[$c]; break; } }
 			$tables = null;
 			foreach (['nb-tables','tables','nb_tables'] as $c) { if (isset($act[$c]) && $act[$c] !== '') { $tables = $act[$c]; break; } }
 			$max_participants = null;
@@ -88,6 +90,7 @@ try {
 				'max_participants'   => $max_participants,
 				'organizer'         => $organizer,
 				'location'          => $location,
+				'phone'             => $phone,
 				'tables'            => $tables,
 				'start_chips'       => $start_chips,
 				'bounty'            => $bounty,
@@ -693,7 +696,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     <div class="v2-detail-section">
       <div class="v2-detail-section-title">Infos Partie</div>
       <div class="v2-detail-row"><div class="v2-detail-label">👤 Organisateur</div><div class="v2-detail-value" id="dd-organisateur">—</div></div>
-      <div class="v2-detail-row"><div class="v2-detail-label">📍 Lieu</div><div class="v2-detail-value" style="color:var(--cyan)" id="dd-lieu">—</div></div>
+      <div class="v2-detail-row"><div class="v2-detail-label">📍 Lieu</div><div class="v2-detail-value" style="color:var(--cyan);text-align:right" id="dd-lieu-wrap"><span id="dd-lieu">—</span><span id="dd-tel-wrap" style="display:none"><br><a id="dd-tel" href="#" style="font-size:12px;color:var(--muted);font-weight:500;text-decoration:none"></a></span></div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">👥 Inscrits / Max</div><div class="v2-detail-value" id="dd-inscrits">—</div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">▦ Tables</div><div class="v2-detail-value" style="color:var(--green)" id="dd-tables">—</div></div>
     </div>
@@ -971,6 +974,17 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     f('v2-modal-sub-text', act.display_date || '—');
     f('dd-organisateur', act.organizer || '—');
     f('dd-lieu', act.location || '—');
+    var telWrap = document.getElementById('dd-tel-wrap');
+    var telEl = document.getElementById('dd-tel');
+    if (telWrap && telEl) {
+      if (act.phone) {
+        telEl.textContent = '📞 ' + act.phone;
+        telEl.href = 'tel:' + act.phone.replace(/\s/g,'');
+        telWrap.style.display = 'inline';
+      } else {
+        telWrap.style.display = 'none';
+      }
+    }
     f('dd-inscrits', (act.participants_count!=null) ? act.participants_count+(act.max_participants?' / '+act.max_participants:'') : '—');
     f('dd-tables', act.tables || '—');
     f('dd-buyin', act.buyin!=null ? act.buyin+' €' : '—');
