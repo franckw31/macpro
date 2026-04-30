@@ -341,6 +341,7 @@ function renderNotes() {
     try {
         var debugDiv = document.getElementById('debug-pseudos');
         var debugState = '[DEBUG] canSeeRecues=' + trak.canSeeRecues + ', allMode=' + trak.allMode + ', pseudo=' + trak.pseudo;
+        debugState += '<br>[DEBUG] membres = [' + membres.map(m=>escH(m.pseudo)).join(', ') + ']';
         if (debugDiv) {
             if (!trak.allMode && !trak.canSeeRecues) {
                 debugDiv.innerHTML = debugState + '<br>[DEBUG] Pseudos cibles filtrés : ' + notes.map(n => escH(n.cible_pseudo)).join(', ');
