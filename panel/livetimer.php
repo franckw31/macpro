@@ -676,19 +676,6 @@ if (isset($_GET['action'])) {
             <button class="act-btn blue" onclick="playBlindsMessage()">💰 Blindes</button>
         </div>
 
-        
-        <?php if ($is_admin): ?>
-        <!-- RESET BLINDES (Admin) -->
-        <div style="margin-top: 14px; text-align: center;">
-            <a href="<?php echo htmlspecialchars($resetBlindsUrl, ENT_QUOTES, 'UTF-8'); ?>"
-               class="act-btn reset-link"
-               style="display:inline-flex;"
-               onclick="return confirm('Réinitialiser les blindes ?');">
-                ⚠️ Réinitialiser les blindes
-            </a>
-        </div>
-        <?php endif; ?>
-
         <?php if (intval($_SESSION['id']) == 265 || intval($_SESSION['id']) == 1): ?>
         <!-- SÉLECTEUR DE PARTIE -->
         <div class="partie-select-wrap">
