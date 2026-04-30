@@ -294,6 +294,16 @@ function loadNotes() {
     fetch(url, { credentials:'include' })
     .then(r=>r.json()).then(d=>{
         trak.notes = d.success ? (d.notes||[]) : [];
+        // Filtrage strict côté client au moment de la réception : si on est en vue joueur
+        if (!trak.allMode && !trak.canSeeRecues && trak.pseudo) {
+            var mSelClient = membres.find(m=>m.pseudo.toLowerCase()===trak.pseudo.toLowerCase());
+            var idSelClient = mSelClient ? mSelClient.id : null;
+            if (idSelClient) {
+                trak.notes = trak.notes.filter(n => (n.id_auteur===trak.myId || n.id_auteur==String(trak.myId)) && (n.id_cible===idSelClient || n.id_cible==String(idSelClient)) && n.cible_pseudo && n.cible_pseudo.toLowerCase()===trak.pseudo.toLowerCase());
+            } else {
+                trak.notes = [];
+            }
+        }
         if (trak.allMode) {
             document.getElementById('player-hdr').classList.remove('visible');
             document.getElementById('content-area').classList.add('visible');
