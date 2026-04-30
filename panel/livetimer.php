@@ -203,18 +203,19 @@ if (isset($_GET['action'])) {
             $next_raw = ($nsb == 0 && $nbb == 0) ? 'PAUSE' : $nsb . '/' . $nbb;
         }
 
-        // Prochaine pause (en secondes depuis maintenant)
+        // Prochaine pause : on cherche le premier niveau avec sb=0 bb=0 après le niveau courant
+        // Le temps jusqu'à sa DÉBUT = fin du niveau qui le précède - maintenant
         $next_pause = '';
-        $acc = $seconds_remaining; // secondes restantes sur le niveau courant
         for ($i = $currentIdx + 1; $i < count($blinds); $i++) {
             $nb   = $blinds[$i];
             $nsb2 = intval($nb['sb'] ?? 0);
             $nbb2 = intval($nb['bb'] ?? 0);
             if ($nsb2 == 0 && $nbb2 == 0) {
-                // $acc = secondes jusqu'à la pause
-                $psec = intval($acc);
-                $ph   = floor($psec / 3600);
-                $pm   = floor(($psec % 3600) / 60);
+                // La pause démarre quand le niveau précédent se termine
+                $pause_starts_at = strtotime($blinds[$i - 1]['fin']);
+                $psec = max(0, $pause_starts_at - $now);
+                $ph = floor($psec / 3600);
+                $pm = floor(($psec % 3600) / 60);
                 if ($ph > 0) {
                     $next_pause = 'dans ' . $ph . 'h' . str_pad($pm, 2, '0', STR_PAD_LEFT);
                 } else {
@@ -222,8 +223,6 @@ if (isset($_GET['action'])) {
                 }
                 break;
             }
-            $ndur = max(0, strtotime($nb['fin']) - strtotime($nb['debut']));
-            $acc += $ndur;
         }
 
         // Stats joueurs
