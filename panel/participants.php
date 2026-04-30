@@ -260,7 +260,7 @@ function trakRenderNotes() {
 
 function trakSend() {
   var text=(document.getElementById('trak-input').value||'').trim(); if(!text)return;
-  fetch('/api/trak-notes.php',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+trakS.token},
+  fetch('/api/trak-notes.php',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json','Authorization':'Bearer '+trakS.token},
     body:JSON.stringify({action:'add',pseudo_cible:trakS.pseudo,note:text,id_activite:trakS.actId})})
   .then(r=>r.json()).then(d=>{ if(d.success&&d.note){ trakS.notes.unshift(d.note); document.getElementById('trak-input').value=''; trakSetMode('auteur'); trakRenderNotes(); } });
 }
