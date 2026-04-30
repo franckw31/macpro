@@ -321,7 +321,7 @@ function renderNotes() {
     }
     // DEBUG: Affiche la liste des pseudos cibles filtrés
     var debugList = '';
-    if (!trak.allMode && !trak.canSeeRecues && idJoueur) {
+    if (!trak.allMode && !trak.canSeeRecues) {
         debugList = '<div style="color:#ff6b6b;font-size:12px;padding:4px 0;">[DEBUG] Pseudos cibles filtrés : ' + notes.map(n => escH(n.cible_pseudo)).join(', ') + '</div>';
     }
     if (!notes.length) {
