@@ -114,6 +114,7 @@ try {
 					}
 				}
 			}
+			$serverActivity['structure_levels'] = $structure_levels;
 
 			$serverParticipation = null;
 			if (!empty($_SESSION['id']) && !empty($con)) {
