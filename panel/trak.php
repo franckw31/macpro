@@ -324,11 +324,12 @@ function renderNotes() {
     // Affiche le debug en haut de page
     try {
         var debugDiv = document.getElementById('debug-pseudos');
+        var debugState = '[DEBUG] canSeeRecues=' + trak.canSeeRecues + ', allMode=' + trak.allMode + ', pseudo=' + trak.pseudo;
         if (debugDiv) {
             if (!trak.allMode && !trak.canSeeRecues) {
-                debugDiv.innerHTML = '[DEBUG] Pseudos cibles filtrés : ' + notes.map(n => escH(n.cible_pseudo)).join(', ');
+                debugDiv.innerHTML = debugState + '<br>[DEBUG] Pseudos cibles filtrés : ' + notes.map(n => escH(n.cible_pseudo)).join(', ');
             } else {
-                debugDiv.innerHTML = '[DEBUG] (aucun filtrage ou admin)';
+                debugDiv.innerHTML = debugState + '<br>[DEBUG] (aucun filtrage ou admin)';
             }
         } else {
             // Bloc non trouvé
@@ -337,7 +338,7 @@ function renderNotes() {
                 var d = document.createElement('div');
                 d.id = 'debug-pseudos';
                 d.style = 'color:#ff6b6b;font-size:13px;padding:4px 16px 0 16px;';
-                d.innerHTML = '[DEBUG] (bloc debug non trouvé)';
+                d.innerHTML = debugState + '<br>[DEBUG] (bloc debug non trouvé)';
                 hdr.parentNode.insertBefore(d, hdr.nextSibling);
             }
         }
