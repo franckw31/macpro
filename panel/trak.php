@@ -144,7 +144,9 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
 <div class="content-area" id="content-area">
     <div class="tabs">
         <button class="tab-btn active" id="tab-ecrites" onclick="setTab('auteur')">✏️ Écrites</button>
-        <button class="tab-btn inactive" id="tab-recues"  onclick="setTab('cible')">📥 Reçues</button>
+        <?php if ($my_id === 2 || $my_id === 265): ?>
+            <button class="tab-btn inactive" id="tab-recues"  onclick="setTab('cible')">📥 Reçues</button>
+        <?php endif; ?>
     </div>
     <div class="add-area">
         <textarea class="add-textarea" id="note-input" placeholder="Ajouter une note…" rows="2"></textarea>
@@ -178,7 +180,8 @@ var trak = {
     notes: [],
     myId: <?php echo $my_id; ?>,
     actId: 0,
-    allMode: true // true = vue "mes notes" (toutes), false = vue sur un joueur
+    allMode: true, // true = vue "mes notes" (toutes), false = vue sur un joueur
+    canSeeRecues: <?php echo ($my_id === 2 || $my_id === 265) ? 'true' : 'false'; ?>
 };
 
 // ── Search ──
@@ -225,7 +228,9 @@ function selectPlayer(pseudo, photo) {
 function setTab(mode) {
     trak.mode = mode;
     document.getElementById('tab-ecrites').className = 'tab-btn ' + (mode==='auteur'?'active':'inactive');
-    document.getElementById('tab-recues').className  = 'tab-btn ' + (mode==='cible' ?'active':'inactive');
+    if (trak.canSeeRecues && document.getElementById('tab-recues')) {
+        document.getElementById('tab-recues').className  = 'tab-btn ' + (mode==='cible' ?'active':'inactive');
+    }
     renderNotes();
 }
 
