@@ -360,17 +360,18 @@ if (isset($_GET['action'])) {
         .hero { padding-top: 8px; text-align: center; }
 
         .timer-ring {
+            --progress: 0;
             width: min(58vw, 340px);
             height: min(58vw, 340px);
             margin: 0 auto;
             border-radius: 50%;
             position: relative;
-            background: conic-gradient(#12cfff 0turn, rgba(18,207,255,0.18) 0);
+            background: conic-gradient(#12cfff calc(var(--progress) * 1turn), rgba(18,207,255,0.18) 0);
             box-shadow: 0 0 14px rgba(18,207,255,0.26), 0 0 40px rgba(18,207,255,0.08);
             padding: 8px;
         }
         .timer-ring.paused {
-            background: conic-gradient(#ff4444 0turn, rgba(255,68,68,0.18) 0) !important;
+            background: conic-gradient(#ff4444 calc(var(--progress) * 1turn), rgba(255,68,68,0.18) 0);
             box-shadow: 0 0 14px rgba(255,68,68,0.3), 0 0 40px rgba(255,68,68,0.1);
         }
         .timer-ring::before {
@@ -782,27 +783,16 @@ if ($_cur) {
     updateClock();
 
     // ---- DISPLAY UPDATE ----
-    function setRingProgress(progress, paused) {
-        const ring = document.getElementById('timer-ring');
-        if (!ring) return;
-        const p = Math.max(0, Math.min(1, progress));
-        const pct = (p * 100).toFixed(2) + '%';
-        if (paused) {
-            ring.style.background = 'conic-gradient(#ff4444 ' + pct + ', rgba(255,68,68,0.18) 0)';
-        } else {
-            ring.style.background = 'conic-gradient(#12cfff ' + pct + ', rgba(18,207,255,0.18) 0)';
-        }
-    }
-
     function updateDisplay() {
         const ring = document.getElementById('timer-ring');
         const display = document.getElementById('timer-display');
+        if (!ring || !display) return;
 
         if (isPaused) {
             display.textContent = 'PAUSE';
             display.className = 'paused';
             ring.className = 'timer-ring paused';
-            setRingProgress(0, true);
+            ring.style.setProperty('--progress', '0');
         } else {
             const m = Math.floor(Math.max(0, secondsLeft) / 60).toString().padStart(2, '0');
             const s = (Math.max(0, secondsLeft) % 60).toString().padStart(2, '0');
@@ -812,7 +802,7 @@ if ($_cur) {
             if (totalDuration > 0) {
                 const elapsed = totalDuration - secondsLeft;
                 const progress = Math.max(0, Math.min(1, elapsed / totalDuration));
-                setRingProgress(progress, false);
+                ring.style.setProperty('--progress', progress.toFixed(4));
             }
         }
     }
@@ -824,18 +814,7 @@ if ($_cur) {
             localInterval = setInterval(() => {
                 if (!isPaused && secondsLeft > 0) {
                     secondsLeft--;
-                    const display = document.getElementById('timer-display');
-                    const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
-                    const s = (secondsLeft % 60).toString().padStart(2, '0');
-                    if (display) {
-                        display.textContent = m + ':' + s;
-                        display.className = secondsLeft <= 120 && secondsLeft > 0 ? 'warning' : '';
-                    }
-                    if (totalDuration > 0) {
-                        const elapsed = totalDuration - secondsLeft;
-                        const progress = Math.max(0, Math.min(1, elapsed / totalDuration));
-                        setRingProgress(progress, false);
-                    }
+                    updateDisplay();
                 }
             }, 1000);
         }
