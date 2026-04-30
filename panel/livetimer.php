@@ -629,8 +629,7 @@ if (isset($_GET['action'])) {
         <div class="blinds-block">
             <div class="blind-info" id="blind-info">-- / --</div>
             <div class="blind-caption">Blindes</div>
-            <div class="blind-info-next">→ <span id="next-blind-info">--</span></div>
-            <div class="pause-line" id="pause-line">—</div>
+            <div class="blind-info-next">→ <span id="next-blind-info">--</span><span id="pause-line" style="margin-left:14px;opacity:0.6;font-size:0.82em;"></span></div>
             <div class="resume-indicator" id="resume-indicator"></div>
         </div>
 
@@ -922,17 +921,13 @@ if ($_cur) {
                 nextSpan.textContent = nextRaw ? String(nextRaw).replace(/\//g, ' / ') : '--';
             }
 
-            // Pause info
+            // Pause info (inline avec les prochaines blindes)
             const pauseLine = document.getElementById('pause-line');
             if (pauseLine) {
-                const isBreak = (currentBlindsName === '0/0' || currentBlindsName === '0-0' || data.blinds_text === 'PAUSE');
-                if (isBreak && secondsLeft > 0) {
-                    const d = new Date(); d.setSeconds(d.getSeconds() + secondsLeft);
-                    pauseLine.textContent = 'Reprise du jeu : ' + d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
-                } else if (data.next_pause) {
-                    pauseLine.textContent = 'Pause : ' + data.next_pause;
+                if (data.next_pause) {
+                    pauseLine.textContent = '· Pause ' + data.next_pause;
                 } else {
-                    pauseLine.textContent = '—';
+                    pauseLine.textContent = '';
                 }
             }
 
