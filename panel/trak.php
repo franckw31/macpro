@@ -238,7 +238,8 @@ function selectPlayer(pseudo, photo) {
     trak.pseudo = pseudo;
     trak.mode = 'auteur';
     trak.allMode = false;
-    searchEl.value = pseudo;
+    // Ne pas vider le champ si déjà rempli (pour reload)
+    if (searchEl.value !== pseudo) searchEl.value = pseudo;
     sugEl.classList.remove('open');
 
     // Update player header
