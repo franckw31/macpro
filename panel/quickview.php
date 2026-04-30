@@ -397,7 +397,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
         </svg>
       </div>
       <div>
-        <div class="v2-app-name">Card<span>Event</span><span class="v2-version">v2.0</span></div>
+        <div class="v2-app-name">Card<span>Event</span><span class="v2-version">V 3.0</span></div>
         <div class="v2-greeting">Bonjour, <span class="name"><?php echo $displayUser; ?></span> <span class="chev">›</span></div>
       </div>
     </div>
