@@ -569,17 +569,6 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-list-chev">›</div>
     </a>
 
-    <a class="v2-list-item" href="/panel/livetimer.php<?php echo $uid_q; ?>">
-      <div class="v2-list-icon orange">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/><path d="M5.5 5.5l1.5 1.5"/><path d="M18.5 5.5l-1.5 1.5"/></svg>
-      </div>
-      <div class="v2-list-body">
-        <div class="v2-list-name">Live Timer</div>
-        <div class="v2-list-sub">Minuteur de blindes en cours</div>
-      </div>
-      <div class="v2-list-chev">›</div>
-    </a>
-
   </div>
 
 </div><!-- /page -->
