@@ -359,26 +359,18 @@ if (isset($_GET['action'])) {
         /* ---- HERO / RING ---- */
         .hero { padding-top: 8px; text-align: center; }
 
-        @property --progress {
-            syntax: '<number>';
-            inherits: false;
-            initial-value: 0;
-        }
-
         .timer-ring {
-            --progress: 0;
             width: min(58vw, 340px);
             height: min(58vw, 340px);
             margin: 0 auto;
             border-radius: 50%;
             position: relative;
-            background: conic-gradient(#12cfff calc(var(--progress) * 1turn), rgba(18,207,255,0.18) 0);
+            background: conic-gradient(#12cfff 0turn, rgba(18,207,255,0.18) 0);
             box-shadow: 0 0 14px rgba(18,207,255,0.26), 0 0 40px rgba(18,207,255,0.08);
             padding: 8px;
-            transition: --progress 1s linear;
         }
         .timer-ring.paused {
-            background: conic-gradient(#ff4444 calc(var(--progress) * 1turn), rgba(255,68,68,0.18) 0);
+            background: conic-gradient(#ff4444 0turn, rgba(255,68,68,0.18) 0) !important;
             box-shadow: 0 0 14px rgba(255,68,68,0.3), 0 0 40px rgba(255,68,68,0.1);
         }
         .timer-ring::before {
@@ -790,26 +782,16 @@ if ($_cur) {
     updateClock();
 
     // ---- DISPLAY UPDATE ----
-    let _animFrame = null;
-    let _progressFrom = 0;
-    let _progressTo = 0;
-    let _animStart = null;
-    const ANIM_DURATION = 900; // ms
-
-    function animateProgress(toVal) {
-        _progressFrom = _progressTo;
-        _progressTo = toVal;
-        _animStart = null;
-        if (_animFrame) cancelAnimationFrame(_animFrame);
-        function step(ts) {
-            if (!_animStart) _animStart = ts;
-            const t = Math.min(1, (ts - _animStart) / ANIM_DURATION);
-            const cur = _progressFrom + (_progressTo - _progressFrom) * t;
-            const ring = document.getElementById('timer-ring');
-            if (ring) ring.style.setProperty('--progress', cur.toFixed(4));
-            if (t < 1) _animFrame = requestAnimationFrame(step);
+    function setRingProgress(progress, paused) {
+        const ring = document.getElementById('timer-ring');
+        if (!ring) return;
+        const p = Math.max(0, Math.min(1, progress));
+        const pct = (p * 100).toFixed(2) + '%';
+        if (paused) {
+            ring.style.background = 'conic-gradient(#ff4444 ' + pct + ', rgba(255,68,68,0.18) 0)';
+        } else {
+            ring.style.background = 'conic-gradient(#12cfff ' + pct + ', rgba(18,207,255,0.18) 0)';
         }
-        _animFrame = requestAnimationFrame(step);
     }
 
     function updateDisplay() {
@@ -820,8 +802,7 @@ if ($_cur) {
             display.textContent = 'PAUSE';
             display.className = 'paused';
             ring.className = 'timer-ring paused';
-            ring.style.setProperty('--progress', '0');
-            _progressTo = 0;
+            setRingProgress(0, true);
         } else {
             const m = Math.floor(Math.max(0, secondsLeft) / 60).toString().padStart(2, '0');
             const s = (Math.max(0, secondsLeft) % 60).toString().padStart(2, '0');
@@ -831,11 +812,7 @@ if ($_cur) {
             if (totalDuration > 0) {
                 const elapsed = totalDuration - secondsLeft;
                 const progress = Math.max(0, Math.min(1, elapsed / totalDuration));
-                // Animer seulement lors d'un sync (pas du tick local)
-                ring.style.setProperty('--progress', progress.toFixed(4));
-                _progressTo = progress;
-            } else {
-                ring.style.setProperty('--progress', '0');
+                setRingProgress(progress, false);
             }
         }
     }
@@ -847,19 +824,17 @@ if ($_cur) {
             localInterval = setInterval(() => {
                 if (!isPaused && secondsLeft > 0) {
                     secondsLeft--;
-                    // Mettre à jour le cercle à chaque seconde
                     const display = document.getElementById('timer-display');
-                    const ring = document.getElementById('timer-ring');
                     const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
                     const s = (secondsLeft % 60).toString().padStart(2, '0');
                     if (display) {
                         display.textContent = m + ':' + s;
                         display.className = secondsLeft <= 120 && secondsLeft > 0 ? 'warning' : '';
                     }
-                    if (ring && totalDuration > 0) {
+                    if (totalDuration > 0) {
                         const elapsed = totalDuration - secondsLeft;
                         const progress = Math.max(0, Math.min(1, elapsed / totalDuration));
-                        ring.style.setProperty('--progress', progress.toFixed(4));
+                        setRingProgress(progress, false);
                     }
                 }
             }, 1000);
