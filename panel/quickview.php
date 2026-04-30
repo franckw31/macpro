@@ -592,7 +592,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					<div id="activity-name" style="display:none"></div>
 					<div id="activity-date" style="display:none"></div>
 				<div style="display:flex;align-items:center;gap:6px;margin-top:6px;line-height:1">
-						<svg style="flex-shrink:0;vertical-align:middle" width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="var(--gold)" opacity="0.85"/><path d="M12.5 8v5l3 1" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+						<svg style="flex-shrink:0;vertical-align:middle;position:relative;top:-5px" width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="var(--gold)" opacity="0.85"/><path d="M12.5 8v5l3 1" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
 						<span class="small" style="color:var(--gold);font-weight:700;vertical-align:middle"><?php
 							$_jours = ['Monday'=>'Lundi','Tuesday'=>'Mardi','Wednesday'=>'Mercredi','Thursday'=>'Jeudi','Friday'=>'Vendredi','Saturday'=>'Samedi','Sunday'=>'Dimanche'];
 							$_mois  = ['January'=>'Janvier','February'=>'Février','March'=>'Mars','April'=>'Avril','May'=>'Mai','June'=>'Juin','July'=>'Juillet','August'=>'Août','September'=>'Septembre','October'=>'Octobre','November'=>'Novembre','December'=>'Décembre'];
