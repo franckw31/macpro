@@ -678,7 +678,6 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 <div class="v2-modal-overlay" id="v2-details-modal" aria-hidden="true">
   <div class="v2-modal-sheet" role="dialog" aria-modal="true">
     <div class="v2-modal-handle"></div>
-    <button class="v2-modal-close" id="v2-details-close">Fermer</button>
     <div class="v2-modal-sub" id="v2-modal-sub" style="display:flex;align-items:center;gap:8px">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:0.85">
         <rect x="3" y="4" width="18" height="17" rx="3" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.5)" stroke-width="1.4"/>
@@ -714,6 +713,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div id="dd-structure-wrap"><div style="color:var(--muted);font-size:13px;padding:8px 0" id="dd-structure-empty">—</div></div>
       <div class="v2-scroll-hint hidden" id="dd-structure-hint">▼ défiler</div>
     </div>
+    <button class="v2-modal-close" id="v2-details-close" style="position:static;display:block;width:100%;margin-top:16px;border-radius:12px;padding:12px;font-size:15px">Fermer</button>
   </div>
 </div>
 
