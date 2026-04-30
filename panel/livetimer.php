@@ -205,18 +205,24 @@ if (isset($_GET['action'])) {
 
         // Prochaine pause (en secondes depuis maintenant)
         $next_pause = '';
-        $acc = $seconds_remaining;
+        $acc = $seconds_remaining; // secondes restantes sur le niveau courant
         for ($i = $currentIdx + 1; $i < count($blinds); $i++) {
             $nb   = $blinds[$i];
             $nsb2 = intval($nb['sb'] ?? 0);
             $nbb2 = intval($nb['bb'] ?? 0);
-            $ndur = max(0, strtotime($nb['fin']) - strtotime($nb['debut']));
             if ($nsb2 == 0 && $nbb2 == 0) {
-                $pmins = floor($acc / 60);
-                $ph = floor($pmins / 60); $pm = $pmins % 60;
-                $next_pause = ($ph > 0 ? $ph . 'h' . str_pad($pm, 2, '0', STR_PAD_LEFT) : 'dans ' . $pmins . 'm');
+                // $acc = secondes jusqu'à la pause
+                $psec = intval($acc);
+                $ph   = floor($psec / 3600);
+                $pm   = floor(($psec % 3600) / 60);
+                if ($ph > 0) {
+                    $next_pause = 'dans ' . $ph . 'h' . str_pad($pm, 2, '0', STR_PAD_LEFT);
+                } else {
+                    $next_pause = 'dans ' . $pm . 'm';
+                }
                 break;
             }
+            $ndur = max(0, strtotime($nb['fin']) - strtotime($nb['debut']));
             $acc += $ndur;
         }
 
