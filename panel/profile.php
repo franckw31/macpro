@@ -613,6 +613,9 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             </div>
         </div>
 
+        <div class="profile-footer-action" style="margin-bottom:10px">
+            <button class="top-action" onclick="window.location.href='/panel/quickview.php';" style="min-width:160px;justify-content:center">Fermer</button>
+        </div>
         <div class="profile-footer-action">
             <a class="top-action logout" href="/panel/logout.php">Déconnexion</a>
         </div>
