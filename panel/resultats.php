@@ -138,7 +138,7 @@ if($activity){
     /* header should show full label even if column is narrow */
     .row.header-row > .col-pseudo{white-space:normal;overflow:visible;text-overflow:none;color:var(--muted);font-weight:700}
     .col-recave{display:flex;justify-content:center;color:var(--orange)}
-    .col-bounty{display:flex;justify-content:center;color:var(--purple)}
+    .col-bounty{display:flex;justify-content:center;color:var(--gold)}
     .col-gains{display:flex;justify-content:flex-end;color:var(--green);font-weight:800}
 
     /* header-specific alignment tweaks */
