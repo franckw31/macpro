@@ -860,10 +860,16 @@ if ($_cur) {
                 lastSB = m[1]; lastBB = m[2];
             } else { lastSB = ''; lastBB = ''; }
 
+            const newLevel = data.level_index !== undefined ? data.level_index : -1;
             if (data.duration_seconds) {
-                totalDuration = parseInt(data.duration_seconds);
-                lastDurationMin = Math.floor(totalDuration / 60);
+                const newDur = parseInt(data.duration_seconds);
+                // Ne remplacer totalDuration que si c'est un nouveau niveau ou si on n'en a pas encore
+                if (totalDuration === 0 || newLevel !== currentLevelIndex) {
+                    totalDuration = newDur;
+                    lastDurationMin = Math.floor(totalDuration / 60);
+                }
             }
+            currentLevelIndex = newLevel;
             lastAvgStack = data.avg_stack || '';
 
             const serverSecs = data.seconds_remaining || 0;
