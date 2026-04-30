@@ -349,8 +349,10 @@ a{color:inherit;text-decoration:none}
 .v2-blind-table td.lvl-ante{color:var(--green)}
 .v2-blind-table td.lvl-min{color:var(--muted)}
 .v2-blind-table tr.lvl-pause td{color:var(--muted);font-style:italic;font-weight:400}
-.v2-blind-table tbody::-webkit-scrollbar{width:3px}
-.v2-blind-table tbody::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:4px}
+.v2-blind-table tbody::-webkit-scrollbar{width:4px}
+.v2-blind-table tbody::-webkit-scrollbar-track{background:rgba(255,255,255,0.06);border-radius:4px}
+.v2-blind-table tbody::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.30);border-radius:4px}
+.v2-blind-table tbody{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.30) rgba(255,255,255,0.06)}
 
 /* ─── INSCRIPTION MODAL ─── */
 .v2-ins-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
