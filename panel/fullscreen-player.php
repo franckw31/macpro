@@ -200,9 +200,9 @@ if (!empty($act_row['date_depart'])) {
             border: 1px solid #ff3333;
             color: #ff3333;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
+            width: 32px;
+            height: 32px;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.2s;
             display: inline-flex;
