@@ -143,24 +143,39 @@ try {
 	if (!empty($con)) {
 		$_jours_all = ['Monday'=>'Lundi','Tuesday'=>'Mardi','Wednesday'=>'Mercredi','Thursday'=>'Jeudi','Friday'=>'Vendredi','Saturday'=>'Samedi','Sunday'=>'Dimanche'];
 		$_mois_all  = ['January'=>'Janvier','February'=>'Février','March'=>'Mars','April'=>'Avril','May'=>'Mai','June'=>'Juin','July'=>'Juillet','August'=>'Août','September'=>'Septembre','October'=>'Octobre','November'=>'Novembre','December'=>'Décembre'];
-		$qa = mysqli_query($con, "SELECT `id-activite`, `date_depart`, COALESCE(`titre-activite`,`titre_activite`,'') AS titre, COALESCE(`buyin`,0) AS buyin FROM activite ORDER BY date_depart DESC LIMIT 60");
-		while ($ra = mysqli_fetch_assoc($qa)) {
-			$_da = new DateTime($ra['date_depart'], new DateTimeZone('Europe/Paris'));
-			$allActivities[] = [
-				'id'    => (int)$ra['id-activite'],
-				'date'  => $ra['date_depart'],
-				'label' => $_jours_all[$_da->format('l')] . ' ' . $_da->format('j') . ' ' . $_mois_all[$_da->format('F')] . ' – ' . $_da->format('H:i'),
-				'day'   => (int)$_da->format('j'),
-				'month' => (int)$_da->format('n'),
-				'year'  => (int)$_da->format('Y'),
-				'ts'    => (int)$_da->getTimestamp(),
-				'titre' => $ra['titre'],
-				'buyin' => (int)$ra['buyin'],
-				'past'  => ($ra['date_depart'] < date('Y-m-d H:i:s')),
-			];
+		// SELECT * to avoid errors on column name variations (titre-activite vs titre_activite)
+		$qa = mysqli_query($con, "SELECT * FROM activite ORDER BY date_depart DESC LIMIT 60");
+		if ($qa) {
+			while ($ra = mysqli_fetch_assoc($qa)) {
+				$_dp = $ra['date_depart'] ?? null;
+				if (!$_dp) continue;
+				$_da = new DateTime($_dp, new DateTimeZone('Europe/Paris'));
+				// Resolve title: try multiple column name variants
+				$_titre = '';
+				foreach (['titre-activite','titre_activite','title','titre'] as $_tc) {
+					if (isset($ra[$_tc]) && strlen(trim($ra[$_tc])) > 0) { $_titre = $ra[$_tc]; break; }
+				}
+				// Resolve buyin
+				$_buyin = 0;
+				foreach (['buyin','buy_in','buy-in'] as $_bc) {
+					if (isset($ra[$_bc]) && $ra[$_bc] !== '') { $_buyin = (int)$ra[$_bc]; break; }
+				}
+				$allActivities[] = [
+					'id'    => (int)$ra['id-activite'],
+					'date'  => $_dp,
+					'label' => $_jours_all[$_da->format('l')] . ' ' . $_da->format('j') . ' ' . $_mois_all[$_da->format('F')] . ' – ' . $_da->format('H:i'),
+					'day'   => (int)$_da->format('j'),
+					'month' => (int)$_da->format('n'),
+					'year'  => (int)$_da->format('Y'),
+					'ts'    => (int)$_da->getTimestamp(),
+					'titre' => $_titre,
+					'buyin' => $_buyin,
+					'past'  => ($_dp < date('Y-m-d H:i:s')),
+				];
+			}
 		}
 	}
-} catch (Exception $e) {}
+} catch (Exception $e) { error_log('allActivities fetch error: ' . $e->getMessage()); }
 
 $uid_q = !empty($serverActivity['id']) ? '?uid=' . intval($serverActivity['id']) : '';
 $participants_href = (
