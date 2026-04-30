@@ -137,6 +137,31 @@ if (!empty($serverActivity['date'])) {
 	$time_str = $_d->format('H:i');
 }
 
+// Fetch ALL activities for the calendar picker (past + future, limit 60)
+$allActivities = [];
+try {
+	if (!empty($con)) {
+		$_jours_all = ['Monday'=>'Lundi','Tuesday'=>'Mardi','Wednesday'=>'Mercredi','Thursday'=>'Jeudi','Friday'=>'Vendredi','Saturday'=>'Samedi','Sunday'=>'Dimanche'];
+		$_mois_all  = ['January'=>'Janvier','February'=>'Février','March'=>'Mars','April'=>'Avril','May'=>'Mai','June'=>'Juin','July'=>'Juillet','August'=>'Août','September'=>'Septembre','October'=>'Octobre','November'=>'Novembre','December'=>'Décembre'];
+		$qa = mysqli_query($con, "SELECT `id-activite`, `date_depart`, COALESCE(`titre-activite`,`titre_activite`,'') AS titre, COALESCE(`buyin`,0) AS buyin FROM activite ORDER BY date_depart DESC LIMIT 60");
+		while ($ra = mysqli_fetch_assoc($qa)) {
+			$_da = new DateTime($ra['date_depart'], new DateTimeZone('Europe/Paris'));
+			$allActivities[] = [
+				'id'    => (int)$ra['id-activite'],
+				'date'  => $ra['date_depart'],
+				'label' => $_jours_all[$_da->format('l')] . ' ' . $_da->format('j') . ' ' . $_mois_all[$_da->format('F')] . ' – ' . $_da->format('H:i'),
+				'day'   => (int)$_da->format('j'),
+				'month' => (int)$_da->format('n'),
+				'year'  => (int)$_da->format('Y'),
+				'ts'    => (int)$_da->getTimestamp(),
+				'titre' => $ra['titre'],
+				'buyin' => (int)$ra['buyin'],
+				'past'  => ($ra['date_depart'] < date('Y-m-d H:i:s')),
+			];
+		}
+	}
+} catch (Exception $e) {}
+
 $uid_q = !empty($serverActivity['id']) ? '?uid=' . intval($serverActivity['id']) : '';
 $participants_href = (
 	!empty($serverActivity['date']) &&
@@ -288,6 +313,44 @@ a{color:inherit;text-decoration:none}
 /* Countdown display */
 #v2-countdown{font-size:28px;font-weight:900;color:var(--green);letter-spacing:1px;line-height:1}
 
+/* ─── CALENDAR PICKER MODAL ─── */
+.v2-cal-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;display:none;align-items:flex-end;justify-content:center}
+.v2-cal-modal-overlay.open{display:flex}
+.v2-cal-sheet{background:#0d1520;border-top-left-radius:22px;border-top-right-radius:22px;width:100%;max-width:440px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
+.v2-cal-header{padding:18px 18px 0;flex-shrink:0}
+.v2-cal-handle{width:36px;height:4px;background:rgba(255,255,255,.15);border-radius:4px;margin:0 auto 14px}
+.v2-cal-title{font-size:17px;font-weight:800;margin-bottom:14px;text-align:center}
+/* Month nav */
+.v2-cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.v2-cal-nav-btn{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--text2)}
+.v2-cal-month-label{font-size:15px;font-weight:700;color:var(--text)}
+/* Day grid */
+.v2-cal-grid-wrap{padding:0 18px;flex-shrink:0}
+.v2-cal-dow{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px}
+.v2-cal-dow span{text-align:center;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--muted);padding:4px 0}
+.v2-cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.v2-cal-day{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--muted);position:relative;cursor:default}
+.v2-cal-day.has-event{color:var(--text);cursor:pointer;background:rgba(10,132,255,.15)}
+.v2-cal-day.has-event:hover,.v2-cal-day.has-event:active{background:rgba(10,132,255,.3)}
+.v2-cal-day.is-next{background:var(--green) !important;color:#04180a !important;font-weight:900;box-shadow:0 0 0 2px var(--green)}
+.v2-cal-day.is-selected{box-shadow:0 0 0 2px var(--orange);color:var(--orange)}
+.v2-cal-day.is-past.has-event{color:var(--muted);background:rgba(255,255,255,.05)}
+/* Event list below grid */
+.v2-cal-list{overflow-y:auto;padding:12px 18px 32px;flex:1;min-height:0}
+.v2-cal-list-title{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;margin-top:4px}
+.v2-cal-event{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:12px;margin-bottom:8px;cursor:pointer;border:1px solid var(--border);transition:background .15s}
+.v2-cal-event:active{background:rgba(255,255,255,.04)}
+.v2-cal-event.is-next-ev{border-color:var(--green);background:rgba(52,199,89,.08)}
+.v2-cal-event.is-selected-ev{border-color:var(--orange);background:rgba(255,159,10,.08)}
+.v2-cal-event.is-past-ev{opacity:.55}
+.v2-cal-ev-left{display:flex;align-items:center;gap:10px}
+.v2-cal-ev-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--blue)}
+.v2-cal-ev-dot.next{background:var(--green)}
+.v2-cal-ev-dot.past{background:var(--muted)}
+.v2-cal-ev-label{font-size:13px;font-weight:700;line-height:1.3}
+.v2-cal-ev-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.v2-cal-ev-right{font-size:12px;font-weight:700;color:var(--orange);white-space:nowrap}
+
 /* Responsive */
 @media(max-width:360px){
   .v2-date-big{font-size:22px}
@@ -303,6 +366,7 @@ a{color:inherit;text-decoration:none}
 <script>
 window.SERVER_ACTIVITY = <?php echo json_encode($serverActivity, JSON_UNESCAPED_UNICODE); ?>;
 window.SERVER_PARTICIPATION = <?php echo json_encode($serverParticipation ?? null, JSON_UNESCAPED_UNICODE); ?>;
+window.ALL_ACTIVITIES = <?php echo json_encode($allActivities, JSON_UNESCAPED_UNICODE); ?>;
 try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)); }catch(e){}
 </script>
 <?php endif; ?>
@@ -343,9 +407,9 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
     <!-- Date + Calendar button -->
     <div class="v2-date-row">
       <div class="v2-date-big"><?php echo htmlspecialchars($date_str); ?></div>
-      <a href="/panel/activities-list.php<?php echo $uid_q; ?>" class="v2-cal-btn" title="Toutes les parties">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-      </a>
+      <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      </button>
     </div>
 
     <!-- DÉMARRE DANS / JOUEURS -->
@@ -483,6 +547,31 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
   </button>
 </nav>
 
+<!-- ══════════ CALENDAR PICKER MODAL ══════════ -->
+<div class="v2-cal-modal-overlay" id="v2-cal-modal" aria-hidden="true">
+  <div class="v2-cal-sheet" role="dialog" aria-modal="true" aria-label="Choisir une partie">
+    <div class="v2-cal-header">
+      <div class="v2-cal-handle"></div>
+      <div class="v2-cal-title">Choisir une partie</div>
+      <div class="v2-cal-nav">
+        <button class="v2-cal-nav-btn" id="v2-cal-prev">‹</button>
+        <div class="v2-cal-month-label" id="v2-cal-month-label">—</div>
+        <button class="v2-cal-nav-btn" id="v2-cal-next">›</button>
+      </div>
+    </div>
+    <div class="v2-cal-grid-wrap">
+      <div class="v2-cal-dow">
+        <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
+      </div>
+      <div class="v2-cal-days" id="v2-cal-days"></div>
+    </div>
+    <div class="v2-cal-list">
+      <div class="v2-cal-list-title">Parties du mois</div>
+      <div id="v2-cal-events"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════ DETAILS MODAL ══════════ -->
 <div class="v2-modal-overlay" id="v2-details-modal" aria-hidden="true">
   <div class="v2-modal-sheet" role="dialog" aria-modal="true">
@@ -578,6 +667,143 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
     </form>
   </div>
 </div>
+
+<script>
+// ─── CALENDAR PICKER ───
+(function(){
+  var overlay  = document.getElementById('v2-cal-modal');
+  var openBtn  = document.getElementById('v2-cal-open');
+  var daysEl   = document.getElementById('v2-cal-days');
+  var eventsEl = document.getElementById('v2-cal-events');
+  var monthLbl = document.getElementById('v2-cal-month-label');
+  var prevBtn  = document.getElementById('v2-cal-prev');
+  var nextBtn  = document.getElementById('v2-cal-next');
+
+  var acts = window.ALL_ACTIVITIES || [];
+  var current = window.SERVER_ACTIVITY || {};
+  var nowTs = Math.floor(Date.now()/1000);
+
+  // Find next activity (smallest future ts)
+  var nextAct = null;
+  acts.forEach(function(a){ if(!a.past && (!nextAct || a.ts < nextAct.ts)) nextAct = a; });
+
+  var moisNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+  // State: current displayed month/year
+  var viewDate = nextAct ? new Date(nextAct.ts*1000) : new Date();
+  var viewMonth = viewDate.getMonth(); // 0-based
+  var viewYear  = viewDate.getFullYear();
+
+  function getActsForMonth(m, y){
+    return acts.filter(function(a){ return a.month-1===m && a.year===y; });
+  }
+
+  function render(){
+    monthLbl.textContent = moisNames[viewMonth] + ' ' + viewYear;
+
+    // Build day grid
+    var firstDay = new Date(viewYear, viewMonth, 1);
+    var dow = firstDay.getDay(); // 0=Sun
+    // Convert to Mon-first (0=Mon … 6=Sun)
+    var offset = (dow === 0) ? 6 : dow - 1;
+    var daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+
+    var monthActs = getActsForMonth(viewMonth, viewYear);
+    // Build map day -> array of acts
+    var dayMap = {};
+    monthActs.forEach(function(a){ (dayMap[a.day] = dayMap[a.day]||[]).push(a); });
+
+    var html = '';
+    // Empty cells
+    for(var i=0;i<offset;i++) html += '<div class="v2-cal-day"></div>';
+    for(var d=1;d<=daysInMonth;d++){
+      var cls = 'v2-cal-day';
+      var hasActs = dayMap[d] && dayMap[d].length;
+      if(hasActs) cls += ' has-event';
+      // Check if any act on this day is past
+      if(hasActs && dayMap[d].every(function(a){ return a.past; })) cls += ' is-past';
+      // Focus: is-next
+      if(hasActs && nextAct && dayMap[d].some(function(a){ return a.id===nextAct.id; })) cls += ' is-next';
+      // Selected
+      if(hasActs && current.id && dayMap[d].some(function(a){ return a.id===current.id; })) cls += ' is-selected';
+      var dataIds = hasActs ? 'data-day="'+d+'"' : '';
+      html += '<div class="'+cls+'" '+dataIds+'>'+d+'</div>';
+    }
+    daysEl.innerHTML = html;
+
+    // Click on day cell
+    daysEl.querySelectorAll('.v2-cal-day.has-event').forEach(function(el){
+      el.addEventListener('click', function(){
+        var day = parseInt(el.getAttribute('data-day'));
+        var dayActs = dayMap[day] || [];
+        if(dayActs.length === 1){
+          navigate(dayActs[0].id);
+        } else {
+          // scroll to events list
+          el.closest('.v2-cal-sheet').querySelector('.v2-cal-list').scrollIntoView({behavior:'smooth'});
+        }
+      });
+    });
+
+    // Render event list
+    var listHtml = '';
+    if(monthActs.length === 0){
+      listHtml = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:16px 0">Aucune partie ce mois-ci</div>';
+    } else {
+      // Sort ascending
+      var sorted = monthActs.slice().sort(function(a,b){ return a.ts-b.ts; });
+      sorted.forEach(function(a){
+        var isNext = nextAct && a.id === nextAct.id;
+        var isSel  = current.id && a.id === current.id;
+        var cls2 = 'v2-cal-event';
+        if(isNext) cls2 += ' is-next-ev';
+        if(isSel)  cls2 += ' is-selected-ev';
+        if(a.past) cls2 += ' is-past-ev';
+        var dotCls = a.past ? 'past' : (isNext ? 'next' : '');
+        var tag = isNext ? ' <span style="background:var(--green);color:#04180a;font-size:9px;font-weight:800;padding:2px 6px;border-radius:20px;vertical-align:middle;margin-left:4px">PROCHAIN</span>' : '';
+        listHtml += '<div class="'+cls2+'" data-id="'+a.id+'">';
+        listHtml += '<div class="v2-cal-ev-left"><div class="v2-cal-ev-dot '+dotCls+'"></div><div>';
+        listHtml += '<div class="v2-cal-ev-label">'+escHtml(a.label)+tag+'</div>';
+        if(a.titre) listHtml += '<div class="v2-cal-ev-sub">'+escHtml(a.titre)+'</div>';
+        listHtml += '</div></div>';
+        listHtml += '<div class="v2-cal-ev-right">'+(a.buyin ? a.buyin+' €' : '')+'</div>';
+        listHtml += '</div>';
+      });
+    }
+    eventsEl.innerHTML = listHtml;
+    eventsEl.querySelectorAll('.v2-cal-event[data-id]').forEach(function(el){
+      el.addEventListener('click', function(){ navigate(parseInt(el.getAttribute('data-id'))); });
+    });
+    // Auto-scroll list to selected/next
+    setTimeout(function(){
+      var focused = eventsEl.querySelector('.is-next-ev, .is-selected-ev');
+      if(focused) focused.scrollIntoView({block:'nearest',behavior:'smooth'});
+    }, 80);
+  }
+
+  function navigate(id){
+    var url = new URL(window.location.href);
+    url.searchParams.set('uid', id);
+    window.location.href = url.toString();
+  }
+
+  function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function open(){
+    // Jump to month of next activity by default, or current selected
+    var target = acts.find(function(a){ return current.id && a.id===current.id; }) || nextAct;
+    if(target){ viewMonth = target.month-1; viewYear = target.year; }
+    render();
+    overlay.classList.add('open'); overlay.setAttribute('aria-hidden','false');
+  }
+  function close(){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); }
+
+  if(openBtn) openBtn.addEventListener('click', open);
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) close(); });
+  if(prevBtn) prevBtn.addEventListener('click', function(){ viewMonth--; if(viewMonth<0){viewMonth=11;viewYear--;} render(); });
+  if(nextBtn) nextBtn.addEventListener('click', function(){ viewMonth++; if(viewMonth>11){viewMonth=0;viewYear++;} render(); });
+})();
+</script>
 
 <script>
 // ─── COUNTDOWN ───
