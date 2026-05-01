@@ -586,6 +586,7 @@ if (isset($_GET['action'])) {
         }
 
         /* ---- RESPONSIVE ---- */
+        @keyframes cdPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
         @media (max-width: 600px) {
             .topbar { gap: 6px; }
             .pill-btn { min-height: 44px; padding: 0 14px; font-size: 14px; }
