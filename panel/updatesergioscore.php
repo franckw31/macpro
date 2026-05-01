@@ -72,6 +72,7 @@ if ($step === 2 && $pseudo_q !== '') {
               AND COALESCE(p.`option`,'None') NOT IN ('Desinscrit','None')
               AND p.classement != 50
               AND a.date_depart <= NOW()
+            HAVING total_recaves > 0
             ORDER BY a.date_depart DESC
             LIMIT 300
         ");
@@ -84,6 +85,7 @@ if ($step === 2 && $pseudo_q !== '') {
             // Critères de qualité des données
             $has_classement = $rank > 0 && $rank !== 50;
             $has_joueurs    = $nb >= 2;
+            $has_recaves    = $total_rec > 0;
 
             // Calcul du score (même formule que resume.php)
             $denom = $nb + $total_rec - $my_rec;
@@ -97,6 +99,7 @@ if ($step === 2 && $pseudo_q !== '') {
 
             if (!$has_classement)    { $status = 'no_classement'; }
             elseif (!$has_joueurs)   { $status = 'no_joueurs'; }
+            elseif (!$has_recaves)   { $status = 'no_recaves'; }
             elseif ($score_calc === null) { $status = 'skip'; }
             elseif ($already !== null && floatval($already) == $score_calc) { $status = 'already_same'; }
             else                     { $status = 'eligible'; }
