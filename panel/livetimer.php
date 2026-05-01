@@ -357,7 +357,7 @@ if (isset($_GET['action'])) {
             transition: background 0.2s;
         }
         .icon-btn:hover { background: rgba(255,255,255,0.06); }
-        .icon-btn.close { background: #000; color: #31c7ff; font-size: 18px; font-weight: 900; border: 1.5px solid #31c7ff !important; }
+        .icon-btn.close { background: #000; color: #31c7ff; font-size: 12px; font-weight: 700; border: 1.5px solid #31c7ff !important; }
         .icon-btn.close:hover { background: rgba(49,199,255,0.1); }
         .icon-btn.muted { opacity: 0.5; }
 
