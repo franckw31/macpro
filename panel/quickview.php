@@ -211,8 +211,8 @@ if (!empty($serverActivity['date'])) {
   $start_ts = strtotime($serverActivity['date']);
   if ($start_ts !== false) {
     $now = time();
-    // Live if started and not older than 12 hours (43200 seconds)
-    $is_today = ($now >= $start_ts) && (($now - $start_ts) <= 43200);
+    // Live if started and not older than 8 hours (28800 seconds)
+    $is_today = ($now >= $start_ts) && (($now - $start_ts) <= 28800);
   }
 }
 $participants_href = $is_past ? '/panel/resultats.php' . $uid_q : '/panel/participants.php' . $uid_q;
