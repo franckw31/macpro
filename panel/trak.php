@@ -369,59 +369,38 @@ function loadNotes() {
 
 // ── Render ──
 function renderNotes() {
-    var mode = trak.mode, myId = trak.myId;
-    var notes;
-    var m = !trak.allMode ? membres.find(m=>m.pseudo===trak.pseudo) : null;
-    var idJoueur = m ? m.id : null;
-    
-    if (trak.allMode) {
-        // Vue toutes les notes (default)
-        notes = trak.notes; 
-    } else {
-        // Filtre joueur spécifique :
-        if (trak.canSeeRecues) {
-            if (idJoueur) {
-                notes = trak.notes.filter(n => n.id_auteur===idJoueur || n.id_cible===idJoueur);
-            } else {
-                notes = [];
-            }
-        } else {
-            // Pour les non-admins, ne voir que les notes écrites par soi-même à ce joueur
-            if (idJoueur) {
-                notes = trak.notes.filter(n => n.id_auteur===myId && (n.id_cible===idJoueur || (n.cible_pseudo && n.cible_pseudo.toLowerCase() === trak.pseudo.toLowerCase())));
-            } else {
-                notes = [];
-            }
-        }
-    }
+    var myId = parseInt(trak.myId);
+    var notes = trak.notes; // Les notes sont déjà filtrées dans loadNotes()
     
     if (!notes.length) {
-        document.getElementById('notes-wrap').innerHTML = '<div class="empty-msg">'+(trak.notes.length?'Aucun résultat pour ce filtre.':'Aucune note disponible.')+'</div>';
+        document.getElementById('notes-wrap').innerHTML = '<div class="empty-msg">'+(trak.allMode ? 'Aucune note disponible.' : 'Aucune note pour ce joueur.')+'</div>';
         return;
     }
     
     document.getElementById('notes-wrap').innerHTML = notes.map(n => {
         var dp;
-        var modeAuteur = (n.id_auteur === myId);
+        var id_a = parseInt(n.id_auteur);
+        var id_c = parseInt(n.id_cible);
         
         if (trak.allMode) {
             // Dans la vue globale, on affiche "De [Auteur] à [Cible]"
             dp = 'De ' + escH(n.auteur_pseudo) + ' à ' + escH(n.cible_pseudo);
         } else {
             // Dans la vue joueur, on affiche l'autre partie
-            dp = modeAuteur ? n.cible_pseudo : n.auteur_pseudo;
+            dp = (id_a === myId) ? n.cible_pseudo : n.auteur_pseudo;
         }
         
         var dpPhoto = '';
-        var m_ref = (n.id_auteur === myId) ? membres.find(m=>m.pseudo===n.cible_pseudo) : membres.find(m=>m.pseudo===n.auteur_pseudo);
+        var refPseudo = (id_a === myId) ? n.cible_pseudo : n.auteur_pseudo;
+        var m_ref = membres.find(m=>m.pseudo===refPseudo);
         if(m_ref) dpPhoto = m_ref.photo || 'https://viendez.com/images/noprofil.jpg';
         
         var al = n.date_activite ? n.date_activite+(n.titre_activite?' — '+n.titre_activite:'') : n.titre_activite;
-        var canDel = n.id_auteur===myId;
+        var canDel = (id_a === myId);
         
         return '<div class="note-item">'
             +'<div class="note-meta">'
-                +'<span class="note-pseudo" style="cursor:pointer;text-decoration:underline" onclick="selectPlayer(\''+escH(n.id_auteur === myId ? n.cible_pseudo : n.auteur_pseudo)+'\',\''+escH(dpPhoto)+'\')">'+dp+'</span>'
+                +'<span class="note-pseudo" style="cursor:pointer;text-decoration:underline" onclick="selectPlayer(\''+escH(refPseudo)+'\',\''+escH(dpPhoto)+'\')">'+escH(dp)+'</span>'
                 +'<div style="display:flex;align-items:center;gap:6px">'
                     +'<span class="note-date">'+fmtDate(n.created_at)+'</span>'
                     +(canDel?'<button class="note-del" onclick="delNote('+n.id+')">🗑</button>':'')
