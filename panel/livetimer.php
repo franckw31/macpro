@@ -614,8 +614,8 @@ if (isset($_GET['action'])) {
             <div class="live-subtitle" id="timer-date-label">—</div>
         </div>
         <div class="right-actions">
-            <button class="icon-btn" id="soundToggle" type="button" title="Son">
-                <span class="icon-svg"><svg viewBox="0 0 24 24"><path d="M14 5l-5 4H5v6h4l5 4V5z"/><path d="M18 9.5a4 4 0 0 1 0 5"/><path d="M20.5 7a7.5 7.5 0 0 1 0 10"/></svg></span>
+            <button class="icon-btn muted" id="soundToggle" type="button" title="Cliquer pour activer le son">
+                <span class="icon-svg"><svg viewBox="0 0 24 24"><path d="M14 5l-5 4H5v6h4l5 4V5z"/><path d="M19 9l-8 8"/><path d="M11 9l8 8"/></svg></span>
             </button>
             <button class="icon-btn" type="button" title="Heure"><span id="clock">--:--</span></button>
             <button class="icon-btn close" title="Compte à rebours 30s" onclick="toggleCountdown()">
