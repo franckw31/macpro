@@ -634,6 +634,25 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-list-chev">›</div>
     </a>
 
+    <!-- Score lookup -->
+    <div class="v2-list-item" style="flex-direction:column;align-items:stretch;gap:10px;padding:14px 16px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="v2-list-icon" style="background:rgba(255,180,0,0.12);flex-shrink:0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffb400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div class="v2-list-body">
+          <div class="v2-list-name">Score</div>
+          <div class="v2-list-sub">Historique SergioScore d'un joueur</div>
+        </div>
+      </div>
+      <form id="score-form" onsubmit="goScore(event)" style="display:flex;gap:8px">
+        <input id="score-pseudo" type="text" placeholder="Pseudo du joueur…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+          style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:9px 12px;color:#fff;font-size:14px;outline:none" />
+        <button type="submit"
+          style="background:#ffb400;color:#000;font-weight:700;font-size:13px;padding:9px 14px;border-radius:10px;white-space:nowrap">Voir ›</button>
+      </form>
+    </div>
+
   </div>
 
 </div><!-- /page -->
