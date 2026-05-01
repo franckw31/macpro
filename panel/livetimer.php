@@ -1123,17 +1123,11 @@ if ($_cur) {
     function cdStart() {
         if (cdRunning || cdTime <= 0) return;
         cdRunning = true;
-        document.getElementById('cd-start').disabled = true;
-        document.getElementById('cd-start').style.opacity = '0.4';
-        document.getElementById('cd-stop').disabled = false;
-        document.getElementById('cd-stop').style.opacity = '1';
         cdInterval = setInterval(() => {
             cdTime--;
             cdUpdateDisplay();
             if (cdTime <= 0) {
                 clearInterval(cdInterval); cdRunning = false;
-                document.getElementById('cd-stop').disabled = true;
-                document.getElementById('cd-stop').style.opacity = '0.4';
                 cdPlayAlarm();
                 speakAnnouncement('Temps écoulé !');
                 setTimeout(() => {
@@ -1148,17 +1142,10 @@ if ($_cur) {
     function cdStop() {
         if (!cdRunning) return;
         clearInterval(cdInterval); cdRunning = false;
-        document.getElementById('cd-start').disabled = false;
-        document.getElementById('cd-start').style.opacity = '1';
-        document.getElementById('cd-stop').disabled = true;
-        document.getElementById('cd-stop').style.opacity = '0.4';
     }
 
     function cdReset() {
         cdStop(); cdTime = 30; cdUpdateDisplay();
-        document.getElementById('cd-display').style.color = '#ffd119';
-        document.getElementById('cd-start').disabled = false;
-        document.getElementById('cd-start').style.opacity = '1';
     }
 
     function cdPlayAlarm() {
