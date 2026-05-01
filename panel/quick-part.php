@@ -300,51 +300,24 @@ if (isset($_POST['submit'])) {
                 mysqli_stmt_close($stmt_pseudo);
             }
 
+            // Calcul bonus inscription
+            $bonus_ins_q = 0;
+            if (!empty($default_activity_date_depart)) {
+                $diff_min_q = abs(strtotime($default_activity_date_depart) - time()) / 60;
+                $bonus_ins_q = min(5000, 200 * floor($diff_min_q / 60));
+            }
+            $jetons_total_q = $jetons_insc + $bonus_ins_q;
+
             // Insérer en renseignant nom-membre (pseudo) et id-membre, challenger = 1 par défaut, avec le nombre de jetons saisi
             $sql_quick_reg = "INSERT INTO `participation` (`id-membre`, `nom-membre`, `id-activite`, `id-table`, `id-siege`, rake, cout_in, challenger, jetons, jetons_bonus_ins, jetons_total) VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)";
 
               $stmt_reg = mysqli_prepare($con, $sql_quick_reg);
               if ($stmt_reg) {
-                  // Calcul bonus inscription
-                  $bonus_ins_q = 0;
-                  if (!empty($default_activity_date_depart)) {
-                      $diff_min_q = abs(strtotime($default_activity_date_depart) - time()) / 60;
-                      $bonus_ins_q = min(5000, 200 * floor($diff_min_q / 60));
-                  }
-                  $jetons_total_q = $jetons_insc + $bonus_ins_q;
-
                   mysqli_stmt_bind_param($stmt_reg, "isiiiddiii", $membre, $pseudo, $acti, $tabl, $sieg, $default_activity_rake, $initial_cout_in, $jetons_insc, $bonus_ins_q, $jetons_total_q);
                  if (mysqli_stmt_execute($stmt_reg)) {
                      $insert_id = mysqli_insert_id($con);
 
-                     // Si pseudo vide pour une raison quelconque, récupérer à nouveau depuis la table membres
-                     if (empty($pseudo)) {
-                         $stmt_pseudo2 = mysqli_prepare($con, "SELECT `pseudo` FROM `membres` WHERE `id-membre` = ? LIMIT 1");
-                         if ($stmt_pseudo2) {
-                             mysqli_stmt_bind_param($stmt_pseudo2, "i", $membre);
-                             mysqli_stmt_execute($stmt_pseudo2);
-                             $res_pseudo2 = mysqli_stmt_get_result($stmt_pseudo2);
-                             if ($res_pseudo2 && $row_p2 = mysqli_fetch_assoc($res_pseudo2)) {
-                                 $pseudo = $row_p2['pseudo'];
-                             }
-                             mysqli_free_result($res_pseudo2);
-                             mysqli_stmt_close($stmt_pseudo2);
-                         }
-                     }
-
-                     // Assurer que nom-membre est bien sauvegardé (mise à jour post-insert)
-                     if ($insert_id > 0 && $pseudo !== '') {
-                         $stmt_up = mysqli_prepare($con, "UPDATE `participation` SET `nom-membre` = ? WHERE `id-participation` = ?");
-                         if ($stmt_up) {
-                             mysqli_stmt_bind_param($stmt_up, "si", $pseudo, $insert_id);
-                             mysqli_stmt_execute($stmt_up);
-                             mysqli_stmt_close($stmt_up);
-                         } else {
-                             error_log("Erreur préparation update nom-membre: " . mysqli_error($con));
-                         }
-                     }
-
-                     $_SESSION['feedback'] = "<div class='alert alert-success'>Inscription rapide réussie : Joueur ID = $membre (".htmlspecialchars($pseudo)."), Activité ID = $acti, Table = $tabl, Siège = $sieg. Rake init.: " . number_format($default_activity_rake, 2) . ", Cout In init.: " . number_format($initial_cout_in, 2) . ".</div>";
+                     $_SESSION['feedback'] = "<div class='alert alert-success'>Inscription rapide réussie : Joueur ID = $membre (".htmlspecialchars($pseudo)."), Activité ID = $acti, Table = $tabl, Siège = $sieg. (Bonus: $bonus_ins_q, Total Jetons: $jetons_total_q)</div>";
                  } else {
                      $_SESSION['feedback'] = "<div class='alert alert-danger'>Erreur inscription rapide: " . htmlspecialchars(mysqli_stmt_error($stmt_reg)) . "</div>";
                  }
