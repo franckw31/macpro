@@ -70,6 +70,7 @@ if ($step === 2 && $pseudo_q !== '') {
             JOIN activite a ON a.`id-activite` = p.`id-activite`
             WHERE p.`id-membre` = '".intval($member_id)."'
               AND COALESCE(p.`option`,'None') NOT IN ('Desinscrit','None')
+              AND p.classement != 50
               AND a.date_depart <= NOW()
             ORDER BY a.date_depart DESC
             LIMIT 300
@@ -81,7 +82,7 @@ if ($step === 2 && $pseudo_q !== '') {
             $my_rec    = intval($row['recave'] ?? 0);
 
             // Critères de qualité des données
-            $has_classement = $rank > 0;
+            $has_classement = $rank > 0 && $rank !== 50;
             $has_joueurs    = $nb >= 2;
 
             // Calcul du score (même formule que resume.php)
