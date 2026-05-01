@@ -261,7 +261,8 @@ if ($step === 3 && !empty($confirmed_ids) && $member_id) {
                     <th>Partie</th>
                     <th class="c">Place</th>
                     <th class="c">Joueurs</th>
-                    <th class="c">Recaves</th>
+                    <th class="c">Recaves (joueur)</th>
+                    <th class="c">Recaves (activité)</th>
                     <th class="r">Score calculé</th>
                     <th class="r">Score actuel</th>
                     <th class="c">Statut</th>
