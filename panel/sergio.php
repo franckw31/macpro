@@ -160,7 +160,7 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
     .spark-bar .tip{display:none;position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:#1a2d3d;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px 7px;font-size:11px;white-space:nowrap;pointer-events:none;z-index:10}
     .spark-bar:hover .tip{display:block}
     .spark-labels{display:flex;gap:4px;margin-top:4px}
-    .spark-lbl{flex:1;font-size:9px;color:var(--muted);text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+    .spark-lbl{flex:1;font-size:9px;color:var(--muted);text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;line-height:1.4}
 
     /* Filters */
     .filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
@@ -240,8 +240,13 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
             <?php
                 $months_short = ['01'=>'Jan','02'=>'Fév','03'=>'Mar','04'=>'Avr','05'=>'Mai','06'=>'Juin','07'=>'Juil','08'=>'Aoû','09'=>'Sep','10'=>'Oct','11'=>'Nov','12'=>'Déc'];
                 $mois_num = substr($mb['mois'], 5);
+                $col_lbl  = scoreColor(floatval($mb['avg_score']));
             ?>
-            <div class="spark-lbl"><?php echo $months_short[$mois_num] ?? $mois_num; ?></div>
+            <div class="spark-lbl">
+                <div style="font-weight:700;color:#eef6fb"><?php echo $months_short[$mois_num] ?? $mois_num; ?></div>
+                <div style="font-size:8px;color:var(--muted)"><?php echo $mb['cnt']; ?> ptie<?php echo $mb['cnt'] > 1 ? 's' : ''; ?></div>
+                <div style="font-size:8px;color:<?php echo $col_lbl; ?>;font-weight:700"><?php echo $mb['avg_score']; ?></div>
+            </div>
             <?php endforeach; ?>
         </div>
     </div>
