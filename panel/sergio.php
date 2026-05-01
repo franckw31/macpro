@@ -75,7 +75,7 @@ if ($member_id && !empty($con)) {
           AND p.sergio_score IS NOT NULL
           $where_extra
         ORDER BY a.date_depart DESC
-        LIMIT 200
+        LIMIT 1000
     ");
     if ($hq) {
         while ($r = mysqli_fetch_assoc($hq)) $rows[] = $r;
@@ -158,7 +158,7 @@ if ($member_id && !empty($con)) {
           AND COALESCE(p.gain,0) > 0
           AND p.`option` NOT IN ('None','Desinscrit')
         ORDER BY a.date_depart DESC
-        LIMIT 200
+        LIMIT 1000
     ");
     if ($itmq) { while ($ir = mysqli_fetch_assoc($itmq)) $itm_rows[] = $ir; }
 

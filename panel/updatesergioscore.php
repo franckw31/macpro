@@ -74,7 +74,7 @@ if ($step === 2 && $pseudo_q !== '') {
               AND a.date_depart <= NOW()
             HAVING total_recaves > 0
             ORDER BY a.date_depart DESC
-            LIMIT 300
+            LIMIT 1000
         ");
         while ($row = mysqli_fetch_assoc($pq)) {
             $nb    = intval($row['nb_joueurs']);
