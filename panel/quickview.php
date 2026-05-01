@@ -671,12 +671,11 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
     function openScoreSearch(e) {
       var block = document.getElementById('score-block');
-      if (document.getElementById('score-expanded').style.display !== 'none') return; // déjà ouvert
       document.getElementById('score-collapsed').style.display = 'none';
       var exp = document.getElementById('score-expanded');
       exp.style.display = 'flex';
       block.style.cursor = 'default';
-      setTimeout(function(){ document.getElementById('score-pseudo').focus(); }, 50);
+      document.getElementById('score-pseudo').focus();
     }
 
     function scoreAC(val) {
