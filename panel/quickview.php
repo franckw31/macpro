@@ -601,13 +601,24 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   <!-- ══════════ ACTIONS RAPIDES ══════════ -->
   <div class="v2-list">
 
-    <a class="v2-list-item" href="<?php echo $is_today ? '/panel/livetimer.php' . $uid_q : htmlspecialchars($participants_href); ?>">
+    <a class="v2-list-item" href="/panel/livetimer.php<?php echo $uid_q; ?>">
+      <div class="v2-list-icon blue">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
+      </div>
+      <div class="v2-list-body">
+        <div class="v2-list-name"><?php echo $is_today ? '🟢 Partie en Cours' : 'Live Timer'; ?></div>
+        <div class="v2-list-sub"><?php echo $is_today ? 'Accéder au Live Timer' : 'Accéder au timer en direct'; ?></div>
+      </div>
+      <div class="v2-list-chev">›</div>
+    </a>
+
+    <a class="v2-list-item" href="<?php echo htmlspecialchars($participants_href); ?>">
       <div class="v2-list-icon blue">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       </div>
       <div class="v2-list-body">
-        <div class="v2-list-name"><?php echo $is_today ? '🟢 Partie en Cours' : ($is_past ? 'Résultat de la partie' : 'Liste des participants'); ?></div>
-        <div class="v2-list-sub"><?php echo $is_today ? 'Accéder au Live Timer' : ($is_past ? 'Voir les résultats' : 'Voir les joueurs inscrits'); ?></div>
+        <div class="v2-list-name"><?php echo $is_past ? 'Résultat de la partie' : 'Liste des participants'; ?></div>
+        <div class="v2-list-sub"><?php echo $is_past ? 'Voir les résultats' : 'Voir les joueurs inscrits'; ?></div>
       </div>
       <div class="v2-list-chev">›</div>
     </a>
