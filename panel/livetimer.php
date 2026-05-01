@@ -685,25 +685,7 @@ if (isset($_GET['action'])) {
         </div>
         <?php endif; ?>
 
-        <?php if (intval($_SESSION['id']) == 265 || intval($_SESSION['id']) == 1): ?>
-        <!-- SÉLECTEUR DE PARTIE -->
-        <div class="partie-select-wrap">
-            <select class="partie-select" onchange="if(this.value) window.location.href='livetimer.php?uid=' + this.value">
-                <option value="">— Changer de partie active —</option>
-                <?php
-                $now_sql = date("Y-m-d");
-                $q_active = mysqli_query($con, "SELECT `id-activite`, `titre-activite`, `date_depart` FROM `activite` WHERE `date_depart` >= DATE_SUB('$now_sql', INTERVAL 5 DAY) ORDER BY `date_depart` DESC, `id-activite` DESC LIMIT 20");
-                if ($q_active) {
-                    while ($g = mysqli_fetch_array($q_active)) {
-                        $sel = ($g['id-activite'] == $id) ? "selected" : "";
-                        $dateDisp = date('d/m', strtotime($g['date_depart']));
-                        echo '<option value="' . $g['id-activite'] . '" ' . $sel . '>' . htmlspecialchars($g['titre-activite']) . ' (' . $dateDisp . ')</option>';
-                    }
-                }
-                ?>
-            </select>
-        </div>
-        <?php endif; ?>
+
 
     <!-- DEBUG VISIBLE - à supprimer après fix -->
 
