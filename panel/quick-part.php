@@ -264,7 +264,9 @@ if (isset($_POST['submit'])) {
 
             $default_activity_rake = 0.0;
             $default_activity_buyin = 0.0;
-            $fetch_defaults_sql = "SELECT rake, buyin, bounty FROM activite WHERE `id-activite` = ?";
+            $default_activity_bounty = 0.0;
+            $default_activity_date_depart = "";
+            $fetch_defaults_sql = "SELECT rake, buyin, bounty, date_depart FROM activite WHERE `id-activite` = ?";
             $stmt_fetch_defaults = mysqli_prepare($con, $fetch_defaults_sql);
             if ($stmt_fetch_defaults) {
                 mysqli_stmt_bind_param($stmt_fetch_defaults, "i", $acti);
@@ -274,6 +276,7 @@ if (isset($_POST['submit'])) {
                         $default_activity_rake = floatval($defaults_row['rake'] ?? 0.0);
                         $default_activity_bounty = floatval($defaults_row['bounty'] ?? 0.0);
                         $default_activity_buyin = floatval($defaults_row['buyin'] ?? 0.0);
+                        $default_activity_date_depart = $defaults_row['date_depart'] ?? "";
                     }
                      mysqli_free_result($defaults_result);
                 } else { error_log("Erreur execution fetch defaults pour activité ID $acti: " . mysqli_stmt_error($stmt_fetch_defaults)); }
