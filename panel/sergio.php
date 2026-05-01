@@ -322,8 +322,8 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
 
     <!-- Stats extra row 2 -->
     <div class="stat-grid" style="margin-top:6px">
-        <div class="stat-card" onclick="document.getElementById('itm-modal').style.display='flex'" style="cursor:pointer">
-            <div class="val" style="color:var(--gold);font-size:17px;text-decoration:underline dotted"><?php echo $extra_stats['itm']; ?><span style="color:var(--muted);font-size:12px;font-weight:500"> / <?php echo $extra_stats['parties']; ?></span></div>
+        <div class="stat-card">
+            <div class="val" style="color:var(--green);font-size:17px"><?php echo $extra_stats['tf']; ?><span style="color:var(--muted);font-size:12px;font-weight:500"> / <?php echo $extra_stats['parties']; ?></span></div>
             <div class="lbl">TF</div>
         </div>
         <div class="stat-card" onclick="document.getElementById('itm-modal').style.display='flex'" style="cursor:pointer">
