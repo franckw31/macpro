@@ -1376,13 +1376,6 @@ function escTrak(s) {
     .catch(function(){ alert('Erreur réseau, veuillez réessayer.'); });
   }
 })();
-
-function goScore(e) {
-  e.preventDefault();
-  var pseudo = document.getElementById('score-pseudo').value.trim();
-  if (!pseudo) { document.getElementById('score-pseudo').focus(); return; }
-  window.location.href = '/panel/sergio.php?pseudo=' + encodeURIComponent(pseudo);
-}
 </script>
 </body>
 </html>
