@@ -311,7 +311,7 @@ a{color:inherit;text-decoration:none}
 /* ─── ACTIONS RAPIDES ─── */
 .v2-section-title{font-size:11px;font-weight:700;letter-spacing:1.2px;color:var(--muted);text-transform:uppercase;padding:4px 20px 8px;margin-top:4px}
 .v2-list{background:var(--card);border-radius:var(--radius);margin:0 16px 14px;overflow:hidden}
-.v2-list-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);transition:background .15s}
+.v2-list-item{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);transition:background .15s}
 .v2-list-item:last-child{border-bottom:none}
 .v2-list-item:active{background:rgba(255,255,255,0.04)}
 .v2-list-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
