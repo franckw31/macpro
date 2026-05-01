@@ -91,7 +91,7 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
 .empty-msg{text-align:center;color:#8fa0b0;padding:32px 16px}
 
 /* ── Add note ── */
-.add-area{padding:10px 14px;border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:8px;align-items:flex-end;background:#071019;position:sticky;bottom:0;padding-bottom:max(10px,env(safe-area-inset-bottom,10px))}
+.add-area{padding:10px 14px;border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:8px;align-items:flex-end;background:#0d1f2d;margin-top:auto;padding-bottom:max(10px,env(safe-area-inset-bottom,10px))}
 .add-textarea{flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#eef6fb;font-size:14px;resize:none;font-family:inherit;outline:none}
 .add-btn{padding:10px 16px;border-radius:10px;background:#17a34a;color:#fff;font-weight:700;border:0;cursor:pointer;font-size:18px;align-self:flex-end}
 .add-btn:disabled{opacity:.4;cursor:default}
