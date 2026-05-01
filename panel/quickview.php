@@ -588,13 +588,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <?php endif; ?>
     </div>
 
-    <!-- Inscrit banner -->
-    <?php if ($is_registered): ?>
-    <div class="v2-inscrit">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      Vous êtes inscrit
-    </div>
-    <?php endif; ?>
+
 
   </div><!-- /v2-card -->
 
