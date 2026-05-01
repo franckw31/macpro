@@ -857,6 +857,14 @@ if ($_cur) {
                 if (totalDuration === 0 || newLevel !== currentLevelIndex) {
                     totalDuration = newDur;
                     lastDurationMin = Math.floor(totalDuration / 60);
+                    // Annonce automatique du nouveau niveau (pas au tout premier chargement)
+                    if (currentLevelIndex !== -1 && newLevel !== currentLevelIndex) {
+                        const lvlName = data.level_name || (newLevel + 1);
+                        let msg = 'Nouveau niveau : ' + lvlName + '.';
+                        if (data.blinds_text && data.blinds_text !== 'PAUSE') msg += ' Blindes : ' + data.blinds_text + '.';
+                        else if (data.blinds_text === 'PAUSE') msg = 'Pause !';
+                        speakAnnouncement(msg);
+                    }
                 }
             }
             currentLevelIndex = newLevel;
@@ -1020,7 +1028,8 @@ if ($_cur) {
         if (soundToggle && soundToggle.classList.contains('muted')) return;
         if (!text) return;
 
-        if (typeof responsiveVoice !== 'undefined') {
+        const rvReady = typeof responsiveVoice !== 'undefined' && responsiveVoice.voiceSupport && responsiveVoice.voiceSupport();
+        if (rvReady) {
             try {
                 responsiveVoice.speak(text, getVoiceName(), { rate: 0.95, pitch: 1, volume: 1 });
                 return;
@@ -1030,7 +1039,7 @@ if ($_cur) {
             speechVoice = speechVoice || (window.speechSynthesis.getVoices().find(v => v.lang.startsWith('fr')) || null);
             const utter = new SpeechSynthesisUtterance(text);
             utter.lang = speechVoice?.lang || 'fr-FR';
-            utter.voice = speechVoice;
+            utter.voice = speechVoice || null;
             utter.rate = 0.95;
             window.speechSynthesis.cancel();
             window.speechSynthesis.speak(utter);
