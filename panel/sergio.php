@@ -7,6 +7,13 @@ include __DIR__ . '/include/config.php'; // provides $con (mysqli)
 
 // ── Paramètres ────────────────────────────────────────────────────────────────
 $member_id = isset($_GET['mid']) && is_numeric($_GET['mid']) ? intval($_GET['mid']) : null;
+// Résolution par pseudo
+if (!$member_id && !empty($_GET['pseudo'])) {
+    include_once __DIR__ . '/include/config.php';
+    $ps = mysqli_real_escape_string($con, trim($_GET['pseudo']));
+    $pr = @mysqli_query($con, "SELECT `id-membre` FROM membres WHERE pseudo='$ps' LIMIT 1");
+    if ($pr && mysqli_num_rows($pr) > 0) { $member_id = intval(mysqli_fetch_assoc($pr)['id-membre']); }
+}
 // Fallback : membre connecté
 if (!$member_id && isset($_SESSION['id'])) $member_id = intval($_SESSION['id']);
 
