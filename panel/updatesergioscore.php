@@ -283,6 +283,7 @@ if ($step === 3 && !empty($confirmed_ids) && $member_id) {
                     case 'already_same':  $tag = '<span class="badge tag-same">= Identique</span>';  break;
                     case 'no_classement': $tag = '<span class="badge tag-no">✗ Pas de classement</span>'; break;
                     case 'no_joueurs':    $tag = '<span class="badge tag-no">✗ &lt; 2 joueurs</span>'; break;
+                    case 'no_recaves':    $tag = '<span class="badge tag-no">✗ Recaves activité = 0</span>'; break;
                     default:              $tag = '<span class="badge tag-skip">— Ignoré</span>';
                 }
             ?>
