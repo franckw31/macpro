@@ -1110,7 +1110,7 @@ function escTrak(s) {
   function tick(){
     var diff = ts - Math.floor(Date.now()/1000);
     if(diff <= 0){
-      if(diff < -43200){ el.textContent = 'Terminée'; el.style.color = 'var(--muted)'; }
+      if(diff < -13200){ el.textContent = 'Terminée'; el.style.color = 'var(--muted)'; }
       else { el.textContent = 'En cours'; el.style.color = 'var(--orange)'; }
       return;
     }
