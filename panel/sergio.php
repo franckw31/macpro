@@ -237,7 +237,11 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
         </div>
         <div class="spark-labels">
             <?php foreach ($monthly as $mb): ?>
-            <div class="spark-lbl"><?php echo substr($mb['mois'], 5); ?></div>
+            <?php
+                $months_short = ['01'=>'Jan','02'=>'Fév','03'=>'Mar','04'=>'Avr','05'=>'Mai','06'=>'Juin','07'=>'Juil','08'=>'Aoû','09'=>'Sep','10'=>'Oct','11'=>'Nov','12'=>'Déc'];
+                $mois_num = substr($mb['mois'], 5);
+            ?>
+            <div class="spark-lbl"><?php echo $months_short[$mois_num] ?? $mois_num; ?></div>
             <?php endforeach; ?>
         </div>
     </div>
