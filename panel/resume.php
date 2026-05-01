@@ -386,7 +386,7 @@ if($activity){
                         <div class="value" style="display:flex;align-items:center;gap:10px">
                             <span><span style="color:<?php echo $position_color; ?>"><?php echo h($rank); ?></span> / <?php echo intval($total_count); ?></span>
                             <?php if($score !== null): ?>
-                                <span style="font-size:14px;color:<?php echo $score_color; ?>;font-weight:700">(SergioScore = <?php echo $score; ?>)</span>
+                                <a href="/panel/sergio.php?mid=<?php echo intval($current_member_id); ?>" style="font-size:14px;color:<?php echo $score_color; ?>;font-weight:700;text-decoration:none" title="Voir l'historique SergioScore">(SergioScore = <?php echo $score; ?> ↗)</a>
                             <?php endif; ?>
                         </div>
                     </div>
