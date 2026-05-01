@@ -292,6 +292,7 @@ if ($step === 3 && !empty($confirmed_ids) && $member_id) {
                 <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600" title="<?php echo h($c['titre']); ?>"><?php echo h($c['titre']); ?></td>
                 <td class="c"><?php echo $c['rank'] > 0 ? $c['rank'] : '—'; ?></td>
                 <td class="c" style="color:var(--muted)"><?php echo $c['nb_joueurs']; ?></td>
+                <td class="c" style="color:var(--orange)"><?php echo $c['my_rec']; ?></td>
                 <td class="c" style="color:var(--muted)"><?php echo $c['total_rec']; ?></td>
                 <td class="r"><strong style="color:<?php echo ($c['score_calc'] !== null && $c['score_calc'] >= 15) ? 'var(--green)' : 'var(--muted)'; ?>"><?php echo $score_disp; ?></strong></td>
                 <td class="r" style="color:var(--muted)"><?php echo $exist_disp; ?></td>
