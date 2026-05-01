@@ -198,9 +198,10 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
         .close-btn{font-size:12px;padding:5px 8px;top:10px;right:8px}
         .hero{margin-top:36px}
         .hero h1{font-size:18px}
-        .stat-grid{grid-template-columns:repeat(2,1fr);gap:6px}
-        .stat-card .val{font-size:18px}
-        .stat-card{padding:10px 6px}
+        .stat-grid{grid-template-columns:repeat(4,1fr);gap:4px}
+        .stat-card .val{font-size:15px}
+        .stat-card .lbl{font-size:9px}
+        .stat-card{padding:8px 4px}
         .filters select,.filters a.pill{font-size:12px;padding:5px 10px}
         .td-titre{max-width:100px}
         .hist-table{min-width:420px}
