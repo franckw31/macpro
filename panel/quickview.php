@@ -162,14 +162,14 @@ if (!empty($serverActivity['date'])) {
 	$date_str = $date_only_str . ' ' . $time_str;
 }
 
-// Fetch ALL activities for the calendar picker (past + future, limit 60)
+// Fetch ALL activities for the calendar picker (past + future, limit 500)
 $allActivities = [];
 try {
 	if (!empty($con)) {
 		$_jours_all = ['Monday'=>'Lundi','Tuesday'=>'Mardi','Wednesday'=>'Mercredi','Thursday'=>'Jeudi','Friday'=>'Vendredi','Saturday'=>'Samedi','Sunday'=>'Dimanche'];
 		$_mois_all  = ['January'=>'Janvier','February'=>'Février','March'=>'Mars','April'=>'Avril','May'=>'Mai','June'=>'Juin','July'=>'Juillet','August'=>'Août','September'=>'Septembre','October'=>'Octobre','November'=>'Novembre','December'=>'Décembre'];
 		// SELECT * to avoid errors on column name variations (titre-activite vs titre_activite)
-		$qa = mysqli_query($con, "SELECT * FROM activite ORDER BY date_depart DESC LIMIT 60");
+		$qa = mysqli_query($con, "SELECT * FROM activite ORDER BY date_depart DESC LIMIT 500");
 		if ($qa) {
 			while ($ra = mysqli_fetch_assoc($qa)) {
 				$_dp = $ra['date_depart'] ?? null;
