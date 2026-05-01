@@ -314,7 +314,7 @@ a{color:inherit;text-decoration:none}
 .v2-list-item{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);transition:background .15s}
 .v2-list-item:last-child{border-bottom:none}
 .v2-list-item:active{background:rgba(255,255,255,0.04)}
-.v2-list-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.v2-list-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px}
 .v2-list-icon.blue{background:rgba(10,132,255,0.15)}
 .v2-list-icon.purple{background:rgba(180,123,255,0.15)}
 .v2-list-icon.teal{background:rgba(48,213,200,0.15)}
@@ -640,7 +640,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       $spq = @mysqli_query($con, "SELECT pseudo FROM membres WHERE pseudo IS NOT NULL AND pseudo != '' ORDER BY pseudo ASC");
       while ($spq && $spr = mysqli_fetch_assoc($spq)) { $score_pseudos[] = $spr['pseudo']; }
     ?>
-    <div id="score-block" class="v2-list-item" onclick="openScoreSearch(event)" style="cursor:pointer;padding:14px 16px;transition:background .15s">
+    <div id="score-block" class="v2-list-item" onclick="openScoreSearch(event)" style="cursor:pointer;transition:background .15s">
       <!-- Vue compacte (par défaut) -->
       <div id="score-collapsed" style="display:flex;align-items:center;gap:10px;width:100%">
         <div class="v2-list-icon" style="background:rgba(255,180,0,0.12);flex-shrink:0">
