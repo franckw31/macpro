@@ -385,20 +385,9 @@ if($activity){
                         <div class="label">Position / Inscrits</div>
                         <div class="value" style="display:flex;align-items:center;gap:10px">
                             <span><span style="color:<?php echo $position_color; ?>"><?php echo h($rank); ?></span> / <?php echo intval($total_count); ?></span>
-                            <?php
-                                // Score = ceil((1 - (rank / (inscrits + total_recaves_all - player_recaves))) * 20)
-                                $total_recaves_all = 0;
-                                if(isset($all_rows) && is_array($all_rows)){
-                                    foreach($all_rows as $_sr){ $total_recaves_all += intval($_sr['recave'] ?? 0); }
-                                }
-                                $score_denom = intval($total_count) + $total_recaves_all - $recave_count;
-                                if($score_denom > 0){
-                                    $score_raw = (1 - ($rank / $score_denom)) * 20;
-                                    $score = round($score_raw, 2);
-                                    $score_color = ($score >= 18) ? 'var(--gold)' : (($score >= 15) ? 'var(--green)' : (($score >= 10) ? 'var(--blue)' : 'var(--muted)'));
-                                    echo '<span style="font-size:14px;color:'.$score_color.';font-weight:700">(SergioScore = '.$score.')</span>';
-                                }
-                            ?>
+                            <?php if($score !== null): ?>
+                                <span style="font-size:14px;color:<?php echo $score_color; ?>;font-weight:700">(SergioScore = <?php echo $score; ?>)</span>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?php if(!empty($eliminated_by)): ?>
