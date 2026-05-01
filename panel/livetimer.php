@@ -637,11 +637,6 @@ if (isset($_GET['action'])) {
             <div id="countdown-overlay" style="display:none;position:absolute;inset:0;z-index:10;border-radius:50%;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px">
                 <div style="color:rgba(255,255,255,0.5);font-size:clamp(11px,1.6vw,16px);letter-spacing:0.14em;text-transform:uppercase">⏱ Compte à rebours</div>
                 <div id="cd-display" style="font-size:clamp(68px,13vw,140px);font-weight:500;color:#ffd119;font-variant-numeric:tabular-nums;line-height:1">30</div>
-                <div style="display:flex;gap:10px;margin-top:6px">
-                    <button id="cd-start" onclick="cdStart()" style="padding:6px 14px;border-radius:999px;background:#4CAF50;color:#fff;border:0;font-weight:700;font-size:13px;cursor:pointer">▶ Start</button>
-                    <button id="cd-stop" onclick="cdStop()" disabled style="padding:6px 14px;border-radius:999px;background:#ff9800;color:#fff;border:0;font-weight:700;font-size:13px;cursor:pointer;opacity:0.4">⏸ Stop</button>
-                    <button onclick="cdReset()" style="padding:6px 14px;border-radius:999px;background:#f44336;color:#fff;border:0;font-weight:700;font-size:13px;cursor:pointer">↺</button>
-                </div>
                 <button onclick="toggleCountdown()" style="margin-top:4px;background:none;border:0;color:rgba(255,255,255,0.4);font-size:12px;cursor:pointer">✕ Fermer</button>
             </div>
         </div>
