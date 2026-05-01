@@ -292,7 +292,7 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
 </head>
 <body>
 <div class="page">
-    <a href="javascript:history.back()" class="close-btn">← Retour</a>
+    <a href="/panel/quickview.php" class="close-btn">← Retour</a>
 
     <?php if (!$member_id): ?>
         <div style="margin-top:60px;text-align:center;color:var(--muted)">Aucun joueur sélectionné.</div>
