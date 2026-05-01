@@ -181,13 +181,43 @@ if (isset($_POST['submitcreaj'])) {
                             
                             // Auto-register to activity if requested
                             if ($auto_register && $selected_activity_id) {
-                                // Insert participation and save nom-membre (pseudo) together with id-membre
-                                $register_sql = "INSERT INTO `participation` (`id-membre`, `nom-membre`, `id-activite`, `id-table`, `id-siege`, `jetons`) VALUES (?, ?, ?, 1, 1, ?)";
+                                // Fetch activite defaults
+                                $act_jetons = 0;
+                                $act_rake = 0.0;
+                                $act_buyin = 0.0;
+                                $act_bounty = 0.0;
+                                $act_date_depart = "";
+                                $stmtA = mysqli_prepare($con, "SELECT jetons, rake, buyin, bounty, date_depart FROM activite WHERE `id-activite` = ? LIMIT 1");
+                                if ($stmtA) {
+                                    mysqli_stmt_bind_param($stmtA, "i", $selected_activity_id);
+                                    mysqli_stmt_execute($stmtA);
+                                    $resA = mysqli_stmt_get_result($stmtA);
+                                    if ($rowA = mysqli_fetch_assoc($resA)) {
+                                        $act_jetons = intval($rowA['jetons'] ?? 0);
+                                        $act_rake = floatval($rowA['rake'] ?? 0);
+                                        $act_buyin = floatval($rowA['buyin'] ?? 0);
+                                        $act_bounty = floatval($rowA['bounty'] ?? 0);
+                                        $act_date_depart = $rowA['date_depart'];
+                                    }
+                                    mysqli_stmt_close($stmtA);
+                                }
+
+                                // Calculate bonus values
+                                $initial_cout_in = $act_buyin + $act_bounty + $act_rake + 5;
+                                $bonus_ins = 0;
+                                if (!empty($act_date_depart)) {
+                                    $diff_minutes = abs(strtotime($act_date_depart) - time()) / 60;
+                                    $bonus_ins = min(5000, 200 * floor($diff_minutes / 60));
+                                }
+                                $jetons_total = $act_jetons + $bonus_ins;
+
+                                // Insert participation with bonus values
+                                $register_sql = "INSERT INTO `participation` (`id-membre`, `nom-membre`, `id-activite`, `id-table`, `id-siege`, `jetons`, `rake`, `cout_in`, `challenger`, `jetons_bonus_ins`, `jetons_total`) VALUES (?, ?, ?, 1, 1, ?, ?, ?, 1, ?, ?)";
                                 $stmt_register = mysqli_prepare($con, $register_sql);
                                 if ($stmt_register) {
-                                    mysqli_stmt_bind_param($stmt_register, "isii", $new_player_id, $pseudo, $selected_activity_id, $jetons_crea);
+                                    mysqli_stmt_bind_param($stmt_register, "issiidii", $new_player_id, $pseudo, $selected_activity_id, $act_jetons, $act_rake, $initial_cout_in, $bonus_ins, $jetons_total);
                                     if (mysqli_stmt_execute($stmt_register)) {
-                                        $_SESSION['feedback'] = "<div class='alert alert-success'>Joueur créé et inscrit à l'activité : " . htmlspecialchars($pseudo) . "</div>";
+                                        $_SESSION['feedback'] = "<div class='alert alert-success'>Joueur créé et inscrit à l'activité : " . htmlspecialchars($pseudo) . " (Bonus: $bonus_ins)</div>";
                                     } else {
                                         $_SESSION['feedback'] = "<div class='alert alert-warning'>Joueur créé mais erreur lors de l'inscription à l'activité : " . htmlspecialchars(mysqli_stmt_error($stmt_register)) . "</div>";
                                     }
