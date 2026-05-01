@@ -334,6 +334,24 @@ if($activity){
                 }
                 // position color depends on PricePool gains (green when >0, red otherwise)
                 $position_color = ($gains > 0) ? 'var(--green)' : '#ff6b6b';
+
+                // ── SergioScore ────────────────────────────────────────────────
+                $score = null;
+                $score_color = 'var(--muted)';
+                $total_recaves_all = 0;
+                if(isset($all_rows) && is_array($all_rows)){
+                    foreach($all_rows as $_sr){ $total_recaves_all += intval($_sr['recave'] ?? 0); }
+                }
+                $score_denom = intval($total_count) + $total_recaves_all - $recave_count;
+                if($score_denom > 0){
+                    $score = round((1 - ($rank / $score_denom)) * 20, 2);
+                    $score_color = ($score >= 18) ? 'var(--gold)' : (($score >= 15) ? 'var(--green)' : (($score >= 10) ? 'var(--blue)' : 'var(--muted)'));
+                }
+                // Sauvegarde dans participation.sergio_score (seulement si l'activité est terminée)
+                if($score !== null && !empty($r['id']) && !empty($con)){
+                    // On n'écrase que si la valeur a changé (ou est NULL) pour éviter des UPDATE inutiles
+                    @mysqli_query($con, "UPDATE `participation` SET `sergio_score` = '".floatval($score)."' WHERE `id-participation` = '".intval($r['id'])."' AND (`sergio_score` IS NULL OR `sergio_score` != '".floatval($score)."')");
+                }
                 ?>
                 <div class="summary-lines" role="list" aria-label="Synthèse joueur" style="margin-top:12px">
                     <?php
