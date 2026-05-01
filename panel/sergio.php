@@ -227,12 +227,11 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
         ?>
         <div class="sparkline">
             <?php foreach ($monthly as $mb):
-                $pct = max(4, round((floatval($mb['avg_score']) / $max_val) * 100));
+                $pct = max(8, min(85, round((floatval($mb['avg_score']) / $max_val) * 85)));
                 $col = scoreColor(floatval($mb['avg_score']));
-                $label = substr($mb['mois'], 0, 7); // YYYY-MM
             ?>
-            <div class="spark-bar" style="height:<?php echo $pct; ?>%;background:<?php echo $col; ?>">
-                <div class="tip"><?php echo h($mb['mois']); ?><br><?php echo $mb['avg_score']; ?> (<?php echo $mb['cnt']; ?> pts)</div>
+            <div class="spark-bar" style="height:<?php echo $pct; ?>%;background:<?php echo $col; ?>;opacity:.85">
+                <div class="tip"><?php echo h($mb['mois']); ?><br>Moy : <?php echo $mb['avg_score']; ?><br><?php echo $mb['cnt']; ?> partie(s)</div>
             </div>
             <?php endforeach; ?>
         </div>
