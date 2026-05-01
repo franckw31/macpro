@@ -1138,7 +1138,7 @@ if ($_cur) {
                 clearInterval(cdInterval); cdRunning = false;
                 document.getElementById('cd-stop').disabled = true;
                 document.getElementById('cd-stop').style.opacity = '0.4';
-                try { new Audio('/newtimer/end.mp3').play(); } catch(e) {}
+                cdPlayAlarm();
                 speakAnnouncement('Temps écoulé !');
             }
         }, 1000);
