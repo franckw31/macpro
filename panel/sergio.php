@@ -31,6 +31,7 @@ $extra_stats = ['tf' => 0, 'itm' => 0, 'recaves' => 0];
 $chal_rank  = null;
 $chal_total = null;
 $chal_title = '';
+$extra_stats = ['parties' => 0, 'tf' => 0, 'itm' => 0, 'recaves' => 0];
 
 if ($member_id && !empty($con)) {
     // Pseudo
@@ -122,7 +123,7 @@ if ($member_id && !empty($con)) {
     if ($mqr) { while ($mr2 = mysqli_fetch_assoc($mqr)) $monthly[] = $mr2; }
 
     // Stats extra : TF, ITM, recaves totales
-    $extra_stats = ['tf' => 0, 'itm' => 0, 'recaves' => 0];
+    $extra_stats = ['parties' => 0, 'tf' => 0, 'itm' => 0, 'recaves' => 0];
     $eq = @mysqli_query($con, "
         SELECT
             COUNT(*)                                                   AS total_parties,
