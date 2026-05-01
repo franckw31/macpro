@@ -1,0 +1,312 @@
+<?php
+session_start();
+include __DIR__ . '/include/config.php'; // provides $con (mysqli)
+
+// ── Paramètres ────────────────────────────────────────────────────────────────
+$member_id = isset($_GET['mid']) && is_numeric($_GET['mid']) ? intval($_GET['mid']) : null;
+// Fallback : membre connecté
+if (!$member_id && isset($_SESSION['id'])) $member_id = intval($_SESSION['id']);
+
+$filter_year  = isset($_GET['y']) && is_numeric($_GET['y'])  ? intval($_GET['y'])  : null;
+$filter_month = isset($_GET['m']) && is_numeric($_GET['m'])  ? intval($_GET['m'])  : null;
+
+function h($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
+
+// ── Données du membre ─────────────────────────────────────────────────────────
+$pseudo = '';
+$rows   = [];
+$years  = [];
+$stats  = ['count' => 0, 'avg' => null, 'best' => null, 'worst' => null, 'sum' => 0];
+
+if ($member_id && !empty($con)) {
+    // Pseudo
+    $mq = @mysqli_query($con, "SELECT COALESCE(pseudo,'') AS pseudo FROM membres WHERE `id-membre` = '".intval($member_id)."' LIMIT 1");
+    if ($mq && mysqli_num_rows($mq) > 0) {
+        $mr = mysqli_fetch_assoc($mq);
+        $pseudo = $mr['pseudo'];
+    }
+
+    // Années disponibles (pour le filtre)
+    $yq = @mysqli_query($con, "
+        SELECT DISTINCT YEAR(a.date_depart) AS yr
+        FROM participation p
+        JOIN activite a ON a.`id-activite` = p.`id-activite`
+        WHERE p.`id-membre` = '".intval($member_id)."'
+          AND p.sergio_score IS NOT NULL
+        ORDER BY yr DESC
+    ");
+    if ($yq) { while ($yr = mysqli_fetch_assoc($yq)) $years[] = intval($yr['yr']); }
+
+    // Construction du WHERE dynamique
+    $where_extra = '';
+    if ($filter_year)  $where_extra .= " AND YEAR(a.date_depart)  = ".intval($filter_year);
+    if ($filter_month) $where_extra .= " AND MONTH(a.date_depart) = ".intval($filter_month);
+
+    // Historique
+    $hq = @mysqli_query($con, "
+        SELECT
+            a.`id-activite`         AS id_activite,
+            a.date_depart,
+            COALESCE(a.`titre-activite`, a.titre_activite, 'Partie') AS titre,
+            p.`id-participation`    AS id_participation,
+            p.sergio_score,
+            COALESCE(p.classement, p.place, p.rang, 0) AS classement,
+            (SELECT COUNT(*) FROM participation p2 WHERE p2.`id-activite` = a.`id-activite`) AS nb_joueurs
+        FROM participation p
+        JOIN activite a ON a.`id-activite` = p.`id-activite`
+        WHERE p.`id-membre` = '".intval($member_id)."'
+          AND p.sergio_score IS NOT NULL
+          $where_extra
+        ORDER BY a.date_depart DESC
+        LIMIT 200
+    ");
+    if ($hq) {
+        while ($r = mysqli_fetch_assoc($hq)) $rows[] = $r;
+    }
+
+    // Stats globales (sur la sélection filtrée)
+    $sq = @mysqli_query($con, "
+        SELECT
+            COUNT(*)        AS cnt,
+            AVG(p.sergio_score)  AS avg_score,
+            MAX(p.sergio_score)  AS best,
+            MIN(p.sergio_score)  AS worst,
+            SUM(p.sergio_score)  AS total
+        FROM participation p
+        JOIN activite a ON a.`id-activite` = p.`id-activite`
+        WHERE p.`id-membre` = '".intval($member_id)."'
+          AND p.sergio_score IS NOT NULL
+          $where_extra
+    ");
+    if ($sq && ($sr = mysqli_fetch_assoc($sq))) {
+        $stats = [
+            'count' => intval($sr['cnt']),
+            'avg'   => $sr['avg_score'] !== null ? round(floatval($sr['avg_score']), 2) : null,
+            'best'  => $sr['best']      !== null ? round(floatval($sr['best']),      2) : null,
+            'worst' => $sr['worst']     !== null ? round(floatval($sr['worst']),     2) : null,
+            'sum'   => round(floatval($sr['total']), 2),
+        ];
+    }
+
+    // Moyenne mensuelle (pour le graphe sparkline)
+    $monthly = [];
+    $mqr = @mysqli_query($con, "
+        SELECT
+            DATE_FORMAT(a.date_depart,'%Y-%m') AS mois,
+            ROUND(AVG(p.sergio_score), 2)      AS avg_score,
+            COUNT(*)                           AS cnt
+        FROM participation p
+        JOIN activite a ON a.`id-activite` = p.`id-activite`
+        WHERE p.`id-membre` = '".intval($member_id)."'
+          AND p.sergio_score IS NOT NULL
+        GROUP BY mois
+        ORDER BY mois ASC
+        LIMIT 24
+    ");
+    if ($mqr) { while ($mr2 = mysqli_fetch_assoc($mqr)) $monthly[] = $mr2; }
+}
+
+// Couleur d'un score
+function scoreColor($s) {
+    if ($s === null) return 'var(--muted)';
+    if ($s >= 18) return 'var(--gold)';
+    if ($s >= 15) return 'var(--green)';
+    if ($s >= 10) return 'var(--blue)';
+    return 'var(--muted)';
+}
+
+$months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin',
+              7=>'Juillet',8=>'Août',9=>'Septembre',10=>'Octobre',11=>'Novembre',12=>'Décembre'];
+?>
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>SergioScore — <?php echo h($pseudo); ?></title>
+    <style>
+    :root{--muted:#8b98a6;--gold:#ffb400;--orange:#ff7a45;--green:#18b041;--purple:#9b59ff;--blue:#00b6ff;--bg:#071019;--card:#0d1d2b}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:#eef6fb;font-family:Inter,system-ui,-apple-system,Arial;font-size:14px;padding-bottom:40px}
+    a{color:var(--orange);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .page{max-width:720px;margin:0 auto;padding:14px 12px;position:relative}
+    .close-btn{position:absolute;top:14px;right:12px;padding:6px 10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--orange);font-weight:700}
+
+    /* Header */
+    .hero{margin-top:10px;text-align:center}
+    .hero h1{font-size:22px;font-weight:900;color:var(--gold)}
+    .hero .sub{color:var(--muted);margin-top:4px;font-size:13px}
+
+    /* Stats cards */
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+    @media(max-width:480px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+    .stat-card{background:var(--card);border-radius:10px;padding:12px 8px;text-align:center;border:1px solid rgba(255,255,255,0.05)}
+    .stat-card .val{font-size:22px;font-weight:900;margin-bottom:4px}
+    .stat-card .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+
+    /* Sparkline */
+    .chart-wrap{background:var(--card);border-radius:10px;padding:14px 12px;margin-top:12px;border:1px solid rgba(255,255,255,0.05)}
+    .chart-title{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+    .sparkline{display:flex;align-items:flex-end;gap:4px;height:60px}
+    .spark-bar{flex:1;border-radius:3px 3px 0 0;min-width:6px;position:relative;cursor:default;transition:opacity .15s}
+    .spark-bar:hover{opacity:.8}
+    .spark-bar .tip{display:none;position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:#1a2d3d;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px 7px;font-size:11px;white-space:nowrap;pointer-events:none;z-index:10}
+    .spark-bar:hover .tip{display:block}
+    .spark-labels{display:flex;gap:4px;margin-top:4px}
+    .spark-lbl{flex:1;font-size:9px;color:var(--muted);text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+
+    /* Filters */
+    .filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+    .filters select,.filters a.pill{background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:20px;color:#eef6fb;padding:5px 14px;font-size:13px;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none}
+    .filters select{padding-right:24px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238b98a6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+    .filters a.pill{color:var(--muted)}
+    .filters a.pill.active,.filters a.pill:hover{color:var(--orange);border-color:var(--orange)}
+
+    /* Table */
+    .section-title{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px}
+    .hist-table{width:100%;border-collapse:collapse}
+    .hist-table th{font-size:11px;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.06);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+    .hist-table th.r,.hist-table td.r{text-align:right}
+    .hist-table th.c,.hist-table td.c{text-align:center}
+    .hist-table tbody tr{border-bottom:1px solid rgba(255,255,255,.03);transition:background .1s}
+    .hist-table tbody tr:hover{background:rgba(255,255,255,.025)}
+    .hist-table td{padding:8px 8px;vertical-align:middle}
+    .td-date{color:var(--muted);font-size:12px;white-space:nowrap}
+    .td-titre{font-weight:600;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:700;background:rgba(255,255,255,.06)}
+    .no-data{color:var(--muted);text-align:center;padding:30px 0;font-size:13px}
+    </style>
+</head>
+<body>
+<div class="page">
+    <a href="javascript:history.back()" class="close-btn">← Retour</a>
+
+    <?php if (!$member_id): ?>
+        <div style="margin-top:60px;text-align:center;color:var(--muted)">Aucun joueur sélectionné.</div>
+    <?php else: ?>
+
+    <div class="hero">
+        <h1>⭐ SergioScore</h1>
+        <div class="sub"><?php echo h($pseudo); ?></div>
+    </div>
+
+    <!-- Stats cards -->
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="val" style="color:var(--blue)"><?php echo $stats['count']; ?></div>
+            <div class="lbl">Parties</div>
+        </div>
+        <div class="stat-card">
+            <div class="val" style="color:<?php echo scoreColor($stats['avg']); ?>"><?php echo $stats['avg'] ?? '—'; ?></div>
+            <div class="lbl">Moyenne</div>
+        </div>
+        <div class="stat-card">
+            <div class="val" style="color:var(--gold)"><?php echo $stats['best'] ?? '—'; ?></div>
+            <div class="lbl">Meilleur</div>
+        </div>
+        <div class="stat-card">
+            <div class="val" style="color:#ff6b6b"><?php echo $stats['worst'] ?? '—'; ?></div>
+            <div class="lbl">Pire</div>
+        </div>
+    </div>
+
+    <!-- Sparkline mensuelle -->
+    <?php if (!empty($monthly)): ?>
+    <div class="chart-wrap">
+        <div class="chart-title">Moyenne mensuelle (<?php echo count($monthly); ?> mois)</div>
+        <?php
+        $max_val = max(array_map(fn($m) => floatval($m['avg_score']), $monthly));
+        $max_val = max($max_val, 1);
+        ?>
+        <div class="sparkline">
+            <?php foreach ($monthly as $mb):
+                $pct = max(4, round((floatval($mb['avg_score']) / $max_val) * 100));
+                $col = scoreColor(floatval($mb['avg_score']));
+                $label = substr($mb['mois'], 0, 7); // YYYY-MM
+            ?>
+            <div class="spark-bar" style="height:<?php echo $pct; ?>%;background:<?php echo $col; ?>">
+                <div class="tip"><?php echo h($mb['mois']); ?><br><?php echo $mb['avg_score']; ?> (<?php echo $mb['cnt']; ?> pts)</div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="spark-labels">
+            <?php foreach ($monthly as $mb): ?>
+            <div class="spark-lbl"><?php echo substr($mb['mois'], 5); ?></div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Filtres -->
+    <div class="filters">
+        <form method="get" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <input type="hidden" name="mid" value="<?php echo intval($member_id); ?>">
+
+            <select name="y" onchange="this.form.submit()">
+                <option value="">Toutes les années</option>
+                <?php foreach ($years as $yr): ?>
+                <option value="<?php echo $yr; ?>" <?php echo ($filter_year === $yr ? 'selected' : ''); ?>><?php echo $yr; ?></option>
+                <?php endforeach; ?>
+            </select>
+
+            <select name="m" onchange="this.form.submit()">
+                <option value="">Tous les mois</option>
+                <?php foreach ($months_fr as $mn => $ml): ?>
+                <option value="<?php echo $mn; ?>" <?php echo ($filter_month === $mn ? 'selected' : ''); ?>><?php echo $ml; ?></option>
+                <?php endforeach; ?>
+            </select>
+
+            <?php if ($filter_year || $filter_month): ?>
+            <a href="?mid=<?php echo intval($member_id); ?>" class="pill">✕ Réinitialiser</a>
+            <?php endif; ?>
+        </form>
+
+        <?php if ($filter_year || $filter_month): ?>
+        <span style="color:var(--muted);font-size:12px">
+            <?php echo $stats['count']; ?> partie(s) — moy. <strong style="color:<?php echo scoreColor($stats['avg']); ?>"><?php echo $stats['avg'] ?? '—'; ?></strong>
+        </span>
+        <?php endif; ?>
+    </div>
+
+    <!-- Historique -->
+    <div class="section-title">Historique des parties</div>
+
+    <?php if (empty($rows)): ?>
+        <div class="no-data">Aucune donnée SergioScore enregistrée.<br><span style="font-size:12px">Les scores sont sauvegardés à chaque consultation de la page résultats.</span></div>
+    <?php else: ?>
+    <table class="hist-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Partie</th>
+                <th class="c">Place</th>
+                <th class="c">Joueurs</th>
+                <th class="r">Score</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($rows as $row):
+            $score_val = round(floatval($row['sergio_score']), 2);
+            $col       = scoreColor($score_val);
+            $dt        = strtotime($row['date_depart']);
+            $date_str  = $dt ? date('d/m/Y', $dt) : h($row['date_depart']);
+            $place     = intval($row['classement']);
+        ?>
+            <tr>
+                <td class="td-date"><?php echo $date_str; ?></td>
+                <td class="td-titre" title="<?php echo h($row['titre']); ?>"><?php echo h($row['titre']); ?></td>
+                <td class="c"><span class="badge"><?php echo $place > 0 ? $place : '—'; ?></span></td>
+                <td class="c" style="color:var(--muted)"><?php echo intval($row['nb_joueurs']); ?></td>
+                <td class="r"><span class="badge" style="color:<?php echo $col; ?>;background:rgba(255,255,255,.05)"><?php echo $score_val; ?></span></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php endif; ?>
+
+    <?php endif; // member_id ?>
+</div>
+</body>
+</html>
