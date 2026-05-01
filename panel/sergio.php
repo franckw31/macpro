@@ -144,6 +144,24 @@ if ($member_id && !empty($con)) {
         ];
     }
 
+    // Détail ITM
+    $itm_rows = [];
+    $itmq = @mysqli_query($con, "
+        SELECT
+            a.date_depart,
+            COALESCE(a.`titre-activite`,'Partie')  AS titre,
+            COALESCE(p.classement,0)               AS classement,
+            COALESCE(p.gain,0)                     AS gain
+        FROM participation p
+        JOIN activite a ON a.`id-activite` = p.`id-activite`
+        WHERE p.`id-membre` = '".intval($member_id)."'
+          AND COALESCE(p.gain,0) > 0
+          AND p.`option` NOT IN ('None','Desinscrit')
+        ORDER BY a.date_depart DESC
+        LIMIT 200
+    ");
+    if ($itmq) { while ($ir = mysqli_fetch_assoc($itmq)) $itm_rows[] = $ir; }
+
     // Classement challenge en cours
     $chal_rank  = null;
     $chal_total = null;
@@ -308,8 +326,8 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
             <div class="val" style="color:var(--green);font-size:17px"><?php echo $extra_stats['tf']; ?><span style="color:var(--muted);font-size:12px;font-weight:500"> / <?php echo $extra_stats['parties']; ?></span></div>
             <div class="lbl">TF</div>
         </div>
-        <div class="stat-card">
-            <div class="val" style="color:var(--gold);font-size:17px"><?php echo $extra_stats['itm']; ?><span style="color:var(--muted);font-size:12px;font-weight:500"> / <?php echo $extra_stats['parties']; ?></span></div>
+        <div class="stat-card" onclick="document.getElementById('itm-modal').style.display='flex'" style="cursor:pointer">
+            <div class="val" style="color:var(--gold);font-size:17px;text-decoration:underline dotted"><?php echo $extra_stats['itm']; ?><span style="color:var(--muted);font-size:12px;font-weight:500"> / <?php echo $extra_stats['parties']; ?></span></div>
             <div class="lbl">ITM</div>
         </div>
         <div class="stat-card">
