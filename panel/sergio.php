@@ -27,11 +27,11 @@ $pseudo = '';
 $rows   = [];
 $years  = [];
 $stats  = ['count' => 0, 'avg' => null, 'best' => null, 'worst' => null, 'sum' => 0];
-$extra_stats = ['tf' => 0, 'itm' => 0, 'recaves' => 0];
+$extra_stats = ['parties' => 0, 'tf' => 0, 'itm' => 0, 'recaves' => 0];
+$itm_rows   = [];
 $chal_rank  = null;
 $chal_total = null;
 $chal_title = '';
-$extra_stats = ['parties' => 0, 'tf' => 0, 'itm' => 0, 'recaves' => 0];
 
 if ($member_id && !empty($con)) {
     // Pseudo
