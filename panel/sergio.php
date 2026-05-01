@@ -486,7 +486,7 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
             <td style="padding:8px 14px;color:var(--muted);white-space:nowrap;font-size:12px"><?php echo $ids; ?></td>
             <td style="padding:8px 8px;font-weight:600;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h($ir['titre']); ?></td>
             <td style="padding:8px 8px;text-align:center;color:var(--blue)"><?php echo $ir['classement'] > 0 ? '#'.intval($ir['classement']) : '—'; ?></td>
-            <td style="padding:8px 14px;text-align:right;color:var(--gold);font-weight:700"><?php echo ($gain >= 100 ? '+'.number_format($gain/100,2,',',' ').' €' : '+'.$gain); ?></td>
+            <td style="padding:8px 14px;text-align:right;color:var(--gold);font-weight:700"><?php echo '+'.number_format($gain, 2, ',', ' ').' €'; ?></td>
           </tr>
         <?php endforeach; ?>
         </tbody>
