@@ -131,9 +131,7 @@ if ($member_id && !empty($con)) {
             SUM(CASE WHEN COALESCE(p.gain,0) > 0 THEN 1 ELSE 0 END)                       AS total_itm,
             COALESCE(SUM(COALESCE(p.recave,0)),0)                                          AS total_recaves
         FROM participation p
-        JOIN activite a ON a.`id-activite` = p.`id-activite`
         WHERE p.`id-membre` = '".intval($member_id)."'
-          AND p.`option` NOT IN ('None','Desinscrit')
     ");
     if ($eq && ($er = mysqli_fetch_assoc($eq))) {
         $extra_stats = [
