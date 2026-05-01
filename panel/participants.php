@@ -45,7 +45,7 @@ if($activity){
                 $participants[] = array(
                     'id' => isset($row['id-participation'])? $row['id-participation'] : (isset($row['id'])? $row['id'] : null),
                     'mid' => isset($row['id-membre'])? intval($row['id-membre']) : (isset($row['id_membre'])? intval($row['id_membre']) : null),
-                    'pseudo' => isset($row['pseudo'])? $row['pseudo'] : '',,
+                    'pseudo' => isset($row['pseudo'])? $row['pseudo'] : '',
                     'option' => isset($row['option'])? $row['option'] : '',
                     'date' => isset($row['ds'])? $row['ds'] : (isset($row['activity_date'])? $row['activity_date'] : null),
                     'jetons' => isset($row['jetons'])? $row['jetons'] : 0,
