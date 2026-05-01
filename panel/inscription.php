@@ -79,6 +79,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg'])) {
     $memberRow = $memberQuery ? mysqli_fetch_assoc($memberQuery) : null;
     $memberName = $memberRow && isset($memberRow['pseudo']) ? mysqli_real_escape_string($db, $memberRow['pseudo']) : '';
 
+    // Fetch activity defaults for bonus calculation
+    $actJetons = 0;
+    $actDateDepart = "";
+    $actQuery = mysqli_query($db, "SELECT jetons, date_depart FROM activite WHERE `id-activite` = '" . intval($activityId) . "' LIMIT 1");
+    if ($actQuery && ($actRow = mysqli_fetch_assoc($actQuery))) {
+        $actJetons = intval($actRow['jetons'] ?? 0);
+        $actDateDepart = $actRow['date_depart'] ?? "";
+    }
+
     $existsQuery = mysqli_query($db, "SELECT `id-participation` FROM participation WHERE `id-membre` = '" . intval($userId) . "' AND `id-activite` = '" . intval($activityId) . "' LIMIT 1");
     $existing = $existsQuery ? mysqli_fetch_assoc($existsQuery) : null;
 
@@ -99,6 +108,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg'])) {
         if ($hasDs) {
             $updates[] = "`ds` = NOW()";
         }
+
+        // Recalculate bonus if re-registering
+        if ($status !== 'Desinscrit') {
+            $bonus_ins = 0;
+            if (!empty($actDateDepart)) {
+                $diff_minutes = abs(strtotime($actDateDepart) - time()) / 60;
+                $bonus_ins = min(5000, 200 * floor($diff_minutes / 60));
+            }
+            $jetons_total = $actJetons + $bonus_ins;
+            $updates[] = "`jetons_bonus_ins` = '$bonus_ins'";
+            $updates[] = "`jetons_total` = '$jetons_total'";
+        }
+
         mysqli_query($db, "UPDATE participation SET " . implode(', ', $updates) . " WHERE `id-participation` = '" . intval($existing['id-participation']) . "'");
         if (function_exists('log_activity')) {
             $logAction = ($status === 'Desinscrit') ? 'desinscription' : 'modification_inscription';
@@ -110,8 +132,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg'])) {
         $orderRow = $orderQuery ? mysqli_fetch_assoc($orderQuery) : null;
         $nextOrder = intval($orderRow['max_o'] ?? 0) + 1;
 
-        $columns = ['`id-membre`', '`id-activite`', '`ordre`', '`id-siege`', '`id-table`', '`option`'];
-        $values = ["'" . intval($userId) . "'", "'" . intval($activityId) . "'", "'" . intval($nextOrder) . "'", "'0'", "'0'", "'" . mysqli_real_escape_string($db, $status) . "'"];
+        // Calculate bonus values
+        $bonus_ins = 0;
+        if (!empty($actDateDepart)) {
+            $diff_minutes = abs(strtotime($actDateDepart) - time()) / 60;
+            $bonus_ins = min(5000, 200 * floor($diff_minutes / 60));
+        }
+        $jetons_total = $actJetons + $bonus_ins;
+
+        $columns = ['`id-membre`', '`id-activite`', '`ordre`', '`id-siege`', '`id-table`', '`option`', '`jetons_bonus_ins`', '`jetons_total`'];
+        $values = ["'" . intval($userId) . "'", "'" . intval($activityId) . "'", "'" . intval($nextOrder) . "'", "'0'", "'0'", "'" . mysqli_real_escape_string($db, $status) . "'", "'$bonus_ins'", "'$jetons_total'"];
 
         if ($hasNomMembre) {
             $columns[] = '`nom-membre`';
