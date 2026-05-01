@@ -860,9 +860,12 @@ if ($_cur) {
                     // Annonce automatique du nouveau niveau (pas au tout premier chargement)
                     if (currentLevelIndex !== -1 && newLevel !== currentLevelIndex) {
                         const lvlName = data.level_name || (newLevel + 1);
-                        let msg = 'Nouveau niveau : ' + lvlName + '.';
-                        if (data.blinds_text && data.blinds_text !== 'PAUSE') msg += ' Blindes : ' + data.blinds_text + '.';
-                        else if (data.blinds_text === 'PAUSE') msg = 'Pause !';
+                        let msg = 'Niveau ' + lvlName + '.';
+                        if (data.blinds_text && data.blinds_text !== 'PAUSE') {
+                            msg += ' Small blind ' + lastSB + ', big blind ' + lastBB + '.';
+                        } else if (data.blinds_text === 'PAUSE') {
+                            msg = 'Pause !';
+                        }
                         speakAnnouncement(msg);
                     }
                 }
@@ -1064,7 +1067,7 @@ if ($_cur) {
     // ---- MESSAGES VOCAUX ----
     function playWelcomeMessage() {
         let text = 'Bienvenue à tous ! Le tournoi vient de commencer. ';
-        if (lastSB && lastBB) text += `Les blindes de départ sont ${lastSB} et ${lastBB}. `;
+        if (lastSB && lastBB) text += `Small blind ${lastSB}, big blind ${lastBB}. `;
         if (lastDurationMin) text += `Les niveaux durent ${lastDurationMin} minutes. `;
         text += 'Bonne chance à tous !';
         speakAnnouncement(text);
@@ -1075,11 +1078,11 @@ if ($_cur) {
     }
 
     function playBlindsMessage() {
-        let text = 'Rappel : les blindes actuelles sont ';
-        if (lastSB && lastBB) text += `${lastSB} et ${lastBB}`;
+        let text = 'Blindes actuelles : ';
+        if (lastSB && lastBB) text += `small blind ${lastSB}, big blind ${lastBB}`;
         else text += 'non disponibles';
-        if (lastDurationMin) text += `, pour des niveaux de ${lastDurationMin} minutes`;
-        if (lastAvgStack) text += `. Le stack moyen est de ${lastAvgStack}`;
+        if (lastDurationMin) text += `, niveaux de ${lastDurationMin} minutes`;
+        if (lastAvgStack) text += `. Stack moyen : ${lastAvgStack}`;
         if (lastPlayersActive > 0) text += `. Il reste ${lastPlayersActive} joueurs sur ${lastPlayersTotal}`;
         text += '.';
         speakAnnouncement(text);
