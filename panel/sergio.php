@@ -126,10 +126,10 @@ if ($member_id && !empty($con)) {
     $extra_stats = ['parties' => 0, 'tf' => 0, 'itm' => 0, 'recaves' => 0];
     $eq = @mysqli_query($con, "
         SELECT
-            COUNT(*)                                                   AS total_parties,
-            COALESCE(SUM(COALESCE(p.tf,0)),0)                         AS total_tf,
-            SUM(CASE WHEN COALESCE(p.gain,0) > 0 THEN 1 ELSE 0 END)  AS total_itm,
-            COALESCE(SUM(COALESCE(p.recave,0)),0)                     AS total_recaves
+            COUNT(*)                                                                        AS total_parties,
+            SUM(CASE WHEN COALESCE(p.classement,0) > 0 AND p.classement < 10 THEN 1 ELSE 0 END) AS total_tf,
+            SUM(CASE WHEN COALESCE(p.gain,0) > 0 THEN 1 ELSE 0 END)                       AS total_itm,
+            COALESCE(SUM(COALESCE(p.recave,0)),0)                                          AS total_recaves
         FROM participation p
         JOIN activite a ON a.`id-activite` = p.`id-activite`
         WHERE p.`id-membre` = '".intval($member_id)."'
