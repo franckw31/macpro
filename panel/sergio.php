@@ -322,8 +322,8 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
 
     <!-- Stats extra row 2 -->
     <div class="stat-grid" style="margin-top:6px">
-        <div class="stat-card">
-            <div class="val" style="color:var(--green);font-size:17px"><?php echo $extra_stats['tf']; ?><span style="color:var(--muted);font-size:12px;font-weight:500"> / <?php echo $extra_stats['parties']; ?></span></div>
+        <div class="stat-card" onclick="document.getElementById('itm-modal').style.display='flex'" style="cursor:pointer">
+            <div class="val" style="color:var(--gold);font-size:17px;text-decoration:underline dotted"><?php echo $extra_stats['itm']; ?><span style="color:var(--muted);font-size:12px;font-weight:500"> / <?php echo $extra_stats['parties']; ?></span></div>
             <div class="lbl">TF</div>
         </div>
         <div class="stat-card" onclick="document.getElementById('itm-modal').style.display='flex'" style="cursor:pointer">
@@ -455,5 +455,44 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
 
     <?php endif; // member_id ?>
 </div>
-</body>
+
+<!-- ── Modal ITM ─────────────────────────────────────────────────────── -->
+<div id="itm-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;align-items:flex-end;justify-content:center" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#0d1d2b;border-radius:16px 16px 0 0;width:100%;max-width:520px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.07)">
+      <span style="font-weight:800;font-size:15px;color:var(--gold)">⭐ ITM — <?php echo h($pseudo); ?></span>
+      <button onclick="document.getElementById('itm-modal').style.display='none'" style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1">×</button>
+    </div>
+    <div style="overflow-y:auto;padding:0 0 16px">
+    <?php if (empty($itm_rows)): ?>
+      <div style="text-align:center;color:var(--muted);padding:30px">Aucun ITM enregistré.</div>
+    <?php else: ?>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.07)">
+            <th style="padding:8px 14px;color:var(--muted);font-weight:600;text-align:left;font-size:11px;text-transform:uppercase">Date</th>
+            <th style="padding:8px 8px;color:var(--muted);font-weight:600;text-align:left;font-size:11px;text-transform:uppercase">Partie</th>
+            <th style="padding:8px 8px;color:var(--muted);font-weight:600;text-align:center;font-size:11px;text-transform:uppercase">Place</th>
+            <th style="padding:8px 14px;color:var(--muted);font-weight:600;text-align:right;font-size:11px;text-transform:uppercase">Gain</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($itm_rows as $ir):
+            $idt  = strtotime($ir['date_depart']);
+            $ids  = $idt ? date('d/m/Y', $idt) : h($ir['date_depart']);
+            $gain = intval($ir['gain']);
+        ?>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+            <td style="padding:8px 14px;color:var(--muted);white-space:nowrap;font-size:12px"><?php echo $ids; ?></td>
+            <td style="padding:8px 8px;font-weight:600;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h($ir['titre']); ?></td>
+            <td style="padding:8px 8px;text-align:center;color:var(--blue)"><?php echo $ir['classement'] > 0 ? '#'.intval($ir['classement']) : '—'; ?></td>
+            <td style="padding:8px 14px;text-align:right;color:var(--gold);font-weight:700"><?php echo ($gain >= 100 ? '+'.number_format($gain/100,2,',',' ').' €' : '+'.$gain); ?></td>
+          </tr>
+        <?php endforeach; ?>
+        </tbody>
+      </table>
+    <?php endif; ?>
+    </div>
+  </div>
+</div>
 </html>
