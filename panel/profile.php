@@ -602,6 +602,13 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 <div style="text-align:center"><div class="num" style="color:#08b0ff"><a href="/panel/activities_recaves.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:underline;text-decoration-color:#08b0ff"><?php echo intval($stats['recaves']); ?></a></div><div class="sub">Recaves <span style="font-size:11px;color:#9aa6b1">(<?php echo $recave_pct; ?>%)</span></div></div>
             </div>
 
+            <!-- SergioScore link -->
+            <div style="margin-top:10px;text-align:center">
+                <a href="/panel/sergio.php?mid=<?php echo intval($uid_int); ?>" style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;background:rgba(255,180,0,0.1);border:1px solid rgba(255,180,0,0.3);color:#ffb400;font-weight:800;font-size:13px;text-decoration:none">
+                    ⭐ Voir l'historique SergioScore
+                </a>
+            </div>
+
             <div style="border-top:1px solid rgba(0,0,0,0.06);margin-top:12px;padding-top:10px;display:flex;align-items:center;gap:12px">
                 <div style="font-weight:700">Meilleur gain :</div>
                 <div style="font-weight:800;color:#16a34a;font-size:16px"><?php echo htmlspecialchars(number_format($stats['best_gain'],0,',',' ')) . ' €'; ?></div>
