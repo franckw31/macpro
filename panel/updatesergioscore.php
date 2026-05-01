@@ -257,7 +257,12 @@ if ($step === 3 && !empty($confirmed_ids) && $member_id) {
         <input type="hidden" name="pseudo" value="<?php echo h($member_row['pseudo']); ?>">
         <input type="hidden" name="confirmed_ids" id="confirmed_ids" value="">
 
-        <table style="margin-top:16px">
+        <div class="actions" style="margin-bottom:8px">
+            <button type="button" class="btn btn-muted" onclick="selectAll(true)">☑ Tout sélectionner</button>
+            <button type="button" class="btn btn-muted" onclick="selectAll(false)">☐ Tout désélectionner</button>
+        </div>
+
+        <table style="margin-top:4px">
             <thead>
                 <tr>
                     <th><input type="checkbox" id="chk-all" title="Tout cocher/décocher"></th>
