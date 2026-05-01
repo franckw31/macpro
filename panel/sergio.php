@@ -200,6 +200,7 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
         .hist-table th,.hist-table td{padding:6px 5px;font-size:11px}
         .badge{padding:2px 5px;font-size:11px}
     }
+    </style>
 </head>
 <body>
 <div class="page">
