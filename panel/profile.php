@@ -545,7 +545,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             ?>
             <div class="card-row"><div class="label">Rang Challenge</div><div class="value"><?php echo htmlspecialchars($challenge_rank_display); ?> <a id="link-challenge" href="/panel/challenge_rank.php<?php echo $challenge_uid? '?uid=' . $challenge_uid : ''; ?>" onclick="logPanelAction('vue_classement_challenge')" style="margin-left:8px;color:#ff9d3b;font-weight:700">Visualiser</a></div></div>
             <div class="card-row"><div class="label">Vos Tickets de Tombola</div><div class="value"><?php echo intval($tombola_count); ?> <a id="link-tombola" href="/panel/tickets_tombolas.php?id=<?php echo intval($uid); ?>" onclick="window.location.href=this.href;" style="margin-left:8px;color:#16a34a;font-weight:700">Voir</a></div></div>
-            <div class="card-row"><div class="label">SergioScore</div><div class="value">— <a id="link-notes" href="#" style="margin-left:8px;color:#08b0ff;font-weight:700">Voir</a></div></div>
+            <div class="card-row"><div class="label">SergioScore</div><div class="value">⭐ <a id="link-sergio" href="/panel/sergio.php?mid=<?php echo intval($uid_int); ?>" style="margin-left:8px;color:#ffb400;font-weight:700">Voir</a></div></div>
         </div>
 
         <?php
@@ -600,13 +600,6 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 <div style="text-align:center"><div class="num" style="color:#ffd100"><a href="/panel/activities_victories.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:underline;text-decoration-color:#08b0ff"><?php echo intval($stats['victories']); ?></a></div><div class="sub">Victoires <span style="font-size:11px;color:#9aa6b1">(<?php echo $victory_pct; ?>%)</span></div></div>
                 <div style="text-align:center"><div class="num" style="color:#ff9d3b"><a href="/panel/activities_wins.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:underline;text-decoration-color:#08b0ff"><?php echo intval($stats['gains']); ?></a></div><div class="sub">ITM <span style="font-size:11px;color:#9aa6b1">(<?php echo $itm_pct; ?>%)</span></div></div>
                 <div style="text-align:center"><div class="num" style="color:#08b0ff"><a href="/panel/activities_recaves.php?uid=<?php echo intval($uid_int); ?>" style="color:inherit;text-decoration:underline;text-decoration-color:#08b0ff"><?php echo intval($stats['recaves']); ?></a></div><div class="sub">Recaves <span style="font-size:11px;color:#9aa6b1">(<?php echo $recave_pct; ?>%)</span></div></div>
-            </div>
-
-            <!-- SergioScore link -->
-            <div style="margin-top:10px;text-align:center">
-                <a href="/panel/sergio.php?mid=<?php echo intval($uid_int); ?>" style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;background:rgba(255,180,0,0.1);border:1px solid rgba(255,180,0,0.3);color:#ffb400;font-weight:800;font-size:13px;text-decoration:none">
-                    ⭐ Voir l'historique SergioScore
-                </a>
             </div>
 
             <div style="border-top:1px solid rgba(0,0,0,0.06);margin-top:12px;padding-top:10px;display:flex;align-items:center;gap:12px">
