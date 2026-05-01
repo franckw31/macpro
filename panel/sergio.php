@@ -359,10 +359,15 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
             <?php foreach ($monthly as $mb):
                 $pct = max(8, min(85, round((floatval($mb['avg_score']) / $max_val) * 85)));
                 $col = scoreColor(floatval($mb['avg_score']));
+                $mb_y = substr($mb['mois'], 0, 4);
+                $mb_m = intval(substr($mb['mois'], 5));
+                $is_active = ($filter_year == $mb_y && $filter_month == $mb_m);
+                $bar_url = '?mid='.intval($member_id).'&y='.$mb_y.'&m='.$mb_m;
+                $bar_url_clear = ($is_active) ? '?mid='.intval($member_id) : $bar_url;
             ?>
-            <div class="spark-bar" style="height:<?php echo $pct; ?>%;background:<?php echo $col; ?>;opacity:.85">
-                <div class="tip"><?php echo h($mb['mois']); ?><br>Moy : <?php echo $mb['avg_score']; ?><br><?php echo $mb['cnt']; ?> partie(s)</div>
-            </div>
+            <a href="<?php echo $bar_url_clear; ?>" class="spark-bar" style="height:<?php echo $pct; ?>%;background:<?php echo $col; ?>;opacity:<?php echo $is_active ? '1' : '.85'; ?>;text-decoration:none;outline:<?php echo $is_active ? '2px solid #fff' : 'none'; ?>;outline-offset:2px">
+                <div class="tip"><?php echo h($mb['mois']); ?><br>Moy : <?php echo $mb['avg_score']; ?><br><?php echo $mb['cnt']; ?> partie(s)<br><?php echo $is_active ? '✕ Annuler filtre' : 'Cliquer pour filtrer'; ?></div>
+            </a>
             <?php endforeach; ?>
         </div>
         <div class="spark-labels">
@@ -372,11 +377,11 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
                 $mois_num = substr($mb['mois'], 5);
                 $col_lbl  = scoreColor(floatval($mb['avg_score']));
             ?>
-            <div class="spark-lbl">
+            <a href="<?php echo ($filter_year == substr($mb['mois'],0,4) && $filter_month == intval(substr($mb['mois'],5))) ? '?mid='.intval($member_id) : '?mid='.intval($member_id).'&y='.substr($mb['mois'],0,4).'&m='.intval(substr($mb['mois'],5)); ?>" class="spark-lbl" style="text-decoration:none;cursor:pointer;<?php echo ($filter_year == substr($mb['mois'],0,4) && $filter_month == intval(substr($mb['mois'],5))) ? 'background:rgba(255,255,255,.12);border-radius:6px;' : ''; ?>">
                 <div style="font-weight:700;color:#eef6fb"><?php echo $months_short[$mois_num] ?? $mois_num; ?></div>
                 <div style="font-size:8px;color:var(--muted)"><?php echo $mb['cnt']; ?> ptie<?php echo $mb['cnt'] > 1 ? 's' : ''; ?></div>
                 <div style="font-size:8px;color:<?php echo $col_lbl; ?>;font-weight:700"><?php echo $mb['avg_score']; ?></div>
-            </div>
+            </a>
             <?php endforeach; ?>
         </div>
     </div>
