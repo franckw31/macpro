@@ -1140,6 +1140,11 @@ if ($_cur) {
                 document.getElementById('cd-stop').style.opacity = '0.4';
                 cdPlayAlarm();
                 speakAnnouncement('Temps écoulé !');
+                setTimeout(() => {
+                    cdOpen = false;
+                    document.getElementById('countdown-overlay').style.display = 'none';
+                    cdReset();
+                }, 1500);
             }
         }, 1000);
     }
