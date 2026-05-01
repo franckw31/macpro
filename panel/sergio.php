@@ -175,11 +175,13 @@ if ($member_id && !empty($con)) {
         $rkq = @mysqli_query($con, "
             SELECT m.`id-membre` AS mid, COALESCE(SUM(p.points),0) AS pts
             FROM membres m
-            LEFT JOIN participation p ON p.`id-membre` = m.`id-membre`
-            LEFT JOIN activite a      ON p.`id-activite` = a.`id-activite` AND a.`id_challenge` = $chal_id
-            LEFT JOIN blackliste b    ON m.`id-membre` = b.id_membre
-            WHERE b.id_membre IS NULL
-              AND (p.`option` IS NULL OR p.`option` NOT IN ('None','Desinscrit'))
+            JOIN participation p  ON p.`id-membre`   = m.`id-membre`
+            JOIN activite a       ON p.`id-activite` = a.`id-activite`
+            LEFT JOIN blackliste b ON m.`id-membre`  = b.id_membre
+            WHERE a.`id_challenge` = $chal_id
+              AND b.id_membre IS NULL
+              AND p.`option` NOT IN ('None','Desinscrit')
+              AND a.date_depart < '$today_str'
             GROUP BY m.`id-membre`
             HAVING pts > 0
             ORDER BY pts DESC
