@@ -167,12 +167,12 @@ body{background:#071019;color:#eef6fb;font-family:Inter,system-ui,-apple-system,
             <button class="tab-btn inactive" id="tab-recues"  onclick="setTab('cible')">📥 Reçues</button>
         <?php endif; ?>
     </div>
+    <div class="notes-wrap" id="notes-wrap">
+        <div class="spinner">Chargement…</div>
+    </div>
     <div class="add-area">
         <textarea class="add-textarea" id="note-input" placeholder="Ajouter une note…" rows="2"></textarea>
         <button class="add-btn" id="send-btn" onclick="sendNote()">➤</button>
-    </div>
-    <div class="notes-wrap" id="notes-wrap">
-        <div class="spinner">Chargement…</div>
     </div>
 </div>
 
