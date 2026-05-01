@@ -344,7 +344,7 @@ if($activity){
                 }
                 $score_denom = intval($total_count) + $total_recaves_all - $recave_count;
                 if($score_denom > 0){
-                    $score = round((1 - ($rank / $score_denom)) * 20, 2);
+                    $score = round((1 - (($rank - 1) / $score_denom)) * 20, 2);
                     $score_color = ($score >= 18) ? 'var(--gold)' : (($score >= 15) ? 'var(--green)' : (($score >= 10) ? 'var(--blue)' : 'var(--muted)'));
                 }
                 // Sauvegarde dans participation.sergio_score (seulement si l'activité est terminée)
