@@ -298,11 +298,19 @@ if (isset($_POST['submit'])) {
             }
 
             // Insérer en renseignant nom-membre (pseudo) et id-membre, challenger = 1 par défaut, avec le nombre de jetons saisi
-            $sql_quick_reg = "INSERT INTO `participation` (`id-membre`, `nom-membre`, `id-activite`, `id-table`, `id-siege`, rake, cout_in, challenger, jetons) VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?)";
+            $sql_quick_reg = "INSERT INTO `participation` (`id-membre`, `nom-membre`, `id-activite`, `id-table`, `id-siege`, rake, cout_in, challenger, jetons, jetons_bonus_ins, jetons_total) VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)";
 
               $stmt_reg = mysqli_prepare($con, $sql_quick_reg);
               if ($stmt_reg) {
-                  mysqli_stmt_bind_param($stmt_reg, "isiiiddi", $membre, $pseudo, $acti, $tabl, $sieg, $default_activity_rake, $initial_cout_in, $jetons_insc);
+                  // Calcul bonus inscription
+                  $bonus_ins_q = 0;
+                  if (!empty($default_activity_date_depart)) {
+                      $diff_min_q = abs(strtotime($default_activity_date_depart) - time()) / 60;
+                      $bonus_ins_q = min(5000, 200 * floor($diff_min_q / 60));
+                  }
+                  $jetons_total_q = $jetons_insc + $bonus_ins_q;
+
+                  mysqli_stmt_bind_param($stmt_reg, "isiiiddiii", $membre, $pseudo, $acti, $tabl, $sieg, $default_activity_rake, $initial_cout_in, $jetons_insc, $bonus_ins_q, $jetons_total_q);
                  if (mysqli_stmt_execute($stmt_reg)) {
                      $insert_id = mysqli_insert_id($con);
 
