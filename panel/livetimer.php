@@ -617,9 +617,9 @@ if (isset($_GET['action'])) {
                 <span class="icon-svg"><svg viewBox="0 0 24 24"><path d="M14 5l-5 4H5v6h4l5 4V5z"/><path d="M18 9.5a4 4 0 0 1 0 5"/><path d="M20.5 7a7.5 7.5 0 0 1 0 10"/></svg></span>
             </button>
             <button class="icon-btn" type="button" title="Heure"><span id="clock">--:--</span></button>
-            <a href="compte-rebours-30s.php?uid=<?php echo $id; ?>" class="icon-btn close" title="Compte à rebours 30s">
+            <button class="icon-btn close" title="Compte à rebours 30s" onclick="toggleCountdown()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d1d1d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l3 3"/><path d="M9 2h6"/></svg>
-            </a>
+            </button>
         </div>
     </div>
 
@@ -631,6 +631,17 @@ if (isset($_GET['action'])) {
             <div class="timer-center">
                 <div class="level-line">Niveau <span id="level-num">--</span> / <span id="level-total">--</span></div>
                 <div id="timer-display">--:--</div>
+            </div>
+            <!-- COUNTDOWN OVERLAY -->
+            <div id="countdown-overlay" style="display:none;position:absolute;inset:0;z-index:10;border-radius:50%;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px">
+                <div style="color:rgba(255,255,255,0.5);font-size:clamp(11px,1.6vw,16px);letter-spacing:0.14em;text-transform:uppercase">⏱ Compte à rebours</div>
+                <div id="cd-display" style="font-size:clamp(68px,13vw,140px);font-weight:500;color:#ffd119;font-variant-numeric:tabular-nums;line-height:1">30</div>
+                <div style="display:flex;gap:10px;margin-top:6px">
+                    <button id="cd-start" onclick="cdStart()" style="padding:6px 14px;border-radius:999px;background:#4CAF50;color:#fff;border:0;font-weight:700;font-size:13px;cursor:pointer">▶ Start</button>
+                    <button id="cd-stop" onclick="cdStop()" disabled style="padding:6px 14px;border-radius:999px;background:#ff9800;color:#fff;border:0;font-weight:700;font-size:13px;cursor:pointer;opacity:0.4">⏸ Stop</button>
+                    <button onclick="cdReset()" style="padding:6px 14px;border-radius:999px;background:#f44336;color:#fff;border:0;font-weight:700;font-size:13px;cursor:pointer">↺</button>
+                </div>
+                <button onclick="toggleCountdown()" style="margin-top:4px;background:none;border:0;color:rgba(255,255,255,0.4);font-size:12px;cursor:pointer">✕ Fermer</button>
             </div>
         </div>
 
@@ -1089,6 +1100,63 @@ if ($_cur) {
         } catch(e) {
             speakAnnouncement('Alerte sirène !');
         }
+    }
+
+    // ---- COMPTE À REBOURS 30s ----
+    let cdTime = 30;
+    let cdInterval = null;
+    let cdRunning = false;
+    let cdOpen = false;
+
+    function toggleCountdown() {
+        cdOpen = !cdOpen;
+        const overlay = document.getElementById('countdown-overlay');
+        overlay.style.display = cdOpen ? 'flex' : 'none';
+        if (!cdOpen) { cdStop(); cdReset(); }
+    }
+
+    function cdUpdateDisplay() {
+        const el = document.getElementById('cd-display');
+        if (!el) return;
+        el.textContent = cdTime;
+        el.style.color = cdTime <= 5 ? '#ff4444' : '#ffd119';
+        el.style.animation = cdTime <= 5 && cdTime > 0 ? 'cdPulse 0.5s infinite' : 'none';
+    }
+
+    function cdStart() {
+        if (cdRunning || cdTime <= 0) return;
+        cdRunning = true;
+        document.getElementById('cd-start').disabled = true;
+        document.getElementById('cd-start').style.opacity = '0.4';
+        document.getElementById('cd-stop').disabled = false;
+        document.getElementById('cd-stop').style.opacity = '1';
+        cdInterval = setInterval(() => {
+            cdTime--;
+            cdUpdateDisplay();
+            if (cdTime <= 0) {
+                clearInterval(cdInterval); cdRunning = false;
+                document.getElementById('cd-stop').disabled = true;
+                document.getElementById('cd-stop').style.opacity = '0.4';
+                try { new Audio('/newtimer/end.mp3').play(); } catch(e) {}
+                speakAnnouncement('Temps écoulé !');
+            }
+        }, 1000);
+    }
+
+    function cdStop() {
+        if (!cdRunning) return;
+        clearInterval(cdInterval); cdRunning = false;
+        document.getElementById('cd-start').disabled = false;
+        document.getElementById('cd-start').style.opacity = '1';
+        document.getElementById('cd-stop').disabled = true;
+        document.getElementById('cd-stop').style.opacity = '0.4';
+    }
+
+    function cdReset() {
+        cdStop(); cdTime = 30; cdUpdateDisplay();
+        document.getElementById('cd-display').style.color = '#ffd119';
+        document.getElementById('cd-start').disabled = false;
+        document.getElementById('cd-start').style.opacity = '1';
     }
 
     // ---- SON TOGGLE ----
