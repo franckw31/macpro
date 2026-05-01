@@ -138,8 +138,8 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
     a{color:var(--orange);text-decoration:none}
     a:hover{text-decoration:underline}
 
-    .page{max-width:720px;margin:0 auto;padding:14px 12px;position:relative}
-    .close-btn{position:absolute;top:14px;right:12px;padding:6px 10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--orange);font-weight:700}
+    .page{max-width:720px;margin:0 auto;padding:14px 12px 14px;position:relative}
+    .close-btn{position:absolute;top:14px;right:12px;padding:6px 10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--orange);font-weight:700;font-size:13px}
 
     /* Header */
     .hero{margin-top:10px;text-align:center}
@@ -148,21 +148,20 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
 
     /* Stats cards */
     .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
-    @media(max-width:480px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
     .stat-card{background:var(--card);border-radius:10px;padding:12px 8px;text-align:center;border:1px solid rgba(255,255,255,0.05)}
     .stat-card .val{font-size:22px;font-weight:900;margin-bottom:4px}
     .stat-card .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 
     /* Sparkline */
-    .chart-wrap{background:var(--card);border-radius:10px;padding:14px 12px;margin-top:12px;border:1px solid rgba(255,255,255,0.05)}
+    .chart-wrap{background:var(--card);border-radius:10px;padding:14px 12px;margin-top:12px;border:1px solid rgba(255,255,255,0.05);overflow-x:auto}
     .chart-title{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
-    .sparkline{display:flex;align-items:flex-end;gap:4px;height:60px}
-    .spark-bar{flex:1;border-radius:3px 3px 0 0;min-width:6px;position:relative;cursor:default;transition:opacity .15s}
+    .sparkline{display:flex;align-items:flex-end;gap:4px;height:60px;min-width:0}
+    .spark-bar{flex:1;border-radius:3px 3px 0 0;min-width:18px;position:relative;cursor:default;transition:opacity .15s}
     .spark-bar:hover{opacity:.8}
     .spark-bar .tip{display:none;position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:#1a2d3d;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px 7px;font-size:11px;white-space:nowrap;pointer-events:none;z-index:10}
     .spark-bar:hover .tip{display:block}
     .spark-labels{display:flex;gap:4px;margin-top:4px}
-    .spark-lbl{flex:1;font-size:9px;color:var(--muted);text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;line-height:1.4}
+    .spark-lbl{flex:1;font-size:9px;color:var(--muted);text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;line-height:1.4;min-width:18px}
 
     /* Filters */
     .filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
@@ -173,18 +172,34 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
 
     /* Table */
     .section-title{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px}
-    .hist-table{width:100%;border-collapse:collapse}
-    .hist-table th{font-size:11px;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.06);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+    .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:8px}
+    .hist-table{width:100%;border-collapse:collapse;min-width:480px}
+    .hist-table th{font-size:11px;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.06);font-weight:600;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
     .hist-table th.r,.hist-table td.r{text-align:right}
     .hist-table th.c,.hist-table td.c{text-align:center}
     .hist-table tbody tr{border-bottom:1px solid rgba(255,255,255,.03);transition:background .1s}
     .hist-table tbody tr:hover{background:rgba(255,255,255,.025)}
-    .hist-table td{padding:8px 8px;vertical-align:middle}
+    .hist-table td{padding:7px 8px;vertical-align:middle}
     .td-date{color:var(--muted);font-size:12px;white-space:nowrap}
-    .td-titre{font-weight:600;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .td-titre{font-weight:600;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:700;background:rgba(255,255,255,.06)}
     .no-data{color:var(--muted);text-align:center;padding:30px 0;font-size:13px}
-    </style>
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media(max-width:520px){
+        .page{padding:10px 8px}
+        .close-btn{font-size:12px;padding:5px 8px;top:10px;right:8px}
+        .hero{margin-top:36px}
+        .hero h1{font-size:18px}
+        .stat-grid{grid-template-columns:repeat(2,1fr);gap:6px}
+        .stat-card .val{font-size:18px}
+        .stat-card{padding:10px 6px}
+        .filters select,.filters a.pill{font-size:12px;padding:5px 10px}
+        .td-titre{max-width:100px}
+        .hist-table{min-width:420px}
+        .hist-table th,.hist-table td{padding:6px 5px;font-size:11px}
+        .badge{padding:2px 5px;font-size:11px}
+    }
 </head>
 <body>
 <div class="page">
