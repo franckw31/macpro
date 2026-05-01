@@ -10,7 +10,7 @@ if (!$member_id && isset($_SESSION['id'])) $member_id = intval($_SESSION['id']);
 $filter_year  = isset($_GET['y']) && is_numeric($_GET['y'])  ? intval($_GET['y'])  : null;
 $filter_month = isset($_GET['m']) && is_numeric($_GET['m'])  ? intval($_GET['m'])  : null;
 
-function h($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
+if (!function_exists('h')) { function h($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); } }
 
 // ── Données du membre ─────────────────────────────────────────────────────────
 $pseudo = '';
@@ -107,12 +107,14 @@ if ($member_id && !empty($con)) {
 }
 
 // Couleur d'un score
-function scoreColor($s) {
-    if ($s === null) return 'var(--muted)';
-    if ($s >= 18) return 'var(--gold)';
-    if ($s >= 15) return 'var(--green)';
-    if ($s >= 10) return 'var(--blue)';
-    return 'var(--muted)';
+if (!function_exists('scoreColor')) {
+    function scoreColor($s) {
+        if ($s === null) return 'var(--muted)';
+        if ($s >= 18) return 'var(--gold)';
+        if ($s >= 15) return 'var(--green)';
+        if ($s >= 10) return 'var(--blue)';
+        return 'var(--muted)';
+    }
 }
 
 $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin',
@@ -217,7 +219,7 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
     <div class="chart-wrap">
         <div class="chart-title">Moyenne mensuelle (<?php echo count($monthly); ?> mois)</div>
         <?php
-        $max_val = max(array_map(fn($m) => floatval($m['avg_score']), $monthly));
+        $max_val = max(array_map(function($m){ return floatval($m['avg_score']); }, $monthly));
         $max_val = max($max_val, 1);
         ?>
         <div class="sparkline">
