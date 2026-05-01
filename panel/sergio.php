@@ -311,7 +311,7 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
         </div>
         <div class="stat-card">
             <div class="val" style="color:<?php echo scoreColor($stats['avg']); ?>"><?php echo $stats['avg'] ?? '—'; ?></div>
-            <div class="lbl">Moyenne</div>
+            <div class="lbl">Note Moyenne</div>
         </div>
         <div class="stat-card">
             <div class="val" style="color:var(--gold)"><?php echo $stats['best'] ?? '—'; ?></div>
