@@ -67,6 +67,7 @@ if($activity){
 
                 $rows[] = [
                     'id' => isset($r['id-participation'])? $r['id-participation'] : (isset($r['id'])? $r['id'] : null),
+                    'mid' => isset($r['id-membre']) && $r['id-membre'] !== '' ? intval($r['id-membre']) : null,
                     'pseudo' => $r['pseudo'] ?? '',
                     'place' => $place,
                     'challenge' => $challenge,
@@ -196,7 +197,7 @@ if($activity){
             ?>
                 <div class="row" role="listitem">
                     <div class="col-num <?php echo $rankClass; ?>">#<?php echo h($rank); ?></div>
-                    <div class="col-pseudo <?php echo ($i===0? 'pseudo-highlight':''); ?>"><?php echo h($r['pseudo']); ?></div>
+                    <div class="col-pseudo <?php echo ($i===0? 'pseudo-highlight':''); ?>"><?php if(!empty($r['mid'])): ?><a href="/panel/sergio.php?mid=<?php echo intval($r['mid']); ?>" style="color:inherit;text-decoration:none"><?php echo h($r['pseudo']); ?></a><?php else: ?><?php echo h($r['pseudo']); ?><?php endif; ?></div>
                     <div class="col-bounty"><?php echo $r['bounty']? h($r['bounty']) : '-'; ?></div>
                     <div class="col-recave"><?php echo $r['recave']? h($r['recave']) : '-'; ?></div>
                     <div class="col-gains"><?php echo ($r['gains']>0)? number_format($r['gains'], 0, ',', ' ') . '€' : '-'; ?></div>
