@@ -235,11 +235,11 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
         </div>
         <div class="stat-card">
             <div class="val" style="color:var(--gold)"><?php echo $stats['best'] ?? '—'; ?></div>
-            <div class="lbl">Meilleur</div>
+            <div class="lbl">La Meilleur</div>
         </div>
         <div class="stat-card">
             <div class="val" style="color:#ff6b6b"><?php echo $stats['worst'] ?? '—'; ?></div>
-            <div class="lbl">Pire</div>
+            <div class="lbl">La Pire</div>
         </div>
     </div>
 
