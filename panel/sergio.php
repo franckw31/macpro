@@ -54,7 +54,9 @@ if ($member_id && !empty($con)) {
             p.`id-participation`    AS id_participation,
             p.sergio_score,
             COALESCE(p.classement, 0) AS classement,
-            (SELECT COUNT(*) FROM participation p2 WHERE p2.`id-activite` = a.`id-activite`) AS nb_joueurs
+            COALESCE(p.recave, 0)    AS recave_joueur,
+            (SELECT COUNT(*) FROM participation p2 WHERE p2.`id-activite` = a.`id-activite`) AS nb_joueurs,
+            (SELECT COALESCE(SUM(COALESCE(p3.recave,0)),0) FROM participation p3 WHERE p3.`id-activite` = a.`id-activite`) AS total_recaves
         FROM participation p
         JOIN activite a ON a.`id-activite` = p.`id-activite`
         WHERE p.`id-membre` = '".intval($member_id)."'
@@ -295,7 +297,9 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
                 <th>Date</th>
                 <th>Partie</th>
                 <th class="c">Place</th>
+                <th class="c" title="Recaves du joueur">R.J</th>
                 <th class="c">Joueurs</th>
+                <th class="c" title="Total recaves de la partie">R.T</th>
                 <th class="r">Score</th>
             </tr>
         </thead>
@@ -311,7 +315,9 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
                 <td class="td-date"><?php echo $date_str; ?></td>
                 <td class="td-titre" title="<?php echo h($row['titre']); ?>"><?php echo h($row['titre']); ?></td>
                 <td class="c"><span class="badge"><?php echo $place > 0 ? $place : '—'; ?></span></td>
+                <td class="c" style="color:<?php echo intval($row['recave_joueur']) > 0 ? 'var(--orange)' : 'var(--muted)'; ?>"><?php echo intval($row['recave_joueur']) ?: '—'; ?></td>
                 <td class="c" style="color:var(--muted)"><?php echo intval($row['nb_joueurs']); ?></td>
+                <td class="c" style="color:var(--muted)"><?php echo intval($row['total_recaves']) ?: '—'; ?></td>
                 <td class="r"><span class="badge" style="color:<?php echo $col; ?>;background:rgba(255,255,255,.05)"><?php echo $score_val; ?></span></td>
             </tr>
         <?php endforeach; ?>
