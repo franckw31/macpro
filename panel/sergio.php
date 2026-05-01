@@ -340,6 +340,7 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
         <?php endforeach; ?>
         </tbody>
     </table>
+    </div>
     <?php endif; ?>
 
     <?php endif; // member_id ?>
