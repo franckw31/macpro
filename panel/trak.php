@@ -357,15 +357,12 @@ function renderNotes() {
     var notes;
     var m = !trak.allMode ? membres.find(m=>m.pseudo===trak.pseudo) : null;
     var idJoueur = m ? m.id : null;
-        if (trak.allMode) {
-            // Mes notes :
-            if (trak.canSeeRecues) {
-                notes = trak.notes.filter(n => mode==='auteur' ? n.id_auteur===myId : n.id_cible===myId);
-            } else {
-                notes = trak.notes.filter(n => n.id_auteur===myId);
-            }
+    
+    if (trak.allMode) {
+        // Vue toutes les notes (default)
+        notes = trak.notes; 
     } else {
-        // Filtre joueur :
+        // Filtre joueur spécifique :
         if (trak.canSeeRecues) {
             if (idJoueur) {
                 notes = trak.notes.filter(n => n.id_auteur===idJoueur || n.id_cible===idJoueur);
@@ -373,45 +370,42 @@ function renderNotes() {
                 notes = [];
             }
         } else {
-            // Pour les non-admins, ne voir que les notes écrites par soi-même à ce joueur, et dont le pseudo cible correspond exactement
+            // Pour les non-admins, ne voir que les notes écrites par soi-même à ce joueur
             if (idJoueur) {
-                var mSel = membres.find(m=>m.pseudo.toLowerCase()===trak.pseudo.toLowerCase());
-                var idSel = mSel ? mSel.id : null;
-                notes = trak.notes.filter(n => n.id_auteur===myId && n.id_cible===idSel && n.cible_pseudo && n.cible_pseudo.toLowerCase() === trak.pseudo.toLowerCase());
-                // Filtrage strict même si l'API retourne trop : on garde uniquement les notes dont id_cible === idSel et cible_pseudo === trak.pseudo
-                notes = notes.filter(n => n.id_cible === idSel && n.cible_pseudo && n.cible_pseudo.toLowerCase() === trak.pseudo.toLowerCase());
+                notes = trak.notes.filter(n => n.id_auteur===myId && (n.id_cible===idJoueur || (n.cible_pseudo && n.cible_pseudo.toLowerCase() === trak.pseudo.toLowerCase())));
             } else {
                 notes = [];
             }
         }
     }
-    var debugList = '';
+    
     if (!notes.length) {
-        document.getElementById('notes-wrap').innerHTML = debugList + '<div class="empty-msg">'+(trak.notes.length?'Aucun résultat pour ce filtre.':'Aucune note pour ce joueur.')+'</div>';
+        document.getElementById('notes-wrap').innerHTML = '<div class="empty-msg">'+(trak.notes.length?'Aucun résultat pour ce filtre.':'Aucune note disponible.')+'</div>';
         return;
     }
-    document.getElementById('notes-wrap').innerHTML = debugList + notes.map(n => {
+    
+    document.getElementById('notes-wrap').innerHTML = notes.map(n => {
         var dp;
+        var modeAuteur = (n.id_auteur === myId);
+        
         if (trak.allMode) {
-            dp = (mode==='auteur' ? n.cible_pseudo : n.auteur_pseudo);
-        } else if (idJoueur) {
-            // Pour le filtre joueur, on veut afficher l'autre pseudo (celui qui n'est pas moi)
-            if (n.id_auteur === myId) {
-                dp = n.cible_pseudo;
-            } else {
-                dp = n.auteur_pseudo;
-            }
+            // Dans la vue globale, on affiche "De [Auteur] à [Cible]"
+            dp = 'De ' + escH(n.auteur_pseudo) + ' à ' + escH(n.cible_pseudo);
         } else {
-            dp = '';
+            // Dans la vue joueur, on affiche l'autre partie
+            dp = modeAuteur ? n.cible_pseudo : n.auteur_pseudo;
         }
+        
         var dpPhoto = '';
-        var m2 = membres.find(m=>m.pseudo===dp);
-        if(m2) dpPhoto = m2.photo || 'https://viendez.com/images/noprofil.jpg';
+        var m_ref = (n.id_auteur === myId) ? membres.find(m=>m.pseudo===n.cible_pseudo) : membres.find(m=>m.pseudo===n.auteur_pseudo);
+        if(m_ref) dpPhoto = m_ref.photo || 'https://viendez.com/images/noprofil.jpg';
+        
         var al = n.date_activite ? n.date_activite+(n.titre_activite?' — '+n.titre_activite:'') : n.titre_activite;
         var canDel = n.id_auteur===myId;
+        
         return '<div class="note-item">'
             +'<div class="note-meta">'
-                +'<span class="note-pseudo" style="cursor:pointer;text-decoration:underline" onclick="selectPlayer(\''+escH(dp)+'\',\''+escH(dpPhoto)+'\')">'+escH(dp)+'</span>'
+                +'<span class="note-pseudo" style="cursor:pointer;text-decoration:underline" onclick="selectPlayer(\''+escH(n.id_auteur === myId ? n.cible_pseudo : n.auteur_pseudo)+'\',\''+escH(dpPhoto)+'\')">'+dp+'</span>'
                 +'<div style="display:flex;align-items:center;gap:6px">'
                     +'<span class="note-date">'+fmtDate(n.created_at)+'</span>'
                     +(canDel?'<button class="note-del" onclick="delNote('+n.id+')">🗑</button>':'')
