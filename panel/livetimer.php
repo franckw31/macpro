@@ -619,7 +619,7 @@ if (isset($_GET['action'])) {
             </button>
             <button class="icon-btn" type="button" title="Heure"><span id="clock">--:--</span></button>
             <button class="icon-btn close" title="Compte à rebours 30s" onclick="toggleCountdown()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d1d1d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l3 3"/><path d="M9 2h6"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#31c7ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l3 3"/><path d="M9 2h6"/></svg>
             </button>
         </div>
     </div>
