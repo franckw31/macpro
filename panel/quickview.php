@@ -603,7 +603,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
     <a class="v2-list-item" href="<?php echo $is_today ? '/panel/livetimer.php' . $uid_q : htmlspecialchars($participants_href); ?>">
       <div class="v2-list-icon blue">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       </div>
       <div class="v2-list-body">
         <div class="v2-list-name"><?php echo $is_today ? '🟢 Partie en Cours' : ($is_past ? 'Résultat de la partie' : 'Liste des participants'); ?></div>
@@ -614,7 +614,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
     <a class="v2-list-item" href="/panel/profile.php<?php echo $uid_q; ?>">
       <div class="v2-list-icon purple">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b47bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b47bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </div>
       <div class="v2-list-body">
         <div class="v2-list-name">Mon profil / Historique / Stats</div>
@@ -625,7 +625,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
     <a class="v2-list-item" href="/panel/trak.php" style="text-decoration:none;color:inherit">
       <div class="v2-list-icon teal">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
       </div>
       <div class="v2-list-body">
         <div class="v2-list-name">Traker</div>
@@ -644,7 +644,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <!-- Vue compacte (par défaut) -->
       <div id="score-collapsed" style="display:flex;align-items:center;gap:10px;width:100%">
         <div class="v2-list-icon" style="background:rgba(255,180,0,0.12);flex-shrink:0">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffb400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffb400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </div>
         <div class="v2-list-body">
           <div class="v2-list-name">Score</div>
