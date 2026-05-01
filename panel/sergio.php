@@ -125,6 +125,7 @@ if ($member_id && !empty($con)) {
     $extra_stats = ['tf' => 0, 'itm' => 0, 'recaves' => 0];
     $eq = @mysqli_query($con, "
         SELECT
+            COUNT(*)                                                   AS total_parties,
             COALESCE(SUM(COALESCE(p.tf,0)),0)                         AS total_tf,
             SUM(CASE WHEN COALESCE(p.gain,0) > 0 THEN 1 ELSE 0 END)  AS total_itm,
             COALESCE(SUM(COALESCE(p.recave,0)),0)                     AS total_recaves
@@ -135,6 +136,7 @@ if ($member_id && !empty($con)) {
     ");
     if ($eq && ($er = mysqli_fetch_assoc($eq))) {
         $extra_stats = [
+            'parties' => intval($er['total_parties']),
             'tf'      => intval($er['total_tf']),
             'itm'     => intval($er['total_itm']),
             'recaves' => intval($er['total_recaves']),
@@ -302,15 +304,15 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
     <!-- Stats extra row 2 -->
     <div class="stat-grid" style="margin-top:6px">
         <div class="stat-card">
-            <div class="val" style="color:var(--green)"><?php echo $extra_stats['tf']; ?></div>
+            <div class="val" style="color:var(--green);font-size:17px"><?php echo $extra_stats['tf']; ?><span style="color:var(--muted);font-size:12px;font-weight:500"> / <?php echo $extra_stats['parties']; ?></span></div>
             <div class="lbl">TF</div>
         </div>
         <div class="stat-card">
-            <div class="val" style="color:var(--gold)"><?php echo $extra_stats['itm']; ?></div>
+            <div class="val" style="color:var(--gold);font-size:17px"><?php echo $extra_stats['itm']; ?><span style="color:var(--muted);font-size:12px;font-weight:500"> / <?php echo $extra_stats['parties']; ?></span></div>
             <div class="lbl">ITM</div>
         </div>
         <div class="stat-card">
-            <div class="val" style="color:var(--orange)"><?php echo $extra_stats['recaves']; ?></div>
+            <div class="val" style="color:var(--orange);font-size:17px"><?php echo $extra_stats['recaves']; ?><span style="color:var(--muted);font-size:12px;font-weight:500"> / <?php echo $extra_stats['parties']; ?></span></div>
             <div class="lbl">Recaves</div>
         </div>
         <div class="stat-card" title="<?php echo h($chal_title); ?>">
