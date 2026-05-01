@@ -134,6 +134,7 @@ if ($member_id && !empty($con)) {
         WHERE p.`id-membre` = '".intval($member_id)."'
           AND p.classement != 0
           AND p.classement != 50
+          AND p.sergio_score > 0
     ");
     if ($eq && ($er = mysqli_fetch_assoc($eq))) {
         $extra_stats = [
