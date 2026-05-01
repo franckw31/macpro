@@ -325,16 +325,32 @@ function loadNotes() {
         // debug display removed
 
         trak.notes = d.success ? (d.notes||[]) : [];
-        // Filtrage strict côté client au moment de la réception : si on est en vue joueur
-        if (!trak.allMode && !trak.canSeeRecues && trak.pseudo) {
+        
+        // --- FILTRAGE STRICT CÔTÉ CLIENT ---
+        if (!trak.allMode && trak.pseudo) {
             var mSelClient = membres.find(m=>m.pseudo.toLowerCase()===trak.pseudo.toLowerCase());
             var idSelClient = mSelClient ? mSelClient.id : null;
+            
             if (idSelClient) {
-                trak.notes = trak.notes.filter(n => (n.id_auteur===trak.myId || n.id_auteur==String(trak.myId)) && (n.id_cible===idSelClient || n.id_cible==String(idSelClient)) && n.cible_pseudo && n.cible_pseudo.toLowerCase()===trak.pseudo.toLowerCase());
+                trak.notes = trak.notes.filter(n => {
+                    var id_a = parseInt(n.id_auteur);
+                    var id_c = parseInt(n.id_cible);
+                    var my_id_int = parseInt(trak.myId);
+                    
+                    // Si Admin : voit tout ce qui concerne le joueur (émis OU reçu par lui)
+                    if (trak.canSeeRecues) {
+                        return (id_a === idSelClient || id_c === idSelClient);
+                    } 
+                    // Si Joueur Normal : ne voit que ses PROPRES notes vers ce joueur
+                    else {
+                        return (id_a === my_id_int && id_c === idSelClient);
+                    }
+                });
             } else {
                 trak.notes = [];
             }
         }
+
         if (trak.allMode) {
             document.getElementById('player-hdr').classList.remove('visible');
             document.getElementById('content-area').classList.add('visible');
