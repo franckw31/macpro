@@ -308,6 +308,8 @@ if ($step === 3 && !empty($confirmed_ids) && $member_id) {
         </table>
 
         <div class="actions">
+            <button type="button" class="btn btn-muted" onclick="selectAll(true)">☑ Tout sélectionner</button>
+            <button type="button" class="btn btn-muted" onclick="selectAll(false)">☐ Tout désélectionner</button>
             <button type="button" class="btn btn-gold" onclick="submitConfirmed()">💾 Sauvegarder les cochés</button>
             <a href="updatesergioscore.php" class="btn btn-muted">← Recommencer</a>
         </div>
@@ -315,8 +317,12 @@ if ($step === 3 && !empty($confirmed_ids) && $member_id) {
 
     <script>
     document.getElementById('chk-all').addEventListener('change', function(){
-        document.querySelectorAll('.row-chk').forEach(c => c.checked = this.checked);
+        selectAll(this.checked);
     });
+    function selectAll(val) {
+        document.querySelectorAll('.row-chk').forEach(c => c.checked = val);
+        document.getElementById('chk-all').checked = val;
+    }
     function submitConfirmed(){
         const ids = Array.from(document.querySelectorAll('.row-chk:checked')).map(c => c.value);
         if (!ids.length){ alert('Aucune ligne cochée.'); return; }
