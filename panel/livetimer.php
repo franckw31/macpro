@@ -1113,7 +1113,8 @@ if ($_cur) {
         cdOpen = !cdOpen;
         const overlay = document.getElementById('countdown-overlay');
         overlay.style.display = cdOpen ? 'flex' : 'none';
-        if (!cdOpen) { cdStop(); cdReset(); }
+        if (cdOpen) { cdReset(); cdStart(); }
+        else { cdStop(); cdReset(); }
     }
 
     function cdUpdateDisplay() {
