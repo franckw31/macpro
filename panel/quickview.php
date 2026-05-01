@@ -715,6 +715,10 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     function goScore(e) {
       if (e) e.preventDefault();
       var pseudo = document.getElementById('score-pseudo').value.trim();
+      // Si un seul choix en autocomplétion, utiliser ce choix
+      var list = document.getElementById('score-ac-list');
+      var items = list.querySelectorAll('div');
+      if (items.length === 1) { pseudo = items[0].textContent.trim(); }
       if (!pseudo) { document.getElementById('score-pseudo').focus(); return; }
       window.location.href = '/panel/sergio.php?pseudo=' + encodeURIComponent(pseudo);
     }
