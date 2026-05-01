@@ -617,7 +617,9 @@ if (isset($_GET['action'])) {
                 <span class="icon-svg"><svg viewBox="0 0 24 24"><path d="M14 5l-5 4H5v6h4l5 4V5z"/><path d="M18 9.5a4 4 0 0 1 0 5"/><path d="M20.5 7a7.5 7.5 0 0 1 0 10"/></svg></span>
             </button>
             <button class="icon-btn" type="button" title="Heure"><span id="clock">--:--</span></button>
-            <a href="voir-blindes.php?uid=<?php echo $id; ?>" class="icon-btn close" title="Fermer">✕</a>
+            <a href="compte-rebours-30s.php?uid=<?php echo $id; ?>" class="icon-btn close" title="Compte à rebours 30s">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d1d1d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l3 3"/><path d="M9 2h6"/></svg>
+            </a>
         </div>
     </div>
 
