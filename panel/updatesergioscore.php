@@ -91,7 +91,7 @@ if ($step === 2 && $pseudo_q !== '') {
             $denom = $nb + $total_rec - $my_rec;
             $score_calc = null;
             if ($denom > 0 && $has_classement) {
-                $score_calc = round((1 - ($rank / $denom)) * 20, 2);
+                $score_calc = round((1 - (($rank - 1) / $denom)) * 20, 2);
             }
 
             $already = $row['sergio_score'];
@@ -149,7 +149,7 @@ if ($step === 3 && !empty($confirmed_ids) && $member_id) {
         $my_rec    = intval($rd['recave'] ?? 0);
         $denom = $nb + $total_rec - $my_rec;
         if ($denom <= 0 || $rank <= 0) continue;
-        $score = round((1 - ($rank / $denom)) * 20, 2);
+        $score = round((1 - (($rank - 1) / $denom)) * 20, 2);
         @mysqli_query($con, "UPDATE `participation` SET `sergio_score` = '".floatval($score)."' WHERE `id-participation` = '".intval($pid)."'");
         $saved_count++;
     }
