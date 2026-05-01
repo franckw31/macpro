@@ -158,6 +158,50 @@ if ($step === 3 && !empty($confirmed_ids) && $member_id) {
     $mq2 = @mysqli_query($con, "SELECT pseudo FROM membres WHERE `id-membre` = '".intval($member_id)."' LIMIT 1");
     if ($mq2) { $member_row = mysqli_fetch_assoc($mq2); }
 }
+
+// ── Étape 5 : backfill TOUS les membres ────────────────────────────────────────
+$bulk_result = ['updated' => 0, 'skipped' => 0, 'members' => 0];
+if ($step === 5) {
+    set_time_limit(120);
+    $allq = @mysqli_query($con, "
+        SELECT
+            p.`id-participation`    AS id_part,
+            p.`id-membre`           AS id_membre,
+            p.classement,
+            COALESCE(p.recave,0)    AS recave,
+            p.sergio_score,
+            (SELECT COUNT(*) FROM participation p2
+             WHERE p2.`id-activite` = p.`id-activite`
+               AND COALESCE(p2.`option`,'None') NOT IN ('Desinscrit','None')) AS nb_joueurs,
+            (SELECT COALESCE(SUM(COALESCE(p3.recave,0)),0) FROM participation p3
+             WHERE p3.`id-activite` = p.`id-activite`
+               AND COALESCE(p3.`option`,'None') NOT IN ('Desinscrit','None')) AS total_recaves
+        FROM participation p
+        JOIN activite a ON a.`id-activite` = p.`id-activite`
+        WHERE COALESCE(p.`option`,'None') NOT IN ('Desinscrit','None')
+          AND p.classement > 0 AND p.classement != 50
+          AND a.date_depart <= NOW()
+        HAVING total_recaves > 0
+        LIMIT 10000
+    ");
+    $seen_members = [];
+    if ($allq) {
+        while ($rd = mysqli_fetch_assoc($allq)) {
+            $rank      = intval($rd['classement']);
+            $nb        = intval($rd['nb_joueurs']);
+            $total_rec = intval($rd['total_recaves']);
+            $my_rec    = intval($rd['recave']);
+            $denom     = $nb + $total_rec - $my_rec;
+            if ($denom <= 0 || $rank <= 0) { $bulk_result['skipped']++; continue; }
+            $score = round((1 - (($rank - 1) / $denom)) * 20, 2);
+            if ($rd['sergio_score'] !== null && floatval($rd['sergio_score']) == $score) { $bulk_result['skipped']++; continue; }
+            @mysqli_query($con, "UPDATE `participation` SET `sergio_score` = '".floatval($score)."' WHERE `id-participation` = '".intval($rd['id_part'])."'");
+            $bulk_result['updated']++;
+            $seen_members[$rd['id_membre']] = true;
+        }
+    }
+    $bulk_result['members'] = count($seen_members);
+}
 ?>
 <!doctype html>
 <html lang="fr">
@@ -224,8 +268,12 @@ if ($step === 3 && !empty($confirmed_ids) && $member_id) {
         <div class="actions">
             <button type="submit" class="btn btn-primary">🔍 Rechercher</button>
         </div>
+    </form>    <form method="post" style="margin-top:14px" onsubmit="return confirm('Recalculer les SergioScores de TOUS les membres ? Cette opération peut prendre quelques secondes.')">
+        <input type="hidden" name="step" value="5">
+        <div class="actions">
+            <button type="submit" class="btn btn-danger">⚡ Tous les membres (backfill global)</button>
+        </div>
     </form>
-
     <!-- ═══════════════════════════════════════════════════ ÉTAPE 2 : Confirmation -->
     <?php elseif ($step === 2 && $member_id && !empty($candidates)): ?>
     <?php
@@ -346,6 +394,16 @@ if ($step === 3 && !empty($confirmed_ids) && $member_id) {
     <div class="actions">
         <a href="/panel/sergio.php?mid=<?php echo intval($member_id); ?>" class="btn btn-gold">⭐ Voir l'historique</a>
         <a href="updatesergioscore.php" class="btn btn-muted">← Traiter un autre joueur</a>
+    </div>
+
+    <?php elseif ($step === 5): ?>
+    <div class="msg" style="border-color:var(--green);color:var(--green);font-size:15px;font-weight:700">
+        ⚡ Backfill global terminé : <strong><?php echo $bulk_result['updated']; ?></strong> score(s) mis à jour
+        sur <strong><?php echo $bulk_result['members']; ?></strong> membre(s)
+        (<strong><?php echo $bulk_result['skipped']; ?></strong> ignorés car déjà à jour ou données insuffisantes).
+    </div>
+    <div class="actions">
+        <a href="updatesergioscore.php" class="btn btn-muted">← Retour</a>
     </div>
 
     <?php elseif ($step === 2 && $member_id && empty($candidates)): ?>
