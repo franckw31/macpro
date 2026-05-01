@@ -53,7 +53,7 @@ if ($member_id && !empty($con)) {
             COALESCE(a.`titre-activite`, 'Partie') AS titre,
             p.`id-participation`    AS id_participation,
             p.sergio_score,
-            COALESCE(p.classement, p.place, p.rang, 0) AS classement,
+            COALESCE(p.classement, 0) AS classement,
             (SELECT COUNT(*) FROM participation p2 WHERE p2.`id-activite` = a.`id-activite`) AS nb_joueurs
         FROM participation p
         JOIN activite a ON a.`id-activite` = p.`id-activite`
