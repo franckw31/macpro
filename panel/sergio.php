@@ -116,6 +116,58 @@ if ($member_id && !empty($con)) {
         LIMIT 24
     ");
     if ($mqr) { while ($mr2 = mysqli_fetch_assoc($mqr)) $monthly[] = $mr2; }
+
+    // Stats extra : TF, ITM, recaves totales
+    $extra_stats = ['tf' => 0, 'itm' => 0, 'recaves' => 0];
+    $eq = @mysqli_query($con, "
+        SELECT
+            COALESCE(SUM(COALESCE(p.tf,0)),0)                         AS total_tf,
+            SUM(CASE WHEN COALESCE(p.gain,0) > 0 THEN 1 ELSE 0 END)  AS total_itm,
+            COALESCE(SUM(COALESCE(p.recave,0)),0)                     AS total_recaves
+        FROM participation p
+        JOIN activite a ON a.`id-activite` = p.`id-activite`
+        WHERE p.`id-membre` = '".intval($member_id)."'
+          AND p.`option` NOT IN ('None','Desinscrit')
+    ");
+    if ($eq && ($er = mysqli_fetch_assoc($eq))) {
+        $extra_stats = [
+            'tf'      => intval($er['total_tf']),
+            'itm'     => intval($er['total_itm']),
+            'recaves' => intval($er['total_recaves']),
+        ];
+    }
+
+    // Classement challenge en cours
+    $chal_rank  = null;
+    $chal_total = null;
+    $chal_title = '';
+    $today_str  = date('Y-m-d');
+    $chq = @mysqli_query($con, "SELECT id_challenge, titre_challenge FROM challenge WHERE '$today_str' BETWEEN chal_deb AND chal_fin ORDER BY chal_deb DESC LIMIT 1");
+    if ($chq && ($chr = mysqli_fetch_assoc($chq))) {
+        $chal_id    = intval($chr['id_challenge']);
+        $chal_title = $chr['titre_challenge'];
+        // Tous les joueurs classés
+        $rkq = @mysqli_query($con, "
+            SELECT m.`id-membre` AS mid, COALESCE(SUM(p.points),0) AS pts
+            FROM membres m
+            LEFT JOIN participation p ON p.`id-membre` = m.`id-membre`
+            LEFT JOIN activite a      ON p.`id-activite` = a.`id-activite` AND a.`id_challenge` = $chal_id
+            LEFT JOIN blackliste b    ON m.`id-membre` = b.id_membre
+            WHERE b.id_membre IS NULL
+              AND (p.`option` IS NULL OR p.`option` NOT IN ('None','Desinscrit'))
+            GROUP BY m.`id-membre`
+            HAVING pts > 0
+            ORDER BY pts DESC
+        ");
+        if ($rkq) {
+            $rk = 1;
+            while ($rkr = mysqli_fetch_assoc($rkq)) {
+                if (intval($rkr['mid']) === intval($member_id)) { $chal_rank = $rk; }
+                $rk++;
+            }
+            $chal_total = $rk - 1;
+        }
+    }
 }
 
 // Couleur d'un score
@@ -240,6 +292,31 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
         <div class="stat-card">
             <div class="val" style="color:#ff6b6b"><?php echo $stats['worst'] ?? '—'; ?></div>
             <div class="lbl">La Pire</div>
+        </div>
+    </div>
+
+    <!-- Stats extra row 2 -->
+    <div class="stat-grid" style="margin-top:6px">
+        <div class="stat-card">
+            <div class="val" style="color:var(--green)"><?php echo $extra_stats['tf']; ?></div>
+            <div class="lbl">TF</div>
+        </div>
+        <div class="stat-card">
+            <div class="val" style="color:var(--gold)"><?php echo $extra_stats['itm']; ?></div>
+            <div class="lbl">ITM</div>
+        </div>
+        <div class="stat-card">
+            <div class="val" style="color:var(--orange)"><?php echo $extra_stats['recaves']; ?></div>
+            <div class="lbl">Recaves</div>
+        </div>
+        <div class="stat-card" title="<?php echo h($chal_title); ?>">
+            <?php if ($chal_rank): ?>
+            <div class="val" style="color:var(--purple)">#<?php echo $chal_rank; ?></div>
+            <div class="lbl" style="font-size:9px">Challenge</div>
+            <?php else: ?>
+            <div class="val" style="color:var(--muted)">—</div>
+            <div class="lbl">Challenge</div>
+            <?php endif; ?>
         </div>
     </div>
 
