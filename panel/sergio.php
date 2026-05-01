@@ -50,7 +50,7 @@ if ($member_id && !empty($con)) {
         SELECT
             a.`id-activite`         AS id_activite,
             a.date_depart,
-            COALESCE(a.`titre-activite`, a.titre_activite, 'Partie') AS titre,
+            COALESCE(a.`titre-activite`, 'Partie') AS titre,
             p.`id-participation`    AS id_participation,
             p.sergio_score,
             COALESCE(p.classement, p.place, p.rang, 0) AS classement,
