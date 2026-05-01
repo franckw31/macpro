@@ -204,7 +204,17 @@ try {
 
 $uid_q = !empty($serverActivity['id']) ? '?uid=' . intval($serverActivity['id']) : '';
 $is_past = !empty($serverActivity['date']) && strtotime($serverActivity['date']) < time();
-$is_today = !empty($serverActivity['date']) && date('Y-m-d', strtotime($serverActivity['date'])) === date('Y-m-d');
+// Determine "live" status using date+time: consider a game "en cours" when
+// now is after the start time and within a reasonable window (12 hours).
+$is_today = false;
+if (!empty($serverActivity['date'])) {
+  $start_ts = strtotime($serverActivity['date']);
+  if ($start_ts !== false) {
+    $now = time();
+    // Live if started and not older than 12 hours (43200 seconds)
+    $is_today = ($now >= $start_ts) && (($now - $start_ts) <= 43200);
+  }
+}
 $participants_href = $is_past ? '/panel/resultats.php' . $uid_q : '/panel/participants.php' . $uid_q;
 ?>
 <!doctype html>
