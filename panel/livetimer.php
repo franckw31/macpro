@@ -634,10 +634,8 @@ if (isset($_GET['action'])) {
                 <div id="timer-display">--:--</div>
             </div>
             <!-- COUNTDOWN OVERLAY -->
-            <div id="countdown-overlay" style="display:none;position:absolute;inset:0;z-index:10;border-radius:50%;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px">
-                <div style="color:rgba(255,255,255,0.5);font-size:clamp(11px,1.6vw,16px);letter-spacing:0.14em;text-transform:uppercase">⏱ Compte à rebours</div>
+            <div id="countdown-overlay" style="display:none;position:absolute;inset:0;z-index:10;border-radius:50%;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;">
                 <div id="cd-display" style="font-size:clamp(68px,13vw,140px);font-weight:500;color:#ffd119;font-variant-numeric:tabular-nums;line-height:1">30</div>
-                <button onclick="toggleCountdown()" style="margin-top:4px;background:none;border:0;color:rgba(255,255,255,0.4);font-size:12px;cursor:pointer">✕ Fermer</button>
             </div>
         </div>
 
