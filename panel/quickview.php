@@ -635,8 +635,14 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     </a>
 
     <!-- Score lookup -->
-    <div class="v2-list-item" style="flex-direction:column;align-items:stretch;gap:10px;padding:14px 16px">
-      <div style="display:flex;align-items:center;gap:10px">
+    <?php
+      $score_pseudos = [];
+      $spq = @mysqli_query($con, "SELECT pseudo FROM membres WHERE pseudo IS NOT NULL AND pseudo != '' ORDER BY pseudo ASC");
+      while ($spq && $spr = mysqli_fetch_assoc($spq)) { $score_pseudos[] = $spr['pseudo']; }
+    ?>
+    <div id="score-block" class="v2-list-item" onclick="openScoreSearch(event)" style="cursor:pointer;padding:14px 16px;transition:background .15s">
+      <!-- Vue compacte (par défaut) -->
+      <div id="score-collapsed" style="display:flex;align-items:center;gap:10px;width:100%">
         <div class="v2-list-icon" style="background:rgba(255,180,0,0.12);flex-shrink:0">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffb400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </div>
@@ -644,14 +650,76 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
           <div class="v2-list-name">Score</div>
           <div class="v2-list-sub">Historique SergioScore d'un joueur</div>
         </div>
+        <div class="v2-list-chev">›</div>
       </div>
-      <form id="score-form" onsubmit="goScore(event)" style="display:flex;gap:8px">
-        <input id="score-pseudo" type="text" placeholder="Pseudo du joueur…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
-          style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:9px 12px;color:#fff;font-size:14px;outline:none" />
-        <button type="submit"
-          style="background:#ffb400;color:#000;font-weight:700;font-size:13px;padding:9px 14px;border-radius:10px;white-space:nowrap">Voir ›</button>
-      </form>
+      <!-- Vue formulaire (cachée par défaut) -->
+      <div id="score-expanded" style="display:none;width:100%;flex-direction:column;gap:8px">
+        <form id="score-form" onsubmit="goScore(event)" style="display:flex;gap:8px;position:relative">
+          <input id="score-pseudo" type="text" placeholder="Pseudo du joueur…"
+            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+            oninput="scoreAC(this.value)" onkeydown="scoreACKey(event)"
+            style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,180,0,0.5);border-radius:10px;padding:9px 12px;color:#fff;font-size:15px;outline:none" />
+          <button type="submit"
+            style="background:#ffb400;color:#000;font-weight:700;font-size:13px;padding:9px 14px;border-radius:10px;white-space:nowrap;flex-shrink:0">Voir ›</button>
+        </form>
+        <div id="score-ac-list" style="display:none;background:#1c2333;border:1px solid rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;max-height:180px;overflow-y:auto"></div>
+      </div>
     </div>
+    <script>
+    var SCORE_PSEUDOS = <?php echo json_encode($score_pseudos, JSON_UNESCAPED_UNICODE); ?>;
+    var scoreACIdx = -1;
+
+    function openScoreSearch(e) {
+      var block = document.getElementById('score-block');
+      if (document.getElementById('score-expanded').style.display !== 'none') return; // déjà ouvert
+      document.getElementById('score-collapsed').style.display = 'none';
+      var exp = document.getElementById('score-expanded');
+      exp.style.display = 'flex';
+      block.style.cursor = 'default';
+      setTimeout(function(){ document.getElementById('score-pseudo').focus(); }, 50);
+    }
+
+    function scoreAC(val) {
+      var list = document.getElementById('score-ac-list');
+      scoreACIdx = -1;
+      if (!val.trim()) { list.style.display='none'; list.innerHTML=''; return; }
+      var q = val.toLowerCase();
+      var matches = SCORE_PSEUDOS.filter(function(p){ return p.toLowerCase().indexOf(q) !== -1; }).slice(0,10);
+      if (!matches.length) { list.style.display='none'; list.innerHTML=''; return; }
+      list.innerHTML = matches.map(function(p,i){
+        return '<div data-idx="'+i+'" onmousedown="scoreACPick(\''+p.replace(/'/g,"\\'")+'\')" style="padding:10px 14px;font-size:14px;color:#e0e8f0;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer">'+p+'</div>';
+      }).join('');
+      list.style.display = 'block';
+    }
+
+    function scoreACPick(pseudo) {
+      document.getElementById('score-pseudo').value = pseudo;
+      document.getElementById('score-ac-list').style.display = 'none';
+      goScore(null);
+    }
+
+    function scoreACKey(e) {
+      var list = document.getElementById('score-ac-list');
+      var items = list.querySelectorAll('div');
+      if (!items.length) return;
+      if (e.key === 'ArrowDown') { e.preventDefault(); scoreACIdx = Math.min(scoreACIdx+1, items.length-1); scoreACHighlight(items); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); scoreACIdx = Math.max(scoreACIdx-1, 0); scoreACHighlight(items); }
+      else if (e.key === 'Enter' && scoreACIdx >= 0) { e.preventDefault(); scoreACPick(items[scoreACIdx].textContent); }
+      else if (e.key === 'Escape') { list.style.display='none'; }
+    }
+
+    function scoreACHighlight(items) {
+      items.forEach(function(el,i){ el.style.background = i===scoreACIdx ? 'rgba(255,180,0,0.15)' : ''; });
+      if (scoreACIdx >= 0) items[scoreACIdx].scrollIntoView({block:'nearest'});
+    }
+
+    function goScore(e) {
+      if (e) e.preventDefault();
+      var pseudo = document.getElementById('score-pseudo').value.trim();
+      if (!pseudo) { document.getElementById('score-pseudo').focus(); return; }
+      window.location.href = '/panel/sergio.php?pseudo=' + encodeURIComponent(pseudo);
+    }
+    </script>
 
   </div>
 
