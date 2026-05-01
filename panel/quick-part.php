@@ -1559,7 +1559,7 @@ JOIN activite a ON p.`id-activite` = a.`id-activite`";
 
             // Ajout de la variable manquante
             const isAllActivitiesView = <?php echo isset($_SESSION['selected_activity']) ? 'false' : 'true'; ?>;
-            const occupiedSeats = <?php echo isset($occupied_seats_json) ? $occupiedSeats_json : '[]'; ?>;
+            const occupiedSeats = <?php echo isset($occupied_seats_json) ? $occupied_seats_json : '[]'; ?>;
 
             // Initialize DataTables with row filtering
             if ($('.data-table').length > 0) {
