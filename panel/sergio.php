@@ -307,6 +307,7 @@ $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin'
     <?php if (empty($rows)): ?>
         <div class="no-data">Aucune donnée SergioScore enregistrée.<br><span style="font-size:12px">Les scores sont sauvegardés à chaque consultation de la page résultats.</span></div>
     <?php else: ?>
+    <div class="table-wrap">
     <table class="hist-table">
         <thead>
             <tr>
