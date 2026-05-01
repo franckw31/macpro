@@ -338,8 +338,8 @@ function loadNotes() {
         if (trak.allMode) {
             document.getElementById('player-hdr').classList.remove('visible');
             document.getElementById('content-area').classList.add('visible');
-            document.getElementById('player-name').textContent = 'Mes notes';
-            document.getElementById('player-sub').textContent = trak.notes.length + ' note' + (trak.notes.length>1?'s':'') + ' (émises ou reçues)';
+            document.getElementById('player-name').textContent = 'Toutes les notes';
+            document.getElementById('player-sub').textContent = trak.notes.length + ' note' + (trak.notes.length>1?'s':'') + ' chargées';
             document.getElementById('reset-filter-btn').style.display = 'none';
         } else {
             var m = membres.find(m=>m.pseudo===trak.pseudo);
