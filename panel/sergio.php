@@ -127,11 +127,13 @@ if ($member_id && !empty($con)) {
     $eq = @mysqli_query($con, "
         SELECT
             COUNT(*)                                                                        AS total_parties,
-            SUM(CASE WHEN p.classement >= 0 AND p.classement < 10 AND p.classement != 50 THEN 1 ELSE 0 END) AS total_tf,
+            SUM(CASE WHEN p.classement < 10 THEN 1 ELSE 0 END)                             AS total_tf,
             SUM(CASE WHEN COALESCE(p.gain,0) > 0 THEN 1 ELSE 0 END)                       AS total_itm,
             COALESCE(SUM(COALESCE(p.recave,0)),0)                                          AS total_recaves
         FROM participation p
         WHERE p.`id-membre` = '".intval($member_id)."'
+          AND p.classement != 0
+          AND p.classement != 50
     ");
     if ($eq && ($er = mysqli_fetch_assoc($eq))) {
         $extra_stats = [
