@@ -1160,6 +1160,26 @@ if ($_cur) {
         document.getElementById('cd-start').style.opacity = '1';
     }
 
+    function cdPlayAlarm() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            // 3 bips descendants
+            [880, 660, 440].forEach((freq, i) => {
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.type = 'sine';
+                o.frequency.setValueAtTime(freq, ctx.currentTime);
+                g.gain.setValueAtTime(0, ctx.currentTime + i * 0.28);
+                g.gain.linearRampToValueAtTime(0.5, ctx.currentTime + i * 0.28 + 0.02);
+                g.gain.linearRampToValueAtTime(0, ctx.currentTime + i * 0.28 + 0.22);
+                o.connect(g); g.connect(ctx.destination);
+                o.start(ctx.currentTime + i * 0.28);
+                o.stop(ctx.currentTime + i * 0.28 + 0.25);
+            });
+            setTimeout(() => ctx.close(), 1200);
+        } catch(e) {}
+    }
+
     // ---- SON TOGGLE ----
     document.getElementById('soundToggle').addEventListener('click', function() {
         const muted = this.classList.toggle('muted');
