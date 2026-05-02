@@ -519,8 +519,10 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
         </div>
         <div>
           <div class="v2-stat-label">Démarre dans</div>
-          <div id="v2-countdown" class="v2-stat-val green">--:--:--</div>
-          <div id="v2-countdown-bonus" style="font-size:11px;font-weight:700;color:#4ade80;letter-spacing:0.5px;margin-top:2px;opacity:0.85"></div>
+          <div style="display:flex;align-items:baseline;gap:6px">
+            <div id="v2-countdown" class="v2-stat-val green">--:--:--</div>
+            <span id="v2-countdown-bonus" style="font-size:11px;font-weight:700;color:#60a5fa;letter-spacing:0.5px"></span>
+          </div>
         </div>
       </div>
       <div class="v2-stat">
