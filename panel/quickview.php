@@ -1240,11 +1240,13 @@ function escTrak(s) {
     var act = window.SERVER_ACTIVITY || {};
     var f = function(id,v){ var e=document.getElementById(id); if(e) e.textContent = v||'—'; };
     f('v2-modal-title', act.title || '—');
-    var dateStr = act.display_date || '—';
-    if (act.date_heure) dateStr += ' (' + act.date_heure.replace(':', 'h') + ')';
-    f('v2-modal-sub-text', dateStr);
+    var dateEl = document.getElementById('v2-modal-sub-text');
+    if (dateEl) {
+      var heureHtml = act.date_heure ? ' <span style="font-size:11px;font-weight:600;opacity:0.6">(' + act.date_heure.replace(':', 'h') + ')</span>' : '';
+      dateEl.innerHTML = (act.display_date || '—') + heureHtml;
+    }
     var timeEl = document.getElementById('v2-modal-time');
-    if (timeEl) timeEl.textContent = act.date_heure ? act.date_heure.replace(':', 'h') : '';
+    if (timeEl) timeEl.textContent = '';
     f('dd-organisateur', act.organizer || '—');
     f('dd-lieu', act.location || '—');
     // Mise à jour lien maps
