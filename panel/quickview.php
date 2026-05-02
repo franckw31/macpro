@@ -1224,7 +1224,7 @@ function escTrak(s) {
     var h = Math.floor(diff/3600).toString().padStart(2,'0');
     var m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
     var s = (diff%60).toString().padStart(2,'0');
-    el.textContent = h+':'+m+':'+s;
+    el.textContent = h+'h'+m+'m'+s+'s';
   }
   tick();
   setInterval(tick, 1000);
