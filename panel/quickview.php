@@ -83,7 +83,7 @@ try {
 				'id'                 => $id,
 				'date'               => $act['date_depart'] ?? null,
 				'display_date'       => $display_date,
-				'date_heure'         => isset($act['date_heure']) ? $act['date_heure'] : null,
+				'date_heure'         => !empty($time_str) ? $time_str : (isset($act['date_heure']) ? $act['date_heure'] : null),
 				'title'              => $act['titre-activite'] ?? ($act['titre_activite'] ?? null),
 				'buyin'              => isset($act['buyin']) ? (int)$act['buyin'] : null,
 				'rake'               => isset($act['rake'])  ? (int)$act['rake']  : null,
