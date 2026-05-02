@@ -83,7 +83,7 @@ try {
 				'id'                 => $id,
 				'date'               => $act['date_depart'] ?? null,
 				'display_date'       => $display_date,
-				'date_heure'         => !empty($time_str) ? $time_str : (isset($act['date_heure']) ? $act['date_heure'] : null),
+				'date_heure'         => null,
 				'title'              => $act['titre-activite'] ?? ($act['titre_activite'] ?? null),
 				'buyin'              => isset($act['buyin']) ? (int)$act['buyin'] : null,
 				'rake'               => isset($act['rake'])  ? (int)$act['rake']  : null,
@@ -161,6 +161,7 @@ if (!empty($serverActivity['date'])) {
 	$date_only_str = $_jours[$_d->format('l')] . ' ' . $_d->format('j') . ' ' . $_mois[$_d->format('F')];
 	$time_str = $_d->format('H:i');
 	$date_str = $date_only_str . ' ' . $time_str;
+	$serverActivity['date_heure'] = $time_str;
 }
 
 // Fetch ALL activities for the calendar picker (past + future, limit 500)
