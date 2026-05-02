@@ -1232,21 +1232,7 @@ function escTrak(s) {
     var bonusEl = document.getElementById('v2-countdown-bonus');
     if (bonusEl) {
       var diffH = diff / 3600;
-      var bonus = 0;
-      if      (diffH < 2)  bonus = 200;
-      else if (diffH < 4)  bonus = 400;
-      else if (diffH < 6)  bonus = 600;
-      else if (diffH < 8)  bonus = 800;
-      else if (diffH < 10) bonus = 1000;
-      else if (diffH < 12) bonus = 1200;
-      else if (diffH < 16) bonus = 1600;
-      else if (diffH < 20) bonus = 2000;
-      else if (diffH < 24) bonus = 2400;
-      else if (diffH < 30) bonus = 3000;
-      else if (diffH < 36) bonus = 3600;
-      else if (diffH < 42) bonus = 4200;
-      else if (diffH < 48) bonus = 4800;
-      else                 bonus = 5000;
+      var bonus = Math.min(5000, (Math.floor(diffH) + 1) * 100);
       bonusEl.textContent = '(+' + bonus + ')';
     }
   }
