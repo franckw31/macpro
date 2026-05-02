@@ -1239,7 +1239,7 @@ function escTrak(s) {
     var f = function(id,v){ var e=document.getElementById(id); if(e) e.textContent = v||'—'; };
     f('v2-modal-title', act.title || '—');
     var dateStr = act.display_date || '—';
-    if (act.date_heure) dateStr += ' (' + act.date_heure + ')';
+    if (act.date_heure) dateStr += ' (' + act.date_heure.replace(':', 'h') + ')';
     f('v2-modal-sub-text', dateStr);
     f('dd-organisateur', act.organizer || '—');
     f('dd-lieu', act.location || '—');
