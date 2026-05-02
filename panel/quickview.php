@@ -1220,12 +1220,34 @@ function escTrak(s) {
     if(diff <= 0){
       if(diff < -43200){ el.textContent = 'Terminée'; el.style.color = 'var(--muted)'; }
       else { el.textContent = 'En cours'; el.style.color = 'var(--orange)'; }
+      el.nextElementSibling && (el.nextElementSibling.textContent = '');
       return;
     }
     var h = Math.floor(diff/3600).toString().padStart(2,'0');
     var m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
     var s = (diff%60).toString().padStart(2,'0');
     el.textContent = h+'h'+m+'m'+s+'s';
+    // Bonus jetons selon temps restant
+    var bonusEl = document.getElementById('v2-countdown-bonus');
+    if (bonusEl) {
+      var diffH = diff / 3600;
+      var bonus = 0;
+      if      (diffH < 2)  bonus = 200;
+      else if (diffH < 4)  bonus = 400;
+      else if (diffH < 6)  bonus = 600;
+      else if (diffH < 8)  bonus = 800;
+      else if (diffH < 10) bonus = 1000;
+      else if (diffH < 12) bonus = 1200;
+      else if (diffH < 16) bonus = 1600;
+      else if (diffH < 20) bonus = 2000;
+      else if (diffH < 24) bonus = 2400;
+      else if (diffH < 30) bonus = 3000;
+      else if (diffH < 36) bonus = 3600;
+      else if (diffH < 42) bonus = 4200;
+      else if (diffH < 48) bonus = 4800;
+      else                 bonus = 5000;
+      bonusEl.textContent = '(+' + bonus + ')';
+    }
   }
   tick();
   setInterval(tick, 1000);
