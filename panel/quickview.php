@@ -786,6 +786,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     <button class="v2-modal-close" id="v2-details-close" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.06);padding:6px 14px;border-radius:20px;border:0;color:#ff9d3b;font-weight:700;font-size:14px;cursor:pointer;z-index:10">Fermer</button>
     <div class="v2-modal-handle"></div>
     <div class="v2-modal-sub" id="v2-modal-sub" style="display:flex;align-items:center;gap:8px">
+      <span id="v2-modal-time" style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.7)"></span>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:0.85">
         <rect x="3" y="4" width="18" height="17" rx="3" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.5)" stroke-width="1.4"/>
         <path d="M3 9h18" stroke="rgba(255,255,255,0.5)" stroke-width="1.4"/>
@@ -1239,8 +1240,9 @@ function escTrak(s) {
     var f = function(id,v){ var e=document.getElementById(id); if(e) e.textContent = v||'—'; };
     f('v2-modal-title', act.title || '—');
     var dateStr = act.display_date || '—';
-    if (act.date_heure) dateStr += ' (' + act.date_heure.replace(':', 'h') + ')';
     f('v2-modal-sub-text', dateStr);
+    var timeEl = document.getElementById('v2-modal-time');
+    if (timeEl) timeEl.textContent = act.date_heure ? act.date_heure.replace(':', 'h') : '';
     f('dd-organisateur', act.organizer || '—');
     f('dd-lieu', act.location || '—');
     // Mise à jour lien maps
