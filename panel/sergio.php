@@ -288,7 +288,7 @@ a{color:inherit;text-decoration:none}
 /* Hero card */
 .sg-hero{background:#0f1629;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px 16px;text-align:center;margin-bottom:8px}
 .sg-hero-lbl{font-size:10px;color:#94a3b8;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
-.sg-hero-score{font-size:54px;font-weight:900;letter-spacing:-2px;line-height:1.05}
+.sg-hero-score{font-size:38px;font-weight:900;letter-spacing:-1px;line-height:1.05}
 .sg-hero-delta{font-size:12px;font-weight:600;margin-top:6px}
 
 /* Stats row 1 */
