@@ -712,7 +712,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
             oninput="scoreAC(this.value)" onkeydown="scoreACKey(event)"
             class="v2-score-input" />
           <button type="submit" class="v2-score-submit">Voir ›</button>
-          <a href="/panel/quickview.php" class="v2-score-submit" style="text-decoration:none;margin-left:4px;color:#2893ff;display:flex;align-items:center;justify-content:center">Retour</a>
+          <a href="/panel/quickview.php" class="v2-score-submit" style="text-decoration:none;margin-left:4px;color:#2893ff;display:flex;align-items:center;justify-content:center">Annuler</a>
         </form>
         <div id="score-ac-list" class="v2-score-ac"></div>
       </div>
