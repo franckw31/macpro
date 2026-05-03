@@ -273,8 +273,10 @@ a{color:inherit;text-decoration:none}
 .v2-next-label svg{flex-shrink:0}
 .v2-date-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:16px}
 .v2-date-big{font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1.1}
-.v2-cal-btn{width:46px;height:46px;background:rgba(255,255,255,0.05);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid #e03030;box-shadow:0 0 8px rgba(224,48,48,0.4)}
+.v2-cal-btn{width:46px;height:46px;background:rgba(255,255,255,0.05);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;border:none;box-shadow:0 0 10px rgba(10,132,255,0.22);isolation:isolate;overflow:hidden}
+.v2-cal-btn::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1.5px;background:conic-gradient(from 0deg,rgba(10,132,255,0.16) 0deg,rgba(10,132,255,0.16) 220deg,rgba(94,210,255,0.98) 285deg,rgba(10,132,255,1) 325deg,rgba(10,132,255,0.16) 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:v2-cal-chenillard 2.2s linear infinite;pointer-events:none}
 .v2-cal-btn svg{width:22px;height:22px;stroke:var(--text2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@keyframes v2-cal-chenillard{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
 /* Stats row */
 .v2-stats{display:grid;grid-template-columns:66% 33%;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}
@@ -491,7 +493,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
     <!-- Date + Calendar button -->
     <div class="v2-date-row">
       <div class="v2-date-big"><?php echo htmlspecialchars($date_only_str); ?><?php if($time_str): ?> <span style="font-size:19px;font-weight:700;color:var(--green)"><?php echo htmlspecialchars($time_str); ?></span><?php endif; ?></div>
-      <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog" style="width:46px;height:46px;border-radius:12px;background:rgba(10,132,255,0.18);border:1px solid #e03030;box-shadow:0 0 5px rgba(224,48,48,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:-18px">
+      <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog" style="width:46px;height:46px;border-radius:12px;background:rgba(10,132,255,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:-18px">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="4" width="18" height="17" rx="3" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.5)" stroke-width="1.4"/>
           <path d="M3 9h18" stroke="rgba(255,255,255,0.5)" stroke-width="1.4"/>
