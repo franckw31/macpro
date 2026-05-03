@@ -631,7 +631,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
     <a class="v2-list-item tile-blue" href="/panel/livetimer.php<?php echo $uid_q; ?>">
       <div class="v2-list-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
       </div>
       <div class="v2-list-body">
         <div class="v2-list-name"><?php echo $is_today ? '🟢 Partie en Cours' : 'Live Timer'; ?></div>
@@ -642,7 +642,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
     <a class="v2-list-item tile-orange" href="<?php echo htmlspecialchars($participants_href); ?>">
       <div class="v2-list-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       </div>
       <div class="v2-list-body">
         <div class="v2-list-name"><?php echo $is_past ? 'Résultat de la partie' : 'Liste des participants'; ?></div>
@@ -653,7 +653,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
     <a class="v2-list-item tile-purple" href="/panel/profile.php<?php echo $uid_q; ?>">
       <div class="v2-list-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b47bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </div>
       <div class="v2-list-body">
         <div class="v2-list-name">Mon profil / Historique / Stats</div>
@@ -664,7 +664,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
     <a class="v2-list-item tile-cyan" href="/panel/trak.php" style="text-decoration:none;color:inherit">
       <div class="v2-list-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
       </div>
       <div class="v2-list-body">
         <div class="v2-list-name">Traker</div>
@@ -683,7 +683,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <!-- Vue compacte (par défaut) -->
       <div id="score-collapsed" class="v2-score-collapsed">
         <div class="v2-list-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffb400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </div>
         <div class="v2-list-body">
           <div class="v2-list-name">Scoring Joueur</div>
@@ -695,7 +695,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div id="score-expanded" class="v2-score-expanded">
         <div class="v2-list-title-row">
           <div class="v2-list-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffb400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           </div>
           <div class="v2-list-body">
             <div class="v2-list-name">Scoring Joueur</div>
@@ -715,7 +715,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
     <a class="v2-list-item tile-red" href="/newtimer/index.php" style="text-decoration:none;color:inherit">
       <div class="v2-list-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
       </div>
       <div class="v2-list-body">
         <div class="v2-list-name">Votre Timer</div>
@@ -726,7 +726,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
     <a class="v2-list-item tile-green" href="/panel/repartition.php" style="text-decoration:none;color:inherit">
       <div class="v2-list-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18"/><path d="M6 3v8"/><path d="M18 3v18"/><path d="M3 17h12"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18"/><path d="M6 3v8"/><path d="M18 3v18"/><path d="M3 17h12"/></svg>
       </div>
       <div class="v2-list-body">
         <div class="v2-list-name">Répartition</div>
@@ -741,6 +741,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
     function openScoreSearch(e) {
       var block = document.getElementById('score-block');
+      block.classList.add('tile-open');
       document.getElementById('score-collapsed').style.display = 'none';
       var exp = document.getElementById('score-expanded');
       exp.style.display = 'flex';
