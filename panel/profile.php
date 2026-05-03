@@ -784,7 +784,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 
             if (!btn || !modal) return;
 
-            const open = function(){ modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; pwdStatus.textContent=''; if (pwdCurrent) pwdCurrent.value=''; pwdNew.value=''; pwdConfirm.value=''; if (pwdCurrent) pwdCurrent.focus(); else pwdNew.focus(); };
+            const open = function(){ modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; pwdStatus.textContent=''; pwdNew.value=''; pwdConfirm.value=''; if (pwdCurrent) pwdCurrent.focus(); else pwdNew.focus(); };
             const close = function(){ modal.classList.remove('is-open'); modal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; };
 
             btn.addEventListener('click', function(e){ e.preventDefault(); open(); });
