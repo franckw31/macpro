@@ -273,8 +273,8 @@ a{color:inherit;text-decoration:none}
 .v2-next-label svg{flex-shrink:0}
 .v2-date-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:16px}
 .v2-date-big{font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1.1}
-.v2-cal-btn{width:46px;height:46px;background:rgba(255,255,255,0.05);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;border:none;box-shadow:0 0 10px rgba(10,132,255,0.22);isolation:isolate;overflow:hidden}
-.v2-cal-btn::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1.5px;background:conic-gradient(from 0deg,rgba(10,132,255,0.16) 0deg,rgba(10,132,255,0.16) 220deg,rgba(94,210,255,0.98) 285deg,rgba(10,132,255,1) 325deg,rgba(10,132,255,0.16) 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:v2-cal-chenillard 2.2s linear infinite;pointer-events:none}
+.v2-cal-btn{width:46px;height:46px;background:rgba(255,255,255,0.05);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;border:none;box-shadow:0 0 5px rgba(10,132,255,0.12);isolation:isolate;overflow:hidden}
+.v2-cal-btn::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;background:conic-gradient(from 0deg,rgba(10,132,255,0.08) 0deg,rgba(10,132,255,0.08) 250deg,rgba(126,219,255,0.55) 305deg,rgba(10,132,255,0.6) 330deg,rgba(10,132,255,0.08) 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:v2-cal-chenillard 3.4s linear infinite;pointer-events:none}
 .v2-cal-btn svg{width:22px;height:22px;stroke:var(--text2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 @keyframes v2-cal-chenillard{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
