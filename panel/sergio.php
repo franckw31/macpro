@@ -631,8 +631,6 @@ $tf_pct  = $extra_stats['parties'] > 0 ? round($extra_stats['tf']  / $extra_stat
   </div>
 </div>
 
-<div class="sg-foot">🔒 Données uniquement visibles par vous</div>
-
 <?php endif; // member_id ?>
 </div>
 
