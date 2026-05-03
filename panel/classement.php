@@ -55,7 +55,7 @@ if ($member_id && !empty($con)) {
             WHERE p.sergio_score IS NOT NULL
               AND p.classement != 0 AND p.classement != 50
             GROUP BY p.`id-membre`
-            HAVING COUNT(*) >= 3
+            HAVING COUNT(*) >= 6
         ) sub
     ");
     if ($gq && ($gr = mysqli_fetch_assoc($gq))) $grp = $gr;
@@ -67,7 +67,7 @@ if ($member_id && !empty($con)) {
         FROM participation p
         WHERE p.sergio_score IS NOT NULL AND p.classement != 0 AND p.classement != 50
         GROUP BY p.`id-membre`
-        HAVING COUNT(*) >= 3
+        HAVING COUNT(*) >= 6
         ORDER BY avg_score DESC
     ");
     if ($rq) {
@@ -285,6 +285,56 @@ body{background:#080d1a;color:#f1f5f9;font-family:Inter,-apple-system,BlinkMacSy
       <div style="font-size:18px;font-weight:900;color:<?php echo $dp?'#4ade80':'#f87171';?>"><?php echo ($dp?'↗ +':'↘ ').$dv;?></div>
     </div>
     <?php endif; ?>
+  </div>
+</div>
+<?php endif; ?>
+
+<!-- Tableau debug classement complet -->
+<?php
+$all = [];
+$aq = @mysqli_query($con, "
+    SELECT p.`id-membre`, COALESCE(m.pseudo,'?') AS pseudo,
+           ROUND(AVG(p.sergio_score),2) AS avg_score,
+           COUNT(*) AS nb_parties,
+           SUM(CASE WHEN COALESCE(p.gain,0)>0 THEN 1 ELSE 0 END) AS itm
+    FROM participation p
+    LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
+    WHERE p.sergio_score IS NOT NULL AND p.classement != 0 AND p.classement != 50
+    GROUP BY p.`id-membre`
+    HAVING COUNT(*) >= 6
+    ORDER BY avg_score DESC
+");
+if ($aq) { while ($ar = mysqli_fetch_assoc($aq)) $all[] = $ar; }
+?>
+<?php if (!empty($all)): ?>
+<div style="max-width:560px;margin:16px auto 0;padding:0 12px">
+  <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Classement complet (≥6 parties)</div>
+  <div style="background:#0f1629;border:1px solid rgba(255,255,255,.07);border-radius:14px;overflow:hidden">
+  <table style="width:100%;border-collapse:collapse;font-size:12px">
+    <thead>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.07)">
+        <th style="padding:8px 10px;color:#64748b;text-align:center;font-size:10px">#</th>
+        <th style="padding:8px 10px;color:#64748b;text-align:left;font-size:10px">Joueur</th>
+        <th style="padding:8px 10px;color:#64748b;text-align:center;font-size:10px">Parties</th>
+        <th style="padding:8px 10px;color:#64748b;text-align:center;font-size:10px">ITM</th>
+        <th style="padding:8px 10px;color:#64748b;text-align:right;font-size:10px">Moy.</th>
+      </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($all as $i => $ar):
+      $isMe = intval($ar['id-membre']) === $member_id;
+      $col = $ar['avg_score'] >= 18 ? '#fbbf24' : ($ar['avg_score'] >= 15 ? '#4ade80' : ($ar['avg_score'] >= 10 ? '#60a5fa' : '#8b98a6'));
+    ?>
+    <tr style="border-bottom:1px solid rgba(255,255,255,.04);<?php echo $isMe ? 'background:rgba(167,139,250,.08);' : ''; ?>">
+      <td style="padding:7px 10px;text-align:center;color:<?php echo $i===0?'#fbbf24':($i===1?'#94a3b8':($i===2?'#c47a3a':'#4b5563'));?>;font-weight:700"><?php echo $i+1; ?></td>
+      <td style="padding:7px 10px;font-weight:<?php echo $isMe?'800':'600';?>;color:<?php echo $isMe?'#a78bfa':'#f1f5f9';?>"><?php echo h($ar['pseudo']); ?><?php echo $isMe?' ←':''; ?></td>
+      <td style="padding:7px 10px;text-align:center;color:#64748b"><?php echo $ar['nb_parties']; ?></td>
+      <td style="padding:7px 10px;text-align:center;color:#fbbf24"><?php echo $ar['itm']; ?></td>
+      <td style="padding:7px 10px;text-align:right;font-weight:800;color:<?php echo $col;?>"><?php echo $ar['avg_score']; ?></td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+  </table>
   </div>
 </div>
 <?php endif; ?>
