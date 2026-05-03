@@ -572,11 +572,12 @@ $tf_pct  = $extra_stats['parties'] > 0 ? round($extra_stats['tf']  / $extra_stat
       $dt=strtotime($r['date_depart']); $dy=$dt?date('d',$dt):'—';
       $mfr2=$mfr[$dt?date('M',$dt):'']??strtoupper(date('M',$dt));
       $bp=min(100,round($sv/20*100));
+      $titre_clean=trim(preg_replace('/\s*\(.*?\)/','', $r['titre']??''));
     ?>
     <div class="sg-game">
       <div class="sg-gdate"><span class="sg-gday"><?php echo $dy;?></span><span class="sg-gmon"><?php echo $mfr2;?></span></div>
       <div class="sg-ginfo">
-        <div class="sg-gtitle"><?php echo h($r['titre']??'');?></div>
+        <div class="sg-gtitle"><?php echo h($titre_clean);?></div>
         <div class="sg-gsub"><?php echo intval($r['nb_joueurs']);?> joueurs · <?php echo intval($r['classement'])>0?intval($r['classement']).'e place':'—';?></div>
       </div>
       <div class="sg-gscore">
@@ -593,11 +594,12 @@ $tf_pct  = $extra_stats['parties'] > 0 ? round($extra_stats['tf']  / $extra_stat
       $dt=strtotime($r['date_depart']); $dy=$dt?date('d',$dt):'—';
       $mfr2=$mfr[$dt?date('M',$dt):'']??strtoupper(date('M',$dt));
       $bp=min(100,round($sv/20*100));
+      $titre_clean=trim(preg_replace('/\s*\(.*?\)/','', $r['titre']??''));
     ?>
     <div class="sg-game">
       <div class="sg-gdate"><span class="sg-gday"><?php echo $dy;?></span><span class="sg-gmon"><?php echo $mfr2;?></span></div>
       <div class="sg-ginfo">
-        <div class="sg-gtitle"><?php echo h($r['titre']??'');?></div>
+        <div class="sg-gtitle"><?php echo h($titre_clean);?></div>
         <div class="sg-gsub"><?php echo intval($r['nb_joueurs']);?> joueurs · <?php echo intval($r['classement'])>0?intval($r['classement']).'e place':'—';?></div>
       </div>
       <div class="sg-gscore">
