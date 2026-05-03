@@ -269,6 +269,7 @@ a{color:inherit;text-decoration:none}
 
 /* ─── CARD BASE ─── */
 .v2-card{background:var(--card);border-radius:var(--radius);padding:18px 18px 16px;margin:0 16px 14px}
+.v2-card-next{padding-bottom:8px}
 
 /* ─── NEXT GAME CARD ─── */
 .v2-next-label{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:1.2px;color:var(--green);text-transform:uppercase;margin-bottom:10px}
@@ -499,7 +500,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
   </header>
 
   <!-- ══════════ PROCHAINE PARTIE ══════════ -->
-  <div class="v2-card">
+  <div class="v2-card v2-card-next">
 
     <!-- Label -->
     <div class="v2-next-label">
