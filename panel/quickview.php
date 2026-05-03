@@ -829,6 +829,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-detail-row"><div class="v2-detail-label">🍽️ Participation Aux Frais</div><div class="v2-detail-value" id="dd-rake">—</div></div>
       <div class="v2-detail-row" id="dd-bounty-row"><div class="v2-detail-label">🎯 Bounty</div><div class="v2-detail-value" id="dd-bounty">—</div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">🔁 Re-entries</div><div class="v2-detail-value" id="dd-recave">—</div></div>
+      <div class="v2-detail-row"><div class="v2-detail-label">▦ Nb Tables</div><div class="v2-detail-value" id="dd-nb-tables">—</div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">🎲 Jetons départ Hors Bonus 1 & 2</div><div class="v2-detail-value" style="color:var(--orange)" id="dd-jetons">—</div></div>
     </div>
 
@@ -1144,7 +1145,7 @@ function escTrak(s) {
       // Selected
       if(hasActs && current.id && dayMap[d].some(function(a){ return a.id===current.id; })) cls += ' is-selected';
       var dataIds = hasActs ? 'data-day="'+d+'"' : '';
-      html += '<div class="'+cls+'" '+dataIds+'>'+d+'</div>';
+      html += '<div class="'+cls+'" '+dataIds+'">'+d+'</div>';
     }
     daysEl.innerHTML = html;
 
