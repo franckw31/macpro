@@ -27,11 +27,14 @@ $pseudo = '';
 $rows   = [];
 $years  = [];
 $stats  = ['count' => 0, 'avg' => null, 'best' => null, 'worst' => null, 'sum' => 0];
-$extra_stats = ['parties' => 0, 'tf' => 0, 'itm' => 0, 'recaves' => 0];
-$itm_rows   = [];
-$chal_rank  = null;
-$chal_total = null;
-$chal_title = '';
+$extra_stats = ['parties' => 0, 'tf' => 0, 'itm' => 0, 'recaves' => 0, 'best_rank' => null, 'worst_rank' => null, 'top1' => 0];
+$itm_rows       = [];
+$chal_rank      = null;
+$chal_total     = null;
+$chal_title     = '';
+$curr_month_avg = null;
+$prev_month_avg = null;
+$insights       = [];
 
 if ($member_id && !empty($con)) {
     // Pseudo
@@ -129,7 +132,10 @@ if ($member_id && !empty($con)) {
             COUNT(*)                                                                        AS total_parties,
             SUM(CASE WHEN p.classement < 10 THEN 1 ELSE 0 END)                             AS total_tf,
             SUM(CASE WHEN COALESCE(p.gain,0) > 0 THEN 1 ELSE 0 END)                       AS total_itm,
-            COALESCE(SUM(COALESCE(p.recave,0)),0)                                          AS total_recaves
+            COALESCE(SUM(COALESCE(p.recave,0)),0)                                          AS total_recaves,
+            MIN(CASE WHEN p.classement > 0 AND p.classement < 50 THEN p.classement END)   AS best_rank,
+            MAX(CASE WHEN p.classement > 0 AND p.classement < 50 THEN p.classement END)   AS worst_rank,
+            SUM(CASE WHEN p.classement = 1 THEN 1 ELSE 0 END)                             AS top1_count
         FROM participation p
         WHERE p.`id-membre` = '".intval($member_id)."'
           AND p.classement != 0
@@ -138,10 +144,13 @@ if ($member_id && !empty($con)) {
     ");
     if ($eq && ($er = mysqli_fetch_assoc($eq))) {
         $extra_stats = [
-            'parties' => intval($er['total_parties']),
-            'tf'      => intval($er['total_tf']),
-            'itm'     => intval($er['total_itm']),
-            'recaves' => intval($er['total_recaves']),
+            'parties'    => intval($er['total_parties']),
+            'tf'         => intval($er['total_tf']),
+            'itm'        => intval($er['total_itm']),
+            'recaves'    => intval($er['total_recaves']),
+            'best_rank'  => $er['best_rank']  !== null ? intval($er['best_rank'])  : null,
+            'worst_rank' => $er['worst_rank'] !== null ? intval($er['worst_rank']) : null,
+            'top1'       => intval($er['top1_count']),
         ];
     }
 
@@ -196,6 +205,38 @@ if ($member_id && !empty($con)) {
             $chal_total = $rk - 1;
         }
     }
+
+    // Moyenne mois courant et mois précédent
+    $cmq = @mysqli_query($con, "SELECT ROUND(AVG(p.sergio_score),2) AS avg FROM participation p JOIN activite a ON a.`id-activite`=p.`id-activite` WHERE p.`id-membre`='".intval($member_id)."' AND p.sergio_score IS NOT NULL AND DATE_FORMAT(a.date_depart,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m')");
+    if ($cmq && ($cmr = mysqli_fetch_assoc($cmq))) $curr_month_avg = $cmr['avg'] !== null ? round(floatval($cmr['avg']),2) : null;
+    $pmq = @mysqli_query($con, "SELECT ROUND(AVG(p.sergio_score),2) AS avg FROM participation p JOIN activite a ON a.`id-activite`=p.`id-activite` WHERE p.`id-membre`='".intval($member_id)."' AND p.sergio_score IS NOT NULL AND DATE_FORMAT(a.date_depart,'%Y-%m')=DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m')");
+    if ($pmq && ($pmr = mysqli_fetch_assoc($pmq))) $prev_month_avg = $pmr['avg'] !== null ? round(floatval($pmr['avg']),2) : null;
+
+    // Insights auto-générés
+    if ($curr_month_avg !== null && $prev_month_avg !== null && $prev_month_avg > 0) {
+        $delta_pct_ins = round(($curr_month_avg - $prev_month_avg) / $prev_month_avg * 100);
+        if ($delta_pct_ins >= 0) {
+            $insights[] = ['icon'=>'↗', 'color'=>'#4ade80', 'title'=>'En forme !', 'text'=>"Votre score moyen a augmenté de {$delta_pct_ins}% par rapport au mois dernier."];
+        } else {
+            $insights[] = ['icon'=>'↘', 'color'=>'#f87171', 'title'=>'En progression', 'text'=>"Votre score moyen a baissé de ".abs($delta_pct_ins)."% par rapport au mois dernier."];
+        }
+    }
+    if ($extra_stats['parties'] > 0) {
+        $itm_pct_ins = round($extra_stats['itm'] / $extra_stats['parties'] * 100);
+        if ($itm_pct_ins >= 40) {
+            $insights[] = ['icon'=>'🏆', 'color'=>'#fbbf24', 'title'=>'Régulier', 'text'=>"Vous avez fait l'ITM dans {$itm_pct_ins}% de vos parties."];
+        }
+    }
+    if ($chal_rank !== null) {
+        if ($chal_rank === 1) {
+            $insights[] = ['icon'=>'🎯', 'color'=>'#a78bfa', 'title'=>'Objectif', 'text'=>"Maintenez ce rythme pour rester en tête du classement."];
+        } else {
+            $insights[] = ['icon'=>'🎯', 'color'=>'#a78bfa', 'title'=>'Objectif', 'text'=>"Continuez à progresser pour atteindre la 1ère place du classement."];
+        }
+    }
+    if (empty($insights)) {
+        $insights[] = ['icon'=>'📊', 'color'=>'#60a5fa', 'title'=>'Statistiques', 'text'=>"Jouez plus de parties pour débloquer des insights personnalisés."];
+    }
 }
 
 // Couleur d'un score
@@ -211,6 +252,16 @@ if (!function_exists('scoreColor')) {
 
 $months_fr = [1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin',
               7=>'Juillet',8=>'Août',9=>'Septembre',10=>'Octobre',11=>'Novembre',12=>'Décembre'];
+
+if (!function_exists('scoreColorNew')) {
+    function scoreColorNew($s) {
+        if ($s === null) return '#8b98a6';
+        if ($s >= 18)   return '#fbbf24';
+        if ($s >= 15)   return '#4ade80';
+        if ($s >= 10)   return '#60a5fa';
+        return '#8b98a6';
+    }
+}
 ?>
 <!doctype html>
 <html lang="fr">
