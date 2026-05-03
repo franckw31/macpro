@@ -686,6 +686,18 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         <div id="score-ac-list" style="display:none;background:#1c2333;border:1px solid rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;max-height:180px;overflow-y:auto"></div>
       </div>
     </div>
+
+    <a class="v2-list-item" href="/newtimer/index.php" style="text-decoration:none;color:inherit">
+      <div class="v2-list-icon blue">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
+      </div>
+      <div class="v2-list-body">
+        <div class="v2-list-name">Votre Timer</div>
+        <div class="v2-list-sub">Ouvrir le nouveau timer</div>
+      </div>
+      <div class="v2-list-chev">›</div>
+    </a>
+
     <script>
     var SCORE_PSEUDOS = <?php echo json_encode($score_pseudos, JSON_UNESCAPED_UNICODE); ?>;
     var scoreACIdx = -1;
