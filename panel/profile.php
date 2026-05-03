@@ -568,16 +568,8 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             <div class="card-row"><div class="label">SergioScore</div><div class="value">⭐ <a id="link-sergio" href="/panel/sergio.php?mid=<?php echo intval($uid_int); ?>" style="margin-left:8px;color:#ffb400;font-weight:700">Voir</a></div></div>
         </div>
 
-        <?php
-            $pwd_display = '—';
-            if (!empty($user['password'])) {
-                $pwd_display = $user['password'];
-            } elseif (!empty($user['password_ext'])) {
-                $pwd_display = $user['password_ext'];
-            }
-        ?>
         <div class="card">
-            <div class="card-row"><div class="label">Mot de passe</div><div class="value"><?php echo htmlspecialchars($pwd_display); ?> <button id="changePasswordBtn" style="margin-left:10px;background:transparent;border:0;color:#08b0ff;font-weight:800;cursor:pointer">Changer</button></div></div>
+            <div class="card-row"><div class="label">Mot de passe</div><div class="value"><button id="changePasswordBtn" style="background:transparent;border:0;color:#08b0ff;font-weight:800;cursor:pointer">Changer</button></div></div>
         </div>
 
         <form id="changePasswordForm" method="post">
@@ -587,7 +579,6 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                     <h2 id="passwordModalTitle" class="avatar-modal-title">Changer le mot de passe</h2>
                     <p class="avatar-modal-subtitle">Entrez d’abord votre mot de passe actuel, puis le nouveau.</p>
                     <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
-                        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px"><span>Mot de passe actuel</span><div style="width:70%;max-width:320px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:inherit;font-weight:700;letter-spacing:1px"><?php echo htmlspecialchars($pwd_display, ENT_QUOTES); ?></div></div>
                         <label class="avatar-control" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px"><span>Nouveau mot de passe</span><input name="new_password" id="pwd_new" type="password" style="width:70%;max-width:320px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
                         <label class="avatar-control" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px"><span>Confirmer</span><input name="confirm_password" id="pwd_confirm" type="password" style="width:70%;max-width:320px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
                     </div>
