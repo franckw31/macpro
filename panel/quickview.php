@@ -698,6 +698,17 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-list-chev">›</div>
     </a>
 
+    <a class="v2-list-item" href="/panel/repartition.php" style="text-decoration:none;color:inherit">
+      <div class="v2-list-icon teal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18"/><path d="M6 3v8"/><path d="M18 3v18"/><path d="M3 17h12"/></svg>
+      </div>
+      <div class="v2-list-body">
+        <div class="v2-list-name">Répartition</div>
+        <div class="v2-list-sub">Voir la répartition des tables</div>
+      </div>
+      <div class="v2-list-chev">›</div>
+    </a>
+
     <script>
     var SCORE_PSEUDOS = <?php echo json_encode($score_pseudos, JSON_UNESCAPED_UNICODE); ?>;
     var scoreACIdx = -1;
