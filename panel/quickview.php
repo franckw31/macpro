@@ -291,7 +291,7 @@ a{color:inherit;text-decoration:none}
 .v2-stat-val small{font-size:13px;font-weight:600;color:var(--muted);margin-left:1px}
 
 /* Financial row */
-.v2-fin{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:18px}
+.v2-fin{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:18px}
 .v2-fin-item{background:var(--card2);padding:10px 10px 10px 12px;display:flex;align-items:center;gap:8px}
 .v2-fin-ico{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .v2-fin-ico.gold{background:rgba(255,159,10,0.12)}
@@ -566,6 +566,15 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
         <div>
           <div class="v2-fin-lbl">Re-entries</div>
           <div class="v2-fin-val" style="color:var(--cyan)"><?php echo isset($serverActivity['recave']) ? htmlspecialchars($serverActivity['recave']) : '—'; ?></div>
+        </div>
+      </div>
+      <div class="v2-fin-item">
+        <div class="v2-fin-ico blue" style="background:rgba(10,132,255,0.12)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="7" height="7" rx="1.5"/><rect x="3" y="13" width="7" height="7" rx="1.5"/><rect x="14" y="13" width="7" height="7" rx="1.5"/></svg>
+        </div>
+        <div>
+          <div class="v2-fin-lbl">Nb Tables</div>
+          <div class="v2-fin-val" style="color:var(--blue)"><?php echo isset($serverActivity['tables']) ? htmlspecialchars($serverActivity['tables']) : '—'; ?></div>
         </div>
       </div>
     </div>
