@@ -675,8 +675,6 @@ $tf_pct  = $extra_stats['parties'] > 0 ? round($extra_stats['tf']  / $extra_stat
 </div>
 </body>
 </html>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{background:var(--bg);color:#eef6fb;font-family:Inter,system-ui,-apple-system,Arial;font-size:14px;padding-bottom:40px}
     a{color:var(--orange);text-decoration:none}
     a:hover{text-decoration:underline}
 
