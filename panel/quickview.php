@@ -723,8 +723,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
       </div>
       <div class="v2-list-body">
-        <div class="v2-list-name">Votre Timer</div>
-        <div class="v2-list-sub">Ouvrir le nouveau timer</div>
+        <div class="v2-list-name">Timer Personnel</div>
+        <div class="v2-list-sub">Ouvrir votre propre Timer</div>
       </div>
       <div class="v2-list-chev">›</div>
     </a>
@@ -735,7 +735,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       </div>
       <div class="v2-list-body">
         <div class="v2-list-name">Répartition</div>
-        <div class="v2-list-sub">Voir la répartition des tables</div>
+        <div class="v2-list-sub">Aide Répartition Pricepool</div>
       </div>
       <div class="v2-list-chev">›</div>
     </a>
