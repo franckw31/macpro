@@ -148,8 +148,9 @@ function formatEur(v){ return v + ' €'; }
 function setDateEl(display, dateStr){
   const el = document.getElementById('activity-date');
   if(!el) return;
+  // Si l'élément est verrouillé (valeur PHP déjà affichée avec heure), ne pas écraser
+  if(el.getAttribute('data-locked') === '1') return;
   const val = formatDisplayDate(display, dateStr);
-  // Ne remplace que si la valeur contient une heure (ex: "20:00")
   if(val && /\d{2}:\d{2}/.test(val)) el.textContent = val;
 }
 

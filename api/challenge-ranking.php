@@ -34,13 +34,25 @@ try {
     }
     $stmtT = $pdo->prepare("SELECT membre_id FROM app_auth_tokens WHERE token = ? AND (expires_at IS NULL OR expires_at > NOW())");
     $stmtT->execute([$token]);
-    if (!$stmtT->fetch()) {
+    $tokenRow = $stmtT->fetch();
+    if (!$tokenRow) {
         http_response_code(401);
         echo json_encode(['success' => false, 'error' => 'Token invalide']);
         exit;
     }
+    $authUserId = (int)$tokenRow['membre_id'];
+    $authPseudo = $pdo->prepare("SELECT pseudo FROM membres WHERE `id-membre` = ? LIMIT 1");
+    $authPseudo->execute([$authUserId]);
+    $authPseudoRow = $authPseudo->fetch();
+    $authUsername = $authPseudoRow['pseudo'] ?? 'Inconnu';
 
-    // ── Déterminer l'id_challenge ────────────────────────────────
+    // ── Log de consultation ──────────────────────────────────────
+    $logChalId = isset($_GET['challenge_id']) ? (int)$_GET['challenge_id'] : 0;
+    $logDetails = $logChalId ? "Challenge #$logChalId" : 'Challenge auto';
+    $logIp = $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'UNKNOWN';
+    $pdo->prepare("INSERT INTO activity_logs (user_id, username, action, source, details, ip_address) VALUES (?, ?, 'vue_classement_challenge', 'iOS App', ?, ?)")
+        ->execute([$authUserId, $authUsername, $logDetails, $logIp]);
+
     // Priorité : challenge_id explicite → challenge du mois courant → activity_id
     $challengeId = 0;
     $challengeTitle = '';
