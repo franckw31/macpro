@@ -564,7 +564,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
         </div>
         <div>
-          <div class="v2-fin-lbl">Re-entries</div>
+          <div class="v2-fin-lbl">Re-Buy</div>
           <div class="v2-fin-val" style="color:var(--cyan)"><?php echo isset($serverActivity['recave']) ? htmlspecialchars($serverActivity['recave']) : '—'; ?></div>
         </div>
       </div>
