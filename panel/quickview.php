@@ -749,7 +749,6 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       var exp = document.getElementById('score-expanded');
       exp.style.display = 'flex';
       block.style.cursor = 'default';
-      document.getElementById('score-pseudo').focus();
     }
 
     function scoreAC(val) {
@@ -793,7 +792,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       var list = document.getElementById('score-ac-list');
       var items = list.querySelectorAll('div');
       if (items.length === 1) { pseudo = items[0].textContent.trim(); }
-      if (!pseudo) { document.getElementById('score-pseudo').focus(); return; }
+      if (!pseudo) { return; }
       window.location.href = '/panel/sergio.php?pseudo=' + encodeURIComponent(pseudo);
     }
     </script>
