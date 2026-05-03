@@ -412,7 +412,7 @@ a{color:inherit;text-decoration:none}
 .v2-toggle input:checked ~ .v2-toggle-thumb{transform:translateX(18px)}
 
 /* Countdown display */
-#v2-countdown{font-size:20px;font-weight:900;color:var(--green);letter-spacing:1px;line-height:1}
+#v2-countdown{font-size:16px;font-weight:900;color:var(--green);letter-spacing:1px;line-height:1}
 
 /* ─── CALENDAR PICKER MODAL ─── */
 .v2-cal-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;display:none;align-items:center;justify-content:center;padding:20px}
