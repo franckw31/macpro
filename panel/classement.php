@@ -55,7 +55,7 @@ if ($member_id && !empty($con)) {
             WHERE p.sergio_score IS NOT NULL
               AND p.classement != 0 AND p.classement != 50
             GROUP BY p.`id-membre`
-            HAVING COUNT(*) >= 6
+            HAVING COUNT(*) >= 7
         ) sub
     ");
     if ($gq && ($gr = mysqli_fetch_assoc($gq))) $grp = $gr;
@@ -67,7 +67,7 @@ if ($member_id && !empty($con)) {
         FROM participation p
         WHERE p.sergio_score IS NOT NULL AND p.classement != 0 AND p.classement != 50
         GROUP BY p.`id-membre`
-        HAVING COUNT(*) >= 6
+        HAVING COUNT(*) >= 7
         ORDER BY avg_score DESC
     ");
     if ($rq) {
@@ -301,7 +301,7 @@ $aq = @mysqli_query($con, "
     LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
     WHERE p.sergio_score IS NOT NULL AND p.classement != 0 AND p.classement != 50
     GROUP BY p.`id-membre`
-    HAVING COUNT(*) >= 6
+    HAVING COUNT(*) >= 7
     ORDER BY avg_score DESC
 ");
 if ($aq) { while ($ar = mysqli_fetch_assoc($aq)) $all[] = $ar; }
