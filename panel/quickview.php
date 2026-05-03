@@ -629,8 +629,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   <!-- ══════════ ACTIONS RAPIDES ══════════ -->
   <div class="v2-list">
 
-    <a class="v2-list-item" href="/panel/livetimer.php<?php echo $uid_q; ?>">
-      <div class="v2-list-icon blue">
+    <a class="v2-list-item tile-blue" href="/panel/livetimer.php<?php echo $uid_q; ?>">
+      <div class="v2-list-icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
       </div>
       <div class="v2-list-body">
@@ -640,8 +640,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-list-chev">›</div>
     </a>
 
-    <a class="v2-list-item" href="<?php echo htmlspecialchars($participants_href); ?>">
-      <div class="v2-list-icon blue">
+    <a class="v2-list-item tile-orange" href="<?php echo htmlspecialchars($participants_href); ?>">
+      <div class="v2-list-icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       </div>
       <div class="v2-list-body">
@@ -651,8 +651,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-list-chev">›</div>
     </a>
 
-    <a class="v2-list-item" href="/panel/profile.php<?php echo $uid_q; ?>">
-      <div class="v2-list-icon purple">
+    <a class="v2-list-item tile-purple" href="/panel/profile.php<?php echo $uid_q; ?>">
+      <div class="v2-list-icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b47bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </div>
       <div class="v2-list-body">
@@ -662,8 +662,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-list-chev">›</div>
     </a>
 
-    <a class="v2-list-item" href="/panel/trak.php" style="text-decoration:none;color:inherit">
-      <div class="v2-list-icon teal">
+    <a class="v2-list-item tile-cyan" href="/panel/trak.php" style="text-decoration:none;color:inherit">
+      <div class="v2-list-icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
       </div>
       <div class="v2-list-body">
@@ -679,10 +679,10 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       $spq = @mysqli_query($con, "SELECT pseudo FROM membres WHERE pseudo IS NOT NULL AND pseudo != '' ORDER BY pseudo ASC");
       while ($spq && $spr = mysqli_fetch_assoc($spq)) { $score_pseudos[] = $spr['pseudo']; }
     ?>
-    <div id="score-block" class="v2-list-item" onclick="openScoreSearch(event)" style="cursor:pointer;transition:background .15s">
+    <div id="score-block" class="v2-list-item tile-gold" onclick="openScoreSearch(event)" style="cursor:pointer;transition:background .15s">
       <!-- Vue compacte (par défaut) -->
-      <div id="score-collapsed" style="display:flex;align-items:center;gap:10px;width:100%">
-        <div class="v2-list-icon" style="background:rgba(255,180,0,0.12);flex-shrink:0">
+      <div id="score-collapsed" class="v2-score-collapsed">
+        <div class="v2-list-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffb400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </div>
         <div class="v2-list-body">
@@ -692,21 +692,29 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         <div class="v2-list-chev">›</div>
       </div>
       <!-- Vue formulaire (cachée par défaut) -->
-      <div id="score-expanded" style="display:none;width:100%;flex-direction:column;gap:8px">
-        <form id="score-form" onsubmit="goScore(event)" style="display:flex;gap:8px;position:relative">
+      <div id="score-expanded" class="v2-score-expanded">
+        <div class="v2-list-title-row">
+          <div class="v2-list-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffb400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="v2-list-body">
+            <div class="v2-list-name">Scoring Joueur</div>
+            <div class="v2-list-sub">Historique SergioScore d'un joueur</div>
+          </div>
+        </div>
+        <form id="score-form" onsubmit="goScore(event)" class="v2-score-form">
           <input id="score-pseudo" type="text" placeholder="Pseudo du joueur…"
             autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
             oninput="scoreAC(this.value)" onkeydown="scoreACKey(event)"
-            style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,180,0,0.5);border-radius:10px;padding:9px 12px;color:#fff;font-size:15px;outline:none" />
-          <button type="submit"
-            style="background:#ffb400;color:#000;font-weight:700;font-size:13px;padding:9px 14px;border-radius:10px;white-space:nowrap;flex-shrink:0">Voir ›</button>
+            class="v2-score-input" />
+          <button type="submit" class="v2-score-submit">Voir ›</button>
         </form>
-        <div id="score-ac-list" style="display:none;background:#1c2333;border:1px solid rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;max-height:180px;overflow-y:auto"></div>
+        <div id="score-ac-list" class="v2-score-ac"></div>
       </div>
     </div>
 
-    <a class="v2-list-item" href="/newtimer/index.php" style="text-decoration:none;color:inherit">
-      <div class="v2-list-icon blue">
+    <a class="v2-list-item tile-red" href="/newtimer/index.php" style="text-decoration:none;color:inherit">
+      <div class="v2-list-icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
       </div>
       <div class="v2-list-body">
@@ -716,8 +724,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-list-chev">›</div>
     </a>
 
-    <a class="v2-list-item" href="/panel/repartition.php" style="text-decoration:none;color:inherit">
-      <div class="v2-list-icon teal">
+    <a class="v2-list-item tile-green" href="/panel/repartition.php" style="text-decoration:none;color:inherit">
+      <div class="v2-list-icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18"/><path d="M6 3v8"/><path d="M18 3v18"/><path d="M3 17h12"/></svg>
       </div>
       <div class="v2-list-body">
