@@ -179,7 +179,7 @@ body{background:#080d1a;color:#f1f5f9;font-family:Inter,-apple-system,BlinkMacSy
 <?php endif; ?>
 
 <!-- Score moyen -->
-<div class="cmp-card">
+<div class="cmp-card" style="padding:8px 10px 6px">
   <div class="cmp-title">Score moyen</div>
   <?php
     $max_avg = max($grp_best, $my_avg, 1);
