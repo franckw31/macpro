@@ -37,7 +37,7 @@ if ($member_id && !empty($con)) {
     ");
     if ($sq && ($sr = mysqli_fetch_assoc($sq))) $my = $sr;
 
-    // Stats groupe (tous les joueurs ayant un sergio_score, min 3 parties)
+    // Stats groupe (tous les joueurs ayant un sergio_score, min 7 parties)
     $gq = @mysqli_query($con, "
         SELECT
             ROUND(AVG(sub.avg_score),2)   AS grp_avg,
@@ -60,7 +60,7 @@ if ($member_id && !empty($con)) {
     ");
     if ($gq && ($gr = mysqli_fetch_assoc($gq))) $grp = $gr;
 
-    // Rang du joueur parmi tous les joueurs (par avg_score, min 3 parties)
+    // Rang du joueur parmi tous les joueurs (par avg_score, min 7 parties)
     $rank = null; $rank_total = null;
     $rq = @mysqli_query($con, "
         SELECT p.`id-membre`, ROUND(AVG(p.sergio_score),2) AS avg_score
@@ -174,7 +174,7 @@ body{background:#080d1a;color:#f1f5f9;font-family:Inter,-apple-system,BlinkMacSy
 <div class="sg-rank">
   <div class="sg-rank-lbl">Classement SergioScore global</div>
   <div class="sg-rank-val">#<?php echo $rank; ?></div>
-  <div class="sg-rank-sub">sur <?php echo $rank_total; ?> joueurs (min. 3 parties)</div>
+  <div class="sg-rank-sub">sur <?php echo $rank_total; ?> joueurs (min. 6 parties)</div>
 </div>
 <?php endif; ?>
 
