@@ -261,33 +261,7 @@ body{background:#080d1a;color:#f1f5f9;font-family:Inter,-apple-system,BlinkMacSy
   <div style="font-size:9.5px;color:#64748b;margin-top:4px">Moins de recaves = meilleure gestion du tapis</div>
 </div>
 
-<!-- Évolution mensuelle -->
-<?php if ($curr_avg !== null || $prev_avg !== null): ?>
-<div class="cmp-card">
-  <div class="cmp-title">Évolution mensuelle</div>
-  <div style="display:flex;gap:8px">
-    <?php if ($prev_avg !== null): ?>
-    <div style="flex:1;background:rgba(255,255,255,.03);border-radius:10px;padding:10px;text-align:center">
-      <div style="font-size:9px;color:#64748b;text-transform:uppercase;margin-bottom:4px">Mois dernier</div>
-      <div style="font-size:22px;font-weight:900;color:<?php echo scoreColor(floatval($prev_avg));?>"><?php echo $prev_avg;?></div>
-    </div>
-    <?php endif; ?>
-    <?php if ($curr_avg !== null): ?>
-    <div style="flex:1;background:rgba(255,255,255,.04);border-radius:10px;padding:10px;text-align:center;border:1px solid rgba(74,222,128,.2)">
-      <div style="font-size:9px;color:#4ade80;text-transform:uppercase;margin-bottom:4px">Ce mois-ci</div>
-      <div style="font-size:22px;font-weight:900;color:<?php echo scoreColor(floatval($curr_avg));?>"><?php echo $curr_avg;?></div>
-    </div>
-    <?php endif; ?>
-    <?php if ($curr_avg !== null && $prev_avg !== null): ?>
-    <div style="flex:1;background:rgba(255,255,255,.03);border-radius:10px;padding:10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center">
-      <?php $dv=round($curr_avg-$prev_avg,2); $dp=$dv>=0; ?>
-      <div style="font-size:9px;color:#64748b;text-transform:uppercase;margin-bottom:4px">Évolution</div>
-      <div style="font-size:18px;font-weight:900;color:<?php echo $dp?'#4ade80':'#f87171';?>"><?php echo ($dp?'↗ +':'↘ ').$dv;?></div>
-    </div>
-    <?php endif; ?>
-  </div>
-</div>
-<?php endif; ?>
+
 
 <!-- Tableau debug classement complet -->
 <?php
