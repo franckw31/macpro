@@ -305,8 +305,17 @@ $aq = @mysqli_query($con, "
     ORDER BY avg_score DESC
 ");
 if ($aq) { while ($ar = mysqli_fetch_assoc($aq)) $all[] = $ar; }
+// position du joueur dans ce classement
+$table_pos = null;
+foreach ($all as $i => $ar2) {
+    if (intval($ar2['id-membre']) === intval($member_id)) { $table_pos = $i + 1; break; }
+}
+$all_count = count($all);
 ?>
 <?php if (!empty($all)): ?>
+  <div style="max-width:560px;margin:6px auto 0;padding:0 12px">
+    <div style="font-size:12px;color:#94a3b8">Debug — rank var: <?php echo isset($rank)?$rank:'—'; ?> · table_pos: <?php echo $table_pos ?? '—'; ?> · total: <?php echo $all_count; ?></div>
+  </div>
 <div style="max-width:560px;margin:16px auto 0;padding:0 12px">
   <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Classement complet (≥6 parties)</div>
   <div style="background:#0f1629;border:1px solid rgba(255,255,255,.07);border-radius:14px;overflow:hidden">
