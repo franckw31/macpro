@@ -489,7 +489,7 @@ $tf_pct  = $extra_stats['parties'] > 0 ? round($extra_stats['tf']  / $extra_stat
     <span class="sg-chart-title">PERFORMANCE MENSUELLE (<?php echo $cn; ?> MOIS)</span>
     <?php if($cds): ?><span class="sg-chart-delta" style="color:<?php echo $cdp?'#4ade80':'#f87171'; ?>;background:<?php echo $cdp?'rgba(74,222,128,0.12)':'rgba(248,113,113,0.12)'; ?>"><?php echo $cds; ?></span><?php endif; ?>
   </div>
-  <svg viewBox="0 0 <?php echo $sw; ?> <?php echo $sh; ?>" preserveAspectRatio="none" style="width:100%;height:120px;display:block">
+  <svg viewBox="0 0 <?php echo $sw; ?> <?php echo $sh; ?>" preserveAspectRatio="none" style="width:100%;height:72px;display:block">
     <defs>
       <linearGradient id="sgLg" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0%" stop-color="#fb923c"/>
