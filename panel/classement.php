@@ -174,7 +174,7 @@ body{background:#080d1a;color:#f1f5f9;font-family:Inter,-apple-system,BlinkMacSy
 <div class="sg-rank">
   <div class="sg-rank-lbl">Classement SergioScore global</div>
   <div class="sg-rank-val">#<?php echo $rank; ?></div>
-  <div class="sg-rank-sub">sur <?php echo $rank_total; ?> joueurs (min. 6 parties)</div>
+  <div class="sg-rank-sub">sur <?php echo $rank_total; ?> joueurs (min. 6 parties) depuis 1 An</div>
 </div>
 <?php endif; ?>
 
