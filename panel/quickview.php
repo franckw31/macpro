@@ -256,7 +256,7 @@ a{color:inherit;text-decoration:none}
 /* ─── HEADER ─── */
 .v2-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;gap:12px}
 .v2-header-left{display:flex;align-items:center;gap:12px}
-.v2-logo{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.v2-logo{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
 .v2-logo img{width:100%;height:100%;object-fit:cover;display:block}
 .v2-app-name{font-size:18px;font-weight:800;letter-spacing:-0.3px}
 .v2-app-name span{color:var(--blue)}
