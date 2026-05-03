@@ -378,7 +378,6 @@ a{color:inherit;text-decoration:none}
 
 <!-- Header -->
 <div class="sg-header">
-  <div class="sg-avatar">⭐</div>
   <h1 class="sg-title">SergioScore ⭐</h1>
   <p class="sg-sub"><?php echo h($pseudo); ?></p>
 </div>
