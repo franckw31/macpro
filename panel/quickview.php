@@ -209,10 +209,12 @@ $is_past = !empty($serverActivity['date']) && strtotime($serverActivity['date'])
 // Determine "live" status using date+time: consider a game "en cours" when
 // now is after the start time and within a reasonable window (12 hours).
 $is_today = false;
+$is_pre_game_countdown_active = false;
 if (!empty($serverActivity['date'])) {
   $start_ts = strtotime($serverActivity['date']);
   if ($start_ts !== false) {
     $now = time();
+    $is_pre_game_countdown_active = ($now < $start_ts);
     // Live if started and not older than 8 hours (28800 seconds)
     $is_today = ($now >= $start_ts) && (($now - $start_ts) <= 28800);
   }
@@ -630,6 +632,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   <!-- ══════════ ACTIONS RAPIDES ══════════ -->
   <div class="v2-list">
 
+    <?php if (!$is_pre_game_countdown_active): ?>
     <a class="v2-list-item tile-blue" href="/panel/livetimer.php<?php echo $uid_q; ?>">
       <div class="v2-list-icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
@@ -640,6 +643,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       </div>
       <div class="v2-list-chev">›</div>
     </a>
+    <?php endif; ?>
 
     <a class="v2-list-item tile-orange" href="<?php echo htmlspecialchars($participants_href); ?>">
       <div class="v2-list-icon">
