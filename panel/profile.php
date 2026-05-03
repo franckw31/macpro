@@ -235,23 +235,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'uploa
     exit;
 }
 
-// Handle password change from profile page (no current password required)
+// Handle password change from profile page (current password required)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'change_password') {
     $redirect_uri = $_SERVER['REQUEST_URI'] ?? '/panel/profile.php';
     $set_flash = function(string $type, string $message) {
         $_SESSION['profile_avatar_flash'] = ['type' => $type, 'message' => $message];
     };
 
+    $current = isset($_POST['current_password']) ? trim((string)$_POST['current_password']) : '';
     $new = isset($_POST['new_password']) ? trim((string)$_POST['new_password']) : '';
     $confirm = isset($_POST['confirm_password']) ? trim((string)$_POST['confirm_password']) : '';
 
-    if ($new === '' || $confirm === '') {
+    if ($current === '' || $new === '' || $confirm === '') {
         $set_flash('error', 'Tous les champs sont requis.');
         header('Location: ' . $redirect_uri);
         exit;
     }
     if ($new !== $confirm) {
         $set_flash('error', 'Les nouveaux mots de passe ne correspondent pas.');
+        header('Location: ' . $redirect_uri);
+        exit;
+    }
+    // Check current password against existing raw values (password or password_ext)
+    $db_password = '';
+    $db_password_ext = '';
+    if ($stmtc = @mysqli_prepare($con, "SELECT password, password_ext FROM membres WHERE `id-membre` = ? LIMIT 1")) {
+        mysqli_stmt_bind_param($stmtc, 'i', $uid);
+        mysqli_stmt_execute($stmtc);
+        mysqli_stmt_bind_result($stmtc, $db_password, $db_password_ext);
+        mysqli_stmt_fetch($stmtc);
+        mysqli_stmt_close($stmtc);
+    }
+
+    $is_current_ok =
+        ($db_password !== '' && hash_equals((string)$db_password, $current)) ||
+        ($db_password_ext !== '' && hash_equals((string)$db_password_ext, $current));
+    if (!$is_current_ok) {
+        $set_flash('error', 'Mot de passe actuel incorrect.');
         header('Location: ' . $redirect_uri);
         exit;
     }
@@ -565,8 +585,9 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             <div id="passwordModal" class="avatar-modal" aria-hidden="true">
                 <div class="avatar-modal-card" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
                     <h2 id="passwordModalTitle" class="avatar-modal-title">Changer le mot de passe</h2>
-                    <p class="avatar-modal-subtitle">Entrez le nouveau mot de passe et confirmez-le.</p>
+                    <p class="avatar-modal-subtitle">Entrez d’abord votre mot de passe actuel, puis le nouveau.</p>
                     <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+                        <label class="avatar-control" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px"><span>Mot de passe actuel</span><input name="current_password" id="pwd_current" type="password" style="width:70%;max-width:320px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
                         <label class="avatar-control" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px"><span>Nouveau mot de passe</span><input name="new_password" id="pwd_new" type="password" style="width:70%;max-width:320px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
                         <label class="avatar-control" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px"><span>Confirmer</span><input name="confirm_password" id="pwd_confirm" type="password" style="width:70%;max-width:320px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit"></label>
                     </div>
@@ -747,12 +768,13 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         })();
     </script>
     <script>
-        // Change password modal handling (no current password required)
+        // Change password modal handling
         (function(){
             const btn = document.getElementById('changePasswordBtn');
             const modal = document.getElementById('passwordModal');
             const pwdCancel = document.getElementById('pwdCancel');
             const pwdSave = document.getElementById('pwdSave');
+            const pwdCurrent = document.getElementById('pwd_current');
             const pwdNew = document.getElementById('pwd_new');
             const pwdConfirm = document.getElementById('pwd_confirm');
             const pwdStatus = document.getElementById('pwdStatus');
@@ -762,7 +784,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 
             if (!btn || !modal) return;
 
-            const open = function(){ modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; pwdStatus.textContent=''; pwdNew.value=''; pwdConfirm.value=''; pwdNew.focus(); };
+            const open = function(){ modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; pwdStatus.textContent=''; if (pwdCurrent) pwdCurrent.value=''; pwdNew.value=''; pwdConfirm.value=''; if (pwdCurrent) pwdCurrent.focus(); else pwdNew.focus(); };
             const close = function(){ modal.classList.remove('is-open'); modal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; };
 
             btn.addEventListener('click', function(e){ e.preventDefault(); open(); });
@@ -770,9 +792,10 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 
             // Validate on native form submit to ensure a single click submits
             form.addEventListener('submit', function(e){
+                const cur = (pwdCurrent && pwdCurrent.value ? pwdCurrent.value : '').trim();
                 const n = (pwdNew.value || '').trim();
                 const c = (pwdConfirm.value || '').trim();
-                if (!n || !c) { e.preventDefault(); pwdStatus.textContent = 'Tous les champs sont requis.'; return; }
+                if (!cur || !n || !c) { e.preventDefault(); pwdStatus.textContent = 'Tous les champs sont requis.'; return; }
                 // no minimum length enforced
                 if (n !== c) { e.preventDefault(); pwdStatus.textContent = 'Les mots de passe ne correspondent pas.'; return; }
                 // allow native submit — close modal and show sending state
