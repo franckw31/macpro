@@ -569,7 +569,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
         </div>
 
         <div class="card">
-            <div class="card-row"><div class="label">Mot de passe</div><div class="value"><button id="changePasswordBtn" style="background:transparent;border:0;color:#08b0ff;font-weight:800;cursor:pointer">Voir / Modifier</button></div></div>
+            <div class="card-row"><div class="label">Mot de passe</div><div class="value"><button id="changePasswordBtn" style="background:transparent;border:0;color:#08b0ff;font-weight:800;cursor:pointer;font-size:15px">Voir / Modifier</button></div></div>
         </div>
 
         <form id="changePasswordForm" method="post">
