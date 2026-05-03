@@ -326,7 +326,7 @@ a{color:inherit;text-decoration:none}
 
 /* Bottom grid */
 .sg-bottom{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-@media(max-width:480px){.sg-bottom{grid-template-columns:1fr}}
+@media(max-width:360px){.sg-bottom{grid-template-columns:1fr}}
 
 /* Section card */
 .sg-sec{background:#0f1629;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:14px 12px;display:flex;flex-direction:column}
