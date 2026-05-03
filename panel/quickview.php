@@ -256,8 +256,8 @@ a{color:inherit;text-decoration:none}
 /* ─── HEADER ─── */
 .v2-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;gap:12px}
 .v2-header-left{display:flex;align-items:center;gap:12px}
-.v2-logo{width:44px;height:44px;background:linear-gradient(135deg,#0a84ff 0%,#0062cc 100%);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.v2-logo svg{width:26px;height:26px;fill:#fff}
+.v2-logo{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.v2-logo img{width:100%;height:100%;object-fit:cover;display:block}
 .v2-app-name{font-size:18px;font-weight:800;letter-spacing:-0.3px}
 .v2-app-name span{color:var(--blue)}
 .v2-version{background:rgba(10,132,255,0.18);color:var(--blue);font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px;vertical-align:middle}
@@ -484,9 +484,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
   <header class="v2-header">
     <div class="v2-header-left">
       <div class="v2-logo">
-        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16 2C11 8 8 11 8 15c0 4 4 6 7 6v5c0 1.2 1.2 2 2.2 2s2.2-.8 2.2-2v-5c3 0 6.6-2 6.6-6 0-4-3-7-10-13z"/>
-        </svg>
+        <img src="bg.jpg" alt="CardEvent">
       </div>
       <div>
         <div class="v2-app-name">Card<span>Event</span><span class="v2-version">V 3.0</span></div>
