@@ -1234,7 +1234,7 @@ function escTrak(s) {
     var bonusEl = document.getElementById('v2-countdown-bonus');
     if (bonusEl) {
       var diffH = diff / 3600;
-      var bonus = Math.min(5000, (Math.floor(diffH) + 1) * 100);
+      var bonus = Math.min(5000, (Math.floor(diffH) + 1) * 200);
       bonusEl.textContent = '(+' + bonus + ')';
     }
   }
