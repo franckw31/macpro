@@ -484,7 +484,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
   <header class="v2-header">
     <div class="v2-header-left">
       <div class="v2-logo">
-        <img src="bg.jpg" alt="CardEvent">
+        <img src="/qrcode/joker_bg.jpg" alt="CardEvent">
       </div>
       <div>
         <div class="v2-app-name">Card<span>Event</span><span class="v2-version">V 3.0</span></div>
