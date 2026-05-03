@@ -800,22 +800,6 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
 </div><!-- /page -->
 
-<!-- ══════════ BOTTOM NAV ══════════ -->
-<nav class="v2-bottom-nav">
-  <button class="v2-nav-btn active" onclick="window.location.href='/panel/quickview_v2.php'">
-    <svg viewBox="0 0 24 24"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 21h14a1 1 0 0 0 1-1v-7H4v7a1 1 0 0 0 1 1z"/></svg>
-    Accueil
-  </button>
-  <button class="v2-nav-btn" onclick="window.location.href='/newtimer/index.php'">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
-    Votre Timer
-  </button>
-  <button class="v2-nav-btn" onclick="window.location.href='/panel/repartition.php'">
-    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-    Répartition
-  </button>
-</nav>
-
 <!-- ══════════ CALENDAR PICKER MODAL ══════════ -->
 <div class="v2-cal-modal-overlay" id="v2-cal-modal" aria-hidden="true">
   <div class="v2-cal-sheet" role="dialog" aria-modal="true" aria-label="Choisir une partie">
