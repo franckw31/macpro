@@ -792,10 +792,9 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 
             // Validate on native form submit to ensure a single click submits
             form.addEventListener('submit', function(e){
-                const cur = (pwdCurrent && pwdCurrent.value ? pwdCurrent.value : '').trim();
                 const n = (pwdNew.value || '').trim();
                 const c = (pwdConfirm.value || '').trim();
-                if (!cur || !n || !c) { e.preventDefault(); pwdStatus.textContent = 'Tous les champs sont requis.'; return; }
+                if (!n || !c) { e.preventDefault(); pwdStatus.textContent = 'Tous les champs sont requis.'; return; }
                 // no minimum length enforced
                 if (n !== c) { e.preventDefault(); pwdStatus.textContent = 'Les mots de passe ne correspondent pas.'; return; }
                 // allow native submit — close modal and show sending state
