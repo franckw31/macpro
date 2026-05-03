@@ -546,7 +546,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff9f0a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="8" rx="8" ry="3"/><path d="M4 8v5c0 1.66 3.58 3 8 3s8-1.34 8-3V8"/><path d="M4 13v4c0 1.66 3.58 3 8 3s8-1.34 8-3v-4"/></svg>
         </div>
         <div>
-          <div class="v2-fin-lbl">Buy-in</div>
+          <div class="v2-fin-lbl">BuyIn</div>
           <div class="v2-fin-val" style="color:var(--orange)"><?php echo isset($serverActivity['buyin']) ? htmlspecialchars($serverActivity['buyin']).' €' : '—'; ?></div>
         </div>
       </div>
@@ -573,7 +573,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="7" height="7" rx="1.5"/><rect x="3" y="13" width="7" height="7" rx="1.5"/><rect x="14" y="13" width="7" height="7" rx="1.5"/></svg>
         </div>
         <div>
-          <div class="v2-fin-lbl">Nb Tables</div>
+          <div class="v2-fin-lbl">Tables</div>
           <div class="v2-fin-val" style="color:var(--blue)"><?php echo isset($serverActivity['tables']) ? htmlspecialchars($serverActivity['tables']) : '—'; ?></div>
         </div>
       </div>
