@@ -555,7 +555,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff453a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 6v6"/><path d="M10.5 6v6"/><path d="M15 5l-1.5 12"/></svg>
         </div>
         <div>
-          <div class="v2-fin-lbl">Rake</div>
+          <div class="v2-fin-lbl">PAF</div>
           <div class="v2-fin-val" style="color:#ff453a"><?php echo isset($serverActivity['rake']) ? htmlspecialchars($serverActivity['rake']).' €' : '—'; ?></div>
         </div>
       </div>
