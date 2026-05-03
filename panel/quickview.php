@@ -264,7 +264,7 @@ a{color:inherit;text-decoration:none}
 .v2-greeting{font-size:13px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:4px}
 .v2-greeting .name{color:var(--text2);font-weight:600}
 .v2-greeting .chev{color:var(--blue);font-weight:700}
-.v2-avatar{width:80px;height:80px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,255,255,0.18);flex-shrink:0}
+.v2-avatar{width:54px;height:54px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,255,255,0.18);flex-shrink:0}
 .v2-avatar img{width:100%;height:100%;object-fit:cover;display:block}
 
 /* ─── CARD BASE ─── */
