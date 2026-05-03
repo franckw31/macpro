@@ -827,7 +827,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-detail-section-title" style="text-align:center;color:#4cd964">Infos Financières</div>
       <div class="v2-detail-row"><div class="v2-detail-label">💶 Buy-in</div><div class="v2-detail-value" style="color:var(--orange)" id="dd-buyin">—</div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">🍽️ Participation Aux Frais</div><div class="v2-detail-value" id="dd-rake">—</div></div>
-      <div class="v2-detail-row"><div class="v2-detail-label">🎯 Bounty</div><div class="v2-detail-value" id="dd-bounty">—</div></div>
+      <div class="v2-detail-row" id="dd-bounty-row"><div class="v2-detail-label">🎯 Bounty</div><div class="v2-detail-value" id="dd-bounty">—</div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">🔁 Re-entries</div><div class="v2-detail-value" id="dd-recave">—</div></div>
       <div class="v2-detail-row"><div class="v2-detail-label">🎲 Jetons départ Hors Bonus 1 & 2</div><div class="v2-detail-value" style="color:var(--orange)" id="dd-jetons">—</div></div>
     </div>
@@ -1305,7 +1305,10 @@ function escTrak(s) {
     f('dd-tables', act.tables || '—');
     f('dd-buyin', act.buyin!=null ? act.buyin+' €' : '—');
     f('dd-rake', act.rake!=null ? act.rake+' €' : '—');
-    f('dd-bounty', act.bounty ? act.bounty+' €' : '—');
+    var bountyNum = Number(act.bounty || 0);
+    var bountyRow = document.getElementById('dd-bounty-row');
+    if (bountyRow) bountyRow.style.display = bountyNum > 0 ? 'flex' : 'none';
+    f('dd-bounty', bountyNum > 0 ? bountyNum+' €' : '—');
     f('dd-recave', act.recave || '—');
     f('dd-jetons', act.start_chips || '—');
     // Build blind levels table
