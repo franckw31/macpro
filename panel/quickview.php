@@ -757,7 +757,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   </button>
   <button class="v2-nav-btn" onclick="window.location.href='/newtimer/index.php'">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
-    Local Timer
+    Votre Timer
   </button>
   <button class="v2-nav-btn" onclick="window.location.href='/panel/repartition.php'">
     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
