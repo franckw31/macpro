@@ -290,6 +290,148 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'auto_assign_missing') {
+    $activityId = isset($_POST['activity_id']) ? (int) $_POST['activity_id'] : 0;
+
+    if ($activityId <= 0) {
+        $_SESSION['flash_affectation_collection_activite'] = [
+            'type' => 'error',
+            'text' => 'Activité invalide pour l\'attribution automatique.'
+        ];
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    }
+
+    $activity = getActivityById($conx, $activityId);
+    if (!$activity) {
+        $_SESSION['flash_affectation_collection_activite'] = [
+            'type' => 'error',
+            'text' => 'Activité introuvable.'
+        ];
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    }
+
+    $participantsAuto = getParticipantsByActivity($conx, $activityId);
+    if (empty($participantsAuto)) {
+        $_SESSION['flash_affectation_collection_activite'] = [
+            'type' => 'error',
+            'text' => 'Aucun participant valide pour cette activité.'
+        ];
+        header('Location: ' . $_SERVER['PHP_SELF'] . '?activity_id=' . $activityId);
+        exit;
+    }
+
+    $conx->begin_transaction();
+
+    try {
+        $hasCollectionValeur = columnExists($conx, 'collections', 'valeur');
+        $hasIndividuValeur = columnExists($conx, 'collections-individu', 'valeur');
+        $hasIndividuDate = columnExists($conx, 'collections-individu', 'date');
+
+        $assigned = 0;
+        $alreadyHasCollection = 0;
+        $noCollectionLeft = 0;
+
+        foreach ($participantsAuto as $p) {
+            $memberId = (int) ($p['id-membre'] ?? 0);
+            if ($memberId <= 0) {
+                continue;
+            }
+
+            $stmtHas = $conx->prepare('SELECT COUNT(*) AS c FROM `collections-individu` WHERE `id-indiv` = ?');
+            if (!$stmtHas) {
+                throw new RuntimeException('Erreur SQL vérification membre: ' . $conx->error);
+            }
+            $stmtHas->bind_param('i', $memberId);
+            $stmtHas->execute();
+            $hasRow = $stmtHas->get_result()->fetch_assoc();
+            $stmtHas->close();
+
+            if (!empty($hasRow) && (int) ($hasRow['c'] ?? 0) > 0) {
+                $alreadyHasCollection++;
+                continue;
+            }
+
+            $selectCollectionValeur = $hasCollectionValeur ? 'c.valeur' : '1 AS valeur';
+            $stmtCol = $conx->prepare('SELECT c.id_collection, c.nom, ' . $selectCollectionValeur . ' FROM collections c LEFT JOIN `collections-individu` ci ON ci.id_col = c.id_collection WHERE ci.id IS NULL ORDER BY c.id_collection ASC LIMIT 1');
+            if (!$stmtCol) {
+                throw new RuntimeException('Erreur SQL collection disponible: ' . $conx->error);
+            }
+            $stmtCol->execute();
+            $collection = $stmtCol->get_result()->fetch_assoc();
+            $stmtCol->close();
+
+            if (!$collection) {
+                $noCollectionLeft++;
+                break;
+            }
+
+            $collectionId = (int) $collection['id_collection'];
+            $dateValue = $activity['date_depart'] ?? date('Y-m-d');
+            $coLabel = 'Auto activité #' . (int) $activity['id-activite'] . ' - ' . ($activity['titre-activite'] ?? '');
+            $valeur = isset($collection['valeur']) ? (int) $collection['valeur'] : 1;
+
+            $insertColumns = ['id_col', '`id-indiv`', 'co'];
+            $insertPlaceholders = ['?', '?', '?'];
+
+            if ($hasIndividuValeur) {
+                $insertColumns[] = 'valeur';
+                $insertPlaceholders[] = '?';
+            }
+
+            if ($hasIndividuDate) {
+                $insertColumns[] = '`date`';
+                $insertPlaceholders[] = '?';
+            }
+
+            $insertSql = 'INSERT INTO `collections-individu` (' . implode(', ', $insertColumns) . ') VALUES (' . implode(', ', $insertPlaceholders) . ')';
+            $stmtIns = $conx->prepare($insertSql);
+            if (!$stmtIns) {
+                throw new RuntimeException('Erreur SQL insert auto: ' . $conx->error);
+            }
+
+            $bound = false;
+            if ($hasIndividuValeur && $hasIndividuDate) {
+                $bound = $stmtIns->bind_param('iisis', $collectionId, $memberId, $coLabel, $valeur, $dateValue);
+            } elseif ($hasIndividuValeur && !$hasIndividuDate) {
+                $bound = $stmtIns->bind_param('iisi', $collectionId, $memberId, $coLabel, $valeur);
+            } elseif (!$hasIndividuValeur && $hasIndividuDate) {
+                $bound = $stmtIns->bind_param('iiss', $collectionId, $memberId, $coLabel, $dateValue);
+            } else {
+                $bound = $stmtIns->bind_param('iis', $collectionId, $memberId, $coLabel);
+            }
+
+            if (!$bound) {
+                throw new RuntimeException('Bind auto impossible: ' . $stmtIns->error);
+            }
+
+            if (!$stmtIns->execute()) {
+                throw new RuntimeException('Insertion auto impossible: ' . $stmtIns->error);
+            }
+            $stmtIns->close();
+
+            $assigned++;
+        }
+
+        $conx->commit();
+
+        $_SESSION['flash_affectation_collection_activite'] = [
+            'type' => 'success',
+            'text' => 'Attribution auto terminée : ' . $assigned . ' ajouté(s), ' . $alreadyHasCollection . ' déjà équipé(s), ' . $noCollectionLeft . ' arrêt(s) faute de collection libre.'
+        ];
+    } catch (Throwable $e) {
+        $conx->rollback();
+        $_SESSION['flash_affectation_collection_activite'] = [
+            'type' => 'error',
+            'text' => 'Échec attribution auto: ' . $e->getMessage() . ' (mysqli errno: ' . (int) $conx->errno . ', error: ' . $conx->error . ')'
+        ];
+    }
+
+    header('Location: ' . $_SERVER['PHP_SELF'] . '?activity_id=' . $activityId);
+    exit;
+}
+
 if (isset($_GET['activity_id']) && (int) $_GET['activity_id'] > 0) {
     $selectedActivityId = (int) $_GET['activity_id'];
 }
@@ -428,6 +570,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                             </li>
                         <?php endforeach; ?>
                     </ul>
+
+                    <form method="post" action="" style="margin-top:12px;">
+                        <input type="hidden" name="action" value="auto_assign_missing">
+                        <input type="hidden" name="activity_id" value="<?php echo (int) $selectedActivity['id-activite']; ?>">
+                        <button type="submit" style="background:#0ea5e9;" onclick="return confirm('Attribuer automatiquement une collection libre aux participants qui n\'en ont pas ?');">
+                            Attribuer automatiquement aux participants sans collection
+                        </button>
+                    </form>
                 <?php endif; ?>
             </div>
 
