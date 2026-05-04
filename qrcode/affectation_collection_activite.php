@@ -124,6 +124,7 @@ function getParticipantsByActivity(mysqli $db, int $activityId): array
 
     $sql = 'SELECT p.`id-membre`, p.option, p.`nom-membre`, m.pseudo
                         , ' . $selectJetonsBonusIns . ' AS jetons_bonus_ins
+                        , COALESCE(p.classement, 0) AS classement
             FROM participation p
             LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
             WHERE p.`id-activite` = ?
@@ -145,7 +146,8 @@ function getParticipantsByActivity(mysqli $db, int $activityId): array
             'id-membre' => (int) ($row['id-membre'] ?? 0),
             'pseudo' => $row['pseudo'] ?: ($row['nom-membre'] ?: ('Membre #' . (int) ($row['id-membre'] ?? 0))),
             'option' => $row['option'] ?? '',
-            'jetons_bonus_ins' => (int) ($row['jetons_bonus_ins'] ?? 0)
+            'jetons_bonus_ins' => (int) ($row['jetons_bonus_ins'] ?? 0),
+            'classement' => (int) ($row['classement'] ?? 0)
         ];
     }
 
@@ -315,6 +317,7 @@ function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId
 
     $sql = 'SELECT DISTINCT p.`id-membre`, COALESCE(m.pseudo, p.`nom-membre`) AS pseudo
                         , ' . $selectJetonsBonusIns . ' AS jetons_bonus_ins
+                        , COALESCE(p.classement, 0) AS classement
             FROM participation p
             LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
             WHERE p.`id-activite` = ?
@@ -341,7 +344,8 @@ function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId
             $rows[] = [
                 'id-membre' => $memberId,
                 'pseudo' => $row['pseudo'] ?: ('Membre #' . $memberId),
-                'jetons_bonus_ins' => (int) ($row['jetons_bonus_ins'] ?? 0)
+                'jetons_bonus_ins' => (int) ($row['jetons_bonus_ins'] ?? 0),
+                'classement' => (int) ($row['classement'] ?? 0)
             ];
         }
     }
@@ -893,6 +897,18 @@ try {
             font-weight:700;
             padding-left:8px;
         }
+        .choice-meta {
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex-shrink:0;
+            padding-left:8px;
+        }
+        .choice-rank {
+            color:var(--green);
+            font-size:12px;
+            font-weight:700;
+        }
         .btn-cyan { background:linear-gradient(90deg,var(--cyan),#00b3b3); color:#032027; }
         @media (max-width: 780px) {
             .page { padding:12px 10px 92px; }
@@ -971,7 +987,10 @@ try {
                                                 <input type="checkbox" name="member_ids[]" value="<?php echo (int) $pm['id-membre']; ?>" checked>
                                                 <span class="choice-label">#<?php echo (int) $pm['id-membre']; ?> — <?php echo h($pm['pseudo']); ?></span>
                                             </span>
-                                            <span class="choice-bonus"><?php echo (int) ($pm['jetons_bonus_ins'] ?? 0); ?></span>
+                                            <span class="choice-meta">
+                                                <span class="choice-bonus"><?php echo (int) ($pm['jetons_bonus_ins'] ?? 0); ?></span>
+                                                <span class="choice-rank"><?php echo (int) ($pm['classement'] ?? 0); ?></span>
+                                            </span>
                                         </label>
                                     <?php endforeach; ?>
                                 </div>
