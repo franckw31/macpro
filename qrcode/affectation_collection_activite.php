@@ -153,16 +153,44 @@ function getAvailableCollections(mysqli $db): array
     return $rows;
 }
 
-function getParticipantsWithoutCollection(mysqli $db, int $activityId): array
+function memberHasCollectionForActivity(mysqli $db, int $memberId, int $activityId, ?string $activityDate): bool
+{
+    $hasIndividuDate = columnExists($db, 'collections-individu', 'date');
+
+    if ($hasIndividuDate && !empty($activityDate)) {
+        $stmt = $db->prepare('SELECT COUNT(*) AS c FROM `collections-individu` WHERE `id-indiv` = ? AND DATE(`date`) = DATE(?)');
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bind_param('is', $memberId, $activityDate);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return !empty($row) && (int) ($row['c'] ?? 0) > 0;
+    }
+
+    $pattern1 = '%activité #' . $activityId . '%';
+    $pattern2 = '%activite #' . $activityId . '%';
+    $stmt = $db->prepare('SELECT COUNT(*) AS c FROM `collections-individu` WHERE `id-indiv` = ? AND (co LIKE ? OR co LIKE ?)');
+    if (!$stmt) {
+        return false;
+    }
+    $stmt->bind_param('iss', $memberId, $pattern1, $pattern2);
+    $stmt->execute();
+    $row = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    return !empty($row) && (int) ($row['c'] ?? 0) > 0;
+}
+
+function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId, ?string $activityDate): array
 {
     $sql = 'SELECT DISTINCT p.`id-membre`, COALESCE(m.pseudo, p.`nom-membre`) AS pseudo
             FROM participation p
             LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
             WHERE p.`id-activite` = ?
               AND (p.option IS NULL OR p.option NOT IN ("Annule", "Desinscrit", "None", "Option"))
-              AND NOT EXISTS (
-                  SELECT 1 FROM `collections-individu` ci WHERE ci.`id-indiv` = p.`id-membre`
-              )
             ORDER BY COALESCE(m.pseudo, p.`nom-membre`) ASC';
 
     $stmt = $db->prepare($sql);
@@ -176,10 +204,17 @@ function getParticipantsWithoutCollection(mysqli $db, int $activityId): array
 
     $rows = [];
     while ($row = $res->fetch_assoc()) {
-        $rows[] = [
-            'id-membre' => (int) ($row['id-membre'] ?? 0),
-            'pseudo' => $row['pseudo'] ?: ('Membre #' . (int) ($row['id-membre'] ?? 0))
-        ];
+        $memberId = (int) ($row['id-membre'] ?? 0);
+        if ($memberId <= 0) {
+            continue;
+        }
+
+        if (!memberHasCollectionForActivity($db, $memberId, $activityId, $activityDate)) {
+            $rows[] = [
+                'id-membre' => $memberId,
+                'pseudo' => $row['pseudo'] ?: ('Membre #' . $memberId)
+            ];
+        }
     }
 
     $stmt->close();
@@ -360,7 +395,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         exit;
     }
 
-    $participantsAuto = getParticipantsWithoutCollection($conx, $activityId);
+    $activityDate = $activity['date_depart'] ?? null;
+    $participantsAuto = getParticipantsWithoutCollectionForActivity($conx, $activityId, $activityDate);
     if (empty($participantsAuto)) {
         $_SESSION['flash_affectation_collection_activite'] = [
             'type' => 'error',
@@ -392,6 +428,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
 
             if (!isset($allowedMemberIds[$memberId])) {
+                $notEligible++;
+                continue;
+            }
+
+            if (memberHasCollectionForActivity($conx, $memberId, $activityId, $activityDate)) {
                 $notEligible++;
                 continue;
             }
@@ -486,7 +527,7 @@ if ($selectedActivityId > 0) {
     if ($selectedActivity) {
         $participants = getParticipantsByActivity($conx, $selectedActivityId);
         $availableCollections = getAvailableCollections($conx);
-        $participantsWithoutCollection = getParticipantsWithoutCollection($conx, $selectedActivityId);
+        $participantsWithoutCollection = getParticipantsWithoutCollectionForActivity($conx, $selectedActivityId, $selectedActivity['date_depart'] ?? null);
     }
 }
 
