@@ -777,7 +777,7 @@ try {
             </a>
         </header>
 
-        <h1 class="title">Nouvelle affectation : activité → participant → collection</h1>
+        <h1 class="title">Affectation Ticket Tombola - Participant</h1>
 
         <?php if ($flash): ?>
             <div class="flash <?php echo h($flash['type'] ?? 'error'); ?>">
