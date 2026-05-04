@@ -153,6 +153,50 @@ function getAvailableCollections(mysqli $db): array
     return $rows;
 }
 
+function countAvailableCollectionsForActivityMonth(mysqli $db, ?string $activityDate): int
+{
+    if (empty($activityDate)) {
+        return count(getAvailableCollections($db));
+    }
+
+    $hasIndividuDate = columnExists($db, 'collections-individu', 'date');
+    if (!$hasIndividuDate) {
+        return count(getAvailableCollections($db));
+    }
+
+    $timestamp = strtotime($activityDate);
+    if ($timestamp === false) {
+        return count(getAvailableCollections($db));
+    }
+
+    $month = (int) date('n', $timestamp);
+    $year = (int) date('Y', $timestamp);
+
+    $sql = 'SELECT COUNT(*) AS c
+            FROM collections c
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM `collections-individu` ci
+                WHERE ci.id_col = c.id_collection
+                  AND ci.`id-indiv` IS NOT NULL
+                  AND ci.`id-indiv` > 0
+                  AND MONTH(ci.`date`) = ?
+                  AND YEAR(ci.`date`) = ?
+            )';
+
+    $stmt = $db->prepare($sql);
+    if (!$stmt) {
+        return count(getAvailableCollections($db));
+    }
+
+    $stmt->bind_param('ii', $month, $year);
+    $stmt->execute();
+    $row = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    return (int) ($row['c'] ?? 0);
+}
+
 function memberHasCollectionForActivity(mysqli $db, int $memberId, int $activityId, ?string $activityDate): bool
 {
     $hasIndividuDate = columnExists($db, 'collections-individu', 'date');
@@ -228,6 +272,7 @@ $selectedActivityId = isset($_POST['activity_id']) ? (int) $_POST['activity_id']
 $selectedActivity = null;
 $participants = [];
 $availableCollections = [];
+$availableCollectionsMonthCount = 0;
 $participantsWithoutCollection = [];
 $pendingAssignment = null;
 
@@ -527,6 +572,7 @@ if ($selectedActivityId > 0) {
     if ($selectedActivity) {
         $participants = getParticipantsByActivity($conx, $selectedActivityId);
         $availableCollections = getAvailableCollections($conx);
+        $availableCollectionsMonthCount = countAvailableCollectionsForActivityMonth($conx, $selectedActivity['date_depart'] ?? null);
         $participantsWithoutCollection = getParticipantsWithoutCollectionForActivity($conx, $selectedActivityId, $selectedActivity['date_depart'] ?? null);
     }
 }
@@ -809,8 +855,9 @@ try {
                     <p class="muted">Aucun participant valide pour cette activité.</p>
                 <?php else: ?>
                     <p class="metric">
-                        Collections non affectées à un joueur (toutes activités confondues) :
-                        <strong><?php echo (int) count($availableCollections); ?></strong>
+                        Collections non affectées à un joueur pour le mois de l'activité
+                        (tous joueurs et toutes parties confondus) :
+                        <strong><?php echo (int) $availableCollectionsMonthCount; ?></strong>
                     </p>
 
                     <div class="confirm-wrap">
