@@ -125,6 +125,7 @@ function getParticipantsByActivity(mysqli $db, int $activityId): array
     $sql = 'SELECT p.`id-membre`, p.option, p.`nom-membre`, m.pseudo
                         , ' . $selectJetonsBonusIns . ' AS jetons_bonus_ins
                         , COALESCE(p.classement, 0) AS classement
+            , COALESCE(p.gain, 0) AS gain
             FROM participation p
             LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
             WHERE p.`id-activite` = ?
@@ -147,7 +148,8 @@ function getParticipantsByActivity(mysqli $db, int $activityId): array
             'pseudo' => $row['pseudo'] ?: ($row['nom-membre'] ?: ('Membre #' . (int) ($row['id-membre'] ?? 0))),
             'option' => $row['option'] ?? '',
             'jetons_bonus_ins' => (int) ($row['jetons_bonus_ins'] ?? 0),
-            'classement' => (int) ($row['classement'] ?? 0)
+            'classement' => (int) ($row['classement'] ?? 0),
+            'gain' => (int) ($row['gain'] ?? 0)
         ];
     }
 
@@ -318,6 +320,7 @@ function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId
     $sql = 'SELECT DISTINCT p.`id-membre`, COALESCE(m.pseudo, p.`nom-membre`) AS pseudo
                         , ' . $selectJetonsBonusIns . ' AS jetons_bonus_ins
                         , COALESCE(p.classement, 0) AS classement
+            , COALESCE(p.gain, 0) AS gain
             FROM participation p
             LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
             WHERE p.`id-activite` = ?
@@ -345,7 +348,8 @@ function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId
                 'id-membre' => $memberId,
                 'pseudo' => $row['pseudo'] ?: ('Membre #' . $memberId),
                 'jetons_bonus_ins' => (int) ($row['jetons_bonus_ins'] ?? 0),
-                'classement' => (int) ($row['classement'] ?? 0)
+                'classement' => (int) ($row['classement'] ?? 0),
+                'gain' => (int) ($row['gain'] ?? 0)
             ];
         }
     }
@@ -909,6 +913,11 @@ try {
             font-size:12px;
             font-weight:700;
         }
+        .choice-gain {
+            color:var(--text2);
+            font-size:12px;
+            font-weight:700;
+        }
         .btn-cyan { background:linear-gradient(90deg,var(--cyan),#00b3b3); color:#032027; }
         @media (max-width: 780px) {
             .page { padding:12px 10px 92px; }
@@ -990,6 +999,7 @@ try {
                                             <span class="choice-meta">
                                                 <span class="choice-bonus">B:<?php echo (int) ($pm['jetons_bonus_ins'] ?? 0); ?></span>
                                                 <span class="choice-rank">C:<?php echo (int) ($pm['classement'] ?? 0); ?></span>
+                                                <span class="choice-gain">G:<?php echo (int) ($pm['gain'] ?? 0); ?></span>
                                             </span>
                                         </label>
                                     <?php endforeach; ?>
