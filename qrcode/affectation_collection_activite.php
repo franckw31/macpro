@@ -709,22 +709,6 @@ try {
             border:none;
         }
         button:hover { filter:brightness(1.06); }
-        .participants-list {
-            list-style:none;
-            margin:10px 0 0;
-            padding:0;
-            display:grid;
-            grid-template-columns:1fr 1fr;
-            gap:8px;
-        }
-        .participants-list li {
-            background:#0f1621;
-            border:1px solid var(--border);
-            border-radius:10px;
-            padding:9px 10px;
-            font-size:13px;
-            color:var(--text2);
-        }
         .muted { color:var(--muted); font-size:13px; }
         .metric {
             margin-top:10px;
@@ -770,7 +754,6 @@ try {
         .btn-cyan { background:linear-gradient(90deg,var(--cyan),#00b3b3); color:#032027; }
         @media (max-width: 780px) {
             .page { padding:12px 10px 92px; }
-            .participants-list { grid-template-columns:1fr; }
             .title { font-size:19px; }
         }
     </style>
@@ -815,7 +798,7 @@ try {
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <button type="submit">Afficher participants + collections disponibles</button>
+                <button type="submit">Afficher les données</button>
             </form>
         </div>
 
@@ -825,28 +808,16 @@ try {
                 #<?php echo (int) $selectedActivity['id-activite']; ?> — <?php echo h($selectedActivity['titre-activite']); ?>
                 <div class="muted"><?php echo h($selectedActivity['date_depart']); ?> <?php echo h($selectedActivity['heure_depart']); ?> · <?php echo h($selectedActivity['ville']); ?></div>
 
-                <h3 class="section-title">2) Liste des participants</h3>
+                <h3 class="section-title">2) Confirmation joueur par joueur</h3>
                 <?php if (empty($participants)): ?>
                     <p class="muted">Aucun participant valide pour cette activité.</p>
                 <?php else: ?>
-                    <ul class="participants-list">
-                        <?php foreach ($participants as $p): ?>
-                            <li>
-                                #<?php echo (int) $p['id-membre']; ?> — <?php echo h($p['pseudo']); ?>
-                                <?php if (!empty($p['option'])): ?>
-                                    <span class="muted">(<?php echo h($p['option']); ?>)</span>
-                                <?php endif; ?>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-
                     <p class="metric">
                         Collections non affectées à un joueur (toutes activités confondues) :
                         <strong><?php echo (int) count($availableCollections); ?></strong>
                     </p>
 
                     <div class="confirm-wrap">
-                        <h3 class="section-title">Confirmation joueur par joueur</h3>
                         <?php if (empty($participantsWithoutCollection)): ?>
                             <p class="muted">Tous les participants ont déjà une collection.</p>
                         <?php else: ?>
