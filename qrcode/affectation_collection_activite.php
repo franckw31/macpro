@@ -36,18 +36,22 @@ function columnExists(mysqli $db, string $table, string $column): bool
         return false;
     }
 
-    $tableEscaped = '`' . str_replace('`', '``', $table) . '`';
-    $sql = 'SHOW COLUMNS FROM ' . $tableEscaped . ' LIKE ?';
+    $sql = 'SELECT COUNT(*) AS c
+            FROM information_schema.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE()
+              AND TABLE_NAME = ?
+              AND COLUMN_NAME = ?';
     $stmt = $db->prepare($sql);
     if (!$stmt) {
         $cache[$key] = false;
         return false;
     }
 
-    $stmt->bind_param('s', $column);
+    $stmt->bind_param('ss', $table, $column);
     $stmt->execute();
     $res = $stmt->get_result();
-    $exists = $res && $res->num_rows > 0;
+    $row = $res ? $res->fetch_assoc() : null;
+    $exists = $row && (int) ($row['c'] ?? 0) > 0;
     $stmt->close();
 
     $cache[$key] = $exists;
