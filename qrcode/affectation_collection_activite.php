@@ -831,6 +831,9 @@ try {
             color:var(--text);
             background:#0f1621;
         }
+        #activity_id {
+            font-size:12px;
+        }
         button {
             cursor:pointer;
             background:linear-gradient(90deg,var(--blue),#0070dd);
