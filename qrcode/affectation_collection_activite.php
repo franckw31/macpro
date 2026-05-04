@@ -798,16 +798,12 @@ try {
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <button type="submit">Afficher les données</button>
+                <button type="submit">Valider</button>
             </form>
         </div>
 
         <?php if ($selectedActivity): ?>
             <div class="card">
-                <strong>Activité sélectionnée :</strong>
-                #<?php echo (int) $selectedActivity['id-activite']; ?> — <?php echo h($selectedActivity['titre-activite']); ?>
-                <div class="muted"><?php echo h($selectedActivity['date_depart']); ?> <?php echo h($selectedActivity['heure_depart']); ?> · <?php echo h($selectedActivity['ville']); ?></div>
-
                 <h3 class="section-title">2) Confirmation joueur par joueur</h3>
                 <?php if (empty($participants)): ?>
                     <p class="muted">Aucun participant valide pour cette activité.</p>
