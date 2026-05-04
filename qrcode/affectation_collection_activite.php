@@ -324,10 +324,28 @@ function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId
         $hasJetonsBonusIns = columnExists($db, 'participation', 'jetons_bonus_ins');
         $selectJetonsBonusIns = $hasJetonsBonusIns ? 'COALESCE(p.jetons_bonus_ins, 0)' : '0';
 
+    // Subquery to count participations in the same month/year as the selected activity
+    $monthFilter = '';
+    $bindTypes = 'i';
+    $bindValues = [$activityId];
+    if ($activityDate) {
+        $monthFilter = '(SELECT COUNT(*) FROM participation pm2
+                         JOIN activite a2 ON a2.`id-activite` = pm2.`id-activite`
+                         WHERE pm2.`id-membre` = p.`id-membre`
+                           AND (pm2.option IS NULL OR pm2.option NOT IN ("Annule", "Desinscrit", "None", "Option"))
+                           AND MONTH(a2.date_depart) = MONTH(?)
+                           AND YEAR(a2.date_depart) = YEAR(?))';
+        $bindTypes = 'iss';
+        $bindValues = [$activityId, $activityDate, $activityDate];
+    } else {
+        $monthFilter = '0';
+    }
+
     $sql = 'SELECT DISTINCT p.`id-membre`, COALESCE(m.pseudo, p.`nom-membre`) AS pseudo
                         , ' . $selectJetonsBonusIns . ' AS jetons_bonus_ins
                         , COALESCE(p.classement, 0) AS classement
             , COALESCE(p.gain, 0) AS gain
+            , (' . $monthFilter . ') AS nb_parties_mois
             FROM participation p
             LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
             WHERE p.`id-activite` = ?
@@ -339,7 +357,11 @@ function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId
         return [];
     }
 
-    $stmt->bind_param('i', $activityId);
+    if ($activityDate) {
+        $stmt->bind_param($bindTypes, $bindValues[0], $bindValues[1], $bindValues[2]);
+    } else {
+        $stmt->bind_param('i', $activityId);
+    }
     $stmt->execute();
     $res = $stmt->get_result();
 
@@ -356,7 +378,8 @@ function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId
                 'pseudo' => $row['pseudo'] ?: ('Membre #' . $memberId),
                 'jetons_bonus_ins' => (int) ($row['jetons_bonus_ins'] ?? 0),
                 'classement' => (int) ($row['classement'] ?? 0),
-                'gain' => (int) ($row['gain'] ?? 0)
+                'gain' => (int) ($row['gain'] ?? 0),
+                'nb_parties_mois' => (int) ($row['nb_parties_mois'] ?? 0),
             ];
         }
     }
@@ -1011,6 +1034,7 @@ try {
                                                 <span class="choice-bonus">B:<?php echo (int) ($pm['jetons_bonus_ins'] ?? 0); ?></span>
                                                 <span class="choice-rank">C:<?php echo (int) ($pm['classement'] ?? 0); ?></span>
                                                 <span class="choice-gain">G:<?php echo (int) ($pm['gain'] ?? 0); ?></span>
+                                                <span class="choice-parties" title="Parties jouées ce mois">P:<?php echo (int) ($pm['nb_parties_mois'] ?? 0); ?></span>
                                             </span>
                                         </label>
                                     <?php endforeach; ?>
