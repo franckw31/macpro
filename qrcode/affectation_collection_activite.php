@@ -787,7 +787,7 @@ try {
 
         <div class="card">
             <form method="post" action="">
-                <label for="activity_id">1) Choix de l'activité :)</label>
+                <label for="activity_id">1) Choix de l'activité :</label>
                 <select name="activity_id" id="activity_id" required>
                     <option value="">-- Sélectionner une activité --</option>
                     <?php foreach ($activities as $activity): ?>
