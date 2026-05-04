@@ -516,7 +516,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
-if (isset($_GET['activity_id']) && (int) $_GET['activity_id'] > 0) {
+if ($selectedActivityId <= 0 && isset($_GET['activity_id']) && (int) $_GET['activity_id'] > 0) {
     $selectedActivityId = (int) $_GET['activity_id'];
 }
 
