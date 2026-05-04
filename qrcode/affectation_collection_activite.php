@@ -220,6 +220,58 @@ function countAvailableCollectionsForActivityMonth(mysqli $db, ?string $activity
     return (int) ($row['c'] ?? 0);
 }
 
+function getAvailableCollectionsForActivityMonth(mysqli $db, ?string $activityDate): array
+{
+    $hasCollectionValeur = columnExists($db, 'collections', 'valeur');
+    $selectValeur = $hasCollectionValeur ? 'c.valeur' : '1 AS valeur';
+
+    if (empty($activityDate) || !columnExists($db, 'collections-individu', 'date')) {
+        return getAvailableCollections($db);
+    }
+
+    $timestamp = strtotime($activityDate);
+    if ($timestamp === false) {
+        return getAvailableCollections($db);
+    }
+
+    $month = (int) date('n', $timestamp);
+    $year = (int) date('Y', $timestamp);
+
+    $sql = 'SELECT c.id_collection, c.nom, ' . $selectValeur . '
+            FROM collections c
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM `collections-individu` ci
+                WHERE ci.id_col = c.id_collection
+                  AND ci.`id-indiv` IS NOT NULL
+                  AND ci.`id-indiv` > 0
+                  AND MONTH(ci.`date`) = ?
+                  AND YEAR(ci.`date`) = ?
+            )
+            ORDER BY c.id_collection ASC';
+
+    $stmt = $db->prepare($sql);
+    if (!$stmt) {
+        return getAvailableCollections($db);
+    }
+
+    $stmt->bind_param('ii', $month, $year);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    $rows = [];
+    while ($row = $res->fetch_assoc()) {
+        $rows[] = [
+            'id_collection' => (int) $row['id_collection'],
+            'nom' => $row['nom'] ?? '',
+            'valeur' => isset($row['valeur']) ? (int) $row['valeur'] : 1
+        ];
+    }
+    $stmt->close();
+
+    return $rows;
+}
+
 function memberHasCollectionForActivity(mysqli $db, int $memberId, int $activityId, ?string $activityDate): bool
 {
     $hasIndividuDate = columnExists($db, 'collections-individu', 'date');
@@ -342,21 +394,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             throw new RuntimeException('Le participant sélectionné n\'est pas valide pour cette activité.');
         }
 
-        // Vérifier collection disponible (non utilisée)
-        $hasCollectionValeur = columnExists($conx, 'collections', 'valeur');
-        $selectCollectionValeur = $hasCollectionValeur ? 'c.valeur' : '1 AS valeur';
-        $stmtCol = $conx->prepare('SELECT c.id_collection, c.nom, ' . $selectCollectionValeur . ' FROM collections c LEFT JOIN `collections-individu` ci ON ci.id_col = c.id_collection AND ci.`id-indiv` IS NOT NULL AND ci.`id-indiv` > 0 WHERE c.id_collection = ? AND ci.id IS NULL LIMIT 1');
-        if (!$stmtCol) {
-            throw new RuntimeException('Erreur SQL collection: ' . $conx->error);
+        $collection = null;
+        foreach (getAvailableCollectionsForActivityMonth($conx, $activity['date_depart'] ?? null) as $availableCollection) {
+            if ((int) $availableCollection['id_collection'] === $collectionId) {
+                $collection = $availableCollection;
+                break;
+            }
         }
-        $stmtCol->bind_param('i', $collectionId);
-        $stmtCol->execute();
-        $colRes = $stmtCol->get_result();
-        $collection = $colRes ? $colRes->fetch_assoc() : null;
-        $stmtCol->close();
 
         if (!$collection) {
-            throw new RuntimeException('La collection choisie est déjà utilisée ou introuvable.');
+            throw new RuntimeException('La collection choisie n\'est pas disponible pour le mois de cette activité.');
         }
 
         $coLabel = 'Affectation activité #' . (int) $activity['id-activite'] . ' - ' . ($activity['titre-activite'] ?? '');
@@ -506,14 +553,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 continue;
             }
 
-            $selectCollectionValeur = $hasCollectionValeur ? 'c.valeur' : '1 AS valeur';
-            $stmtCol = $conx->prepare('SELECT c.id_collection, c.nom, ' . $selectCollectionValeur . ' FROM collections c LEFT JOIN `collections-individu` ci ON ci.id_col = c.id_collection AND ci.`id-indiv` IS NOT NULL AND ci.`id-indiv` > 0 WHERE ci.id IS NULL ORDER BY c.id_collection ASC LIMIT 1');
-            if (!$stmtCol) {
-                throw new RuntimeException('Erreur SQL collection disponible: ' . $conx->error);
-            }
-            $stmtCol->execute();
-            $collection = $stmtCol->get_result()->fetch_assoc();
-            $stmtCol->close();
+            $availableForMonth = getAvailableCollectionsForActivityMonth($conx, $activityDate);
+            $collection = !empty($availableForMonth) ? $availableForMonth[0] : null;
 
             if (!$collection) {
                 $noCollectionLeft++;
@@ -595,7 +636,7 @@ if ($selectedActivityId > 0) {
     $selectedActivity = getActivityById($conx, $selectedActivityId);
     if ($selectedActivity) {
         $participants = getParticipantsByActivity($conx, $selectedActivityId);
-        $availableCollections = getAvailableCollections($conx);
+        $availableCollections = getAvailableCollectionsForActivityMonth($conx, $selectedActivity['date_depart'] ?? null);
         $activityMonthLabel = formatActivityMonthLabel($selectedActivity['date_depart'] ?? null);
         $availableCollectionsMonthCount = countAvailableCollectionsForActivityMonth($conx, $selectedActivity['date_depart'] ?? null);
         $participantsWithoutCollection = getParticipantsWithoutCollectionForActivity($conx, $selectedActivityId, $selectedActivity['date_depart'] ?? null);
@@ -617,7 +658,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $selectedActivityId = $activityId;
             $selectedActivity = getActivityById($conx, $selectedActivityId);
             $participants = $selectedActivity ? getParticipantsByActivity($conx, $selectedActivityId) : [];
-            $availableCollections = $selectedActivity ? getAvailableCollections($conx) : [];
+            $availableCollections = $selectedActivity ? getAvailableCollectionsForActivityMonth($conx, $selectedActivity['date_depart'] ?? null) : [];
         }
 
         $selectedParticipant = null;
