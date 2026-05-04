@@ -11,6 +11,11 @@ if ($uid <= 0) {
 }
 
 function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
+function strip_parenthesized($text){
+    $text = (string) $text;
+    $text = preg_replace('/\s*\([^)]*\)\s*/u', ' ', $text);
+    return trim(preg_replace('/\s{2,}/u', ' ', $text));
+}
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : $uid;
 $hasMonthFilter = isset($_GET['month_tom']);
@@ -166,7 +171,7 @@ if ($id > 0) {
                         echo '<tr>';
                         echo '<td>'.esc($row['collection_nom']).'</td>';
                         echo '<td>'.esc(date('d/m/Y', strtotime($row['date']))).'</td>';
-                        echo '<td>'.esc($activite_titre ?: '-').'</td>';
+                        echo '<td>'.esc(strip_parenthesized($activite_titre ?: '-')).'</td>';
                         $checked = (intval($row['aff_rake'])===1)?'checked':'';
                         echo '<td><input type="checkbox" disabled '. $checked .' ></td>';
                         echo '</tr>';
