@@ -683,66 +683,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <?php endif; ?>
             </div>
 
-            <div class="card">
-                <h3>3) Validation et insertion dans collections-individu</h3>
-
-                <?php if (empty($participants) || empty($availableCollections)): ?>
-                    <?php if (empty($availableCollections)): ?>
-                        <p class="muted">Aucune collection disponible (toutes déjà utilisées dans collections-individu).</p>
-                    <?php endif; ?>
-                <?php else: ?>
-                    <form method="post" action="">
-                        <input type="hidden" name="action" value="request_validation">
-                        <input type="hidden" name="activity_id" value="<?php echo (int) $selectedActivity['id-activite']; ?>">
-
-                        <div class="grid">
-                            <div>
-                                <label for="member_id">Participant</label>
-                                <select name="member_id" id="member_id" required>
-                                    <option value="">-- Choisir un participant --</option>
-                                    <?php foreach ($participants as $p): ?>
-                                        <option value="<?php echo (int) $p['id-membre']; ?>">
-                                            #<?php echo (int) $p['id-membre']; ?> — <?php echo h($p['pseudo']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label for="collection_id">Collection disponible</label>
-                                <select name="collection_id" id="collection_id" required>
-                                    <option value="">-- Choisir une collection libre --</option>
-                                    <?php foreach ($availableCollections as $c): ?>
-                                        <option value="<?php echo (int) $c['id_collection']; ?>">
-                                            #<?php echo (int) $c['id_collection']; ?> — <?php echo h($c['nom']); ?> (valeur <?php echo (int) $c['valeur']; ?>)
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
-
-                        <button type="submit">Demander validation</button>
-                    </form>
-                <?php endif; ?>
-            </div>
-
-            <?php if ($pendingAssignment): ?>
-                <div class="card" style="border-color:#93c5fd; background:#eff6ff;">
-                    <h3>4) Confirmation finale demandée</h3>
-                    <p><strong>Activité :</strong> #<?php echo (int) $pendingAssignment['activity_id']; ?> — <?php echo h($pendingAssignment['activity_title']); ?></p>
-                    <p><strong>Participant :</strong> #<?php echo (int) $pendingAssignment['member_id']; ?> — <?php echo h($pendingAssignment['member_pseudo']); ?></p>
-                    <p><strong>Collection :</strong> #<?php echo (int) $pendingAssignment['collection_id']; ?> — <?php echo h($pendingAssignment['collection_nom']); ?> (valeur <?php echo (int) $pendingAssignment['collection_valeur']; ?>)</p>
-
-                    <form method="post" action="" style="margin-top:12px;">
-                        <input type="hidden" name="action" value="save_assignment">
-                        <input type="hidden" name="activity_id" value="<?php echo (int) $pendingAssignment['activity_id']; ?>">
-                        <input type="hidden" name="member_id" value="<?php echo (int) $pendingAssignment['member_id']; ?>">
-                        <input type="hidden" name="collection_id" value="<?php echo (int) $pendingAssignment['collection_id']; ?>">
-                        <input type="hidden" name="confirm" value="1">
-                        <button type="submit" style="background:#16a34a;">Oui, je confirme l'ajout</button>
-                    </form>
-                </div>
-            <?php endif; ?>
         <?php endif; ?>
     </div>
 </body>
