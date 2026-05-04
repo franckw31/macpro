@@ -654,6 +654,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
+
+                        <p class="muted" style="margin-top:10px;">
+                            Collections non affectées à un joueur (toutes activités confondues) :
+                            <strong><?php echo (int) count($availableCollections); ?></strong>
+                        </p>
                     </ul>
 
                     <div style="margin-top:14px; border-top:1px solid #dbeafe; padding-top:12px;">
