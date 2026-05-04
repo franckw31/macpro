@@ -884,6 +884,7 @@ try {
             border:1px solid var(--border);
             border-radius:10px;
             padding:9px 10px;
+            font-size:12px;
         }
         .choice-main {
             display:flex;
@@ -900,7 +901,7 @@ try {
         .choice-bonus {
             flex-shrink:0;
             color:var(--cyan);
-            font-size:12px;
+            font-size:11px;
             font-weight:700;
             padding-left:8px;
         }
@@ -913,12 +914,12 @@ try {
         }
         .choice-rank {
             color:var(--green);
-            font-size:12px;
+            font-size:11px;
             font-weight:700;
         }
         .choice-gain {
             color:var(--text2);
-            font-size:12px;
+            font-size:11px;
             font-weight:700;
         }
         .btn-cyan { background:linear-gradient(90deg,var(--cyan),#00b3b3); color:#032027; }
