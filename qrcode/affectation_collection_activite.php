@@ -952,6 +952,11 @@ try {
             font-size:11px;
             font-weight:700;
         }
+        .choice-parties {
+            color:#f9a825;
+            font-size:11px;
+            font-weight:700;
+        }
         .btn-cyan { background:linear-gradient(90deg,var(--cyan),#00b3b3); color:#032027; }
         @media (max-width: 780px) {
             .page { padding:12px 10px 92px; }
