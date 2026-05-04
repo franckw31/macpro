@@ -89,10 +89,8 @@ if ($id > 0) {
         .card{padding:12px;overflow:auto}
         /* Color the 'QRcode' column (1st column) yellow */
         table.dataTable tbody td:nth-child(1), table.dataTable thead th:nth-child(1) { color: #ffd100; font-weight:700; }
-        /* Color the 'Valeur' column (2nd column) green */
-        table.dataTable tbody td:nth-child(2), table.dataTable thead th:nth-child(2) { color: #16a34a; font-weight:700; }
-        /* Color the 'Titre Activité' column (4th column) blue */
-        table.dataTable tbody td:nth-child(4), table.dataTable thead th:nth-child(4) { color: #3CA6FF; font-weight:700; }
+        /* Color the 'Titre Activité' column (3rd column) blue */
+        table.dataTable tbody td:nth-child(3), table.dataTable thead th:nth-child(3) { color: #3CA6FF; font-weight:700; }
         /* Ensure last column (Réduction Rake) remains visible but compact */
         table.dataTable tbody td:last-child, table.dataTable thead th:last-child {
             min-width:56px;
@@ -145,7 +143,6 @@ if ($id > 0) {
                 <thead>
                     <tr>
                         <th>QRcode</th>
-                        <th>Val.</th>
                         <th>Date</th>
                         <th>Titre Activité</th>
                         <th>Rake</th>
@@ -156,7 +153,7 @@ if ($id > 0) {
                 if (empty($rows)) {
                     echo '<tr style="color:#888;text-align:center">';
                     echo '<td>Aucun ticket trouvé.</td>';
-                    echo '<td></td><td></td><td></td><td></td>';
+                    echo '<td></td><td></td><td></td>';
                     echo '</tr>';
                 } else {
                     foreach ($rows as $row) {
@@ -168,7 +165,6 @@ if ($id > 0) {
                         }
                         echo '<tr>';
                         echo '<td>'.esc($row['collection_nom']).'</td>';
-                        echo '<td>'.esc($row['collection_valeur']).'</td>';
                         echo '<td>'.esc(date('d/m/Y', strtotime($row['date']))).'</td>';
                         echo '<td>'.esc($activite_titre ?: '-').'</td>';
                         $checked = (intval($row['aff_rake'])===1)?'checked':'';
