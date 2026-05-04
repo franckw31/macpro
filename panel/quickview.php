@@ -740,6 +740,19 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-list-chev">›</div>
     </a>
 
+    <?php if (!empty($_SESSION['id']) && in_array((int) $_SESSION['id'], [2, 265], true)): ?>
+    <a class="v2-list-item tile-cyan" href="/qrcode/affectation_collection_activite.php" style="text-decoration:none;color:inherit">
+      <div class="v2-list-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M21 15v4a2 2 0 0 1-2 2h-4"/><path d="M3 15v4a2 2 0 0 0 2 2h4"/><path d="M8 8h2v2H8z"/><path d="M14 8h2v2h-2z"/><path d="M8 14h2v2H8z"/><path d="M14 14h2v2h-2z"/></svg>
+      </div>
+      <div class="v2-list-body">
+        <div class="v2-list-name">Qrcode / Tombolas</div>
+        <div class="v2-list-sub">Affectation collections et tombolas</div>
+      </div>
+      <div class="v2-list-chev">›</div>
+    </a>
+    <?php endif; ?>
+
     <script>
     var SCORE_PSEUDOS = <?php echo json_encode($score_pseudos, JSON_UNESCAPED_UNICODE); ?>;
     var scoreACIdx = -1;
