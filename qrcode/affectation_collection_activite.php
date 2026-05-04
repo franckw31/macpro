@@ -346,6 +346,7 @@ function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId
                         , COALESCE(p.classement, 0) AS classement
             , COALESCE(p.gain, 0) AS gain
             , (' . $monthFilter . ') AS nb_parties_mois
+            , p.option AS opt
             FROM participation p
             LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
             WHERE p.`id-activite` = ?
@@ -380,6 +381,7 @@ function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId
                 'classement' => (int) ($row['classement'] ?? 0),
                 'gain' => (int) ($row['gain'] ?? 0),
                 'nb_parties_mois' => (int) ($row['nb_parties_mois'] ?? 0),
+                'option' => $row['opt'] ?? '',
             ];
         }
     }
@@ -1040,6 +1042,7 @@ try {
                                                 <td class="td-rank"><?php echo $cl; ?></td>
                                                 <td class="td-gain"><?php echo (int) ($pm['gain'] ?? 0); ?></td>
                                                 <td class="td-parties"><?php echo $pm2; ?></td>
+                                                <td style="color:var(--muted);font-size:11px;"><?php echo h($pm['option'] ?? ''); ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                         </tbody>
