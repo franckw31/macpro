@@ -153,6 +153,39 @@ function getAvailableCollections(mysqli $db): array
     return $rows;
 }
 
+function getParticipantsWithoutCollection(mysqli $db, int $activityId): array
+{
+    $sql = 'SELECT DISTINCT p.`id-membre`, COALESCE(m.pseudo, p.`nom-membre`) AS pseudo
+            FROM participation p
+            LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
+            WHERE p.`id-activite` = ?
+              AND (p.option IS NULL OR p.option NOT IN ("Annule", "Desinscrit", "None", "Option"))
+              AND NOT EXISTS (
+                  SELECT 1 FROM `collections-individu` ci WHERE ci.`id-indiv` = p.`id-membre`
+              )
+            ORDER BY COALESCE(m.pseudo, p.`nom-membre`) ASC';
+
+    $stmt = $db->prepare($sql);
+    if (!$stmt) {
+        return [];
+    }
+
+    $stmt->bind_param('i', $activityId);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    $rows = [];
+    while ($row = $res->fetch_assoc()) {
+        $rows[] = [
+            'id-membre' => (int) ($row['id-membre'] ?? 0),
+            'pseudo' => $row['pseudo'] ?: ('Membre #' . (int) ($row['id-membre'] ?? 0))
+        ];
+    }
+
+    $stmt->close();
+    return $rows;
+}
+
 $flash = $_SESSION['flash_affectation_collection_activite'] ?? null;
 unset($_SESSION['flash_affectation_collection_activite']);
 
@@ -160,6 +193,7 @@ $selectedActivityId = isset($_POST['activity_id']) ? (int) $_POST['activity_id']
 $selectedActivity = null;
 $participants = [];
 $availableCollections = [];
+$participantsWithoutCollection = [];
 $pendingAssignment = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'save_assignment') {
@@ -290,15 +324,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'auto_assign_missing') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'assign_selected_missing') {
     $activityId = isset($_POST['activity_id']) ? (int) $_POST['activity_id'] : 0;
+    $selectedMembers = isset($_POST['member_ids']) && is_array($_POST['member_ids']) ? $_POST['member_ids'] : [];
+    $selectedMembers = array_values(array_unique(array_map('intval', $selectedMembers)));
+    $selectedMembers = array_values(array_filter($selectedMembers, function ($v) {
+        return $v > 0;
+    }));
 
     if ($activityId <= 0) {
         $_SESSION['flash_affectation_collection_activite'] = [
             'type' => 'error',
-            'text' => 'Activité invalide pour l\'attribution automatique.'
+            'text' => 'Activité invalide pour l\'attribution.'
         ];
         header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    }
+
+    if (empty($selectedMembers)) {
+        $_SESSION['flash_affectation_collection_activite'] = [
+            'type' => 'error',
+            'text' => 'Aucun joueur coché. Coche au moins un participant à confirmer.'
+        ];
+        header('Location: ' . $_SERVER['PHP_SELF'] . '?activity_id=' . $activityId);
         exit;
     }
 
@@ -312,14 +360,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         exit;
     }
 
-    $participantsAuto = getParticipantsByActivity($conx, $activityId);
+    $participantsAuto = getParticipantsWithoutCollection($conx, $activityId);
     if (empty($participantsAuto)) {
         $_SESSION['flash_affectation_collection_activite'] = [
             'type' => 'error',
-            'text' => 'Aucun participant valide pour cette activité.'
+            'text' => 'Aucun participant sans collection pour cette activité.'
         ];
         header('Location: ' . $_SERVER['PHP_SELF'] . '?activity_id=' . $activityId);
         exit;
+    }
+
+    $allowedMemberIds = [];
+    foreach ($participantsAuto as $pa) {
+        $allowedMemberIds[(int) $pa['id-membre']] = true;
     }
 
     $conx->begin_transaction();
@@ -330,26 +383,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $hasIndividuDate = columnExists($conx, 'collections-individu', 'date');
 
         $assigned = 0;
-        $alreadyHasCollection = 0;
+        $notEligible = 0;
         $noCollectionLeft = 0;
 
-        foreach ($participantsAuto as $p) {
-            $memberId = (int) ($p['id-membre'] ?? 0);
+        foreach ($selectedMembers as $memberId) {
             if ($memberId <= 0) {
                 continue;
             }
 
-            $stmtHas = $conx->prepare('SELECT COUNT(*) AS c FROM `collections-individu` WHERE `id-indiv` = ?');
-            if (!$stmtHas) {
-                throw new RuntimeException('Erreur SQL vérification membre: ' . $conx->error);
-            }
-            $stmtHas->bind_param('i', $memberId);
-            $stmtHas->execute();
-            $hasRow = $stmtHas->get_result()->fetch_assoc();
-            $stmtHas->close();
-
-            if (!empty($hasRow) && (int) ($hasRow['c'] ?? 0) > 0) {
-                $alreadyHasCollection++;
+            if (!isset($allowedMemberIds[$memberId])) {
+                $notEligible++;
                 continue;
             }
 
@@ -418,7 +461,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         $_SESSION['flash_affectation_collection_activite'] = [
             'type' => 'success',
-            'text' => 'Attribution auto terminée : ' . $assigned . ' ajouté(s), ' . $alreadyHasCollection . ' déjà équipé(s), ' . $noCollectionLeft . ' arrêt(s) faute de collection libre.'
+            'text' => 'Attribution terminée : ' . $assigned . ' ajouté(s), ' . $notEligible . ' ignoré(s), ' . $noCollectionLeft . ' arrêt(s) faute de collection libre.'
         ];
     } catch (Throwable $e) {
         $conx->rollback();
@@ -443,6 +486,7 @@ if ($selectedActivityId > 0) {
     if ($selectedActivity) {
         $participants = getParticipantsByActivity($conx, $selectedActivityId);
         $availableCollections = getAvailableCollections($conx);
+        $participantsWithoutCollection = getParticipantsWithoutCollection($conx, $selectedActivityId);
     }
 }
 
@@ -571,13 +615,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <?php endforeach; ?>
                     </ul>
 
-                    <form method="post" action="" style="margin-top:12px;">
-                        <input type="hidden" name="action" value="auto_assign_missing">
-                        <input type="hidden" name="activity_id" value="<?php echo (int) $selectedActivity['id-activite']; ?>">
-                        <button type="submit" style="background:#0ea5e9;" onclick="return confirm('Attribuer automatiquement une collection libre aux participants qui n\'en ont pas ?');">
-                            Attribuer automatiquement aux participants sans collection
-                        </button>
-                    </form>
+                    <div style="margin-top:14px; border-top:1px solid #dbeafe; padding-top:12px;">
+                        <h3 style="margin:0 0 8px 0; font-size:16px;">Confirmation joueur par joueur</h3>
+                        <?php if (empty($participantsWithoutCollection)): ?>
+                            <p class="muted">Tous les participants ont déjà une collection.</p>
+                        <?php else: ?>
+                            <form method="post" action="" onsubmit="return confirm('Confirmer l\'attribution pour les joueurs cochés ?');">
+                                <input type="hidden" name="action" value="assign_selected_missing">
+                                <input type="hidden" name="activity_id" value="<?php echo (int) $selectedActivity['id-activite']; ?>">
+
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                                    <?php foreach ($participantsWithoutCollection as $pm): ?>
+                                        <label style="display:flex; align-items:center; gap:8px; margin:0; font-weight:normal; background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px; padding:8px 10px;">
+                                            <input type="checkbox" name="member_ids[]" value="<?php echo (int) $pm['id-membre']; ?>" checked>
+                                            <span>#<?php echo (int) $pm['id-membre']; ?> — <?php echo h($pm['pseudo']); ?></span>
+                                        </label>
+                                    <?php endforeach; ?>
+                                </div>
+
+                                <button type="submit" style="background:#0ea5e9; margin-top:10px;">
+                                    Attribuer une collection aux joueurs cochés
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                    </div>
                 <?php endif; ?>
             </div>
 
