@@ -335,8 +335,8 @@ function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId
                            AND (pm2.option IS NULL OR pm2.option NOT IN ("Annule", "Desinscrit", "None", "Option"))
                            AND MONTH(a2.date_depart) = MONTH(?)
                            AND YEAR(a2.date_depart) = YEAR(?))';
-        $bindTypes = 'iss';
-        $bindValues = [$activityId, $activityDate, $activityDate];
+        $bindTypes = 'ssi';
+        $bindValues = [$activityDate, $activityDate, $activityId];
     } else {
         $monthFilter = '0';
     }
