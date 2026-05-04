@@ -583,6 +583,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
     }
 }
+
+$displayUser = 'Visiteur';
+if (!empty($_SESSION['login'])) {
+    $displayUser = $_SESSION['login'];
+} elseif (!empty($_SESSION['user'])) {
+    $displayUser = $_SESSION['user'];
+} elseif (!empty($_COOKIE['uname'])) {
+    $displayUser = $_COOKIE['uname'];
+}
+$displayUser = h($displayUser);
+
+$avatar_url = 'https://viendez.com/images/noprofil.jpg';
+try {
+    if (!empty($_SESSION['id'])) {
+        $uid = (int) $_SESSION['id'];
+        $stmtPhoto = $conx->prepare('SELECT photo FROM membres WHERE `id-membre` = ? LIMIT 1');
+        if ($stmtPhoto) {
+            $stmtPhoto->bind_param('i', $uid);
+            $stmtPhoto->execute();
+            $rowPhoto = $stmtPhoto->get_result()->fetch_assoc();
+            $stmtPhoto->close();
+            if (!empty($rowPhoto['photo'])) {
+                $avatar_url = 'https://viendez.com/images/faces/' . rawurlencode(basename($rowPhoto['photo']));
+            }
+        }
+    }
+} catch (Throwable $e) {
+    // fallback noprofil
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -630,6 +659,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             font-weight:800;
             letter-spacing:.2px;
         }
+        .v2-header{display:flex;align-items:center;justify-content:space-between;padding:10px 2px 12px;gap:12px}
+        .v2-header-left{display:flex;align-items:center;gap:12px;min-width:0}
+        .v2-logo{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+        .v2-logo img{width:100%;height:100%;object-fit:cover;display:block}
+        .v2-app-name{font-size:18px;font-weight:800;letter-spacing:-0.3px;white-space:nowrap}
+        .v2-app-name span{color:var(--blue)}
+        .v2-version{background:rgba(10,132,255,0.18);color:var(--blue);font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px;vertical-align:middle}
+        .v2-greeting{font-size:13px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .v2-greeting .name{color:var(--text2);font-weight:600;max-width:150px;overflow:hidden;text-overflow:ellipsis;display:inline-block;vertical-align:bottom}
+        .v2-greeting .chev{color:var(--blue);font-weight:700}
+        .v2-avatar{width:54px;height:54px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,255,255,0.18);flex-shrink:0}
+        .v2-avatar img{width:100%;height:100%;object-fit:cover;display:block}
         .card {
             border:1px solid var(--border);
             border-radius:var(--radius);
@@ -736,6 +777,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 </head>
 <body>
     <div class="page">
+        <header class="v2-header">
+            <div class="v2-header-left">
+                <div class="v2-logo">
+                    <img src="/qrcode/joker_bg.jpg" alt="CardEvent">
+                </div>
+                <div>
+                    <div class="v2-app-name">Card<span>Event</span><span class="v2-version">V 3.0</span></div>
+                    <div class="v2-greeting">Bonjour, <span class="name"><?php echo $displayUser; ?></span> <span class="chev">›</span></div>
+                </div>
+            </div>
+            <a href="/panel/profile.php" aria-label="Profil">
+                <div class="v2-avatar">
+                    <img src="<?php echo h($avatar_url); ?>" alt="avatar">
+                </div>
+            </a>
+        </header>
+
         <h1 class="title">Nouvelle affectation : activité → participant → collection</h1>
 
         <?php if ($flash): ?>
