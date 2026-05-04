@@ -897,66 +897,46 @@ try {
             border-top:1px solid var(--border);
             padding-top:12px;
         }
-        .confirm-grid {
-            display:grid;
-            grid-template-columns:1fr;
-            gap:8px;
-        }
-        .choice {
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:8px;
-            margin:0;
-            font-weight:500;
-            color:var(--text2);
-            background:#0f1621;
-            border:1px solid var(--border);
-            border-radius:10px;
-            padding:9px 10px;
+        .confirm-table-wrap { overflow-x:auto; margin-bottom:16px; }
+        .confirm-table {
+            width:100%;
+            border-collapse:collapse;
             font-size:12px;
+            color:var(--text2);
         }
-        .choice-main {
-            display:flex;
-            align-items:center;
-            gap:8px;
-            min-width:0;
-            flex:1;
+        .confirm-table thead tr {
+            background:#0f1b2a;
+            border-bottom:2px solid var(--border);
         }
-        .choice-label {
-            overflow:hidden;
-            text-overflow:ellipsis;
+        .confirm-table thead th {
+            padding:8px 12px;
+            text-align:left;
+            font-size:11px;
+            font-weight:700;
+            text-transform:uppercase;
+            letter-spacing:.05em;
+            color:var(--muted);
             white-space:nowrap;
         }
-        .choice-bonus {
-            flex-shrink:0;
-            color:var(--cyan);
-            font-size:11px;
-            font-weight:700;
-            padding-left:8px;
+        .confirm-table thead th.th-center { text-align:center; }
+        .confirm-table tbody tr {
+            border-bottom:1px solid var(--border);
+            transition:background .15s;
         }
-        .choice-meta {
-            display:flex;
-            align-items:center;
-            gap:10px;
-            flex-shrink:0;
-            padding-left:8px;
+        .confirm-table tbody tr:hover { background:#141e2b; }
+        .confirm-table tbody td {
+            padding:8px 12px;
+            vertical-align:middle;
+            white-space:nowrap;
         }
-        .choice-rank {
-            color:var(--green);
-            font-size:11px;
-            font-weight:700;
-        }
-        .choice-gain {
-            color:var(--text2);
-            font-size:11px;
-            font-weight:700;
-        }
-        .choice-parties {
-            color:#f9a825;
-            font-size:11px;
-            font-weight:700;
-        }
+        .confirm-table tbody td.td-center { text-align:center; }
+        .td-pseudo { font-weight:600; color:var(--text2); }
+        .td-bonus { color:var(--cyan); font-weight:700; text-align:center; }
+        .td-rank  { color:var(--green); font-weight:700; text-align:center; }
+        .td-gain  { color:var(--text2); font-weight:700; text-align:center; }
+        .td-parties { color:#f9a825; font-weight:700; text-align:center; }
+        .td-check { text-align:center; }
+        .td-check input[type=checkbox] { width:16px; height:16px; cursor:pointer; accent-color:var(--cyan); }
         .btn-cyan { background:linear-gradient(90deg,var(--cyan),#00b3b3); color:#032027; }
         @media (max-width: 780px) {
             .page { padding:12px 10px 92px; }
@@ -1028,21 +1008,35 @@ try {
                                 <input type="hidden" name="action" value="assign_selected_missing">
                                 <input type="hidden" name="activity_id" value="<?php echo (int) $selectedActivity['id-activite']; ?>">
 
-                                <div class="confirm-grid">
-                                    <?php foreach ($participantsWithoutCollection as $pm): ?>
-                                        <label class="choice">
-                                            <span class="choice-main">
-                                                <input type="checkbox" name="member_ids[]" value="<?php echo (int) $pm['id-membre']; ?>" checked>
-                                                <span class="choice-label">#<?php echo (int) $pm['id-membre']; ?> — <?php echo h($pm['pseudo']); ?></span>
-                                            </span>
-                                            <span class="choice-meta">
-                                                <span class="choice-bonus">B:<?php echo (int) ($pm['jetons_bonus_ins'] ?? 0); ?></span>
-                                                <span class="choice-rank">C:<?php echo (int) ($pm['classement'] ?? 0); ?></span>
-                                                <span class="choice-gain">G:<?php echo (int) ($pm['gain'] ?? 0); ?></span>
-                                                <span class="choice-parties" title="Parties jouées ce mois">P:<?php echo (int) ($pm['nb_parties_mois'] ?? 0); ?></span>
-                                            </span>
-                                        </label>
-                                    <?php endforeach; ?>
+                                <div class="confirm-table-wrap">
+                                    <table class="confirm-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="th-center">✓</th>
+                                                <th>#</th>
+                                                <th>Joueur</th>
+                                                <th class="th-center" title="Jetons bonus inscription">Bonus</th>
+                                                <th class="th-center" title="Classement">Classmt</th>
+                                                <th class="th-center" title="Gain">Gain</th>
+                                                <th class="th-center" title="Parties jouées ce mois">Parties / mois</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach ($participantsWithoutCollection as $pm): ?>
+                                            <tr>
+                                                <td class="td-check">
+                                                    <input type="checkbox" name="member_ids[]" value="<?php echo (int) $pm['id-membre']; ?>" checked>
+                                                </td>
+                                                <td class="td-center" style="color:var(--muted);font-size:11px;"><?php echo (int) $pm['id-membre']; ?></td>
+                                                <td class="td-pseudo"><?php echo h($pm['pseudo']); ?></td>
+                                                <td class="td-bonus"><?php echo (int) ($pm['jetons_bonus_ins'] ?? 0); ?></td>
+                                                <td class="td-rank"><?php echo (int) ($pm['classement'] ?? 0); ?></td>
+                                                <td class="td-gain"><?php echo (int) ($pm['gain'] ?? 0); ?></td>
+                                                <td class="td-parties"><?php echo (int) ($pm['nb_parties_mois'] ?? 0); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
                                 </div>
 
                                 <button type="submit" class="btn-cyan">
