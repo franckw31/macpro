@@ -1028,11 +1028,18 @@ try {
                                                     <input type="checkbox" name="member_ids[]" value="<?php echo (int) $pm['id-membre']; ?>" checked>
                                                 </td>
                                                 <td class="td-center" style="color:var(--muted);font-size:11px;"><?php echo (int) $pm['id-membre']; ?></td>
-                                                <td class="td-pseudo"><?php echo h($pm['pseudo']); ?></td>
+                                                <?php
+                                                    $cl  = (int) ($pm['classement'] ?? 0);
+                                                    $pm2 = (int) ($pm['nb_parties_mois'] ?? 0);
+                                                    $pseudoColor = '';
+                                                    if ($cl > 0 && $cl < 10) $pseudoColor = 'color:var(--green);';
+                                                    if ($pm2 < 2)            $pseudoColor = 'color:#ef5350;';
+                                                ?>
+                                                <td class="td-pseudo" style="<?php echo $pseudoColor; ?>"><?php echo h($pm['pseudo']); ?></td>
                                                 <td class="td-bonus"><?php echo (int) ($pm['jetons_bonus_ins'] ?? 0); ?></td>
-                                                <td class="td-rank"><?php echo (int) ($pm['classement'] ?? 0); ?></td>
+                                                <td class="td-rank"><?php echo $cl; ?></td>
                                                 <td class="td-gain"><?php echo (int) ($pm['gain'] ?? 0); ?></td>
-                                                <td class="td-parties"><?php echo (int) ($pm['nb_parties_mois'] ?? 0); ?></td>
+                                                <td class="td-parties"><?php echo $pm2; ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                         </tbody>
