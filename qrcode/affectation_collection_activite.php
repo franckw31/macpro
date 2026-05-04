@@ -961,7 +961,7 @@ try {
                         <?php $aid = (int) $activity['id-activite']; ?>
                         <option value="<?php echo $aid; ?>" <?php echo ($selectedActivityId === $aid ? 'selected' : ''); ?>>
                             #<?php echo $aid; ?> — <?php echo h($activity['titre-activite']); ?>
-                            (<?php echo h($activity['date_depart']); ?> <?php echo h($activity['heure_depart']); ?>, <?php echo h($activity['ville']); ?>)
+                            (<?php echo h(substr((string) $activity['date_depart'], 0, 10)); ?>)
                         </option>
                     <?php endforeach; ?>
                 </select>
