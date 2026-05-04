@@ -53,7 +53,7 @@ function columnExists(mysqli $db, string $table, string $column): bool
         return $cache[$key];
     }
 
-    $allowedTables = ['collections', 'collections-individu'];
+    $allowedTables = ['collections', 'collections-individu', 'participation'];
     if (!in_array($table, $allowedTables, true)) {
         $cache[$key] = false;
         return false;
@@ -119,7 +119,11 @@ function getActivityById(mysqli $db, int $activityId): ?array
 
 function getParticipantsByActivity(mysqli $db, int $activityId): array
 {
+        $hasJetonsBonusIns = columnExists($db, 'participation', 'jetons_bonus_ins');
+        $selectJetonsBonusIns = $hasJetonsBonusIns ? 'COALESCE(p.jetons_bonus_ins, 0)' : '0';
+
     $sql = 'SELECT p.`id-membre`, p.option, p.`nom-membre`, m.pseudo
+                        , ' . $selectJetonsBonusIns . ' AS jetons_bonus_ins
             FROM participation p
             LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
             WHERE p.`id-activite` = ?
@@ -140,7 +144,8 @@ function getParticipantsByActivity(mysqli $db, int $activityId): array
         $rows[] = [
             'id-membre' => (int) ($row['id-membre'] ?? 0),
             'pseudo' => $row['pseudo'] ?: ($row['nom-membre'] ?: ('Membre #' . (int) ($row['id-membre'] ?? 0))),
-            'option' => $row['option'] ?? ''
+            'option' => $row['option'] ?? '',
+            'jetons_bonus_ins' => (int) ($row['jetons_bonus_ins'] ?? 0)
         ];
     }
 
@@ -305,7 +310,11 @@ function memberHasCollectionForActivity(mysqli $db, int $memberId, int $activity
 
 function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId, ?string $activityDate): array
 {
+        $hasJetonsBonusIns = columnExists($db, 'participation', 'jetons_bonus_ins');
+        $selectJetonsBonusIns = $hasJetonsBonusIns ? 'COALESCE(p.jetons_bonus_ins, 0)' : '0';
+
     $sql = 'SELECT DISTINCT p.`id-membre`, COALESCE(m.pseudo, p.`nom-membre`) AS pseudo
+                        , ' . $selectJetonsBonusIns . ' AS jetons_bonus_ins
             FROM participation p
             LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
             WHERE p.`id-activite` = ?
@@ -331,7 +340,8 @@ function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId
         if (!memberHasCollectionForActivity($db, $memberId, $activityId, $activityDate)) {
             $rows[] = [
                 'id-membre' => $memberId,
-                'pseudo' => $row['pseudo'] ?: ('Membre #' . $memberId)
+                'pseudo' => $row['pseudo'] ?: ('Membre #' . $memberId),
+                'jetons_bonus_ins' => (int) ($row['jetons_bonus_ins'] ?? 0)
             ];
         }
     }
@@ -854,6 +864,7 @@ try {
         .choice {
             display:flex;
             align-items:center;
+            justify-content:space-between;
             gap:8px;
             margin:0;
             font-weight:500;
@@ -862,6 +873,25 @@ try {
             border:1px solid var(--border);
             border-radius:10px;
             padding:9px 10px;
+        }
+        .choice-main {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            min-width:0;
+            flex:1;
+        }
+        .choice-label {
+            overflow:hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+        }
+        .choice-bonus {
+            flex-shrink:0;
+            color:var(--cyan);
+            font-size:12px;
+            font-weight:700;
+            padding-left:8px;
         }
         .btn-cyan { background:linear-gradient(90deg,var(--cyan),#00b3b3); color:#032027; }
         @media (max-width: 780px) {
@@ -937,8 +967,11 @@ try {
                                 <div class="confirm-grid">
                                     <?php foreach ($participantsWithoutCollection as $pm): ?>
                                         <label class="choice">
-                                            <input type="checkbox" name="member_ids[]" value="<?php echo (int) $pm['id-membre']; ?>" checked>
-                                            <span>#<?php echo (int) $pm['id-membre']; ?> — <?php echo h($pm['pseudo']); ?></span>
+                                            <span class="choice-main">
+                                                <input type="checkbox" name="member_ids[]" value="<?php echo (int) $pm['id-membre']; ?>" checked>
+                                                <span class="choice-label">#<?php echo (int) $pm['id-membre']; ?> — <?php echo h($pm['pseudo']); ?></span>
+                                            </span>
+                                            <span class="choice-bonus"><?php echo (int) ($pm['jetons_bonus_ins'] ?? 0); ?></span>
                                         </label>
                                     <?php endforeach; ?>
                                 </div>
