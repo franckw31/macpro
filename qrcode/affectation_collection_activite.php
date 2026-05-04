@@ -21,6 +21,39 @@ function h($v)
     return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
 }
 
+function columnExists(mysqli $db, string $table, string $column): bool
+{
+    static $cache = [];
+    $key = $table . '::' . $column;
+
+    if (array_key_exists($key, $cache)) {
+        return $cache[$key];
+    }
+
+    $allowedTables = ['collections', 'collections-individu'];
+    if (!in_array($table, $allowedTables, true)) {
+        $cache[$key] = false;
+        return false;
+    }
+
+    $tableEscaped = '`' . str_replace('`', '``', $table) . '`';
+    $sql = 'SHOW COLUMNS FROM ' . $tableEscaped . ' LIKE ?';
+    $stmt = $db->prepare($sql);
+    if (!$stmt) {
+        $cache[$key] = false;
+        return false;
+    }
+
+    $stmt->bind_param('s', $column);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $exists = $res && $res->num_rows > 0;
+    $stmt->close();
+
+    $cache[$key] = $exists;
+    return $exists;
+}
+
 function getActivities(mysqli $db): array
 {
     $sql = 'SELECT `id-activite`, `titre-activite`, `date_depart`, `heure_depart`, `ville`
@@ -90,7 +123,10 @@ function getParticipantsByActivity(mysqli $db, int $activityId): array
 
 function getAvailableCollections(mysqli $db): array
 {
-    $sql = 'SELECT c.id_collection, c.nom, c.valeur
+    $hasCollectionValeur = columnExists($db, 'collections', 'valeur');
+    $selectValeur = $hasCollectionValeur ? 'c.valeur' : '1 AS valeur';
+
+    $sql = 'SELECT c.id_collection, c.nom, ' . $selectValeur . '
             FROM collections c
             LEFT JOIN `collections-individu` ci ON ci.id_col = c.id_collection
             WHERE ci.id IS NULL
@@ -165,7 +201,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
 
         // Vérifier collection disponible (non utilisée)
-        $stmtCol = $conx->prepare('SELECT c.id_collection, c.nom, c.valeur FROM collections c LEFT JOIN `collections-individu` ci ON ci.id_col = c.id_collection WHERE c.id_collection = ? AND ci.id IS NULL LIMIT 1');
+        $hasCollectionValeur = columnExists($conx, 'collections', 'valeur');
+        $selectCollectionValeur = $hasCollectionValeur ? 'c.valeur' : '1 AS valeur';
+        $stmtCol = $conx->prepare('SELECT c.id_collection, c.nom, ' . $selectCollectionValeur . ' FROM collections c LEFT JOIN `collections-individu` ci ON ci.id_col = c.id_collection WHERE c.id_collection = ? AND ci.id IS NULL LIMIT 1');
         if (!$stmtCol) {
             throw new RuntimeException('Erreur SQL collection: ' . $conx->error);
         }
@@ -183,11 +221,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $dateValue = $activity['date_depart'] ?? date('Y-m-d');
         $valeur = isset($collection['valeur']) ? (int) $collection['valeur'] : 1;
 
-        $stmtIns = $conx->prepare('INSERT INTO `collections-individu` (id_col, `id-indiv`, co, valeur, `date`) VALUES (?, ?, ?, ?, ?)');
+        $hasIndividuValeur = columnExists($conx, 'collections-individu', 'valeur');
+        $hasIndividuDate = columnExists($conx, 'collections-individu', 'date');
+
+        $insertColumns = ['id_col', '`id-indiv`', 'co'];
+        $insertPlaceholders = ['?', '?', '?'];
+        $bindTypes = 'iis';
+        $bindValues = [$collectionId, $memberId, $coLabel];
+
+        if ($hasIndividuValeur) {
+            $insertColumns[] = 'valeur';
+            $insertPlaceholders[] = '?';
+            $bindTypes .= 'i';
+            $bindValues[] = $valeur;
+        }
+
+        if ($hasIndividuDate) {
+            $insertColumns[] = '`date`';
+            $insertPlaceholders[] = '?';
+            $bindTypes .= 's';
+            $bindValues[] = $dateValue;
+        }
+
+        $insertSql = 'INSERT INTO `collections-individu` (' . implode(', ', $insertColumns) . ') VALUES (' . implode(', ', $insertPlaceholders) . ')';
+        $stmtIns = $conx->prepare($insertSql);
         if (!$stmtIns) {
             throw new RuntimeException('Erreur SQL insert: ' . $conx->error);
         }
-        $stmtIns->bind_param('iisis', $collectionId, $memberId, $coLabel, $valeur, $dateValue);
+
+        $refs = [];
+        $refs[] = &$bindTypes;
+        foreach ($bindValues as $k => $v) {
+            $refs[] = &$bindValues[$k];
+        }
+        call_user_func_array([$stmtIns, 'bind_param'], $refs);
 
         if (!$stmtIns->execute()) {
             throw new RuntimeException('Insertion impossible: ' . $stmtIns->error);
