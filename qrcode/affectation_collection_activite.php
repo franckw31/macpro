@@ -120,6 +120,7 @@ $selectedActivityId = isset($_POST['activity_id']) ? (int) $_POST['activity_id']
 $selectedActivity = null;
 $participants = [];
 $availableCollections = [];
+$pendingAssignment = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'save_assignment') {
     $activityId = isset($_POST['activity_id']) ? (int) $_POST['activity_id'] : 0;
@@ -229,6 +230,59 @@ if ($selectedActivityId > 0) {
         $availableCollections = getAvailableCollections($conx);
     }
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'request_validation') {
+    $activityId = isset($_POST['activity_id']) ? (int) $_POST['activity_id'] : 0;
+    $memberId = isset($_POST['member_id']) ? (int) $_POST['member_id'] : 0;
+    $collectionId = isset($_POST['collection_id']) ? (int) $_POST['collection_id'] : 0;
+
+    if ($activityId <= 0 || $memberId <= 0 || $collectionId <= 0) {
+        $flash = [
+            'type' => 'error',
+            'text' => 'Veuillez choisir une activité, un participant et une collection avant validation.'
+        ];
+    } else {
+        if ($selectedActivityId !== $activityId) {
+            $selectedActivityId = $activityId;
+            $selectedActivity = getActivityById($conx, $selectedActivityId);
+            $participants = $selectedActivity ? getParticipantsByActivity($conx, $selectedActivityId) : [];
+            $availableCollections = $selectedActivity ? getAvailableCollections($conx) : [];
+        }
+
+        $selectedParticipant = null;
+        foreach ($participants as $p) {
+            if ((int) $p['id-membre'] === $memberId) {
+                $selectedParticipant = $p;
+                break;
+            }
+        }
+
+        $selectedCollection = null;
+        foreach ($availableCollections as $c) {
+            if ((int) $c['id_collection'] === $collectionId) {
+                $selectedCollection = $c;
+                break;
+            }
+        }
+
+        if (!$selectedActivity || !$selectedParticipant || !$selectedCollection) {
+            $flash = [
+                'type' => 'error',
+                'text' => 'Impossible de préparer la validation. Vérifiez les éléments sélectionnés.'
+            ];
+        } else {
+            $pendingAssignment = [
+                'activity_id' => $activityId,
+                'activity_title' => $selectedActivity['titre-activite'] ?? '',
+                'member_id' => $memberId,
+                'member_pseudo' => $selectedParticipant['pseudo'] ?? ('Membre #' . $memberId),
+                'collection_id' => $collectionId,
+                'collection_nom' => $selectedCollection['nom'] ?? '',
+                'collection_valeur' => (int) ($selectedCollection['valeur'] ?? 1)
+            ];
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -312,8 +366,8 @@ if ($selectedActivityId > 0) {
                         <p class="muted">Aucune collection disponible (toutes déjà utilisées dans collections-individu).</p>
                     <?php endif; ?>
                 <?php else: ?>
-                    <form method="post" action="" onsubmit="return confirm('Confirmer cette affectation ?');">
-                        <input type="hidden" name="action" value="save_assignment">
+                    <form method="post" action="">
+                        <input type="hidden" name="action" value="request_validation">
                         <input type="hidden" name="activity_id" value="<?php echo (int) $selectedActivity['id-activite']; ?>">
 
                         <div class="grid">
@@ -342,15 +396,28 @@ if ($selectedActivityId > 0) {
                             </div>
                         </div>
 
-                        <label style="margin-top:12px; display:flex; align-items:center; gap:8px; font-weight:normal;">
-                            <input type="checkbox" name="confirm" value="1" required>
-                            Je valide l'ajout dans la table collections-individu.
-                        </label>
-
-                        <button type="submit">Valider et enregistrer</button>
+                        <button type="submit">Demander validation</button>
                     </form>
                 <?php endif; ?>
             </div>
+
+            <?php if ($pendingAssignment): ?>
+                <div class="card" style="border-color:#93c5fd; background:#eff6ff;">
+                    <h3>4) Confirmation finale demandée</h3>
+                    <p><strong>Activité :</strong> #<?php echo (int) $pendingAssignment['activity_id']; ?> — <?php echo h($pendingAssignment['activity_title']); ?></p>
+                    <p><strong>Participant :</strong> #<?php echo (int) $pendingAssignment['member_id']; ?> — <?php echo h($pendingAssignment['member_pseudo']); ?></p>
+                    <p><strong>Collection :</strong> #<?php echo (int) $pendingAssignment['collection_id']; ?> — <?php echo h($pendingAssignment['collection_nom']); ?> (valeur <?php echo (int) $pendingAssignment['collection_valeur']; ?>)</p>
+
+                    <form method="post" action="" style="margin-top:12px;">
+                        <input type="hidden" name="action" value="save_assignment">
+                        <input type="hidden" name="activity_id" value="<?php echo (int) $pendingAssignment['activity_id']; ?>">
+                        <input type="hidden" name="member_id" value="<?php echo (int) $pendingAssignment['member_id']; ?>">
+                        <input type="hidden" name="collection_id" value="<?php echo (int) $pendingAssignment['collection_id']; ?>">
+                        <input type="hidden" name="confirm" value="1">
+                        <button type="submit" style="background:#16a34a;">Oui, je confirme l'ajout</button>
+                    </form>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 </body>
