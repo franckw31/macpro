@@ -21,6 +21,13 @@ function h($v)
     return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
 }
 
+function stripParenthesizedText(?string $text): string
+{
+    $text = (string) ($text ?? '');
+    $text = preg_replace('/\s*\([^)]*\)\s*/u', ' ', $text);
+    return trim(preg_replace('/\s{2,}/', ' ', $text) ?? $text);
+}
+
 function formatActivityMonthLabel(?string $activityDate): string
 {
     if (empty($activityDate)) {
@@ -964,7 +971,7 @@ try {
                     <?php foreach ($activities as $activity): ?>
                         <?php $aid = (int) $activity['id-activite']; ?>
                         <option value="<?php echo $aid; ?>" <?php echo ($selectedActivityId === $aid ? 'selected' : ''); ?>>
-                            #<?php echo $aid; ?> — <?php echo h($activity['titre-activite']); ?>
+                            #<?php echo $aid; ?> — <?php echo h(stripParenthesizedText($activity['titre-activite'] ?? '')); ?>
                             (<?php echo h(substr((string) $activity['date_depart'], 0, 10)); ?>)
                         </option>
                     <?php endforeach; ?>
