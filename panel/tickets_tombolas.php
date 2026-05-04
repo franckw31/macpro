@@ -113,7 +113,7 @@ if ($id > 0) {
     <script type="text/javascript">
     $(document).ready(function(){
         $('#example4').DataTable({
-            pageLength: 10,
+            pageLength: 12,
             ordering: false,
             lengthChange: false,
             searching: false,
