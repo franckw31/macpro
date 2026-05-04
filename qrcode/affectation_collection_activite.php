@@ -988,8 +988,8 @@ try {
                                                 <span class="choice-label">#<?php echo (int) $pm['id-membre']; ?> — <?php echo h($pm['pseudo']); ?></span>
                                             </span>
                                             <span class="choice-meta">
-                                                <span class="choice-bonus"><?php echo (int) ($pm['jetons_bonus_ins'] ?? 0); ?></span>
-                                                <span class="choice-rank"><?php echo (int) ($pm['classement'] ?? 0); ?></span>
+                                                <span class="choice-bonus">B:<?php echo (int) ($pm['jetons_bonus_ins'] ?? 0); ?></span>
+                                                <span class="choice-rank">C:<?php echo (int) ($pm['classement'] ?? 0); ?></span>
                                             </span>
                                         </label>
                                     <?php endforeach; ?>
