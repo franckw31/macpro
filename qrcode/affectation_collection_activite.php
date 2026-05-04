@@ -1018,7 +1018,7 @@ try {
                                                 <th class="th-center" title="Jetons bonus inscription">Bonus</th>
                                                 <th class="th-center" title="Classement" style="width:54px;">Cl.</th>
                                                 <th class="th-center" title="Gain">Gain</th>
-                                                <th class="th-center" title="Parties jouées ce mois" style="width:60px;">P/mois</th>
+                                                <th class="th-center" title="Parties jouées ce mois" style="width:60px;">P</th>
                                             </tr>
                                         </thead>
                                         <tbody>
