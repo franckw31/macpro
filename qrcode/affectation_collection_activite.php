@@ -8,6 +8,7 @@ if (!file_exists($config_path)) {
     die('Config introuvable : ' . htmlspecialchars($config_path, ENT_QUOTES, 'UTF-8'));
 }
 
+$conx = null;
 require_once $config_path; // $conx
 if (!$conx) {
     die('Erreur connexion MySQL : ' . mysqli_connect_error());
