@@ -21,6 +21,29 @@ function h($v)
     return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
 }
 
+function formatActivityMonthLabel(?string $activityDate): string
+{
+    if (empty($activityDate)) {
+        return 'ce mois';
+    }
+
+    $timestamp = strtotime($activityDate);
+    if ($timestamp === false) {
+        return 'ce mois';
+    }
+
+    $months = [
+        1 => 'janvier', 2 => 'février', 3 => 'mars', 4 => 'avril',
+        5 => 'mai', 6 => 'juin', 7 => 'juillet', 8 => 'août',
+        9 => 'septembre', 10 => 'octobre', 11 => 'novembre', 12 => 'décembre'
+    ];
+
+    $month = (int) date('n', $timestamp);
+    $year = date('Y', $timestamp);
+
+    return ($months[$month] ?? 'mois') . ' ' . $year;
+}
+
 function columnExists(mysqli $db, string $table, string $column): bool
 {
     static $cache = [];
@@ -273,6 +296,7 @@ $selectedActivity = null;
 $participants = [];
 $availableCollections = [];
 $availableCollectionsMonthCount = 0;
+$activityMonthLabel = 'ce mois';
 $participantsWithoutCollection = [];
 $pendingAssignment = null;
 
@@ -572,6 +596,7 @@ if ($selectedActivityId > 0) {
     if ($selectedActivity) {
         $participants = getParticipantsByActivity($conx, $selectedActivityId);
         $availableCollections = getAvailableCollections($conx);
+        $activityMonthLabel = formatActivityMonthLabel($selectedActivity['date_depart'] ?? null);
         $availableCollectionsMonthCount = countAvailableCollectionsForActivityMonth($conx, $selectedActivity['date_depart'] ?? null);
         $participantsWithoutCollection = getParticipantsWithoutCollectionForActivity($conx, $selectedActivityId, $selectedActivity['date_depart'] ?? null);
     }
@@ -855,7 +880,7 @@ try {
                     <p class="muted">Aucun participant valide pour cette activité.</p>
                 <?php else: ?>
                     <p class="metric">
-                        Collections non affectées à un joueur pour le mois de l'activité
+                        Collections non affectées à un joueur pour <?php echo h($activityMonthLabel); ?>
                         (tous joueurs et toutes parties confondus) :
                         <strong><?php echo (int) $availableCollectionsMonthCount; ?></strong>
                     </p>
