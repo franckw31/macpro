@@ -132,7 +132,7 @@ function getAvailableCollections(mysqli $db): array
 
     $sql = 'SELECT c.id_collection, c.nom, ' . $selectValeur . '
             FROM collections c
-            LEFT JOIN `collections-individu` ci ON ci.id_col = c.id_collection
+            LEFT JOIN `collections-individu` ci ON ci.id_col = c.id_collection AND ci.`id-indiv` IS NOT NULL AND ci.`id-indiv` > 0
             WHERE ci.id IS NULL
             ORDER BY c.id_collection ASC';
 
@@ -276,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         // Vérifier collection disponible (non utilisée)
         $hasCollectionValeur = columnExists($conx, 'collections', 'valeur');
         $selectCollectionValeur = $hasCollectionValeur ? 'c.valeur' : '1 AS valeur';
-        $stmtCol = $conx->prepare('SELECT c.id_collection, c.nom, ' . $selectCollectionValeur . ' FROM collections c LEFT JOIN `collections-individu` ci ON ci.id_col = c.id_collection WHERE c.id_collection = ? AND ci.id IS NULL LIMIT 1');
+        $stmtCol = $conx->prepare('SELECT c.id_collection, c.nom, ' . $selectCollectionValeur . ' FROM collections c LEFT JOIN `collections-individu` ci ON ci.id_col = c.id_collection AND ci.`id-indiv` IS NOT NULL AND ci.`id-indiv` > 0 WHERE c.id_collection = ? AND ci.id IS NULL LIMIT 1');
         if (!$stmtCol) {
             throw new RuntimeException('Erreur SQL collection: ' . $conx->error);
         }
@@ -438,7 +438,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
 
             $selectCollectionValeur = $hasCollectionValeur ? 'c.valeur' : '1 AS valeur';
-            $stmtCol = $conx->prepare('SELECT c.id_collection, c.nom, ' . $selectCollectionValeur . ' FROM collections c LEFT JOIN `collections-individu` ci ON ci.id_col = c.id_collection WHERE ci.id IS NULL ORDER BY c.id_collection ASC LIMIT 1');
+            $stmtCol = $conx->prepare('SELECT c.id_collection, c.nom, ' . $selectCollectionValeur . ' FROM collections c LEFT JOIN `collections-individu` ci ON ci.id_col = c.id_collection AND ci.`id-indiv` IS NOT NULL AND ci.`id-indiv` > 0 WHERE ci.id IS NULL ORDER BY c.id_collection ASC LIMIT 1');
             if (!$stmtCol) {
                 throw new RuntimeException('Erreur SQL collection disponible: ' . $conx->error);
             }
