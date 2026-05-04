@@ -1016,7 +1016,7 @@ try {
                                                 <th>#</th>
                                                 <th>Joueur</th>
                                                 <th class="th-center" title="Jetons bonus inscription">Bonus</th>
-                                                <th class="th-center" title="Classement">Classmt</th>
+                                                <th class="th-center" title="Classement" style="width:54px;">Cl.</th>
                                                 <th class="th-center" title="Gain">Gain</th>
                                                 <th class="th-center" title="Parties jouées ce mois">Parties / mois</th>
                                             </tr>
