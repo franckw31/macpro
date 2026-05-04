@@ -596,7 +596,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             --bg:#0a0d14;
             --card:#111822;
             --card2:#141e2b;
-            --border:rgba(255,255,255,0.08);
+            --border:rgba(255,255,255,0.06);
             --blue:#0a84ff;
             --cyan:#30d5c8;
             --green:#34c759;
@@ -616,26 +616,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             -webkit-font-smoothing:antialiased;
         }
         .page {
-            max-width:760px;
+            max-width:440px;
             margin:0 auto;
-            padding:16px;
+            min-height:100vh;
+            padding:14px 12px 92px;
+            display:flex;
+            flex-direction:column;
+            gap:0;
         }
         .title {
-            margin:0 0 14px;
-            font-size:22px;
+            margin:4px 2px 12px;
+            font-size:20px;
             font-weight:800;
             letter-spacing:.2px;
         }
         .card {
             border:1px solid var(--border);
             border-radius:var(--radius);
-            padding:14px;
+            padding:16px;
             margin-bottom:12px;
             background:linear-gradient(180deg,var(--card),var(--card2));
+            box-shadow:0 10px 28px rgba(0,0,0,.25);
         }
         .section-title {
             margin:0 0 10px;
-            font-size:16px;
+            font-size:15px;
             font-weight:700;
             color:var(--text2);
         }
@@ -647,7 +652,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
         select, button {
             width:100%;
-            padding:12px;
+            min-height:46px;
+            padding:11px 12px;
             border-radius:12px;
             border:1px solid var(--border);
             font-size:14px;
@@ -675,7 +681,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             border:1px solid var(--border);
             border-radius:10px;
             padding:9px 10px;
-            font-size:14px;
+            font-size:13px;
             color:var(--text2);
         }
         .muted { color:var(--muted); font-size:13px; }
@@ -705,7 +711,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
         .confirm-grid {
             display:grid;
-            grid-template-columns:1fr 1fr;
+            grid-template-columns:1fr;
             gap:8px;
         }
         .choice {
@@ -722,9 +728,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
         .btn-cyan { background:linear-gradient(90deg,var(--cyan),#00b3b3); color:#032027; }
         @media (max-width: 780px) {
-            .page { padding:12px; }
-            .participants-list, .confirm-grid { grid-template-columns:1fr; }
-            .title { font-size:20px; }
+            .page { padding:12px 10px 92px; }
+            .participants-list { grid-template-columns:1fr; }
+            .title { font-size:19px; }
         }
     </style>
 </head>
