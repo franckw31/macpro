@@ -130,7 +130,7 @@ function getParticipantsByActivity(mysqli $db, int $activityId): array
             LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
             WHERE p.`id-activite` = ?
               AND (p.option IS NULL OR p.option NOT IN ("Annule", "Desinscrit", "None", "Option"))
-            ORDER BY COALESCE(m.pseudo, p.`nom-membre`) ASC';
+                        ORDER BY (COALESCE(p.classement, 0) = 0) ASC, COALESCE(p.classement, 0) ASC, COALESCE(m.pseudo, p.`nom-membre`) ASC';
 
     $stmt = $db->prepare($sql);
     if (!$stmt) {
@@ -325,7 +325,7 @@ function getParticipantsWithoutCollectionForActivity(mysqli $db, int $activityId
             LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
             WHERE p.`id-activite` = ?
               AND (p.option IS NULL OR p.option NOT IN ("Annule", "Desinscrit", "None", "Option"))
-            ORDER BY COALESCE(m.pseudo, p.`nom-membre`) ASC';
+                        ORDER BY (COALESCE(p.classement, 0) = 0) ASC, COALESCE(p.classement, 0) ASC, COALESCE(m.pseudo, p.`nom-membre`) ASC';
 
     $stmt = $db->prepare($sql);
     if (!$stmt) {
