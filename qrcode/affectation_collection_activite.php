@@ -591,26 +591,146 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Affectation collection à participant</title>
     <style>
-        body { font-family: Arial, sans-serif; background:#f4f6fb; margin:0; padding:20px; color:#1f2937; }
-        .container { max-width:900px; margin:0 auto; background:#fff; border-radius:12px; padding:22px; box-shadow:0 8px 30px rgba(0,0,0,.08); }
-        h1 { margin-top:0; font-size:24px; }
-        .card { border:1px solid #e5e7eb; border-radius:10px; padding:16px; margin-bottom:16px; background:#fafbff; }
-        label { display:block; margin-bottom:8px; font-weight:600; }
-        select, button { width:100%; padding:12px; border-radius:8px; border:1px solid #d1d5db; font-size:14px; }
-        button { cursor:pointer; border:none; background:#2563eb; color:#fff; font-weight:700; margin-top:10px; }
-        button:hover { background:#1d4ed8; }
-        ul { margin:10px 0 0 18px; }
-        .muted { color:#6b7280; font-size:13px; }
-        .flash { border-radius:8px; padding:12px; margin-bottom:14px; font-weight:600; }
-        .flash.success { background:#dcfce7; color:#166534; border:1px solid #86efac; }
-        .flash.error { background:#fee2e2; color:#991b1b; border:1px solid #fecaca; }
-        .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-        @media (max-width: 700px) { .grid { grid-template-columns:1fr; } }
+        *,*::before,*::after { box-sizing:border-box; }
+        :root {
+            --bg:#0a0d14;
+            --card:#111822;
+            --card2:#141e2b;
+            --border:rgba(255,255,255,0.08);
+            --blue:#0a84ff;
+            --cyan:#30d5c8;
+            --green:#34c759;
+            --danger:#ff453a;
+            --text:#ffffff;
+            --text2:#c8d6e5;
+            --muted:#8e9bae;
+            --radius:16px;
+            --radius-sm:12px;
+        }
+        html, body {
+            margin:0;
+            min-height:100%;
+            background:var(--bg);
+            color:var(--text);
+            font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif;
+            -webkit-font-smoothing:antialiased;
+        }
+        .page {
+            max-width:760px;
+            margin:0 auto;
+            padding:16px;
+        }
+        .title {
+            margin:0 0 14px;
+            font-size:22px;
+            font-weight:800;
+            letter-spacing:.2px;
+        }
+        .card {
+            border:1px solid var(--border);
+            border-radius:var(--radius);
+            padding:14px;
+            margin-bottom:12px;
+            background:linear-gradient(180deg,var(--card),var(--card2));
+        }
+        .section-title {
+            margin:0 0 10px;
+            font-size:16px;
+            font-weight:700;
+            color:var(--text2);
+        }
+        label {
+            display:block;
+            margin-bottom:8px;
+            font-weight:600;
+            color:var(--text2);
+        }
+        select, button {
+            width:100%;
+            padding:12px;
+            border-radius:12px;
+            border:1px solid var(--border);
+            font-size:14px;
+            color:var(--text);
+            background:#0f1621;
+        }
+        button {
+            cursor:pointer;
+            background:linear-gradient(90deg,var(--blue),#0070dd);
+            font-weight:700;
+            margin-top:10px;
+            border:none;
+        }
+        button:hover { filter:brightness(1.06); }
+        .participants-list {
+            list-style:none;
+            margin:10px 0 0;
+            padding:0;
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:8px;
+        }
+        .participants-list li {
+            background:#0f1621;
+            border:1px solid var(--border);
+            border-radius:10px;
+            padding:9px 10px;
+            font-size:14px;
+            color:var(--text2);
+        }
+        .muted { color:var(--muted); font-size:13px; }
+        .metric {
+            margin-top:10px;
+            color:var(--text2);
+            background:#0f1621;
+            border:1px solid var(--border);
+            border-radius:10px;
+            padding:10px;
+            font-size:14px;
+        }
+        .metric strong { color:var(--cyan); }
+        .flash {
+            border-radius:12px;
+            padding:12px;
+            margin-bottom:12px;
+            font-weight:700;
+            border:1px solid transparent;
+        }
+        .flash.success { background:rgba(52,199,89,.18); color:#9ff0b2; border-color:rgba(52,199,89,.35); }
+        .flash.error { background:rgba(255,69,58,.16); color:#ffb4ad; border-color:rgba(255,69,58,.35); }
+        .confirm-wrap {
+            margin-top:14px;
+            border-top:1px solid var(--border);
+            padding-top:12px;
+        }
+        .confirm-grid {
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:8px;
+        }
+        .choice {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            margin:0;
+            font-weight:500;
+            color:var(--text2);
+            background:#0f1621;
+            border:1px solid var(--border);
+            border-radius:10px;
+            padding:9px 10px;
+        }
+        .btn-cyan { background:linear-gradient(90deg,var(--cyan),#00b3b3); color:#032027; }
+        @media (max-width: 780px) {
+            .page { padding:12px; }
+            .participants-list, .confirm-grid { grid-template-columns:1fr; }
+            .title { font-size:20px; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Nouvelle affectation : activité → participant → collection</h1>
+    <div class="page">
+        <h1 class="title">Nouvelle affectation : activité → participant → collection</h1>
 
         <?php if ($flash): ?>
             <div class="flash <?php echo h($flash['type'] ?? 'error'); ?>">
@@ -641,11 +761,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 #<?php echo (int) $selectedActivity['id-activite']; ?> — <?php echo h($selectedActivity['titre-activite']); ?>
                 <div class="muted"><?php echo h($selectedActivity['date_depart']); ?> <?php echo h($selectedActivity['heure_depart']); ?> · <?php echo h($selectedActivity['ville']); ?></div>
 
-                <h3>2) Liste des participants</h3>
+                <h3 class="section-title">2) Liste des participants</h3>
                 <?php if (empty($participants)): ?>
                     <p class="muted">Aucun participant valide pour cette activité.</p>
                 <?php else: ?>
-                    <ul>
+                    <ul class="participants-list">
                         <?php foreach ($participants as $p): ?>
                             <li>
                                 #<?php echo (int) $p['id-membre']; ?> — <?php echo h($p['pseudo']); ?>
@@ -654,15 +774,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
-
-                        <p class="muted" style="margin-top:10px;">
-                            Collections non affectées à un joueur (toutes activités confondues) :
-                            <strong><?php echo (int) count($availableCollections); ?></strong>
-                        </p>
                     </ul>
 
-                    <div style="margin-top:14px; border-top:1px solid #dbeafe; padding-top:12px;">
-                        <h3 style="margin:0 0 8px 0; font-size:16px;">Confirmation joueur par joueur</h3>
+                    <p class="metric">
+                        Collections non affectées à un joueur (toutes activités confondues) :
+                        <strong><?php echo (int) count($availableCollections); ?></strong>
+                    </p>
+
+                    <div class="confirm-wrap">
+                        <h3 class="section-title">Confirmation joueur par joueur</h3>
                         <?php if (empty($participantsWithoutCollection)): ?>
                             <p class="muted">Tous les participants ont déjà une collection.</p>
                         <?php else: ?>
@@ -670,16 +790,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 <input type="hidden" name="action" value="assign_selected_missing">
                                 <input type="hidden" name="activity_id" value="<?php echo (int) $selectedActivity['id-activite']; ?>">
 
-                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                                <div class="confirm-grid">
                                     <?php foreach ($participantsWithoutCollection as $pm): ?>
-                                        <label style="display:flex; align-items:center; gap:8px; margin:0; font-weight:normal; background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px; padding:8px 10px;">
+                                        <label class="choice">
                                             <input type="checkbox" name="member_ids[]" value="<?php echo (int) $pm['id-membre']; ?>" checked>
                                             <span>#<?php echo (int) $pm['id-membre']; ?> — <?php echo h($pm['pseudo']); ?></span>
                                         </label>
                                     <?php endforeach; ?>
                                 </div>
 
-                                <button type="submit" style="background:#0ea5e9; margin-top:10px;">
+                                <button type="submit" class="btn-cyan">
                                     Attribuer une collection aux joueurs cochés
                                 </button>
                             </form>
