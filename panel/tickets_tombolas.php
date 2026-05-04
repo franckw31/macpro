@@ -12,25 +12,57 @@ if ($uid <= 0) {
 
 function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-// default to current month/year
-$selected_month_tom = isset($_GET['month_tom']) ? intval($_GET['month_tom']) : intval(date('m'));
-$selected_year_tom  = isset($_GET['year_tom']) ? intval($_GET['year_tom']) : intval(date('Y'));
+$id = isset($_GET['id']) ? intval($_GET['id']) : $uid;
+$hasMonthFilter = isset($_GET['month_tom']);
+$hasYearFilter  = isset($_GET['year_tom']);
+
+// default values (possibly overridden below with the latest ticket month/year)
+$selected_month_tom = $hasMonthFilter ? intval($_GET['month_tom']) : intval(date('m'));
+$selected_year_tom  = $hasYearFilter ? intval($_GET['year_tom']) : intval(date('Y'));
 
 if ($selected_month_tom < 1 || $selected_month_tom > 12) $selected_month_tom = intval(date('m'));
 $current_year_tom = intval(date('Y'));
 if ($selected_year_tom < 2023 || $selected_year_tom > $current_year_tom) $selected_year_tom = $current_year_tom;
+
+// If no filter is explicitly provided, show the most recent month/year where the member has tickets
+if ($id > 0 && !empty($con) && (!$hasMonthFilter || !$hasYearFilter)) {
+    $latestSql = "SELECT `date`
+                  FROM `collections-individu`
+                  WHERE `id-indiv` = ? AND `date` IS NOT NULL
+                  ORDER BY `date` DESC
+                  LIMIT 1";
+    if ($latestStmt = @mysqli_prepare($con, $latestSql)) {
+        mysqli_stmt_bind_param($latestStmt, 'i', $id);
+        mysqli_stmt_execute($latestStmt);
+        $latestRes = mysqli_stmt_get_result($latestStmt);
+        if ($latestRes && ($latestRow = mysqli_fetch_assoc($latestRes)) && !empty($latestRow['date'])) {
+            $ts = strtotime($latestRow['date']);
+            if ($ts !== false) {
+                $selected_month_tom = intval(date('m', $ts));
+                $selected_year_tom  = intval(date('Y', $ts));
+            }
+        }
+        mysqli_stmt_close($latestStmt);
+    }
+}
 
 $rows = [];
 if ($id > 0 && !empty($con)) {
     $q = "SELECT ci.*, c.nom AS collection_nom, c.valeur AS collection_valeur
           FROM `collections-individu` ci
           LEFT JOIN `collections` c ON ci.`id_col` = c.`id_collection`
-          WHERE ci.`id-indiv` = '".intval($id)."' AND MONTH(ci.`date`) = ".intval($selected_month_tom)." AND YEAR(ci.`date`) = " . intval($selected_year_tom) . "
+          WHERE ci.`id-indiv` = ?
+            AND MONTH(ci.`date`) = ?
+            AND YEAR(ci.`date`) = ?
           ORDER BY ci.`date` DESC";
-    $res = @mysqli_query($con, $q);
-    if ($res) {
-        while ($r = mysqli_fetch_assoc($res)) { $rows[] = $r; }
+    if ($stmt = @mysqli_prepare($con, $q)) {
+        mysqli_stmt_bind_param($stmt, 'iii', $id, $selected_month_tom, $selected_year_tom);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+        if ($res) {
+            while ($r = mysqli_fetch_assoc($res)) { $rows[] = $r; }
+        }
+        mysqli_stmt_close($stmt);
     }
 }
 
