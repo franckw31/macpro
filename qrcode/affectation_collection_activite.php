@@ -230,21 +230,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         $insertColumns = ['id_col', '`id-indiv`', 'co'];
         $insertPlaceholders = ['?', '?', '?'];
-        $bindTypes = 'iis';
-        $bindValues = [$collectionId, $memberId, $coLabel];
 
         if ($hasIndividuValeur) {
             $insertColumns[] = 'valeur';
             $insertPlaceholders[] = '?';
-            $bindTypes .= 'i';
-            $bindValues[] = $valeur;
         }
 
         if ($hasIndividuDate) {
             $insertColumns[] = '`date`';
             $insertPlaceholders[] = '?';
-            $bindTypes .= 's';
-            $bindValues[] = $dateValue;
         }
 
         $insertSql = 'INSERT INTO `collections-individu` (' . implode(', ', $insertColumns) . ') VALUES (' . implode(', ', $insertPlaceholders) . ')';
@@ -253,12 +247,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             throw new RuntimeException('Erreur SQL insert: ' . $conx->error);
         }
 
-        $refs = [];
-        $refs[] = &$bindTypes;
-        foreach ($bindValues as $k => $v) {
-            $refs[] = &$bindValues[$k];
+        $bound = false;
+        if ($hasIndividuValeur && $hasIndividuDate) {
+            $bound = $stmtIns->bind_param('iisis', $collectionId, $memberId, $coLabel, $valeur, $dateValue);
+        } elseif ($hasIndividuValeur && !$hasIndividuDate) {
+            $bound = $stmtIns->bind_param('iisi', $collectionId, $memberId, $coLabel, $valeur);
+        } elseif (!$hasIndividuValeur && $hasIndividuDate) {
+            $bound = $stmtIns->bind_param('iiss', $collectionId, $memberId, $coLabel, $dateValue);
+        } else {
+            $bound = $stmtIns->bind_param('iis', $collectionId, $memberId, $coLabel);
         }
-        call_user_func_array([$stmtIns, 'bind_param'], $refs);
+
+        if (!$bound) {
+            throw new RuntimeException('Bind impossible: ' . $stmtIns->error);
+        }
 
         if (!$stmtIns->execute()) {
             throw new RuntimeException('Insertion impossible: ' . $stmtIns->error);
@@ -280,7 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         $_SESSION['flash_affectation_collection_activite'] = [
             'type' => 'error',
-            'text' => $e->getMessage()
+            'text' => $e->getMessage() . ' (mysqli errno: ' . (int) $conx->errno . ', error: ' . $conx->error . ')'
         ];
 
         header('Location: ' . $_SERVER['PHP_SELF'] . '?activity_id=' . $activityId);
