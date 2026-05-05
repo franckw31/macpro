@@ -246,7 +246,7 @@ if (!empty($con)) {
     $last_game_titre = trim(preg_replace('/\s*\([^)]*\)\s*/u', ' ', $last_game_titre));
     if (!empty($lgrow['date_depart'])) {
       $_lgd = new DateTime($lgrow['date_depart'], new DateTimeZone('Europe/Paris'));
-      $_jfr = ['Monday'=>'Lun','Tuesday'=>'Mar','Wednesday'=>'Mer','Thursday'=>'Jeu','Friday'=>'Ven','Saturday'=>'Sam','Sunday'=>'Dim'];
+      $_jfr = ['Monday'=>'Lundi','Tuesday'=>'Mardi','Wednesday'=>'Mercredi','Thursday'=>'Jeudi','Friday'=>'Vendredi','Saturday'=>'Samedi','Sunday'=>'Dimanche'];
       $_mfr = ['January'=>'jan','February'=>'fév','March'=>'mars','April'=>'avr','May'=>'mai','June'=>'juin','July'=>'juil','August'=>'août','September'=>'sep','October'=>'oct','November'=>'nov','December'=>'déc'];
       $last_game_date = $_jfr[$_lgd->format('l')] . ' ' . $_lgd->format('j') . ' ' . $_mfr[$_lgd->format('F')];
     }
