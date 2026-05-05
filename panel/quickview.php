@@ -1307,7 +1307,7 @@ function escTrak(s) {
         listHtml += '<div class="v2-cal-ev-left"><div class="v2-cal-ev-dot '+dotCls+'"></div><div>';
         listHtml += '<div class="v2-cal-ev-label">'+escHtml(a.label)+tag+'</div>';
         listHtml += '</div></div>';
-        listHtml += '<div class="v2-cal-ev-right">'+(a.buyin ? a.buyin+' €' : '')+'</div>';
+        listHtml += '<div class="v2-cal-ev-right">'+(a.buyin ? a.buyin+'' : '')+'</div>';
         listHtml += '</div>';
       });
     }
