@@ -613,7 +613,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
         </div>
         <div>
           <div class="v2-fin-lbl">BuyIn</div>
-          <div class="v2-fin-val" style="color:var(--orange)"><?php echo isset($serverActivity['buyin']) ? htmlspecialchars($serverActivity['buyin']).' €' : '—'; ?></div>
+          <div class="v2-fin-val" style="color:var(--orange)"><?php echo isset($serverActivity['buyin']) ? htmlspecialchars($serverActivity['buyin']).'' : '—'; ?></div>
         </div>
       </div>
       <div class="v2-fin-item">
@@ -622,7 +622,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
         </div>
         <div>
           <div class="v2-fin-lbl">PAF</div>
-          <div class="v2-fin-val" style="color:#ff453a"><?php echo isset($serverActivity['rake']) ? htmlspecialchars($serverActivity['rake']).' €' : '—'; ?></div>
+          <div class="v2-fin-val" style="color:#ff453a"><?php echo isset($serverActivity['rake']) ? htmlspecialchars($serverActivity['rake']).'' : '—'; ?></div>
         </div>
       </div>
       <div class="v2-fin-item">
@@ -1428,12 +1428,12 @@ function escTrak(s) {
     }
     f('dd-inscrits', (act.participants_count!=null) ? act.participants_count+(act.max_participants?' / '+act.max_participants:'') : '—');
     f('dd-tables', act.tables || '—');
-    f('dd-buyin', act.buyin!=null ? act.buyin+' €' : '—');
-    f('dd-rake', act.rake!=null ? act.rake+' €' : '—');
+    f('dd-buyin', act.buyin!=null ? act.buyin+'' : '—');
+    f('dd-rake', act.rake!=null ? act.rake+'' : '—');
     var bountyNum = Number(act.bounty || 0);
     var bountyRow = document.getElementById('dd-bounty-row');
     if (bountyRow) bountyRow.style.display = bountyNum > 0 ? 'flex' : 'none';
-    f('dd-bounty', bountyNum > 0 ? bountyNum+' €' : '—');
+    f('dd-bounty', bountyNum > 0 ? bountyNum+'' : '—');
     f('dd-recave', act.recave || '—');
     f('dd-jetons', act.start_chips || '—');
     // Build blind levels table
