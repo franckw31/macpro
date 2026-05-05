@@ -219,6 +219,12 @@ if (!empty($serverActivity['date'])) {
     $is_today = ($now >= $start_ts) && (($now - $start_ts) <= 28800);
   }
 }
+// Hide Live Timer if a winner (classement=1) already exists for this activity
+$activity_has_winner = false;
+if (!empty($id) && !empty($con)) {
+  $wq = mysqli_query($con, "SELECT COUNT(*) AS c FROM participation WHERE `id-activite`=" . intval($id) . " AND classement=1");
+  if ($wq && ($wr = mysqli_fetch_assoc($wq))) $activity_has_winner = ((int)$wr['c'] > 0);
+}
 $participants_href = $is_past ? '/panel/resultats.php' . $uid_q : '/panel/participants.php' . $uid_q;
 ?>
 <!doctype html>
