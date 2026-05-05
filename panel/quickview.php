@@ -637,7 +637,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   <!-- ══════════ ACTIONS RAPIDES ══════════ -->
   <div class="v2-list">
 
-    <?php if (!$is_pre_game_countdown_active): ?>
+    <?php if (!$is_pre_game_countdown_active && !$activity_has_winner): ?>
     <a class="v2-list-item tile-blue" href="/panel/livetimer.php<?php echo $uid_q; ?>">
       <div class="v2-list-icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
