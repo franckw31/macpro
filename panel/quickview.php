@@ -250,25 +250,14 @@ if (!empty($con)) {
       $_mfr = ['January'=>'jan','February'=>'fév','March'=>'mars','April'=>'avr','May'=>'mai','June'=>'juin','July'=>'juil','August'=>'août','September'=>'sep','October'=>'oct','November'=>'nov','December'=>'déc'];
       $last_game_date = $_jfr[$_lgd->format('l')] . ' ' . $_lgd->format('j') . ' ' . $_mfr[$_lgd->format('F')];
     }
-    // Count valid participants for paid-spot calculation
-    $lgcntq = mysqli_query($con,
-      "SELECT COUNT(*) AS c FROM participation
-       WHERE `id-activite`=$lg_id
-         AND COALESCE(option,'None') NOT IN ('None','Desinscrit','Annule')");
-    $lg_total = ($lgcntq && ($lgcr = mysqli_fetch_assoc($lgcntq))) ? (int)$lgcr['c'] : 0;
-    $nb_payes = 2;
-    if ($lg_total >  5) $nb_payes = 3;
-    if ($lg_total >  8) $nb_payes = 4;
-    if ($lg_total > 13) $nb_payes = 5;
-    if ($lg_total > 20) $nb_payes = 6;
-    // Fetch paid players ordered by classement
+    // Fetch paid players (gain > 0) ordered by classement
     $lgpq = mysqli_query($con,
       "SELECT p.classement, COALESCE(m.pseudo, p.`nom-membre`) AS pseudo,
               COALESCE(p.gain,0) AS gain
        FROM participation p
        LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
        WHERE p.`id-activite`=$lg_id
-         AND p.classement BETWEEN 1 AND $nb_payes
+         AND p.gain > 0
        ORDER BY p.classement ASC");
     if ($lgpq) {
       while ($lgpr = mysqli_fetch_assoc($lgpq)) $last_game_payes[] = $lgpr;
