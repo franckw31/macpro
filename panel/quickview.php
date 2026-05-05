@@ -802,7 +802,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   <?php if (!empty($last_game_payes)): ?>
   <div class="v2-section-title">Dernière Partie : <?php echo $last_game_date; ?> · <?php echo count($last_game_payes); ?> Payés (ITM)</div>
   <div class="v2-card" style="padding:14px 16px 12px">
-    <div style="display:flex;flex-direction:column;gap:7px">
+    <div style="display:flex;flex-direction:column;gap:3px">
       <?php
         $place_colors = ['#ffd700','#c0c0c0','#cd7f32','#30d5c8','#0a84ff','#34c759'];
         $place_labels = ['🥇 1er','🥈 2e','🥉 3e','4e','5e','6e'];
