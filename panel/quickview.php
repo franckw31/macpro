@@ -820,7 +820,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         <span style="font-size:12px;font-weight:800;color:<?php echo $col;?>;min-width:32px"><?php echo $lbl; ?></span>
         <span style="font-size:13px;font-weight:600;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo htmlspecialchars($lgp['pseudo'],ENT_QUOTES,'UTF-8'); ?></span>
         <?php if ($gn > 0): ?>
-        <span style="font-size:12px;font-weight:700;color:#34c759;white-space:nowrap"><?php echo $gn; ?> €</span>
+        <span style="font-size:12px;font-weight:700;color:#34c759;white-space:nowrap"><?php echo intval($gn / 10); ?> Pts</span>
         <?php endif; ?>
       </div>
       <?php endforeach; ?>
