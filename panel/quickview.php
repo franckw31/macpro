@@ -226,6 +226,55 @@ if (!empty($id) && !empty($con)) {
   if ($wq && ($wr = mysqli_fetch_assoc($wq))) $activity_has_winner = ((int)$wr['c'] > 0);
 }
 $participants_href = $is_past ? '/panel/resultats.php' . $uid_q : '/panel/participants.php' . $uid_q;
+
+// ── Dernière partie : joueurs payés ──────────────────────────────────────────
+$last_game_payes = [];
+$last_game_titre = '';
+$last_game_date  = '';
+if (!empty($con)) {
+  // Find last activity that has a classement=1 winner
+  $lgq = mysqli_query($con,
+    "SELECT a.`id-activite`, a.`titre-activite`, a.`date_depart`
+     FROM activite a
+     JOIN participation p ON p.`id-activite` = a.`id-activite`
+     WHERE p.classement = 1
+     ORDER BY a.date_depart DESC
+     LIMIT 1");
+  if ($lgq && ($lgrow = mysqli_fetch_assoc($lgq))) {
+    $lg_id    = (int)$lgrow['id-activite'];
+    $last_game_titre = $lgrow['titre-activite'] ?? '';
+    $last_game_titre = trim(preg_replace('/\s*\([^)]*\)\s*/u', ' ', $last_game_titre));
+    if (!empty($lgrow['date_depart'])) {
+      $_lgd = new DateTime($lgrow['date_depart'], new DateTimeZone('Europe/Paris'));
+      $_jfr = ['Monday'=>'Lun','Tuesday'=>'Mar','Wednesday'=>'Mer','Thursday'=>'Jeu','Friday'=>'Ven','Saturday'=>'Sam','Sunday'=>'Dim'];
+      $_mfr = ['January'=>'jan','February'=>'fév','March'=>'mars','April'=>'avr','May'=>'mai','June'=>'juin','July'=>'juil','August'=>'août','September'=>'sep','October'=>'oct','November'=>'nov','December'=>'déc'];
+      $last_game_date = $_jfr[$_lgd->format('l')] . ' ' . $_lgd->format('j') . ' ' . $_mfr[$_lgd->format('F')];
+    }
+    // Count valid participants for paid-spot calculation
+    $lgcntq = mysqli_query($con,
+      "SELECT COUNT(*) AS c FROM participation
+       WHERE `id-activite`=$lg_id
+         AND COALESCE(option,'None') NOT IN ('None','Desinscrit','Annule')");
+    $lg_total = ($lgcntq && ($lgcr = mysqli_fetch_assoc($lgcntq))) ? (int)$lgcr['c'] : 0;
+    $nb_payes = 2;
+    if ($lg_total >  5) $nb_payes = 3;
+    if ($lg_total >  8) $nb_payes = 4;
+    if ($lg_total > 13) $nb_payes = 5;
+    if ($lg_total > 20) $nb_payes = 6;
+    // Fetch paid players ordered by classement
+    $lgpq = mysqli_query($con,
+      "SELECT p.classement, COALESCE(m.pseudo, p.`nom-membre`) AS pseudo,
+              COALESCE(p.gain,0) AS gain
+       FROM participation p
+       LEFT JOIN membres m ON m.`id-membre` = p.`id-membre`
+       WHERE p.`id-activite`=$lg_id
+         AND p.classement BETWEEN 1 AND $nb_payes
+       ORDER BY p.classement ASC");
+    if ($lgpq) {
+      while ($lgpr = mysqli_fetch_assoc($lgpq)) $last_game_payes[] = $lgpr;
+    }
+  }
+}
 ?>
 <!doctype html>
 <html lang="fr">
@@ -758,6 +807,39 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-list-chev">›</div>
     </a>
     <?php endif; ?>
+
+  </div><!-- /v2-list -->
+
+  <?php if (!empty($last_game_payes)): ?>
+  <div class="v2-section-title">Dernière Partie · Payés</div>
+  <div class="v2-card" style="padding:14px 16px 12px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;gap:8px">
+      <span style="font-size:13px;font-weight:700;color:var(--text2)"><?php echo htmlspecialchars($last_game_titre,ENT_QUOTES,'UTF-8'); ?></span>
+      <span style="font-size:11px;color:var(--muted);white-space:nowrap"><?php echo htmlspecialchars($last_game_date,ENT_QUOTES,'UTF-8'); ?></span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <?php
+        $place_colors = ['#ffd700','#c0c0c0','#cd7f32','#30d5c8','#0a84ff','#34c759'];
+        $place_labels = ['🥇 1er','🥈 2e','🥉 3e','4e','5e','6e'];
+        foreach ($last_game_payes as $lgp):
+          $cl  = (int)$lgp['classement'];
+          $col = $place_colors[min($cl-1, count($place_colors)-1)];
+          $lbl = $place_labels[min($cl-1, count($place_labels)-1)];
+          $gn  = (int)$lgp['gain'];
+      ?>
+      <div style="display:flex;align-items:center;gap:10px;background:#0f1621;border-radius:8px;padding:7px 10px">
+        <span style="font-size:12px;font-weight:800;color:<?php echo $col;?>;min-width:32px"><?php echo $lbl; ?></span>
+        <span style="font-size:13px;font-weight:600;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo htmlspecialchars($lgp['pseudo'],ENT_QUOTES,'UTF-8'); ?></span>
+        <?php if ($gn > 0): ?>
+        <span style="font-size:12px;font-weight:700;color:#34c759;white-space:nowrap"><?php echo $gn; ?> €</span>
+        <?php endif; ?>
+      </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+  <?php endif; ?>
+
+  <div class="v2-list">
 
     <script>
     var SCORE_PSEUDOS = <?php echo json_encode($score_pseudos, JSON_UNESCAPED_UNICODE); ?>;
