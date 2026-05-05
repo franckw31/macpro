@@ -801,8 +801,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 
   <?php if (!empty($last_game_payes)): ?>
   <div class="v2-section-title">Dernière Partie : <?php echo $last_game_date; ?> · <?php echo count($last_game_payes); ?> Payés (ITM)</div>
-  <div class="v2-card" style="padding:14px 16px 12px">
-    <div style="display:flex;flex-direction:column;gap:3px">
+  <div class="v2-card" style="padding:10px 16px 8px">
+    <div style="display:flex;flex-direction:column;gap:2px">
       <?php
         $place_colors = ['#ffd700','#c0c0c0','#cd7f32','#30d5c8','#0a84ff','#34c759'];
         $place_labels = ['🥇 1er','🥈 2e','🥉 3e','4e','5e','6e'];
@@ -812,7 +812,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
           $lbl = $place_labels[min($cl-1, count($place_labels)-1)];
           $gn  = (int)$lgp['gain'];
       ?>
-      <div style="display:flex;align-items:center;gap:10px;background:#0f1621;border-radius:8px;padding:7px 10px">
+      <div style="display:flex;align-items:center;gap:10px;background:#0f1621;border-radius:6px;padding:3px 10px">
         <span style="font-size:12px;font-weight:800;color:<?php echo $col;?>;min-width:32px"><?php echo $lbl; ?></span>
         <span style="font-size:13px;font-weight:600;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo htmlspecialchars($lgp['pseudo'],ENT_QUOTES,'UTF-8'); ?></span>
         <?php if ($gn > 0): ?>
