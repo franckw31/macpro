@@ -800,7 +800,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   </div><!-- /v2-list -->
 
   <?php if (!empty($last_game_payes)): ?>
-  <div class="v2-section-title">Dernière Partie · <?php echo count($last_game_payes); ?> Payés (ITM)</div>
+  <div class="v2-section-title">Dernière Partie : <?php echo $last_game_date; ?> · <?php echo count($last_game_payes); ?> Payés (ITM)</div>
   <div class="v2-card" style="padding:14px 16px 12px">
     <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;gap:8px">
       <span style="font-size:13px;font-weight:700;color:var(--text2)"><?php echo htmlspecialchars($last_game_titre,ENT_QUOTES,'UTF-8'); ?></span>
