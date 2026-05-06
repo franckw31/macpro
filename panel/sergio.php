@@ -224,6 +224,28 @@ if ($member_id && !empty($con)) {
         }
     }
 
+    // Classement global au SergioScore
+    $sergio_global_rank  = null;
+    $sergio_global_total = null;
+    $sgq = @mysqli_query($con, "
+        SELECT mid, avg_score FROM (
+            SELECT p.`id-membre` AS mid, ROUND(AVG(p.sergio_score),2) AS avg_score
+            FROM participation p
+            WHERE p.sergio_score IS NOT NULL AND p.sergio_score > 0
+            GROUP BY p.`id-membre`
+            HAVING COUNT(*) >= 1
+        ) t
+        ORDER BY avg_score DESC
+    ");
+    if ($sgq) {
+        $sg_rk = 1;
+        while ($sgr = mysqli_fetch_assoc($sgq)) {
+            if (intval($sgr['mid']) === intval($member_id)) { $sergio_global_rank = $sg_rk; }
+            $sg_rk++;
+        }
+        $sergio_global_total = $sg_rk - 1;
+    }
+
     // Moyenne mois courant et mois précédent
     $cmq = @mysqli_query($con, "SELECT ROUND(AVG(p.sergio_score),2) AS avg FROM participation p JOIN activite a ON a.`id-activite`=p.`id-activite` WHERE p.`id-membre`='".intval($member_id)."' AND p.sergio_score IS NOT NULL AND DATE_FORMAT(a.date_depart,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m')");
     if ($cmq && ($cmr = mysqli_fetch_assoc($cmq))) $curr_month_avg = $cmr['avg'] !== null ? round(floatval($cmr['avg']),2) : null;
@@ -433,10 +455,16 @@ $tf_pct  = $extra_stats['parties'] > 0 ? round($extra_stats['tf']  / $extra_stat
     <div class="sg-card-sub"><?php echo $extra_stats['itm']; ?> / <?php echo $extra_stats['parties']; ?></div>
   </div>
   <div class="sg-card">
-    <div class="sg-card-icon">🥇</div>
-    <div class="sg-card-val" style="color:#fbbf24"><?php echo $extra_stats['best_rank'] ?? '—'; ?></div>
-    <div class="sg-card-lbl">MEILLEURE PLACE</div>
-    <div class="sg-card-sub"><?php echo $extra_stats['best_rank'] ? ($extra_stats['best_rank']==1?'1re place':$extra_stats['best_rank'].'e place') : '—'; ?></div>
+    <div class="sg-card-icon">⭐</div>
+    <?php if ($sergio_global_rank): ?>
+    <div class="sg-card-val" style="color:#fbbf24">#<?php echo $sergio_global_rank; ?></div>
+    <div class="sg-card-lbl">RANG SERGIO</div>
+    <div class="sg-card-sub">sur <?php echo $sergio_global_total; ?> joueurs</div>
+    <?php else: ?>
+    <div class="sg-card-val" style="color:#64748b">—</div>
+    <div class="sg-card-lbl">RANG SERGIO</div>
+    <div class="sg-card-sub">—</div>
+    <?php endif; ?>
   </div>
   <div class="sg-card">
     <div class="sg-card-icon">🏅</div>
