@@ -449,7 +449,6 @@ $tf_pct  = $extra_stats['parties'] > 0 ? round($extra_stats['tf']  / $extra_stat
   <div class="sg-s2">
     <span class="sg-s2-lbl">PIRE PLACE</span>
     <span class="sg-s2-val"><?php echo $extra_stats['worst_rank'] ?? '—'; ?></span>
-    <span class="sg-s2-sub">sur <?php echo $extra_stats['parties']; ?></span>
   </div>
   <div class="sg-s2">
     <span class="sg-s2-lbl">TOP 1</span>
