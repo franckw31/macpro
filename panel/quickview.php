@@ -854,8 +854,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     <div class="itm-ticker-label">🏆 <?php echo $last_game_date; ?> · <?php echo count($last_game_payes); ?> ITM</div>
     <div id="itm-ticker-outer" style="overflow:hidden;flex:1;mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)">
       <div class="itm-ticker-track" id="itm-ticker-track">
-        <span id="itm-ticker-orig"><?php echo $ticker_items; ?></span>
-        <span id="itm-ticker-clone"><?php echo $ticker_items; ?></span>
+        <span id="itm-ticker-orig"><?php echo $ticker_items; ?><span class="itm-ticker-sep" style="padding:0 20px">·</span></span>
       </div>
     </div>
   </div>
@@ -863,11 +862,21 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   (function(){
     var track = document.getElementById('itm-ticker-track');
     var orig  = document.getElementById('itm-ticker-orig');
+    var outer = document.getElementById('itm-ticker-outer');
     var wrap  = document.getElementById('itm-ticker-wrap');
     var speed = 30; // px/s
     var pos   = 0;
     var last  = null;
     var paused = false;
+    // Remplir la piste avec assez de copies pour éviter tout vide
+    (function fillTrack(){
+      var needed = outer.offsetWidth * 3;
+      while(track.offsetWidth < needed){
+        var cl = orig.cloneNode(true);
+        cl.removeAttribute('id');
+        track.appendChild(cl);
+      }
+    })();
     wrap.addEventListener('mouseenter', function(){ paused = true; });
     wrap.addEventListener('mouseleave', function(){ paused = false; });
     function tick(ts){
