@@ -1,6 +1,37 @@
 <?php
+session_start();
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/include/functions_logs.php';
+
+// ── Déconnexion ───────────────────────────────────────────────
+if (!empty($_GET['logout'])) {
+    $_SESSION = [];
+    if (ini_get('session.use_cookies')) {
+        $p = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 3600, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
+    }
+    session_destroy();
+    setcookie('qv_pseudo', '', time() - 3600, '/', '', false, true);
+    setcookie('qv_passwd', '', time() - 3600, '/', '', false, true);
+    setcookie('uname',     '', time() - 3600, '/');
+    header('Location: /logs.php');
+    exit;
+}
+
+// ── Auto-login depuis cookie si pas de session ────────────────────────
+if (empty($_SESSION['id']) && !empty($_COOKIE['qv_pseudo']) && !empty($_COOKIE['qv_passwd']) && !empty($con)) {
+    $cp = mysqli_real_escape_string($con, $_COOKIE['qv_pseudo']);
+    $cw = mysqli_real_escape_string($con, $_COOKIE['qv_passwd']);
+    $qa = @mysqli_query($con, "SELECT `id-membre`, `pseudo` FROM membres WHERE (pseudo='$cp' OR email='$cp') AND (password='$cw' OR password_ext='$cw') LIMIT 1");
+    if ($qa && ($ra = mysqli_fetch_array($qa))) {
+        $_SESSION['login'] = $ra['pseudo'];
+        $_SESSION['id']    = $ra['id-membre'];
+        $exp = time() + (30 * 24 * 3600);
+        setcookie('qv_pseudo', $ra['pseudo'], $exp, '/', '', false, true);
+        setcookie('qv_passwd', $cw,           $exp, '/', '', false, true);
+        setcookie('uname',     $ra['pseudo'], $exp, '/');
+    }
+}
 
 define('ADMIN_KEY', 'Cardevent');
 
