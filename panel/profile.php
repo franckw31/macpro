@@ -576,7 +576,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 } else {
                     echo '<span style="color:#888">—</span>';
                 }
-            ?> <a id="link-sergio" href="/panel/sergio.php?mid=<?php echo intval($uid_int); ?>" style="margin-left:8px;color:#ffb400;font-weight:700">Vos Notes</a></div></div>
+            ?> <a id="link-sergio" href="/panel/sergio.php?mid=<?php echo intval($uid_int); ?>" style="margin-left:8px;color:#ffb400;font-weight:700">Vos Stats</a></div></div>
         </div>
 
         <div class="card">
