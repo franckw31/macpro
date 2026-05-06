@@ -462,7 +462,7 @@ $tf_pct  = $extra_stats['parties'] > 0 ? round($extra_stats['tf']  / $extra_stat
     <div class="sg-card-icon">⭐</div>
     <?php if ($sergio_global_rank): ?>
     <div class="sg-card-val" style="color:#fbbf24">#<?php echo $sergio_global_rank; ?></div>
-    <div class="sg-card-lbl">SERGIO GLOBAL</div>
+    <div class="sg-card-lbl">Calassement Général</div>
     <div class="sg-card-sub">sur <?php echo $sergio_global_total; ?> · min.6 · 1 an</div>
     <?php else: ?>
     <div class="sg-card-val" style="color:#64748b">—</div>
