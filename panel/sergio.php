@@ -466,7 +466,7 @@ $tf_pct  = $extra_stats['parties'] > 0 ? round($extra_stats['tf']  / $extra_stat
   </div>
   <div class="sg-s2">
     <span class="sg-s2-lbl">PIRE PLACE</span>
-    <span class="sg-s2-val"><?php echo $extra_stats['worst_rank'] ?? '—'; ?></span>
+    <span class="sg-s2-val"><?php echo $extra_stats['worst_rank'] ?? '—'; ?><?php if (!empty($extra_stats['worst_rank_total'])) echo ' <span style="font-size:0.6em;opacity:0.6">/ ' . $extra_stats['worst_rank_total'] . '</span>'; ?></span>
   </div>
   <div class="sg-s2">
     <span class="sg-s2-lbl">TOP 1</span>
