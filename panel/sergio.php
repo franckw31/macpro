@@ -152,6 +152,24 @@ if ($member_id && !empty($con)) {
             'worst_rank' => $er['worst_rank'] !== null ? intval($er['worst_rank']) : null,
             'top1'       => intval($er['top1_count']),
         ];
+        // Nombre de joueurs dans la partie où le joueur a eu sa pire place
+        $extra_stats['worst_rank_total'] = null;
+        if ($extra_stats['worst_rank'] !== null) {
+            $wrq = @mysqli_query($con, "
+                SELECT COUNT(*) AS nb FROM participation p2
+                WHERE p2.`id-activite` = (
+                    SELECT p.`id-activite` FROM participation p
+                    WHERE p.`id-membre` = '".intval($member_id)."'
+                      AND p.classement = '".intval($extra_stats['worst_rank'])."'
+                      AND p.sergio_score > 0
+                    ORDER BY p.`id-activite` DESC LIMIT 1
+                )
+                  AND p2.classement > 0 AND p2.classement < 50
+            ");
+            if ($wrq && ($wr = mysqli_fetch_assoc($wrq))) {
+                $extra_stats['worst_rank_total'] = intval($wr['nb']);
+            }
+        }
     }
 
     // Détail ITM
