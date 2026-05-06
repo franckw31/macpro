@@ -829,26 +829,35 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   </div><!-- /v2-list -->
 
   <?php if (!empty($last_game_payes)): ?>
-  <div class="v2-section-title">Dernière Partie : <?php echo $last_game_date; ?> · <?php echo count($last_game_payes); ?> Payés (ITM)</div>
-  <div class="v2-card" style="padding:10px 16px 8px">
-    <div style="display:flex;flex-direction:column;gap:2px">
-      <?php
-        $place_colors = ['#ffd700','#c0c0c0','#cd7f32','#30d5c8','#0a84ff','#34c759'];
-        $place_labels = ['🥇 1er','🥈 2e','🥉 3e','4e','5e','6e'];
-        foreach ($last_game_payes as $lgp):
-          $cl  = (int)$lgp['classement'];
-          $col = $place_colors[min($cl-1, count($place_colors)-1)];
-          $lbl = $place_labels[min($cl-1, count($place_labels)-1)];
-          $gn  = (int)$lgp['gain'];
-      ?>
-      <div style="display:flex;align-items:center;gap:10px;background:#0f1621;border-radius:6px;padding:3px 10px">
-        <span style="font-size:12px;font-weight:800;color:<?php echo $col;?>;min-width:32px"><?php echo $lbl; ?></span>
-        <span style="font-size:13px;font-weight:600;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo htmlspecialchars($lgp['pseudo'],ENT_QUOTES,'UTF-8'); ?></span>
-        <?php if ($gn > 0): ?>
-        <span style="font-size:12px;font-weight:700;color:#34c759;white-space:nowrap"><?php echo intval($gn / 10); ?> Pts</span>
-        <?php endif; ?>
+  <?php
+    $place_colors = ['#ffd700','#c0c0c0','#cd7f32','#30d5c8','#0a84ff','#34c759'];
+    $place_labels = ['🥇 1er','🥈 2e','🥉 3e','4e','5e','6e'];
+    $ticker_items = '';
+    foreach ($last_game_payes as $lgp):
+      $cl  = (int)$lgp['classement'];
+      $col = $place_colors[min($cl-1, count($place_colors)-1)];
+      $lbl = $place_labels[min($cl-1, count($place_labels)-1)];
+      $gn  = (int)$lgp['gain'];
+      $pts = $gn > 0 ? ' <span style="color:#34c759;font-weight:700">' . intval($gn/10) . ' Pts</span>' : '';
+      $ticker_items .= '<span class="itm-ticker-item"><span style="color:' . $col . ';font-weight:800">' . $lbl . '</span> <span style="color:var(--text2)">' . htmlspecialchars($lgp['pseudo'],ENT_QUOTES,'UTF-8') . '</span>' . $pts . '</span><span class="itm-ticker-sep">·</span>';
+    endforeach;
+    $ticker_items = rtrim($ticker_items, '<span class="itm-ticker-sep">·</span>');
+  ?>
+  <style>
+    .itm-ticker-wrap{overflow:hidden;background:#0f1621;border-radius:10px;padding:0 12px;margin:0 0 10px;height:34px;display:flex;align-items:center;border:1px solid #1e2d45}
+    .itm-ticker-label{font-size:10px;font-weight:700;color:#2893ff;white-space:nowrap;margin-right:12px;letter-spacing:.3px;text-transform:uppercase;flex-shrink:0}
+    .itm-ticker-track{display:flex;align-items:center;gap:0;animation:itm-scroll 22s linear infinite;white-space:nowrap}
+    .itm-ticker-wrap:hover .itm-ticker-track{animation-play-state:paused}
+    .itm-ticker-item{font-size:12px;white-space:nowrap;padding:0 4px}
+    .itm-ticker-sep{color:#2a3a55;font-size:14px;padding:0 6px}
+    @keyframes itm-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  </style>
+  <div class="itm-ticker-wrap">
+    <div class="itm-ticker-label">🏆 <?php echo $last_game_date; ?> · <?php echo count($last_game_payes); ?> ITM</div>
+    <div style="overflow:hidden;flex:1;mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)">
+      <div class="itm-ticker-track">
+        <?php echo $ticker_items . $ticker_items; ?>
       </div>
-      <?php endforeach; ?>
     </div>
   </div>
   <?php endif; ?>
