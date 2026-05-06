@@ -233,9 +233,11 @@ if ($member_id && !empty($con)) {
         SELECT mid, avg_score FROM (
             SELECT p.`id-membre` AS mid, ROUND(AVG(p.sergio_score),2) AS avg_score
             FROM participation p
+            JOIN activite a ON a.`id-activite` = p.`id-activite`
             WHERE p.sergio_score IS NOT NULL AND p.sergio_score > 0
+              AND a.date_depart >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
             GROUP BY p.`id-membre`
-            HAVING COUNT(*) >= 1
+            HAVING COUNT(*) >= 6
         ) t
         ORDER BY avg_score DESC
     ");
@@ -460,12 +462,12 @@ $tf_pct  = $extra_stats['parties'] > 0 ? round($extra_stats['tf']  / $extra_stat
     <div class="sg-card-icon">⭐</div>
     <?php if ($sergio_global_rank): ?>
     <div class="sg-card-val" style="color:#fbbf24">#<?php echo $sergio_global_rank; ?></div>
-    <div class="sg-card-lbl">RANG SERGIO</div>
-    <div class="sg-card-sub">sur <?php echo $sergio_global_total; ?> joueurs</div>
+    <div class="sg-card-lbl">SERGIO GLOBAL</div>
+    <div class="sg-card-sub">sur <?php echo $sergio_global_total; ?> · min.6 · 1 an</div>
     <?php else: ?>
     <div class="sg-card-val" style="color:#64748b">—</div>
-    <div class="sg-card-lbl">RANG SERGIO</div>
-    <div class="sg-card-sub">—</div>
+    <div class="sg-card-lbl">SERGIO GLOBAL</div>
+    <div class="sg-card-sub">min. 6 parties · 1 an</div>
     <?php endif; ?>
   </div>
   <div class="sg-card">
