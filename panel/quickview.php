@@ -841,7 +841,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       $pts = $gn > 0 ? ' <span style="color:#34c759;font-weight:700">' . intval($gn/10) . ' Pts</span>' : '';
       $ticker_parts[] = '<span class="itm-ticker-item"><span style="color:' . $col . ';font-weight:800">' . $lbl . '</span> <span style="color:var(--text2)">' . htmlspecialchars($lgp['pseudo'],ENT_QUOTES,'UTF-8') . '</span>' . $pts . '</span>';
     endforeach;
-    $ticker_items = implode('<span class="itm-ticker-sep" style="padding:0 6px;color:#2a3a55">·</span>', $ticker_parts);
+    $ticker_items = implode('<span class="itm-ticker-sep" style="padding:0 4px;color:#2a3a55">·</span>', $ticker_parts);
   ?>
   <style>
     .itm-ticker-wrap{overflow:hidden;background:#0f1621;border-radius:10px;padding:0 12px;margin:0 0 10px;height:34px;display:flex;align-items:center;border:1px solid #1e2d45}
