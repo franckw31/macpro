@@ -5,6 +5,30 @@ header('Pragma: no-cache');
 header('Expires: 0');
 header('Vary: Cookie');
 
+// ── Déconnexion : efface session + cookies ──────────────────────────────────
+if (!empty($_GET['logout'])) {
+	$_SESSION = [];
+	if (ini_get('session.use_cookies')) {
+		$p = session_get_cookie_params();
+		setcookie(session_name(), '', time() - 3600, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
+	}
+	session_destroy();
+	$_cookie_expire_del = time() - 3600;
+	setcookie('qv_pseudo', '', $_cookie_expire_del, '/', '', false, true);
+	setcookie('qv_passwd', '', $_cookie_expire_del, '/', '', false, true);
+	setcookie('uname',     '', $_cookie_expire_del, '/');
+	header('Location: /panel/quickview.php');
+	exit;
+}
+
+// ── Auto-auth depuis les cookies si pas encore connecté ────────────────────
+if (empty($_SESSION['login']) && empty($_GET['pseudo'])) {
+	if (!empty($_COOKIE['qv_pseudo']) && !empty($_COOKIE['qv_passwd'])) {
+		$_GET['pseudo'] = $_COOKIE['qv_pseudo'];
+		$_GET['passwd'] = $_COOKIE['qv_passwd'];
+	}
+}
+
 try {
 	include __DIR__ . '/include/config.php';
 	$pseudo_get = isset($_GET['pseudo']) ? (isset($con) ? mysqli_real_escape_string($con, $_GET['pseudo']) : null) : null;
@@ -16,6 +40,11 @@ try {
 		if ($q_auth && ($r_auth = mysqli_fetch_array($q_auth))) {
 			$_SESSION['login'] = $r_auth['pseudo'];
 			$_SESSION['id']    = $r_auth['id-membre'];
+			// ── Mémoriser les identifiants 30 jours ──────────────────────
+			$_cookie_expire = time() + (30 * 24 * 3600);
+			setcookie('qv_pseudo', $r_auth['pseudo'], $_cookie_expire, '/', '', false, true);
+			setcookie('qv_passwd', $pass_get,         $_cookie_expire, '/', '', false, true);
+			setcookie('uname',     $r_auth['pseudo'], $_cookie_expire, '/');
 		}
 	}
 
@@ -533,7 +562,7 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
       </div>
       <div>
         <div class="v2-app-name">Card<span>Event</span><span class="v2-version">V 3.0</span></div>
-        <div class="v2-greeting">Bonjour, <span class="name"><?php echo $displayUser; ?></span> <span class="chev">›</span></div>
+        <div class="v2-greeting">Bonjour, <span class="name"><?php echo $displayUser; ?></span> <span class="chev">›</span><?php if (!empty($_SESSION['login'])): ?>&nbsp;<a href="?logout=1" title="Se déconnecter" style="font-size:11px;color:var(--muted);text-decoration:none;opacity:.6" onclick="return confirm('Se déconnecter et oublier les identifiants ?')">⏻</a><?php endif; ?></div>
       </div>
     </div>
     <a href="/panel/profile.php<?php echo $uid_q; ?>">
