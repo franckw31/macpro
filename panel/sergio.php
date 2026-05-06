@@ -466,7 +466,7 @@ $tf_pct  = $extra_stats['parties'] > 0 ? round($extra_stats['tf']  / $extra_stat
     <div class="sg-card-sub">sur <?php echo $sergio_global_total; ?> · min.6 · 1 an</div>
     <?php else: ?>
     <div class="sg-card-val" style="color:#64748b">—</div>
-    <div class="sg-card-lbl">Note Globale</div>
+    <div class="sg-card-lbl"Classement Général</div>
     <div class="sg-card-sub">min. 6 parties · 1 an</div>
     <?php endif; ?>
   </div>
