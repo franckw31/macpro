@@ -851,7 +851,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     .itm-ticker-sep{color:#2a3a55;font-size:14px;padding:0 6px}
   </style>
   <div class="itm-ticker-wrap" id="itm-ticker-wrap">
-    <div class="itm-ticker-label">🏆 <?php echo $last_game_date; ?> · <?php echo count($last_game_payes); ?> ITM</div>
+    <div class="itm-ticker-label">🏆 <?php echo $last_game_date; ?> · <?php echo count($last_game_payes); ?> ITM :</div>
     <div id="itm-ticker-outer" style="overflow:hidden;flex:1;mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)">
       <div class="itm-ticker-track" id="itm-ticker-track">
         <span id="itm-ticker-orig"><?php echo $ticker_items; ?><span class="itm-ticker-sep" style="padding:0 20px">·</span></span>
