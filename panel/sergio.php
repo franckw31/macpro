@@ -31,6 +31,8 @@ $extra_stats = ['parties' => 0, 'tf' => 0, 'itm' => 0, 'recaves' => 0, 'best_ran
 $itm_rows       = [];
 $chal_rank      = null;
 $chal_total     = null;
+$sergio_global_rank  = null;
+$sergio_global_total = null;
 $chal_title     = '';
 $curr_month_avg = null;
 $prev_month_avg = null;
