@@ -846,20 +846,43 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
   <style>
     .itm-ticker-wrap{overflow:hidden;background:#0f1621;border-radius:10px;padding:0 12px;margin:0 0 10px;height:34px;display:flex;align-items:center;border:1px solid #1e2d45}
     .itm-ticker-label{font-size:10px;font-weight:700;color:#2893ff;white-space:nowrap;margin-right:12px;letter-spacing:.3px;text-transform:uppercase;flex-shrink:0}
-    .itm-ticker-track{display:flex;align-items:center;gap:0;animation:itm-scroll 7s linear infinite;white-space:nowrap}
-    .itm-ticker-wrap:hover .itm-ticker-track{animation-play-state:paused}
+    .itm-ticker-track{display:flex;align-items:center;white-space:nowrap;will-change:transform}
     .itm-ticker-item{font-size:12px;white-space:nowrap;padding:0 4px}
     .itm-ticker-sep{color:#2a3a55;font-size:14px;padding:0 6px}
-    @keyframes itm-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
   </style>
-  <div class="itm-ticker-wrap">
+  <div class="itm-ticker-wrap" id="itm-ticker-wrap">
     <div class="itm-ticker-label">🏆 <?php echo $last_game_date; ?> · <?php echo count($last_game_payes); ?> ITM</div>
-    <div style="overflow:hidden;flex:1;mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)">
-      <div class="itm-ticker-track">
-        <?php echo $ticker_items . $ticker_items; ?>
+    <div id="itm-ticker-outer" style="overflow:hidden;flex:1;mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)">
+      <div class="itm-ticker-track" id="itm-ticker-track">
+        <span id="itm-ticker-orig"><?php echo $ticker_items; ?></span>
+        <span id="itm-ticker-clone"><?php echo $ticker_items; ?></span>
       </div>
     </div>
   </div>
+  <script>
+  (function(){
+    var track = document.getElementById('itm-ticker-track');
+    var orig  = document.getElementById('itm-ticker-orig');
+    var wrap  = document.getElementById('itm-ticker-wrap');
+    var speed = 60; // px/s
+    var pos   = 0;
+    var last  = null;
+    var paused = false;
+    wrap.addEventListener('mouseenter', function(){ paused = true; });
+    wrap.addEventListener('mouseleave', function(){ paused = false; });
+    function tick(ts){
+      if(last !== null && !paused){
+        pos += speed * (ts - last) / 1000;
+        var w = orig.offsetWidth;
+        if(w > 0 && pos >= w) pos -= w;
+        track.style.transform = 'translateX(-' + pos + 'px)';
+      }
+      last = ts;
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+  </script>
   <?php endif; ?>
 
   <div class="v2-list">
