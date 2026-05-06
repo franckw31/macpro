@@ -868,17 +868,17 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     var pos   = 0;
     var last  = null;
     var paused = false;
-    // Remplir la piste avec assez de copies pour éviter tout vide
-    (function fillTrack(){
-      var needed = outer.offsetWidth * 3;
-      while(track.offsetWidth < needed){
-        var cl = orig.cloneNode(true);
-        cl.removeAttribute('id');
-        track.appendChild(cl);
-      }
-    })();
+
+    // Ajouter des copies fixes (5 suffit pour tout écran)
+    for(var i = 0; i < 5; i++){
+      var cl = orig.cloneNode(true);
+      cl.removeAttribute('id');
+      track.appendChild(cl);
+    }
+
     wrap.addEventListener('mouseenter', function(){ paused = true; });
     wrap.addEventListener('mouseleave', function(){ paused = false; });
+
     function tick(ts){
       if(last !== null && !paused){
         pos += speed * (ts - last) / 1000;
