@@ -572,7 +572,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                     if ($sq && ($sr = mysqli_fetch_assoc($sq))) { $sergio_avg = $sr['avg']; }
                 }
                 if ($sergio_avg !== null && $sergio_avg !== '') {
-                    echo '<span style="color:#ffb400;font-weight:800">' . htmlspecialchars($sergio_avg) . '</span>';
+                    echo '<span style="color:#ffffff;font-weight:800">' . htmlspecialchars($sergio_avg) . '</span>';
                 } else {
                     echo '<span style="color:#888">—</span>';
                 }
