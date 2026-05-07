@@ -606,6 +606,8 @@ try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)
           </circle>
         </svg>
       </button>
+        <button id="v2-act-next" title="Activité suivante" onclick="v2NavActivity(1)" style="width:34px;height:46px;border-radius:10px;background:rgba(255,255,255,0.07);border:none;color:var(--text2);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s" onmouseenter="this.style.background='rgba(255,255,255,0.14)'" onmouseleave="this.style.background='rgba(255,255,255,0.07)'">›</button>
+      </div>
     </div>
 
     <!-- DÉMARRE DANS / JOUEURS -->
