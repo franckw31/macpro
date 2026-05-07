@@ -212,7 +212,7 @@ try {
 
     if ($requestedId > 0) {
         $actStmt = $pdo->prepare("
-            SELECT `id-activite`, `titre-activite`, `date_depart`, `heure_depart`, `id_challenge`, COALESCE(`jetons`, 0) as jetons
+            SELECT `id-activite`, `titre-activite`, `date_depart`, `heure_depart`, `id_challenge`, COALESCE(`jetons`, 0) as jetons, COALESCE(`rake`, 0) as rake
             FROM activite WHERE `id-activite` = ?
         ");
         $actStmt->execute([$requestedId]);
@@ -220,7 +220,7 @@ try {
     } else {
         // 1) En cours ou très récente (max 2 jours)
         $actStmt = $pdo->query("
-            SELECT `id-activite`, `titre-activite`, `date_depart`, `heure_depart`, `id_challenge`, COALESCE(`jetons`, 0) as jetons
+            SELECT `id-activite`, `titre-activite`, `date_depart`, `heure_depart`, `id_challenge`, COALESCE(`jetons`, 0) as jetons, COALESCE(`rake`, 0) as rake
             FROM activite
             WHERE date_depart >= (NOW() - INTERVAL 2 DAY)
             ORDER BY date_depart ASC LIMIT 1
@@ -230,7 +230,7 @@ try {
         if (!$activity) {
             // 2) Fallback : dernière activité passée
             $actStmt2 = $pdo->query("
-                SELECT `id-activite`, `titre-activite`, `date_depart`, `heure_depart`, `id_challenge`, COALESCE(`jetons`, 0) as jetons
+                SELECT `id-activite`, `titre-activite`, `date_depart`, `heure_depart`, `id_challenge`, COALESCE(`jetons`, 0) as jetons, COALESCE(`rake`, 0) as rake
                 FROM activite ORDER BY date_depart DESC LIMIT 1
             ");
             $activity = $actStmt2->fetch();
@@ -245,6 +245,7 @@ try {
     $actId       = (int)$activity['id-activite'];
     $challengeId = (int)($activity['id_challenge'] ?? 0);
     $actJetons   = (int)($activity['jetons'] ?? 0);
+    $actRake     = floatval($activity['rake'] ?? 0);
 
     // ── Créer les colonnes bonus si elles n'existent pas ─────────
     $pdo->exec("ALTER TABLE participation
@@ -331,10 +332,10 @@ try {
         $upStmt = $pdo->prepare("
             UPDATE participation
             SET `option` = ?, `valide` = ?, `anonyme` = ?, `latereg` = ?,
-                `jetons` = ?, `jetons_bonus_ins` = ?, `jetons_total` = ?, `ds` = NOW()
+                `rake` = ?, `jetons` = ?, `jetons_bonus_ins` = ?, `jetons_total` = ?, `ds` = NOW()
             WHERE `id-membre` = ? AND `id-activite` = ?
         ");
-        $upStmt->execute([$newStatus, $valide, $anonymeVal, $lateregVal, $actJetons, $bonusIns, $jetonsTotal, $userId, $actId]);
+        $upStmt->execute([$newStatus, $valide, $anonymeVal, $lateregVal, $actRake, $actJetons, $bonusIns, $jetonsTotal, $userId, $actId]);
     } else {
         // Création d'une nouvelle participation
         $ordStmt = $pdo->query("SELECT MAX(ordre) as max_o FROM participation WHERE `id-activite` = $actId");
@@ -344,11 +345,11 @@ try {
         $jetonsTotal = $actJetons + $bonusIns;
         $insStmt = $pdo->prepare("
             INSERT INTO participation
-                (`id-membre`, `id-activite`, `nom-membre`, `option`, `anonyme`, `latereg`, `id-challenge`, `ordre`, `valide`, `classement`, `id_rake`, `jetons`, `jetons_bonus_ins`, `jetons_bonus_arrivee`, `jetons_total`, `ds`)
+                (`id-membre`, `id-activite`, `nom-membre`, `option`, `anonyme`, `latereg`, `id-challenge`, `ordre`, `valide`, `classement`, `id_rake`, `rake`, `jetons`, `jetons_bonus_ins`, `jetons_bonus_arrivee`, `jetons_total`, `ds`)
             VALUES
-                (?, ?, ?, ?, ?, ?, ?, ?, 'Actif', '0', 1, ?, ?, 0, ?, NOW())
+                (?, ?, ?, ?, ?, ?, ?, ?, 'Actif', '0', 1, ?, ?, ?, 0, ?, NOW())
         ");
-        $insStmt->execute([$userId, $actId, $pseudo, $newStatus, $anonymeVal, $lateregVal, $challengeId, $nextOrdre, $actJetons, $bonusIns, $jetonsTotal]);
+        $insStmt->execute([$userId, $actId, $pseudo, $newStatus, $anonymeVal, $lateregVal, $challengeId, $nextOrdre, $actRake, $actJetons, $bonusIns, $jetonsTotal]);
     }
 
     $newIsRegistered = in_array($newStatus, ['Inscrit', 'Option']);
