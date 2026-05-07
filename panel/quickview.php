@@ -550,6 +550,19 @@ window.SERVER_PARTICIPATION = <?php echo json_encode($serverParticipation ?? nul
 window.ALL_ACTIVITIES = <?php echo json_encode($allActivities, JSON_UNESCAPED_UNICODE); ?>;
 try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)); }catch(e){}
 </script>
+<script>
+function v2NavActivity(dir){
+  var acts = (window.ALL_ACTIVITIES || []).slice().sort(function(a,b){ return (a.ts||0)-(b.ts||0); });
+  if(!acts.length) return;
+  var curId = (window.SERVER_ACTIVITY && window.SERVER_ACTIVITY.id) ? window.SERVER_ACTIVITY.id : null;
+  var idx = curId ? acts.findIndex(function(a){ return a.id == curId; }) : -1;
+  var newIdx = idx + dir;
+  if(newIdx < 0 || newIdx >= acts.length) return;
+  var url = new URL(window.location.href);
+  url.searchParams.set('uid', acts[newIdx].id);
+  window.location.href = url.toString();
+}
+</script>
 <?php endif; ?>
 
 <div class="page">
