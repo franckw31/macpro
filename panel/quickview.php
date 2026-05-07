@@ -600,7 +600,7 @@ function v2NavActivity(dir){
     <div class="v2-date-row">
       <div class="v2-date-big"><?php echo htmlspecialchars($date_only_str); ?><?php if($time_str): ?> <span style="font-size:19px;font-weight:700;color:var(--green)"><?php echo htmlspecialchars($time_str); ?></span><?php endif; ?></div>
       <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;margin-top:-18px">
-        <button id="v2-act-prev" title="Activité précédente" onclick="v2NavActivity(-1)" style="width:24px;height:46px;border-radius:10px;background:rgba(255,255,255,0.07);border:none;color:var(--text2);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s" onmouseenter="this.style.background='rgba(255,255,255,0.14)'" onmouseleave="this.style.background='rgba(255,255,255,0.07)'">‹</button>
+        <button id="v2-act-prev" title="Activité précédente" onclick="v2NavActivity(-1)" style="width:24px;height:46px;border-radius:10px;background:rgba(255,255,255,0.07);border:none;color:#0a84ff;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s" onmouseenter="this.style.background='rgba(255,255,255,0.14)'" onmouseleave="this.style.background='rgba(255,255,255,0.07)'">‹</button>
       <button class="v2-cal-btn" id="v2-cal-open" title="Choisir une partie" aria-haspopup="dialog" style="width:46px;height:46px;border-radius:12px;background:rgba(10,132,255,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="4" width="18" height="17" rx="3" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.5)" stroke-width="1.4"/>
@@ -619,7 +619,7 @@ function v2NavActivity(dir){
           </circle>
         </svg>
       </button>
-        <button id="v2-act-next" title="Activité suivante" onclick="v2NavActivity(1)" style="width:24px;height:46px;border-radius:10px;background:rgba(255,255,255,0.07);border:none;color:var(--text2);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s" onmouseenter="this.style.background='rgba(255,255,255,0.14)'" onmouseleave="this.style.background='rgba(255,255,255,0.07)'">›</button>
+        <button id="v2-act-next" title="Activité suivante" onclick="v2NavActivity(1)" style="width:24px;height:46px;border-radius:10px;background:rgba(255,255,255,0.07);border:none;color:#0a84ff;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s" onmouseenter="this.style.background='rgba(255,255,255,0.14)'" onmouseleave="this.style.background='rgba(255,255,255,0.07)'">›</button>
       </div>
     </div>
 
