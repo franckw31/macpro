@@ -82,10 +82,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg'])) {
     // Fetch activity defaults for bonus calculation
     $actJetons = 0;
     $actDateDepart = "";
-    $actQuery = mysqli_query($db, "SELECT jetons, date_depart FROM activite WHERE `id-activite` = '" . intval($activityId) . "' LIMIT 1");
+    $actRake = 0;
+    $actQuery = mysqli_query($db, "SELECT jetons, date_depart, rake FROM activite WHERE `id-activite` = '" . intval($activityId) . "' LIMIT 1");
     if ($actQuery && ($actRow = mysqli_fetch_assoc($actQuery))) {
         $actJetons = intval($actRow['jetons'] ?? 0);
         $actDateDepart = $actRow['date_depart'] ?? "";
+        $actRake = floatval($actRow['rake'] ?? 0);
     }
 
     $existsQuery = mysqli_query($db, "SELECT `id-participation` FROM participation WHERE `id-membre` = '" . intval($userId) . "' AND `id-activite` = '" . intval($activityId) . "' LIMIT 1");
@@ -119,6 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg'])) {
             $jetons_total = $actJetons + $bonus_ins;
             $updates[] = "`jetons_bonus_ins` = '$bonus_ins'";
             $updates[] = "`jetons_total` = '$jetons_total'";
+            $updates[] = "`rake` = '$actRake'";
         }
 
         mysqli_query($db, "UPDATE participation SET " . implode(', ', $updates) . " WHERE `id-participation` = '" . intval($existing['id-participation']) . "'");
@@ -140,8 +143,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg'])) {
         }
         $jetons_total = $actJetons + $bonus_ins;
 
-        $columns = ['`id-membre`', '`id-activite`', '`ordre`', '`id-siege`', '`id-table`', '`option`', '`jetons_bonus_ins`', '`jetons_total`'];
-        $values = ["'" . intval($userId) . "'", "'" . intval($activityId) . "'", "'" . intval($nextOrder) . "'", "'0'", "'0'", "'" . mysqli_real_escape_string($db, $status) . "'", "'$bonus_ins'", "'$jetons_total'"];
+        $columns = ['`id-membre`', '`id-activite`', '`ordre`', '`id-siege`', '`id-table`', '`option`', '`rake`', '`jetons_bonus_ins`', '`jetons_total`'];
+        $values = ["'" . intval($userId) . "'", "'" . intval($activityId) . "'", "'" . intval($nextOrder) . "'", "'0'", "'0'", "'" . mysqli_real_escape_string($db, $status) . "'", "'$actRake'", "'$bonus_ins'", "'$jetons_total'"];
 
         if ($hasNomMembre) {
             $columns[] = '`nom-membre`';
