@@ -103,9 +103,13 @@ try {
             $stmt->execute([$actId]);
             $ordData = $stmt->fetch();
             $nextOrdre = intval($ordData['maxord'] ?? 0) + 1;
+
+            $stmtR = $pdo->prepare("SELECT COALESCE(`rake`,0) AS rake FROM `activite` WHERE `id-activite` = ? LIMIT 1");
+            $stmtR->execute([$actId]);
+            $actRake = floatval(($stmtR->fetch())['rake'] ?? 0);
             
-            $stmt = $pdo->prepare("INSERT INTO `participation` (`id-membre`, `id-activite`, `nom-membre`, `option`, `ordre`, `ds`) VALUES (?, ?, ?, 'Inscrit', ?, NOW())");
-            $stmt->execute([$userId, $actId, $pseudo, $nextOrdre]);
+            $stmt = $pdo->prepare("INSERT INTO `participation` (`id-membre`, `id-activite`, `nom-membre`, `option`, `ordre`, `rake`, `ds`) VALUES (?, ?, ?, 'Inscrit', ?, ?, NOW())");
+            $stmt->execute([$userId, $actId, $pseudo, $nextOrdre, $actRake]);
             $newStatus = 'Inscrit';
             $newRegistered = true;
         }
