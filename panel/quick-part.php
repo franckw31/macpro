@@ -1535,8 +1535,8 @@ JOIN activite a ON p.`id-activite` = a.`id-activite`";
             const occupiedSeats = <?php echo isset($occupied_seats_json) ? $occupied_seats_json : '[]'; ?>;
 
             // Initialize DataTables with row filtering
-            if ($('.data-table').length > 0) {
-                $('.data-table').DataTable({
+            if ($('.data-table:not(.podium-table)').length > 0) {
+                $('.data-table:not(.podium-table)').DataTable({
                     "paging": false,
                     "info": false,
                     "language": {
