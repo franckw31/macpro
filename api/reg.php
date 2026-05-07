@@ -99,8 +99,7 @@ try {
         error_log('[register-activity DEBUG] $_SERVER[REDIRECT_HTTP_AUTHORIZATION]=' . (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] : '(none)'));
         error_log('[register-activity DEBUG] apache_request_headers=' . json_encode($headers, JSON_UNESCAPED_UNICODE));
         error_log('[register-activity DEBUG] normalized_headers=' . json_encode($normHeaders, JSON_UNESCAPED_UNICODE));
-        error_log('[register-activity DEBUG] authHeader(final)=' . $authHeader);
-        // Authentification : priorité à la session PHP (comme quickview.php)
+        error_log('[register-activity DEBUG] authHeader(final)=' . $authHeader);    }        // Authentification : priorité à la session PHP (comme quickview.php)
         if(session_status() !== PHP_SESSION_ACTIVE) session_start();
         $userId = null;
         $pseudo = null;
