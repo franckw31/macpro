@@ -159,20 +159,6 @@ try {
             echo json_encode(['success' => false, 'error' => 'Non authentifié (session ou token)']);
             exit;
         }
-                $userId   = (int)$user['membre_id'];
-                $pseudo   = $user['pseudo'];
-            } else {
-                http_response_code(401);
-                echo json_encode(['success' => false, 'error' => 'Token invalide ou expiré']);
-                exit;
-            }
-        }
-        // If we reach here and still have no authenticated user, reject
-        if (empty($userId) || empty($pseudo)){
-            http_response_code(401);
-            echo json_encode(['success' => false, 'error' => 'Token manquant']);
-            exit;
-        }
 
     // ── Lire le body JSON une seule fois (POST) ──────────────────
     $input = [];
