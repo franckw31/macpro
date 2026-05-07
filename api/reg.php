@@ -145,13 +145,6 @@ try {
                     WHERE at.token = ?
                       AND (at.expires_at IS NULL OR at.expires_at > NOW())
                 ");
-                $stmt = $pdo->prepare("
-                    SELECT at.membre_id, m.pseudo
-                    FROM app_auth_tokens at
-                    JOIN membres m ON m.`id-membre` = at.membre_id
-                    WHERE at.token = ?
-                      AND (at.expires_at IS NULL OR at.expires_at > NOW())
-                ");
                 $stmt->execute([$token]);
                 $user = $stmt->fetch();
                 if ($user){
