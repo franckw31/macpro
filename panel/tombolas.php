@@ -614,12 +614,10 @@ if (!$is_admin) {
                                                                         c.`valeur`,
                                                                         m.`pseudo`,
                                                                         m.`fname`,
-                                                                        m.`lname`,
-                                                                        p.`jetons_bonus_ins`
+                                                                        m.`lname`
                                                                         FROM `collections-individu` ci
                                                                         JOIN `collections` c ON ci.`id_col` = c.`id_collection`
                                                                         JOIN `membres` m ON ci.`id-indiv` = m.`id-membre`
-                                                                        LEFT JOIN `participation` p ON p.`id-membre` = ci.`id-indiv` AND DATE(p.`date_inscription`) = DATE(ci.`date`)
                                                                         WHERE MONTH(ci.`date`) = $selected_month AND YEAR(ci.`date`) = $selected_year
                                                                         ORDER BY " . $order_column . " $sort_order";
                                                                     
@@ -642,9 +640,17 @@ if (!$is_admin) {
                                                                         $aff_rake = $row['aff_rake'];
                                                                         
                                                                         $date_simple = date('Y-m-d', strtotime($date));
-                                                                        $activite_query = mysqli_query($con, "SELECT `titre-activite` FROM `activite` WHERE DATE(`date_depart`) = '$date_simple'");
+                                                                        $activite_query = mysqli_query($con, "SELECT `id-activite`, `titre-activite` FROM `activite` WHERE DATE(`date_depart`) = '$date_simple'");
                                                                         $activite_row = mysqli_fetch_array($activite_query);
                                                                         $titre_activite = $activite_row ? $activite_row['titre-activite'] : '-';
+                                                                        $jetons_bonus_ins = '—';
+                                                                        if ($activite_row && isset($activite_row['id-activite'])) {
+                                                                            $act_id_tmp = intval($activite_row['id-activite']);
+                                                                            $bonus_q = mysqli_query($con, "SELECT `jetons_bonus_ins` FROM `participation` WHERE `id-activite`='$act_id_tmp' AND `id-membre`='" . intval($id_indiv) . "' LIMIT 1");
+                                                                            if ($bonus_q && ($bonus_r = mysqli_fetch_assoc($bonus_q)) && $bonus_r['jetons_bonus_ins'] !== null) {
+                                                                                $jetons_bonus_ins = $bonus_r['jetons_bonus_ins'];
+                                                                            }
+                                                                        }
                                                                         
                                                                         $row_class = (intval($aff_rake) === 1) ? 'table-success' : 'table-warning';
                                                                         $rake_label = (intval($aff_rake) === 1) ? '<span class="badge badge-success" style="cursor:pointer;" onclick="toggleRake(' . $row['id'] . ', 1)" title="Cliquer pour désassigner du Rake">OUI</span>' : '<span class="badge badge-danger" style="cursor:pointer;" onclick="toggleRake(' . $row['id'] . ', 0)" title="Cliquer pour assigner au Rake">NON</span>';
@@ -660,7 +666,7 @@ if (!$is_admin) {
                                                                         echo "<td>" . htmlspecialchars($qrcode) . "</td>";
                                                                         echo "<td>" . number_format($valeur, 2, ',', ' ') . " €</td>";
                                                                         echo "<td>" . date('d/m/Y', strtotime($date)) . "</td>";
-                                                                        echo "<td>" . (isset($row['jetons_bonus_ins']) && $row['jetons_bonus_ins'] !== null ? htmlspecialchars($row['jetons_bonus_ins']) : '—') . "</td>";
+                                                                        echo "<td>" . htmlspecialchars((string)$jetons_bonus_ins) . "</td>";
                                                                         echo "<td>" . htmlspecialchars($titre_activite) . "</td>";
                                                                         echo "<td>" . $rake_label . "</td>";
                                                                         echo "</tr>";
