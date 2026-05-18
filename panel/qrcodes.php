@@ -106,6 +106,16 @@ if (strlen($_SESSION['login']) == 0) {
                                 </a>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <a href="/qrcode/affectation_collection_activite.php" class="dashboard-card card-orange">
+                                    <div class="card-icon"><i class="fa fa-calendar"></i></div>
+                                    <div class="card-title">Affectation Collection / Activité</div>
+                                    <div class="card-description">Associer des collections QR à une activité</div>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
