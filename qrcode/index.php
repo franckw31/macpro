@@ -266,6 +266,18 @@ vip<html lang="fr">
         </div>
 
         <hr style="margin: 20px 0;">
+        <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.15); padding: 16px; text-align: center;">
+            <div style="font-size: 22px; margin-bottom: 6px;">🗂️</div>
+            <div style="font-weight: bold; font-size: 15px; margin-bottom: 4px;">Affectation Collection / Activité</div>
+            <div style="font-size: 12px; color: #666; margin-bottom: 12px;">Associer des collections QR à une activité</div>
+            <a href="https://viendez.com/qrcode/affectation_collection_activite.php" style="text-decoration: none;">
+                <button style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 15px; width: 100%;">
+                    Ouvrir
+                </button>
+            </a>
+        </div>
+
+        <hr style="margin: 20px 0;">
         <form action="print_multiple.php" method="get" target="_blank">
             <div class="history-header">
                 <h3 style="margin: 0 0 10px 0;">Historique récents</h3>
