@@ -270,7 +270,7 @@ vip<html lang="fr">
             <div style="font-size: 22px; margin-bottom: 6px;">🗂️</div>
             <div style="font-weight: bold; font-size: 15px; margin-bottom: 4px;">Affectation Collection / Activité</div>
             <div style="font-size: 12px; color: #666; margin-bottom: 12px;">Associer des collections QR à une activité</div>
-            <a href="https://viendez.com/qrcode/affectation_collection_activite.php" style="text-decoration: none;">
+            <a href="/qrcode/affectation_collection_activite.php" style="text-decoration: none;">
                 <button style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 15px; width: 100%;">
                     Ouvrir
                 </button>
