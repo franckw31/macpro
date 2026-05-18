@@ -545,7 +545,7 @@ if (!$is_admin) {
                                                                                     <th><?php echo getSortLink('qrcode', 'QRcode', $sort_by, $sort_order); ?></th>
                                                                                     <th><?php echo getSortLink('valeur', 'Valeur', $sort_by, $sort_order); ?></th>
                                                                                     <th><?php echo getSortLink('date', 'Date', $sort_by, $sort_order); ?></th>
-                                                                                    <th>Bonus</th>
+                                                                                    <th><?php echo getSortLink('bonus', 'Bonus', $sort_by, $sort_order); ?></th>
                                                                                     <th>Titre Activité</th>
                                                                                     <th><?php echo getSortLink('aff_rake', 'Aff. Rake', $sort_by, $sort_order); ?></th>
                                                                                 </tr>
@@ -592,6 +592,9 @@ if (!$is_admin) {
                                                                                         case 'aff_rake':
                                                                                             $order_column = 'ci.aff_rake';
                                                                                             break;
+                                                                                        case 'bonus':
+                                                                                            $order_column = 'jetons_bonus_ins';
+                                                                                            break;
                                                                                         case 'date':
                                                                                             $order_column = 'ci.date';
                                                                                             break;
@@ -614,7 +617,12 @@ if (!$is_admin) {
                                                                         c.`valeur`,
                                                                         m.`pseudo`,
                                                                         m.`fname`,
-                                                                        m.`lname`
+                                                                        m.`lname`,
+                                                                        (SELECT p.`jetons_bonus_ins` FROM `participation` p
+                                                                         JOIN `activite` a ON a.`id-activite` = p.`id-activite`
+                                                                         WHERE p.`id-membre` = ci.`id-indiv`
+                                                                         AND DATE(a.`date_depart`) = DATE(ci.`date`)
+                                                                         LIMIT 1) AS jetons_bonus_ins
                                                                         FROM `collections-individu` ci
                                                                         JOIN `collections` c ON ci.`id_col` = c.`id_collection`
                                                                         JOIN `membres` m ON ci.`id-indiv` = m.`id-membre`
@@ -640,17 +648,10 @@ if (!$is_admin) {
                                                                         $aff_rake = $row['aff_rake'];
                                                                         
                                                                         $date_simple = date('Y-m-d', strtotime($date));
-                                                                        $activite_query = mysqli_query($con, "SELECT `id-activite`, `titre-activite` FROM `activite` WHERE DATE(`date_depart`) = '$date_simple'");
+                                                                        $activite_query = mysqli_query($con, "SELECT `titre-activite` FROM `activite` WHERE DATE(`date_depart`) = '$date_simple'");
                                                                         $activite_row = mysqli_fetch_array($activite_query);
                                                                         $titre_activite = $activite_row ? $activite_row['titre-activite'] : '-';
-                                                                        $jetons_bonus_ins = '—';
-                                                                        if ($activite_row && isset($activite_row['id-activite'])) {
-                                                                            $act_id_tmp = intval($activite_row['id-activite']);
-                                                                            $bonus_q = mysqli_query($con, "SELECT `jetons_bonus_ins` FROM `participation` WHERE `id-activite`='$act_id_tmp' AND `id-membre`='" . intval($id_indiv) . "' LIMIT 1");
-                                                                            if ($bonus_q && ($bonus_r = mysqli_fetch_assoc($bonus_q)) && $bonus_r['jetons_bonus_ins'] !== null) {
-                                                                                $jetons_bonus_ins = $bonus_r['jetons_bonus_ins'];
-                                                                            }
-                                                                        }
+                                                                        $jetons_bonus_ins = ($row['jetons_bonus_ins'] !== null) ? $row['jetons_bonus_ins'] : '—';
                                                                         
                                                                         $row_class = (intval($aff_rake) === 1) ? 'table-success' : 'table-warning';
                                                                         $rake_label = (intval($aff_rake) === 1) ? '<span class="badge badge-success" style="cursor:pointer;" onclick="toggleRake(' . $row['id'] . ', 1)" title="Cliquer pour désassigner du Rake">OUI</span>' : '<span class="badge badge-danger" style="cursor:pointer;" onclick="toggleRake(' . $row['id'] . ', 0)" title="Cliquer pour assigner au Rake">NON</span>';
