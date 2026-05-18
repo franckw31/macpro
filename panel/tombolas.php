@@ -545,6 +545,7 @@ if (!$is_admin) {
                                                                                     <th><?php echo getSortLink('qrcode', 'QRcode', $sort_by, $sort_order); ?></th>
                                                                                     <th><?php echo getSortLink('valeur', 'Valeur', $sort_by, $sort_order); ?></th>
                                                                                     <th><?php echo getSortLink('date', 'Date', $sort_by, $sort_order); ?></th>
+                                                                                    <th>Bonus</th>
                                                                                     <th>Titre Activité</th>
                                                                                     <th><?php echo getSortLink('aff_rake', 'Aff. Rake', $sort_by, $sort_order); ?></th>
                                                                                 </tr>
@@ -613,10 +614,12 @@ if (!$is_admin) {
                                                                         c.`valeur`,
                                                                         m.`pseudo`,
                                                                         m.`fname`,
-                                                                        m.`lname`
+                                                                        m.`lname`,
+                                                                        p.`jetons_bonus_ins`
                                                                         FROM `collections-individu` ci
                                                                         JOIN `collections` c ON ci.`id_col` = c.`id_collection`
                                                                         JOIN `membres` m ON ci.`id-indiv` = m.`id-membre`
+                                                                        LEFT JOIN `participation` p ON p.`id-membre` = ci.`id-indiv` AND DATE(p.`date_inscription`) = DATE(ci.`date`)
                                                                         WHERE MONTH(ci.`date`) = $selected_month AND YEAR(ci.`date`) = $selected_year
                                                                         ORDER BY " . $order_column . " $sort_order";
                                                                     
@@ -657,17 +660,18 @@ if (!$is_admin) {
                                                                         echo "<td>" . htmlspecialchars($qrcode) . "</td>";
                                                                         echo "<td>" . number_format($valeur, 2, ',', ' ') . " €</td>";
                                                                         echo "<td>" . date('d/m/Y', strtotime($date)) . "</td>";
+                                                                        echo "<td>" . (isset($row['jetons_bonus_ins']) && $row['jetons_bonus_ins'] !== null ? htmlspecialchars($row['jetons_bonus_ins']) : '—') . "</td>";
                                                                         echo "<td>" . htmlspecialchars($titre_activite) . "</td>";
                                                                         echo "<td>" . $rake_label . "</td>";
                                                                         echo "</tr>";
                                                                     }
                                                                     
                                                                     if (!$has_data) {
-                                                                        echo "<tr><td colspan='6' style='text-align: center; padding: 20px; color: #ccc;'>Aucun ticket trouvé</td></tr>";
+                                                                        echo "<tr><td colspan='7' style='text-align: center; padding: 20px; color: #ccc;'>Aucun ticket trouvé</td></tr>";
                                                                     }
                                                                     
                                                                 } catch (Exception $e) {
-                                                                    echo "<tr><td colspan='6' style='text-align: center; color: #f00;'>Erreur: " . htmlspecialchars($e->getMessage()) . "</td></tr>";
+                                                                    echo "<tr><td colspan='7' style='text-align: center; color: #f00;'>Erreur: " . htmlspecialchars($e->getMessage()) . "</td></tr>";
                                                                 }
                                                                 ?>
                                                                             </tbody>
