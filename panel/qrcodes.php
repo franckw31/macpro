@@ -115,6 +115,13 @@ if (strlen($_SESSION['login']) == 0) {
                                     <div class="card-description">Associer des collections QR à une activité</div>
                                 </a>
                             </div>
+                            <div class="col-sm-4">
+                                <a href="/panel/tombolas.php?sort=pseudo" class="dashboard-card card-green">
+                                    <div class="card-icon"><i class="fa fa-ticket"></i></div>
+                                    <div class="card-title">Tombolas</div>
+                                    <div class="card-description">Gestion des tombolas et tickets</div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
