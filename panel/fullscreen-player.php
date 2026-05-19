@@ -311,6 +311,29 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
         #voiceToast.error { border-color: #ef4444; color: #fca5a5; }
         #voiceToast.success { border-color: #4ade80; color: #86efac; }
 
+        /* Bouton Annuler dernière élimination */
+        #undoElimBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 108px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #374151, #6b7280);
+            border: none;
+            cursor: pointer;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            box-shadow: 0 4px 16px rgba(0,0,0,.5);
+            transition: transform .15s, background .2s;
+            opacity: 0.5;
+        }
+        #undoElimBtn:hover { transform: scale(1.1); opacity: 1; background: linear-gradient(135deg, #dc2626, #ef4444); }
+        #undoElimBtn.has-elim { opacity: 1; background: linear-gradient(135deg, #b45309, #f59e0b); }
+
         /* Stats summary at bottom */
         .stats-footer {
             margin-top: 20px;
@@ -520,6 +543,8 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
         <div class="stat-item">Pricepool: <strong><?php echo number_format($pricepool, 0, ',', ' '); ?> €</strong></div>
     </div>
 
+    <!-- Bouton Annuler dernière élimination -->
+    <button id="undoElimBtn" title="Annuler la dernière élimination" onclick="undoLastElimination()">↩️</button>
     <!-- Bouton micro flottant -->
     <button id="voiceMicBtn" title="Commande vocale (ex: élimine Jean)" onclick="toggleVoiceMic()">🎙️</button>
     <div id="voiceToast"></div>
@@ -895,6 +920,28 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
             executeElimination();
         };
 
+        // --- ANNULER DERNIÈRE ÉLIMINATION ---
+        window.undoLastElimination = function() {
+            if (!confirm('Annuler la dernière élimination ?')) return;
+            $.ajax({
+                url: 'undo_elimination.php',
+                type: 'POST',
+                data: { activity_id: <?php echo $id; ?> },
+                dataType: 'json',
+                success: function(resp) {
+                    if (resp && resp.status === 'success') {
+                        speakWithFemaleVoice('Annulé');
+                        setTimeout(function(){ location.reload(); }, 1200);
+                    } else {
+                        alert('Erreur : ' + (resp ? resp.message : 'Réponse vide'));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Erreur AJAX: ' + error);
+                }
+            });
+        };
+
         // --- AUTO-REFRESH INTELLIGENT ---
         $(document).ready(function() {
             var currentChecksum = null;
@@ -1005,6 +1052,7 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
 
         // ── Parser la commande vocale ──────────────────────────────────────
         // Formes supportées :
+        //   "annule"                            → annule la dernière élimination
         //   "[A] élimine [B] définitivement"   → direct, sans modale
         //   "[A] élimine [B] qui recave"        → direct, sans modale
         //   "[A] élimine [B]"                   → modale pré-remplie (A sélectionné, OUT coché)
@@ -1012,6 +1060,16 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
         //   "recave [B]"                        → modale (OUT décoché)
         function parseVoiceCommand(texte) {
             var norm = normalize(texte);
+
+            // Commande annulation
+            var annuleWords = ['annule','annuler','annulation','undo','retour','efface'];
+            for (var ai = 0; ai < annuleWords.length; ai++) {
+                if (norm === annuleWords[ai] || norm.indexOf(annuleWords[ai]) !== -1) {
+                    voiceShowToast('↩️ Annulation…', '', 2000);
+                    undoLastElimination();
+                    return;
+                }
+            }
             console.log('[Voice] normalize:', norm);
 
             // ── ÉTAPE 1 : détecter et retirer le suffixe définitif/recave
