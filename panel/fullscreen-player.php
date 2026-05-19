@@ -1137,8 +1137,8 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
             var victimId   = victimRow.getAttribute('data-id');
             var victimName = victimRow.getAttribute('data-pseudo');
 
-            // ── ÉTAPE 4 : éliminateur + suffixe connu → DIRECT sans modale
-            if (eliminatorPart && isDefinitive !== null) {
+            // ── ÉTAPE 4 : éliminateur trouvé → DIRECT sans modale
+            if (eliminatorPart) {
                 var elimRow = findPlayer(eliminatorPart);
                 if (elimRow) {
                     var elimMemberId = elimRow.getAttribute('data-member-id');
@@ -1146,40 +1146,19 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                     var label        = isDefinitive ? '💀 OUT' : '♻️ Recave';
                     voiceShowToast(label + '\n' + elimPseudo + ' → ' + victimName, 'success', 2500);
                     setTimeout(function() {
-                        applyElimination(victimId, elimMemberId, elimPseudo, isDefinitive, voiceActivityId, victimName);
+                        applyElimination(victimId, elimMemberId, elimPseudo, (isDefinitive === true), voiceActivityId, victimName);
                     }, 600);
                     return;
                 }
-                // éliminateur non trouvé → bascule sur modale pré-remplie
             }
 
-            // ── ÉTAPE 5 : ouvre la modale pré-remplie
-            var toastLabel = (isDefinitive === false) ? '♻️ Recave → ' : '💀 Élimination → ';
-            voiceShowToast(toastLabel + victimName, 'success', 1500);
-
+            // ── ÉTAPE 5 : pas d'éliminateur ou inconnu → exécution directe sans modale
+            var isDefFinal = (isDefinitive === true);
+            var labelFinal = isDefFinal ? '💀 OUT' : '♻️ Recave';
+            voiceShowToast(labelFinal + ' → ' + victimName, 'success', 2500);
             setTimeout(function() {
-                openEliminationModal(victimId, victimName, voiceActivityId);
-
-                setTimeout(function() {
-                    var chk = document.getElementById('definitiveElimination');
-                    // Cocher UNIQUEMENT si "définitivement" explicitement reconnu
-                    if (chk) chk.checked = (isDefinitive === true);
-
-                    // Pré-sélectionner l'éliminateur si trouvé
-                    if (eliminatorPart) {
-                        var er = findPlayer(eliminatorPart);
-                        if (er) {
-                            var ep  = er.getAttribute('data-pseudo');
-                            var sel = document.getElementById('eliminatorSelect');
-                            if (sel) {
-                                for (var k = 0; k < sel.options.length; k++) {
-                                    if (sel.options[k].value === ep) { sel.selectedIndex = k; break; }
-                                }
-                            }
-                        }
-                    }
-                }, 150);
-            }, 400);
+                applyElimination(victimId, '', '', isDefFinal, voiceActivityId, victimName);
+            }, 600);
         }
 
         // ── Init Web Speech API ────────────────────────────────────────────
