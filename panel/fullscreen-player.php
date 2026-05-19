@@ -1029,67 +1029,66 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
         //   "recave [B]"                        → modale (OUT décoché)
         function parseVoiceCommand(texte) {
             var norm = normalize(texte);
-            var eliminatorPart = null;   // texte avant le mot-clé
-            var victimPart     = null;   // texte après le mot-clé (avant suffixe éventuel)
-            var actionType     = null;   // 'elim' | 'recave'
-            var isDefinitive   = null;   // true | false | null (null = laisser la modale décider)
+            console.log('[Voice] normalize:', norm);
 
-            // ── 1. Cherche un mot-clé élimination ──
+            // ── ÉTAPE 1 : détecter et retirer le suffixe définitif/recave
+            //    sur TOUTE la phrase normalisée, AVANT de chercher les noms.
+            //    On teste les plus longs en premier pour éviter les collisions
+            //    (ex: "qui recave" avant "recave").
+            var isDefinitive = null; // null = pas de suffixe détecté → modale
+            var cleanNorm    = norm;
+
+            var allSuffixes = [
+                { words: SUFFIX_DEFINITIVE, val: true  },
+                { words: SUFFIX_RECAVE,     val: false }
+            ];
+
+            outer:
+            for (var si = 0; si < allSuffixes.length; si++) {
+                var group = allSuffixes[si];
+                for (var sw = 0; sw < group.words.length; sw++) {
+                    var nw  = normalize(group.words[sw]);
+                    var pos = cleanNorm.indexOf(nw);
+                    if (pos !== -1) {
+                        isDefinitive = group.val;
+                        // Retirer ce mot du texte de travail
+                        cleanNorm = (cleanNorm.substring(0, pos) + ' ' + cleanNorm.substring(pos + nw.length)).replace(/\s+/g, ' ').trim();
+                        console.log('[Voice] suffixe détecté:', group.words[sw], '→ isDefinitive=', isDefinitive, '| cleanNorm:', cleanNorm);
+                        break outer;
+                    }
+                }
+            }
+
+            // ── ÉTAPE 2 : chercher le verbe d'action dans la phrase nettoyée
+            var eliminatorPart = null;
+            var victimPart     = null;
+            var actionType     = null;
+
             for (var i = 0; i < KEYWORDS_ELIM.length; i++) {
-                var kw = normalize(KEYWORDS_ELIM[i]);
-                var idx = norm.indexOf(kw);
+                var kw  = normalize(KEYWORDS_ELIM[i]);
+                var idx = cleanNorm.indexOf(kw);
                 if (idx !== -1) {
                     actionType     = 'elim';
-                    eliminatorPart = norm.substring(0, idx).trim() || null;
-                    var after      = norm.substring(idx + kw.length).trim();
-
-                    // Extrait le suffixe définitif/recave depuis la fin de `after`
-                    var suf = extractSuffix(after);
-                    if (suf !== null) {
-                        victimPart   = suf.text;
-                        isDefinitive = suf.isDefinitive;
-                    } else {
-                        victimPart   = after;
-                        isDefinitive = null; // ouvrira la modale
-
-                        // Fallback : scanner tout le texte pour un mot-clé recave ou définitif
-                        // (au cas où la reconnaissance vocale transcrit légèrement différemment)
-                        for (var fd = 0; fd < SUFFIX_DEFINITIVE.length; fd++) {
-                            if (norm.indexOf(normalize(SUFFIX_DEFINITIVE[fd])) !== -1) {
-                                isDefinitive = true;
-                                // Retirer le mot trouvé du victimPart
-                                victimPart = victimPart.replace(new RegExp(normalize(SUFFIX_DEFINITIVE[fd]), 'g'), '').trim();
-                                break;
-                            }
-                        }
-                        if (isDefinitive === null) {
-                            for (var fr = 0; fr < SUFFIX_RECAVE.length; fr++) {
-                                if (norm.indexOf(normalize(SUFFIX_RECAVE[fr])) !== -1) {
-                                    isDefinitive = false;
-                                    // Retirer le mot trouvé du victimPart
-                                    victimPart = victimPart.replace(new RegExp(normalize(SUFFIX_RECAVE[fr]), 'g'), '').trim();
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                    eliminatorPart = cleanNorm.substring(0, idx).trim() || null;
+                    victimPart     = cleanNorm.substring(idx + kw.length).trim() || null;
                     break;
                 }
             }
 
-            // ── 2. Sinon, cherche un mot-clé recave ──
             if (!actionType) {
                 for (var j = 0; j < KEYWORDS_RECAVE.length; j++) {
                     var kw2  = normalize(KEYWORDS_RECAVE[j]);
-                    var idx2 = norm.indexOf(kw2);
+                    var idx2 = cleanNorm.indexOf(kw2);
                     if (idx2 !== -1) {
                         actionType   = 'recave';
-                        isDefinitive = false;
-                        victimPart   = norm.substring(idx2 + kw2.length).trim();
+                        isDefinitive = false; // recave = forcément non-définitif
+                        victimPart   = cleanNorm.substring(idx2 + kw2.length).trim() || null;
                         break;
                     }
                 }
             }
+
+            console.log('[Voice] action:', actionType, '| elim:', eliminatorPart, '| victim:', victimPart, '| definitive:', isDefinitive);
 
             if (!actionType) return; // aucune commande reconnue
 
@@ -1098,7 +1097,7 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                 return;
             }
 
-            // ── 3. Trouve la victime ──
+            // ── ÉTAPE 3 : trouver la victime parmi les joueurs en jeu
             var victimRow = findPlayer(victimPart);
             if (!victimRow) {
                 voiceShowToast('❓ Joueur non trouvé : "' + victimPart + '"\n(joueurs en jeu seulement)', 'error');
@@ -1107,7 +1106,7 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
             var victimId   = victimRow.getAttribute('data-id');
             var victimName = victimRow.getAttribute('data-pseudo');
 
-            // ── 4. Cas COMPLET : éliminateur + victime + suffixe → sans modale ──
+            // ── ÉTAPE 4 : éliminateur + suffixe connu → DIRECT sans modale
             if (eliminatorPart && isDefinitive !== null) {
                 var elimRow = findPlayer(eliminatorPart);
                 if (elimRow) {
@@ -1123,7 +1122,7 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                 // éliminateur non trouvé → bascule sur modale pré-remplie
             }
 
-            // ── 5. Cas PARTIEL : ouvre la modale pré-remplie ──
+            // ── ÉTAPE 5 : ouvre la modale pré-remplie
             var toastLabel = (isDefinitive === false) ? '♻️ Recave → ' : '💀 Élimination → ';
             voiceShowToast(toastLabel + victimName, 'success', 1500);
 
@@ -1131,15 +1130,15 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                 openEliminationModal(victimId, victimName, voiceActivityId);
 
                 setTimeout(function() {
-                    // Pré-cocher OUT selon l'action
                     var chk = document.getElementById('definitiveElimination');
-                    if (chk) chk.checked = (isDefinitive !== false); // true si 'elim' sans suffixe
+                    // isDefinitive=false → décoché | isDefinitive=true → coché | null → coché par défaut
+                    if (chk) chk.checked = (isDefinitive !== false);
 
-                    // Pré-sélectionner l'éliminateur dans la liste déroulante si trouvé
+                    // Pré-sélectionner l'éliminateur si trouvé
                     if (eliminatorPart) {
                         var er = findPlayer(eliminatorPart);
                         if (er) {
-                            var ep = er.getAttribute('data-pseudo');
+                            var ep  = er.getAttribute('data-pseudo');
                             var sel = document.getElementById('eliminatorSelect');
                             if (sel) {
                                 for (var k = 0; k < sel.options.length; k++) {
