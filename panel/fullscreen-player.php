@@ -1114,8 +1114,8 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
 
                 setTimeout(function() {
                     var chk = document.getElementById('definitiveElimination');
-                    // isDefinitive=false → décoché | isDefinitive=true → coché | null → coché par défaut
-                    if (chk) chk.checked = (isDefinitive !== false);
+                    // Cocher UNIQUEMENT si "définitivement" explicitement reconnu
+                    if (chk) chk.checked = (isDefinitive === true);
 
                     // Pré-sélectionner l'éliminateur si trouvé
                     if (eliminatorPart) {
