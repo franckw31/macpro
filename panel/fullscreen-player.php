@@ -999,65 +999,135 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
             return (bestScore >= 0.35) ? best : null;
         }
 
+        // ── Suffixes définitif / recave ────────────────────────────────────
+        var SUFFIX_DEFINITIVE = ['definitivement','definitif','definitive','def'];
+        var SUFFIX_RECAVE     = ['qui recave','rebuy','re-buy','recave'];
+
+        // Retourne { text, isDefinitive } en retirant le suffixe trouvé, ou null si aucun
+        function extractSuffix(str) {
+            for (var i = 0; i < SUFFIX_DEFINITIVE.length; i++) {
+                var idx = str.indexOf(normalize(SUFFIX_DEFINITIVE[i]));
+                if (idx !== -1) {
+                    return { text: (str.substring(0, idx) + str.substring(idx + normalize(SUFFIX_DEFINITIVE[i]).length)).trim(), isDefinitive: true };
+                }
+            }
+            for (var j = 0; j < SUFFIX_RECAVE.length; j++) {
+                var idx2 = str.indexOf(normalize(SUFFIX_RECAVE[j]));
+                if (idx2 !== -1) {
+                    return { text: (str.substring(0, idx2) + str.substring(idx2 + normalize(SUFFIX_RECAVE[j]).length)).trim(), isDefinitive: false };
+                }
+            }
+            return null;
+        }
+
         // ── Parser la commande vocale ──────────────────────────────────────
+        // Formes supportées :
+        //   "[A] élimine [B] définitivement"   → direct, sans modale
+        //   "[A] élimine [B] qui recave"        → direct, sans modale
+        //   "[A] élimine [B]"                   → modale pré-remplie (A sélectionné, OUT coché)
+        //   "élimine [B]"                       → modale (OUT coché)
+        //   "recave [B]"                        → modale (OUT décoché)
         function parseVoiceCommand(texte) {
             var norm = normalize(texte);
-            var action = null;
-            var afterKeyword = norm;
+            var eliminatorPart = null;   // texte avant le mot-clé
+            var victimPart     = null;   // texte après le mot-clé (avant suffixe éventuel)
+            var actionType     = null;   // 'elim' | 'recave'
+            var isDefinitive   = null;   // true | false | null (null = laisser la modale décider)
 
-            // Cherche un mot-clé elimination
+            // ── 1. Cherche un mot-clé élimination ──
             for (var i = 0; i < KEYWORDS_ELIM.length; i++) {
                 var kw = normalize(KEYWORDS_ELIM[i]);
                 var idx = norm.indexOf(kw);
                 if (idx !== -1) {
-                    action = 'elim';
-                    afterKeyword = norm.substring(idx + kw.length).trim();
+                    actionType     = 'elim';
+                    eliminatorPart = norm.substring(0, idx).trim() || null;
+                    var after      = norm.substring(idx + kw.length).trim();
+
+                    // Extrait le suffixe définitif/recave depuis la fin de `after`
+                    var suf = extractSuffix(after);
+                    if (suf !== null) {
+                        victimPart   = suf.text;
+                        isDefinitive = suf.isDefinitive;
+                    } else {
+                        victimPart   = after;
+                        isDefinitive = null; // ouvrira la modale
+                    }
                     break;
                 }
             }
 
-            // Cherche un mot-clé recave
-            if (!action) {
+            // ── 2. Sinon, cherche un mot-clé recave ──
+            if (!actionType) {
                 for (var j = 0; j < KEYWORDS_RECAVE.length; j++) {
-                    var kw2 = normalize(KEYWORDS_RECAVE[j]);
+                    var kw2  = normalize(KEYWORDS_RECAVE[j]);
                     var idx2 = norm.indexOf(kw2);
                     if (idx2 !== -1) {
-                        action = 'recave';
-                        afterKeyword = norm.substring(idx2 + kw2.length).trim();
+                        actionType   = 'recave';
+                        isDefinitive = false;
+                        victimPart   = norm.substring(idx2 + kw2.length).trim();
                         break;
                     }
                 }
             }
 
-            if (!action) return;
+            if (!actionType) return; // aucune commande reconnue
 
-            if (!afterKeyword) {
-                voiceShowToast('🎙️ Précisez le nom du joueur\nEx: "élimine Jean"', 'error');
+            if (!victimPart) {
+                voiceShowToast('🎙️ Précisez le nom du joueur\nEx: "Pikachu élimine Manon définitivement"', 'error');
                 return;
             }
 
-            var playerRow = findPlayer(afterKeyword);
-            if (!playerRow) {
-                voiceShowToast('❓ Joueur non trouvé : "' + afterKeyword + '"\n(joueurs en jeu seulement)', 'error');
+            // ── 3. Trouve la victime ──
+            var victimRow = findPlayer(victimPart);
+            if (!victimRow) {
+                voiceShowToast('❓ Joueur non trouvé : "' + victimPart + '"\n(joueurs en jeu seulement)', 'error');
                 return;
             }
+            var victimId   = victimRow.getAttribute('data-id');
+            var victimName = victimRow.getAttribute('data-pseudo');
 
-            var participationId = playerRow.getAttribute('data-id');
-            var pseudo          = playerRow.getAttribute('data-pseudo');
-
-            voiceShowToast('✅ ' + (action === 'recave' ? 'Recave' : 'Élimination') + ' → ' + pseudo, 'success', 1500);
-
-            // Léger délai pour que le toast soit visible avant la modale
-            setTimeout(function() {
-                openEliminationModal(participationId, pseudo, voiceActivityId);
-
-                // Pré-cocher « définitif » si mot-clé élimination (pas recave)
-                if (action === 'elim') {
+            // ── 4. Cas COMPLET : éliminateur + victime + suffixe → sans modale ──
+            if (eliminatorPart && isDefinitive !== null) {
+                var elimRow = findPlayer(eliminatorPart);
+                if (elimRow) {
+                    var elimMemberId = elimRow.getAttribute('data-member-id');
+                    var elimPseudo   = elimRow.getAttribute('data-pseudo');
+                    var label        = isDefinitive ? '💀 OUT' : '♻️ Recave';
+                    voiceShowToast(label + '\n' + elimPseudo + ' → ' + victimName, 'success', 2500);
                     setTimeout(function() {
-                        var chk = document.getElementById('definitiveElimination');
-                        if (chk) chk.checked = true;
-                    }, 120);
+                        applyElimination(victimId, elimMemberId, elimPseudo, isDefinitive, voiceActivityId, victimName);
+                    }, 600);
+                    return;
                 }
+                // éliminateur non trouvé → bascule sur modale pré-remplie
+            }
+
+            // ── 5. Cas PARTIEL : ouvre la modale pré-remplie ──
+            var toastLabel = (isDefinitive === false) ? '♻️ Recave → ' : '💀 Élimination → ';
+            voiceShowToast(toastLabel + victimName, 'success', 1500);
+
+            setTimeout(function() {
+                openEliminationModal(victimId, victimName, voiceActivityId);
+
+                setTimeout(function() {
+                    // Pré-cocher OUT selon l'action
+                    var chk = document.getElementById('definitiveElimination');
+                    if (chk) chk.checked = (isDefinitive !== false); // true si 'elim' sans suffixe
+
+                    // Pré-sélectionner l'éliminateur dans la liste déroulante si trouvé
+                    if (eliminatorPart) {
+                        var er = findPlayer(eliminatorPart);
+                        if (er) {
+                            var ep = er.getAttribute('data-pseudo');
+                            var sel = document.getElementById('eliminatorSelect');
+                            if (sel) {
+                                for (var k = 0; k < sel.options.length; k++) {
+                                    if (sel.options[k].value === ep) { sel.selectedIndex = k; break; }
+                                }
+                            }
+                        }
+                    }
+                }, 150);
             }, 400);
         }
 
