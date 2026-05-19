@@ -263,6 +263,54 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
         }
         .back-btn:hover { opacity: 1; color: var(--color-blue); }
 
+        /* Bouton micro flottant */
+        #voiceMicBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6c63ff, #a855f7);
+            border: none;
+            cursor: pointer;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            box-shadow: 0 4px 20px rgba(108,99,255,.5);
+            transition: transform .15s;
+        }
+        #voiceMicBtn:hover { transform: scale(1.1); }
+        #voiceMicBtn.listening {
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            animation: voicePulse 1.1s infinite;
+        }
+        @keyframes voicePulse {
+            0%   { box-shadow: 0 0 0 0 rgba(239,68,68,.6); }
+            70%  { box-shadow: 0 0 0 16px rgba(239,68,68,0); }
+            100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+        }
+        #voiceToast {
+            position: fixed;
+            bottom: 105px;
+            right: 30px;
+            background: rgba(20,20,30,.95);
+            border: 1px solid #6c63ff;
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: .85rem;
+            color: #fff;
+            max-width: 280px;
+            text-align: center;
+            display: none;
+            z-index: 9999;
+            white-space: pre-line;
+        }
+        #voiceToast.error { border-color: #ef4444; color: #fca5a5; }
+        #voiceToast.success { border-color: #4ade80; color: #86efac; }
+
         /* Stats summary at bottom */
         .stats-footer {
             margin-top: 20px;
@@ -471,6 +519,10 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
         ?>
         <div class="stat-item">Pricepool: <strong><?php echo number_format($pricepool, 0, ',', ' '); ?> €</strong></div>
     </div>
+
+    <!-- Bouton micro flottant -->
+    <button id="voiceMicBtn" title="Commande vocale (ex: élimine Jean)" onclick="toggleVoiceMic()">🎙️</button>
+    <div id="voiceToast"></div>
 
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -886,6 +938,188 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
         });
     </script>
     
+    <!-- ═══════════════════════════════════════════════════════════
+         RECONNAISSANCE VOCALE – Élimination joueur
+         Commandes : "élimine Jean", "bust Jean", "sortie Jean"
+                     "recave Jean", "annule"
+    ════════════════════════════════════════════════════════════════ -->
+    <script>
+    (function() {
+        var voiceRecognition = null;
+        var voiceListening   = false;
+        var voiceActivityId  = "<?php echo $id; ?>";
+        var voiceToastTimer  = null;
+
+        // ── Mots-clés déclencheurs ─────────────────────────────────────────
+        var KEYWORDS_ELIM   = ['élimine','elimine','éliminé','eliminé','bust','sorti','sortie','out'];
+        var KEYWORDS_RECAVE = ['recave','rebuy','re-buy'];
+
+        // ── Afficher un toast ──────────────────────────────────────────────
+        function voiceShowToast(msg, type, duration) {
+            duration = duration || 3000;
+            var t = document.getElementById('voiceToast');
+            t.textContent = msg;
+            t.className   = type || '';
+            t.style.display = 'block';
+            clearTimeout(voiceToastTimer);
+            voiceToastTimer = setTimeout(function(){ t.style.display = 'none'; }, duration);
+        }
+
+        // ── Normaliser une chaîne (minuscules, sans accents) ───────────────
+        function normalize(str) {
+            return str.toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9\s]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        // ── Score de similarité simple (mots en commun) ────────────────────
+        function similarity(a, b) {
+            var wa = normalize(a).split(' ');
+            var wb = normalize(b).split(' ');
+            var match = wa.filter(function(w){ return wb.indexOf(w) !== -1; }).length;
+            return match / Math.max(wa.length, wb.length);
+        }
+
+        // ── Trouver le joueur le plus proche parmi les joueurs EN JEU ──────
+        function findPlayer(name) {
+            var rows = document.querySelectorAll('#joueurs-list tr:not(.eliminated)');
+            var best = null, bestScore = 0;
+            var normName = normalize(name);
+
+            rows.forEach(function(r) {
+                var pseudo = r.getAttribute('data-pseudo') || '';
+                var score  = similarity(normName, pseudo);
+                // Bonus si le transcript contient directement le pseudo normalisé
+                if (normName.indexOf(normalize(pseudo)) !== -1) score = Math.max(score, 0.8);
+                if (score > bestScore) { bestScore = score; best = r; }
+            });
+
+            return (bestScore >= 0.35) ? best : null;
+        }
+
+        // ── Parser la commande vocale ──────────────────────────────────────
+        function parseVoiceCommand(texte) {
+            var norm = normalize(texte);
+            var action = null;
+            var afterKeyword = norm;
+
+            // Cherche un mot-clé elimination
+            for (var i = 0; i < KEYWORDS_ELIM.length; i++) {
+                var kw = normalize(KEYWORDS_ELIM[i]);
+                var idx = norm.indexOf(kw);
+                if (idx !== -1) {
+                    action = 'elim';
+                    afterKeyword = norm.substring(idx + kw.length).trim();
+                    break;
+                }
+            }
+
+            // Cherche un mot-clé recave
+            if (!action) {
+                for (var j = 0; j < KEYWORDS_RECAVE.length; j++) {
+                    var kw2 = normalize(KEYWORDS_RECAVE[j]);
+                    var idx2 = norm.indexOf(kw2);
+                    if (idx2 !== -1) {
+                        action = 'recave';
+                        afterKeyword = norm.substring(idx2 + kw2.length).trim();
+                        break;
+                    }
+                }
+            }
+
+            if (!action) return;
+
+            if (!afterKeyword) {
+                voiceShowToast('🎙️ Précisez le nom du joueur\nEx: "élimine Jean"', 'error');
+                return;
+            }
+
+            var playerRow = findPlayer(afterKeyword);
+            if (!playerRow) {
+                voiceShowToast('❓ Joueur non trouvé : "' + afterKeyword + '"\n(joueurs en jeu seulement)', 'error');
+                return;
+            }
+
+            var participationId = playerRow.getAttribute('data-id');
+            var pseudo          = playerRow.getAttribute('data-pseudo');
+
+            voiceShowToast('✅ ' + (action === 'recave' ? 'Recave' : 'Élimination') + ' → ' + pseudo, 'success', 1500);
+
+            // Léger délai pour que le toast soit visible avant la modale
+            setTimeout(function() {
+                openEliminationModal(participationId, pseudo, voiceActivityId);
+
+                // Pré-cocher « définitif » si mot-clé élimination (pas recave)
+                if (action === 'elim') {
+                    setTimeout(function() {
+                        var chk = document.getElementById('definitiveElimination');
+                        if (chk) chk.checked = true;
+                    }, 120);
+                }
+            }, 400);
+        }
+
+        // ── Init Web Speech API ────────────────────────────────────────────
+        function initVoice() {
+            var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SR) {
+                voiceShowToast('⚠️ Reconnais. vocale non dispo\n(Chrome/Edge requis)', 'error', 5000);
+                return false;
+            }
+            voiceRecognition = new SR();
+            voiceRecognition.lang           = 'fr-FR';
+            voiceRecognition.continuous     = false;
+            voiceRecognition.interimResults = false;
+
+            voiceRecognition.onstart = function() {
+                voiceListening = true;
+                document.getElementById('voiceMicBtn').classList.add('listening');
+                voiceShowToast('🔴 Écoute…\n"élimine [nom]" / "recave [nom]"', '', 8000);
+            };
+
+            voiceRecognition.onresult = function(e) {
+                var texte = e.results[0][0].transcript;
+                console.log('[Voice] Reconnu :', texte);
+                voiceShowToast('🎙️ "' + texte + '"', '', 2000);
+                parseVoiceCommand(texte);
+            };
+
+            voiceRecognition.onerror = function(e) {
+                var msgs = {
+                    'not-allowed' : '🚫 Micro refusé – Autorisez l\'accès',
+                    'no-speech'   : '🔇 Aucun son détecté',
+                    'network'     : '🌐 Erreur réseau',
+                };
+                voiceShowToast(msgs[e.error] || ('Erreur : ' + e.error), 'error');
+                setVoiceIdle();
+            };
+
+            voiceRecognition.onend = function() { setVoiceIdle(); };
+            return true;
+        }
+
+        function setVoiceIdle() {
+            voiceListening = false;
+            var btn = document.getElementById('voiceMicBtn');
+            if (btn) btn.classList.remove('listening');
+        }
+
+        // ── Toggle micro (exposé globalement) ─────────────────────────────
+        window.toggleVoiceMic = function() {
+            if (!voiceRecognition && !initVoice()) return;
+            if (voiceListening) {
+                voiceRecognition.stop();
+            } else {
+                try { voiceRecognition.start(); }
+                catch(e) { voiceRecognition = null; initVoice(); voiceRecognition.start(); }
+            }
+        };
+
+    })();
+    </script>
+
     <!-- Card Background Script -->
     <script src="assets/js/card-bg.js"></script>
     <script>
