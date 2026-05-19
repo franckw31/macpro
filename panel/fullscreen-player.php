@@ -703,10 +703,9 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                             <span style="color:red; font-size:16px; font-weight:bold;">Éliminé définitivement (OUT)</span>
                         </label>
                     </div>
-                    
-                    <div style="text-align:right;margin-top:20px; display: flex; justify-content: flex-end; gap: 10px;">
+
+                    <div style="text-align:right;margin-top:20px;">
                         <button class="btn btn-secondary" id="elimCancel">Annuler</button>
-                        <button class="btn btn-danger" id="elimConfirm">CONFIRMER SORTIE</button>
                     </div>
                 </div>
             `;
@@ -717,17 +716,14 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                 document.body.removeChild(overlay);
             };
 
-            overlay.querySelector('#elimConfirm').onclick = function () {
-                var select = overlay.querySelector('#eliminatorSelect');
+            // Auto-confirme dès qu'un joueur est sélectionné
+            overlay.querySelector('#eliminatorSelect').onchange = function () {
+                var select = this;
                 var eliminatorName = select.value;
+                if (eliminatorName === "") return;
                 var selectedOption = select.options[select.selectedIndex];
                 var eliminatorMemberId = selectedOption.getAttribute('data-member-id');
                 var isDefinitive = overlay.querySelector('#definitiveElimination').checked;
-
-                if (eliminatorName === "") {
-                    return;
-                }
-
                 document.body.removeChild(overlay);
                 applyElimination(victimParticipationId, eliminatorMemberId, eliminatorName, isDefinitive, activityId, victimName);
             };
