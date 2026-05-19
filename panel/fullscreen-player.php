@@ -1011,28 +1011,60 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                 .trim();
         }
 
-        // ── Score de similarité simple (mots en commun) ────────────────────
-        function similarity(a, b) {
-            var wa = normalize(a).split(' ');
-            var wb = normalize(b).split(' ');
-            var match = wa.filter(function(w){ return wb.indexOf(w) !== -1; }).length;
-            return match / Math.max(wa.length, wb.length);
+        // ── Distance de Levenshtein ──────────────────────────────────────────
+        function levenshtein(a, b) {
+            var m = a.length, n = b.length;
+            var dp = [];
+            for (var i = 0; i <= m; i++) { dp[i] = [i]; }
+            for (var j = 0; j <= n; j++) { dp[0][j] = j; }
+            for (var i = 1; i <= m; i++) {
+                for (var j = 1; j <= n; j++) {
+                    dp[i][j] = (a[i-1] === b[j-1])
+                        ? dp[i-1][j-1]
+                        : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+                }
+            }
+            return dp[m][n];
         }
 
-        // ── Trouver le joueur le plus proche parmi les joueurs EN JEU ──────
+        // ── Score combiné : mots communs + Levenshtein ─────────────────────
+        function scoreMatch(query, candidate) {
+            var nq = normalize(query);
+            var nc = normalize(candidate);
+            if (!nq || !nc) return 0;
+            // Correspondance exacte
+            if (nq === nc) return 1;
+            // Le candidat est contenu dans la requête
+            if (nq.indexOf(nc) !== -1) return 0.95;
+            // Mots en commun
+            var wq = nq.split(' '), wc = nc.split(' ');
+            var common = wq.filter(function(w){ return wc.indexOf(w) !== -1; }).length;
+            var wordScore = common / Math.max(wq.length, wc.length);
+            // Levenshtein sur le nom complet (normalisé)
+            var maxLen = Math.max(nq.length, nc.length);
+            var levScore = maxLen > 0 ? 1 - levenshtein(nq, nc) / maxLen : 0;
+            // Levenshtein sur le premier mot du candidat seul (prénom)
+            var firstWord = wc[0] || nc;
+            var maxLen2 = Math.max(nq.length, firstWord.length);
+            var levFirst = maxLen2 > 0 ? 1 - levenshtein(nq, firstWord) / maxLen2 : 0;
+            return Math.max(wordScore, levScore * 0.8, levFirst * 0.9);
+        }
+
+        // ── Trouver le joueur le plus proche (pseudo OU phonétique) ────────
         function findPlayer(name) {
             var rows = document.querySelectorAll('#joueurs-list tr:not(.eliminated)');
             var best = null, bestScore = 0;
-            var normName = normalize(name);
 
             rows.forEach(function(r) {
-                var pseudo = r.getAttribute('data-pseudo') || '';
-                var score  = similarity(normName, pseudo);
-                // Bonus si le transcript contient directement le pseudo normalisé
-                if (normName.indexOf(normalize(pseudo)) !== -1) score = Math.max(score, 0.8);
+                var pseudo   = r.getAttribute('data-pseudo')   || '';
+                var phonetic = r.getAttribute('data-phonetic') || '';
+                var s1 = scoreMatch(name, pseudo);
+                var s2 = phonetic ? scoreMatch(name, phonetic) : 0;
+                var score = Math.max(s1, s2);
                 if (score > bestScore) { bestScore = score; best = r; }
             });
 
+            console.log('[Voice] findPlayer("' + name + '") → best=' + (best ? best.getAttribute('data-pseudo') : 'null') + ' score=' + bestScore.toFixed(2));
             return (bestScore >= 0.35) ? best : null;
         }
 
@@ -1171,7 +1203,7 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
             voiceRecognition = new SR();
             voiceRecognition.lang           = 'fr-FR';
             voiceRecognition.continuous     = false;
-            voiceRecognition.interimResults = false;
+            voiceRecognition.interimResults = true;
 
             voiceRecognition.onstart = function() {
                 voiceListening = true;
@@ -1180,23 +1212,44 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
             };
 
             voiceRecognition.onresult = function(e) {
-                var texte = e.results[0][0].transcript;
-                console.log('[Voice] Reconnu :', texte);
-                voiceShowToast('🎙️ "' + texte + '"', '', 2000);
-                parseVoiceCommand(texte);
+                var interim = '';
+                var final   = '';
+                for (var i = e.resultIndex; i < e.results.length; i++) {
+                    if (e.results[i].isFinal) {
+                        final += e.results[i][0].transcript;
+                    } else {
+                        interim += e.results[i][0].transcript;
+                    }
+                }
+                // Affiche en temps réel ce qui est entendu
+                if (interim) voiceShowToast('🎙️ ' + interim + '…', '', 5000);
+                if (final) {
+                    console.log('[Voice] Final :', final);
+                    voiceShowToast('🎙️ "' + final + '"', '', 2000);
+                    parseVoiceCommand(final);
+                }
             };
 
             voiceRecognition.onerror = function(e) {
+                if (e.error === 'no-speech') {
+                    // Redémarre automatiquement si pas de son
+                    voiceShowToast('🔴 Écoute…\n(pas de son, réessayez)', '', 5000);
+                    try { voiceRecognition.start(); } catch(ex) {}
+                    return;
+                }
                 var msgs = {
                     'not-allowed' : '🚫 Micro refusé – Autorisez l\'accès',
-                    'no-speech'   : '🔇 Aucun son détecté',
                     'network'     : '🌐 Erreur réseau',
                 };
                 voiceShowToast(msgs[e.error] || ('Erreur : ' + e.error), 'error');
                 setVoiceIdle();
             };
 
-            voiceRecognition.onend = function() { setVoiceIdle(); };
+            voiceRecognition.onend = function() {
+                // Ne pas marquer idle si on est encore censé écouter (redémarrage auto)
+                if (!voiceListening) return;
+                setVoiceIdle();
+            };
             return true;
         }
 
