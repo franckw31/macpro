@@ -646,16 +646,13 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
             return fallbackName;
         }
 
-        // Action du bouton POUBELLE / SORTIE
+        // Action du bouton POUBELLE / SORTIE – élimination directe sans popup
         window.confirmDeletePlayer = function(button) {
-            console.log("%c[Action] Clic sur bouton SORTIE", "color: red; font-weight: bold;");
             var participationId = button.getAttribute('data-id');
-            var memberId = button.getAttribute('data-member-id');
-            var name = button.getAttribute('data-name');
-            var activityId = button.getAttribute('data-activity-id');
-            
-            console.log(" -> Joueur ciblé: " + name + " (ID Part: " + participationId + ")");
-            openEliminationModal(participationId, name, activityId);
+            var memberId        = button.getAttribute('data-member-id');
+            var name            = button.getAttribute('data-name');
+            var activityId      = button.getAttribute('data-activity-id');
+            applyElimination(participationId, memberId, '', true, activityId, name);
         };
 
         window.openEliminationModal = function(victimParticipationId, victimName, activityId) {
