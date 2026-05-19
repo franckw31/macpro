@@ -1233,7 +1233,7 @@ if (strlen($_SESSION['id'] == 0)) {
                                                             </h4>
                                                         </div>
                                                         <div style="padding: 15px; background: #fff0f0;">
-                                                            <form method="post" class="form-inline" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce joueur de l\'activité ?');">
+                                                            <form method="post" class="form-inline" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;">
                                                                 <div class="form-group" style="flex: 2;">
                                                                     <label for="membre_del_select" style="display: block; margin-bottom: 5px;">Joueur à supprimer</label>
                                                                     <select name="membre_del" id="membre_del_select" class="form-control" required style="width: 100%;">
