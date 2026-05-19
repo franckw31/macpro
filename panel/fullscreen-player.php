@@ -922,7 +922,6 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
 
         // --- ANNULER DERNIÈRE ÉLIMINATION ---
         window.undoLastElimination = function() {
-            if (!confirm('Annuler la dernière élimination ?')) return;
             $.ajax({
                 url: 'undo_elimination.php',
                 type: 'POST',
