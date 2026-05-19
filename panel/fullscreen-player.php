@@ -646,13 +646,13 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
             return fallbackName;
         }
 
-        // Action du bouton POUBELLE / SORTIE – élimination directe sans popup
+        // Action du bouton POUBELLE / SORTIE
         window.confirmDeletePlayer = function(button) {
             var participationId = button.getAttribute('data-id');
             var memberId        = button.getAttribute('data-member-id');
             var name            = button.getAttribute('data-name');
             var activityId      = button.getAttribute('data-activity-id');
-            applyElimination(participationId, memberId, '', true, activityId, name);
+            openEliminationModal(participationId, name, activityId);
         };
 
         window.openEliminationModal = function(victimParticipationId, victimName, activityId) {
