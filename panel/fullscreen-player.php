@@ -725,7 +725,6 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                 var isDefinitive = overlay.querySelector('#definitiveElimination').checked;
 
                 if (eliminatorName === "") {
-                    alert("Veuillez sélectionner un joueur.");
                     return;
                 }
 
@@ -790,12 +789,11 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                                 // On laisse le temps au MP3 de sirène + voix de se jouer
                                 setTimeout(function() { location.reload(); }, 13000);
                             } else {
-                                alert('Erreur: ' + (resp ? resp.message : 'Réponse vide'));
+                                console.error('[Élimination] Erreur:', resp ? resp.message : 'Réponse vide');
                             }
                         },
                         error: function (xhr, status, error) {
                             console.error('[AJAX Error]', error);
-                            alert('Erreur AJAX: ' + error);
                         }
                     });
                 };
@@ -932,11 +930,11 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                         speakWithFemaleVoice('Annulé');
                         setTimeout(function(){ location.reload(); }, 1200);
                     } else {
-                        alert('Erreur : ' + (resp ? resp.message : 'Réponse vide'));
+                        console.error('[Undo] Erreur:', resp ? resp.message : 'Réponse vide');
                     }
                 },
                 error: function(xhr, status, error) {
-                    alert('Erreur AJAX: ' + error);
+                    console.error('[Undo AJAX]', error);
                 }
             });
         };
