@@ -1051,6 +1051,27 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                     } else {
                         victimPart   = after;
                         isDefinitive = null; // ouvrira la modale
+
+                        // Fallback : scanner tout le texte pour un mot-clé recave ou définitif
+                        // (au cas où la reconnaissance vocale transcrit légèrement différemment)
+                        for (var fd = 0; fd < SUFFIX_DEFINITIVE.length; fd++) {
+                            if (norm.indexOf(normalize(SUFFIX_DEFINITIVE[fd])) !== -1) {
+                                isDefinitive = true;
+                                // Retirer le mot trouvé du victimPart
+                                victimPart = victimPart.replace(new RegExp(normalize(SUFFIX_DEFINITIVE[fd]), 'g'), '').trim();
+                                break;
+                            }
+                        }
+                        if (isDefinitive === null) {
+                            for (var fr = 0; fr < SUFFIX_RECAVE.length; fr++) {
+                                if (norm.indexOf(normalize(SUFFIX_RECAVE[fr])) !== -1) {
+                                    isDefinitive = false;
+                                    // Retirer le mot trouvé du victimPart
+                                    victimPart = victimPart.replace(new RegExp(normalize(SUFFIX_RECAVE[fr]), 'g'), '').trim();
+                                    break;
+                                }
+                            }
+                        }
                     }
                     break;
                 }
