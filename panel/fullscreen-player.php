@@ -999,26 +999,9 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
             return (bestScore >= 0.35) ? best : null;
         }
 
-        // ── Suffixes définitif / recave ────────────────────────────────────
+        // ── Suffixes définitif / recave (liste des mots à détecter) ──────────
         var SUFFIX_DEFINITIVE = ['definitivement','definitif','definitive','def'];
         var SUFFIX_RECAVE     = ['qui recave','rebuy','re-buy','recave'];
-
-        // Retourne { text, isDefinitive } en retirant le suffixe trouvé, ou null si aucun
-        function extractSuffix(str) {
-            for (var i = 0; i < SUFFIX_DEFINITIVE.length; i++) {
-                var idx = str.indexOf(normalize(SUFFIX_DEFINITIVE[i]));
-                if (idx !== -1) {
-                    return { text: (str.substring(0, idx) + str.substring(idx + normalize(SUFFIX_DEFINITIVE[i]).length)).trim(), isDefinitive: true };
-                }
-            }
-            for (var j = 0; j < SUFFIX_RECAVE.length; j++) {
-                var idx2 = str.indexOf(normalize(SUFFIX_RECAVE[j]));
-                if (idx2 !== -1) {
-                    return { text: (str.substring(0, idx2) + str.substring(idx2 + normalize(SUFFIX_RECAVE[j]).length)).trim(), isDefinitive: false };
-                }
-            }
-            return null;
-        }
 
         // ── Parser la commande vocale ──────────────────────────────────────
         // Formes supportées :
