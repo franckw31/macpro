@@ -172,8 +172,9 @@ if ($id > 0) {
                         }
                         $jetons = intval($row['jetons_bonus_ins']);
                         $jetons_color = ($jetons === 5000) ? '#16a34a' : '#c62828';
+                        $qr_color = ($jetons === 5000) ? '#16a34a' : '#c62828';
                         echo '<tr>';
-                        echo '<td>'.esc($row['collection_nom']).'</td>';
+                        echo '<td style="color:'.$qr_color.';font-weight:700">'.esc($row['collection_nom']).'</td>';
                         echo '<td>'.esc(date('d/m/Y', strtotime($row['date']))).'</td>';
                         echo '<td>'.esc(strip_parenthesized($activite_titre ?: '-')).'</td>';
                         echo '<td style="color:'.$jetons_color.';font-weight:700;text-align:center">'.$jetons.'</td>';
