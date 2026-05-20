@@ -597,6 +597,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             metaHtml += '<br><strong>Tickets à 5000 jetons avec ≥2 participations (' + moisPrev + '):</strong> ' + (ticketsPrevMonth5000Min2 || 0);
             if (jetonsBonus == 5000 && ticketsPrevMonth >= 2) {
                 metaHtml += '<br><span style="color:#2e7d32;font-size:18px;font-weight:bold;">✅ Ticket Validé</span>';
+            } else if (jetonsBonus < 5000) {
+                metaHtml += '<br><span style="color:#c62828;font-size:16px;font-weight:bold;">❌ Ticket Invalide car Heure Inscription dépassée</span>';
+            } else if (ticketsPrevMonth < 2) {
+                metaHtml += '<br><span style="color:#c62828;font-size:16px;font-weight:bold;">❌ Nombre de participations insuffisantes</span>';
             }
             metaDiv.innerHTML = metaHtml;
             metaDiv.style.display = 'block';
