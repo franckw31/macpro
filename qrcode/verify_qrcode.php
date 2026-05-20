@@ -179,9 +179,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     AND EXISTS (
                         SELECT 1 FROM participation p
                         WHERE p.`id-membre` = ci.`id-indiv`
+                        AND p.`id-activite` = CAST(SUBSTRING(ci.co, LOCATE('#', ci.co)+1) AS UNSIGNED)
                         AND p.jetons_bonus_ins = 5000
-                        AND MONTH(p.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
-                        AND YEAR(p.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
                     )
                 ");
                 if ($stmtPrev5k) {
