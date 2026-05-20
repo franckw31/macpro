@@ -139,6 +139,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     $stmtPrev5k->fetch();
                     $stmtPrev5k->close();
                 }
+                // Tickets mois précédent à 5000 jetons, seulement si le joueur a ≥2 participations à 5000 ce mois-là
+                $ticketsPrevMonth5000Min2 = 0;
+                $stmtPrev5kMin2 = $conx->prepare("
+                    SELECT COUNT(*) FROM `collections-individu` ci
+                    WHERE ci.`id-indiv` = ?
+                    AND MONTH(ci.`date`) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                    AND YEAR(ci.`date`)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                    AND (
+                        SELECT COUNT(*) FROM participation p
+                        WHERE p.`id-membre` = ci.`id-indiv`
+                        AND p.jetons_bonus_ins = 5000
+                        AND MONTH(p.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                        AND YEAR(p.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                    ) >= 2
+                ");
+                if ($stmtPrev5kMin2) {
+                    $stmtPrev5kMin2->bind_param('i', $idMembre);
+                    $stmtPrev5kMin2->execute();
+                    $stmtPrev5kMin2->bind_result($ticketsPrevMonth5000Min2);
+                    $stmtPrev5kMin2->fetch();
+                    $stmtPrev5kMin2->close();
+                }
             }
 
             respondJson([
@@ -152,7 +174,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 'date_attribution' => $dateAttribution,
                 'jetons_bonus_ins' => $jetonsBonus,
                 'tickets_prev_month' => $ticketsPrevMonth,
-                'tickets_prev_month_5000' => $ticketsPrevMonth5000
+                'tickets_prev_month_5000' => $ticketsPrevMonth5000,
+                'tickets_prev_month_5000_min2' => $ticketsPrevMonth5000Min2
             ]);
         } else {
             respondJson([
@@ -539,7 +562,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 
                 if (data.success) {
                     if (data.found) {
-                        showFoundResult(data.id, data.nom, data.valeur, data.nom_joueur, data.date_attribution, data.jetons_bonus_ins, data.tickets_prev_month, data.tickets_prev_month_5000);
+                        showFoundResult(data.id, data.nom, data.valeur, data.nom_joueur, data.date_attribution, data.jetons_bonus_ins, data.tickets_prev_month, data.tickets_prev_month_5000, data.tickets_prev_month_5000_min2);
                     } else {
                         showNotFoundResult(content);
                     }
@@ -554,7 +577,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             });
         }
         
-        function showFoundResult(id, nom, valeur, nomJoueur, dateAttribution, jetonsBonus, ticketsPrevMonth, ticketsPrevMonth5000) {
+        function showFoundResult(id, nom, valeur, nomJoueur, dateAttribution, jetonsBonus, ticketsPrevMonth, ticketsPrevMonth5000, ticketsPrevMonth5000Min2) {
             const resultDiv = document.getElementById('resultDiv');
             resultDiv.className = 'result found';
             
@@ -571,6 +594,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             var prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
             var moisPrev = prev.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
             metaHtml += '<br><strong>Tickets mois précédent (' + moisPrev + '):</strong> ' + (ticketsPrevMonth || 0) + ' <em>(dont ' + (ticketsPrevMonth5000 || 0) + ' à 5000 jetons)</em>';
+            metaHtml += '<br><strong>Tickets à 5000 jetons avec ≥2 participations (' + moisPrev + '):</strong> ' + (ticketsPrevMonth5000Min2 || 0);
             metaDiv.innerHTML = metaHtml;
             metaDiv.style.display = 'block';
             
