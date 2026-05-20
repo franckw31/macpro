@@ -60,6 +60,49 @@ function respondJson(array $payload) {
     exit;
 }
 
+// Action : lister les tickets éligibles du mois précédent
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'list_tickets') {
+    if (!$conx) {
+        respondJson(['success' => false, 'message' => 'Erreur de connexion']);
+    }
+    $result = $conx->query("
+        SELECT
+            ci.id AS ticket_id,
+            ci.`date` AS date_ticket,
+            COALESCE(m.pseudo, 'Inconnu') AS proprietaire,
+            p_last.ds AS date_participation,
+            p_last.jetons_bonus_ins
+        FROM `collections-individu` ci
+        LEFT JOIN membres m ON m.`id-membre` = ci.`id-indiv`
+        LEFT JOIN participation p_last ON p_last.`id-participation` = (
+            SELECT p2.`id-participation` FROM participation p2
+            WHERE p2.`id-membre` = ci.`id-indiv`
+            AND p2.jetons_bonus_ins = 5000
+            AND MONTH(p2.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+            AND YEAR(p2.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+            ORDER BY p2.`id-participation` DESC LIMIT 1
+        )
+        WHERE MONTH(ci.`date`) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+        AND YEAR(ci.`date`)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+        AND (
+            SELECT COUNT(*) FROM participation p
+            WHERE p.`id-membre` = ci.`id-indiv`
+            AND p.jetons_bonus_ins = 5000
+            AND MONTH(p.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+            AND YEAR(p.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+        ) >= 2
+        ORDER BY m.pseudo, ci.`date`
+    ");
+    if (!$result) {
+        respondJson(['success' => false, 'message' => $conx->error]);
+    }
+    $rows = [];
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
+    respondJson(['success' => true, 'count' => count($rows), 'tickets' => $rows]);
+}
+
 // Traiter l'AJAX pour vérifier le résultat
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'verify') {
     // Vérifier la connexion
