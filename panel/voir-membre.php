@@ -2516,9 +2516,20 @@ if (!$member) {
             leCalqueE.className = "rubrique bgImg montrer";
             leCalque.className = "btnnavA";
 
-            // Redraw DataTables when their tab becomes visible
-            if (id === 'ks' && typeof activiteDataTable !== 'undefined') {
-                activiteDataTable.columns.adjust().draw();
+            // Init/redraw DataTables when their tab becomes visible
+            if (id === 'ks') {
+                if (activiteDataTable === null) {
+                    activiteDataTable = $('#activiteTable').DataTable({
+                        language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json' },
+                        pageLength: 10,
+                        order: [[0, 'desc']]
+                    });
+                    $('#activiteTable').on('click', 'tr.clickable-row', function() {
+                        window.location.href = 'voir-membre.php?id=' + $(this).data('id');
+                    });
+                } else {
+                    activiteDataTable.columns.adjust().draw();
+                }
             }
             if (id === 'portefeuille' && typeof $.fn.dataTable !== 'undefined') {
                 if ($.fn.dataTable.isDataTable('#transactionsTable')) {
@@ -2642,18 +2653,7 @@ if (!$member) {
         <?php } ?>
     </script>
     <script>
-        var activiteDataTable;
-        $(document).ready(function() {
-            activiteDataTable = $('#activiteTable').DataTable({
-                language: { url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json' },
-                pageLength: 10,
-                order: [[0, 'desc']]
-            });
-
-            $('#activiteTable').on('click', 'tr.clickable-row', function() {
-                window.location.href = 'voir-membre.php?id=' + $(this).data('id');
-            });
-        });
+        var activiteDataTable = null;
     </script>
     <script>
 $(document).ready(function() {
