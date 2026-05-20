@@ -75,7 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 SELECT COUNT(*) FROM participation p
                 WHERE p.`id-membre` = ci.`id-indiv`
                 AND p.jetons_bonus_ins = 5000
-                AND p.`id-activite` = CAST(REGEXP_REPLACE(ci.co, '[^0-9]', '') AS UNSIGNED)
+                AND MONTH(p.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                AND YEAR(p.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
             ) AS nb_participations_5000
         FROM `collections-individu` ci
         LEFT JOIN collections c ON c.id_collection = ci.id_col
@@ -86,7 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             SELECT COUNT(*) FROM participation p
             WHERE p.`id-membre` = ci.`id-indiv`
             AND p.jetons_bonus_ins = 5000
-            AND p.`id-activite` = CAST(REGEXP_REPLACE(ci.co, '[^0-9]', '') AS UNSIGNED)
+            AND MONTH(p.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+            AND YEAR(p.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
         ) >= 2
         ORDER BY c.nom, ci.`date`
     ");
@@ -170,7 +172,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         SELECT 1 FROM participation p
                         WHERE p.`id-membre` = ci.`id-indiv`
                         AND p.jetons_bonus_ins = 5000
-                        AND p.`id-activite` = CAST(REGEXP_REPLACE(ci.co, '[^0-9]', '') AS UNSIGNED)
+                        AND MONTH(p.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                        AND YEAR(p.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
                     )
                 ");
                 if ($stmtPrev5k) {
