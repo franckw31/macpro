@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     
     // Préparer et exécuter la requête de recherche avec le nom du joueur depuis membres.pseudo
     $stmt = $conx->prepare("
-        SELECT c.id_collection, c.nom, c.valeur, COALESCE(m.pseudo, 'Non attribué') as nom_joueur, COALESCE(ci.date, '') as date_attribution
+        SELECT c.id_collection, c.nom, c.valeur, COALESCE(m.pseudo, 'Non attribué') as nom_joueur, COALESCE(ci.date, '') as date_attribution, COALESCE(ci.`id-indiv`, 0) as id_membre
         FROM collections c
         LEFT JOIN `collections-individu` ci ON c.id_collection = ci.id_col
         LEFT JOIN membres m ON ci.`id-indiv` = m.`id-membre`
@@ -99,8 +99,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $stmt->store_result();
         
         if ($stmt->num_rows > 0) {
-            $stmt->bind_result($id, $nomResult, $valeur, $nomJoueur, $dateAttribution);
+            $stmt->bind_result($id, $nomResult, $valeur, $nomJoueur, $dateAttribution, $idMembre);
             $stmt->fetch();
+
+            // Compter les tickets distribués ce mois-ci pour ce joueur
+            $ticketsMonth = 0;
+            if ($idMembre > 0) {
+                $stmtCount = $conx->prepare("
+                    SELECT COUNT(*) FROM `collections-individu`
+                    WHERE `id-indiv` = ?
+                    AND MONTH(`date`) = MONTH(NOW())
+                    AND YEAR(`date`) = YEAR(NOW())
+                ");
+                if ($stmtCount) {
+                    $stmtCount->bind_param('i', $idMembre);
+                    $stmtCount->execute();
+                    $stmtCount->bind_result($ticketsMonth);
+                    $stmtCount->fetch();
+                    $stmtCount->close();
+                }
+            }
+
             respondJson([
                 'success' => true,
                 'found' => true,
@@ -109,7 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 'nom' => $nomResult,
                 'valeur' => $valeur,
                 'nom_joueur' => $nomJoueur,
-                'date_attribution' => $dateAttribution
+                'date_attribution' => $dateAttribution,
+                'tickets_this_month' => $ticketsMonth
             ]);
         } else {
             respondJson([
@@ -496,7 +516,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 
                 if (data.success) {
                     if (data.found) {
-                        showFoundResult(data.id, data.nom, data.valeur, data.nom_joueur, data.date_attribution);
+                        showFoundResult(data.id, data.nom, data.valeur, data.nom_joueur, data.date_attribution, data.tickets_this_month);
                     } else {
                         showNotFoundResult(content);
                     }
@@ -511,7 +531,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             });
         }
         
-        function showFoundResult(id, nom, valeur, nomJoueur, dateAttribution) {
+        function showFoundResult(id, nom, valeur, nomJoueur, dateAttribution, ticketsMonth) {
             const resultDiv = document.getElementById('resultDiv');
             resultDiv.className = 'result found';
             
@@ -524,6 +544,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             if (dateAttribution) {
                 metaHtml += '<br><strong>Date:</strong> ' + dateAttribution;
             }
+            var mois = new Date().toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
+            metaHtml += '<br><strong>Tickets ce mois (' + mois + '):</strong> ' + (ticketsMonth || 0);
             metaDiv.innerHTML = metaHtml;
             metaDiv.style.display = 'block';
             
