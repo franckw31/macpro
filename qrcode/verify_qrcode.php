@@ -71,19 +71,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             ci.`date` AS date_ticket,
             c.nom AS qrcode,
             COALESCE(m.pseudo, 'Inconnu') AS proprietaire,
-            p_last.ds AS date_participation,
-            p_last.jetons_bonus_ins
+            (
+                SELECT COUNT(*) FROM participation p
+                WHERE p.`id-membre` = ci.`id-indiv`
+                AND p.jetons_bonus_ins = 5000
+                AND MONTH(p.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                AND YEAR(p.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+            ) AS nb_participations_5000
         FROM `collections-individu` ci
         LEFT JOIN collections c ON c.id_collection = ci.id_col
         LEFT JOIN membres m ON m.`id-membre` = ci.`id-indiv`
-        LEFT JOIN participation p_last ON p_last.`id-participation` = (
-            SELECT p2.`id-participation` FROM participation p2
-            WHERE p2.`id-membre` = ci.`id-indiv`
-            AND p2.jetons_bonus_ins = 5000
-            AND MONTH(p2.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
-            AND YEAR(p2.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
-            ORDER BY p2.`id-participation` DESC LIMIT 1
-        )
         WHERE MONTH(ci.`date`) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
         AND YEAR(ci.`date`)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
         AND (
@@ -571,11 +568,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         return va.localeCompare(vb, 'fr', {numeric: true}) * sortDir;
                     });
                     var cols = [
-                        {key:'proprietaire', label:'Propriétaire'},
-                        {key:'qrcode',       label:'QR Code'},
-                        {key:'date_ticket',  label:'Date ticket'},
-                        {key:'date_participation', label:'Date participation'},
-                        {key:'jetons_bonus_ins',   label:'Jetons bonus ins'}
+                        {key:'proprietaire',         label:'Propriétaire'},
+                        {key:'qrcode',               label:'QR Code'},
+                        {key:'date_ticket',          label:'Date ticket'},
+                        {key:'nb_participations_5000', label:'Participations à 5000'}
                     ];
                     var html = '<h3 style="margin-bottom:10px;">🎟 Tickets éligibles (' + moisPrev + ') : ' + allTickets.length + '</h3>';
                     html += '<table id="ticketsTable"><thead><tr><th>#</th>';
