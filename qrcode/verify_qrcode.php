@@ -446,6 +446,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             word-break: break-all;
             white-space: pre-wrap;
         }
+
+        #ticketsListContainer {
+            margin-top: 30px;
+        }
+        #ticketsListContainer table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        #ticketsListContainer th {
+            background: #1976d2;
+            color: white;
+            padding: 8px 6px;
+            text-align: left;
+        }
+        #ticketsListContainer td {
+            padding: 6px;
+            border-bottom: 1px solid #ddd;
+        }
+        #ticketsListContainer tr:nth-child(even) td {
+            background: #f5f5f5;
+        }
         
         @media (max-width: 600px) {
             .container {
@@ -496,9 +518,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             </div>
             <button onclick="resetScanner()" style="width: 100%; margin-top: 20px;">Nouvelle vérification</button>
         </div>
+
+        <!-- Liste des tickets éligibles -->
+        <div style="margin-top: 20px;">
+            <button onclick="loadTicketsList()" class="btn-secondary" style="width:100%;">📋 Voir les tickets éligibles du mois précédent</button>
+        </div>
+        <div id="ticketsListContainer" style="display:none;"></div>
     </div>
     
     <script>
+        function loadTicketsList() {
+            const container = document.getElementById('ticketsListContainer');
+            container.style.display = 'block';
+            container.innerHTML = '<p style="text-align:center;color:#999;">⏳ Chargement...</p>';
+            fetch(window.location.href, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'action=list_tickets'
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (!data.success) {
+                    container.innerHTML = '<p style="color:red;">Erreur: ' + data.message + '</p>';
+                    return;
+                }
+                var prev = new Date();
+                prev.setMonth(prev.getMonth() - 1);
+                var moisPrev = prev.toLocaleString('fr-FR', {month:'long', year:'numeric'});
+                var html = '<h3 style="margin-bottom:10px;">🎟 Tickets éligibles (' + moisPrev + ') : ' + data.count + '</h3>';
+                html += '<table><thead><tr><th>#</th><th>Propriétaire</th><th>Date ticket</th><th>Date participation</th><th>Jetons bonus ins</th></tr></thead><tbody>';
+                data.tickets.forEach(function(t, i) {
+                    html += '<tr><td>' + (i+1) + '</td><td>' + (t.proprietaire||'') + '</td><td>' + (t.date_ticket||'') + '</td><td>' + (t.date_participation||'') + '</td><td>' + (t.jetons_bonus_ins||'') + '</td></tr>';
+                });
+                html += '</tbody></table>';
+                container.innerHTML = html;
+            })
+            .catch(e => {
+                container.innerHTML = '<p style="color:red;">Erreur de connexion</p>';
+            });
+        }
+
         let html5QrcodeScanner = null;
         let isScanning = false;
         let lastScannedValue = '';
