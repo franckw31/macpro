@@ -2521,7 +2521,7 @@ if (!$member) {
                 if (activiteDataTable === null) {
                     activiteDataTable = $('#activiteTable').DataTable({
                         language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json' },
-                        pageLength: 10,
+                        pageLength: 8,
                         order: [[0, 'desc']]
                     });
                     $('#activiteTable').on('click', 'tr.clickable-row', function() {
