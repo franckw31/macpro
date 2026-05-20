@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         LEFT JOIN `collections-individu` ci ON c.id_collection = ci.id_col
         LEFT JOIN membres m ON ci.`id-indiv` = m.`id-membre`
         WHERE c.nom = ?
-        ORDER BY ci.id_col DESC
+        ORDER BY ci.id DESC
         LIMIT 1
     ");
     
