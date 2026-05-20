@@ -69,10 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         SELECT
             ci.id AS ticket_id,
             ci.`date` AS date_ticket,
+            c.nom AS qrcode,
             COALESCE(m.pseudo, 'Inconnu') AS proprietaire,
             p_last.ds AS date_participation,
             p_last.jetons_bonus_ins
         FROM `collections-individu` ci
+        LEFT JOIN collections c ON c.id_collection = ci.id_col
         LEFT JOIN membres m ON m.`id-membre` = ci.`id-indiv`
         LEFT JOIN participation p_last ON p_last.`id-participation` = (
             SELECT p2.`id-participation` FROM participation p2
@@ -546,9 +548,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 prev.setMonth(prev.getMonth() - 1);
                 var moisPrev = prev.toLocaleString('fr-FR', {month:'long', year:'numeric'});
                 var html = '<h3 style="margin-bottom:10px;">🎟 Tickets éligibles (' + moisPrev + ') : ' + data.count + '</h3>';
-                html += '<table><thead><tr><th>#</th><th>Propriétaire</th><th>Date ticket</th><th>Date participation</th><th>Jetons bonus ins</th></tr></thead><tbody>';
+                html += '<table><thead><tr><th>#</th><th>Propriétaire</th><th>QR Code</th><th>Date ticket</th><th>Date participation</th><th>Jetons bonus ins</th></tr></thead><tbody>';
                 data.tickets.forEach(function(t, i) {
-                    html += '<tr><td>' + (i+1) + '</td><td>' + (t.proprietaire||'') + '</td><td>' + (t.date_ticket||'') + '</td><td>' + (t.date_participation||'') + '</td><td>' + (t.jetons_bonus_ins||'') + '</td></tr>';
+                    html += '<tr><td>' + (i+1) + '</td><td>' + (t.proprietaire||'') + '</td><td style="font-size:11px;word-break:break-all;">' + (t.qrcode||'') + '</td><td>' + (t.date_ticket||'') + '</td><td>' + (t.date_participation||'') + '</td><td>' + (t.jetons_bonus_ins||'') + '</td></tr>';
                 });
                 html += '</tbody></table>';
                 container.innerHTML = html;
