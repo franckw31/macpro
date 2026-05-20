@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         AND EXISTS (
             SELECT 1 FROM participation p
             WHERE p.`id-membre` = ci.`id-indiv`
-            AND p.`id-activite` = CAST(REGEXP_REPLACE(ci.co, '[^0-9]', '') AS UNSIGNED)
+            AND p.`id-activite` = CAST(SUBSTRING(ci.co, LOCATE('#', ci.co)+1) AS UNSIGNED)
             AND p.jetons_bonus_ins = 5000
         )
         AND (
@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     // Préparer et exécuter la requête de recherche avec le nom du joueur depuis membres.pseudo
     $stmt = $conx->prepare("
         SELECT c.id_collection, c.nom, c.valeur, COALESCE(m.pseudo, 'Non attribué') as nom_joueur, COALESCE(ci.date, '') as date_attribution, COALESCE(ci.`id-indiv`, 0) as id_membre,
-               COALESCE((SELECT p.jetons_bonus_ins FROM participation p WHERE p.`id-membre` = ci.`id-indiv` AND p.`id-activite` = CAST(REGEXP_REPLACE(ci.co, '[^0-9]', '') AS UNSIGNED) LIMIT 1), 0) as jetons_bonus_ins
+               COALESCE((SELECT p.jetons_bonus_ins FROM participation p WHERE p.`id-membre` = ci.`id-indiv` AND p.`id-activite` = CAST(SUBSTRING(ci.co, LOCATE('#', ci.co)+1) AS UNSIGNED) LIMIT 1), 0) as jetons_bonus_ins
         FROM collections c
         LEFT JOIN `collections-individu` ci ON c.id_collection = ci.id_col
         LEFT JOIN membres m ON ci.`id-indiv` = m.`id-membre`
