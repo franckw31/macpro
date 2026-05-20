@@ -462,7 +462,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             color: white;
             padding: 8px 6px;
             text-align: left;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
         }
+        #ticketsListContainer th:hover { background: #1565c0; }
+        #ticketsListContainer th.sort-asc::after  { content: ' ▲'; }
+        #ticketsListContainer th.sort-desc::after { content: ' ▼'; }
         #ticketsListContainer td {
             padding: 6px;
             border-bottom: 1px solid #ddd;
@@ -547,13 +553,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 var prev = new Date();
                 prev.setMonth(prev.getMonth() - 1);
                 var moisPrev = prev.toLocaleString('fr-FR', {month:'long', year:'numeric'});
-                var html = '<h3 style="margin-bottom:10px;">🎟 Tickets éligibles (' + moisPrev + ') : ' + data.count + '</h3>';
-                html += '<table><thead><tr><th>#</th><th>Propriétaire</th><th>QR Code</th><th>Date ticket</th><th>Date participation</th><th>Jetons bonus ins</th></tr></thead><tbody>';
-                data.tickets.forEach(function(t, i) {
-                    html += '<tr><td>' + (i+1) + '</td><td>' + (t.proprietaire||'') + '</td><td style="font-size:11px;word-break:break-all;">' + (t.qrcode||'') + '</td><td>' + (t.date_ticket||'') + '</td><td>' + (t.date_participation||'') + '</td><td>' + (t.jetons_bonus_ins||'') + '</td></tr>';
-                });
-                html += '</tbody></table>';
-                container.innerHTML = html;
+                var allTickets = data.tickets;
+                var sortCol = 'qrcode';
+                var sortDir = 1;
+
+                function renderTable() {
+                    var sorted = allTickets.slice().sort(function(a, b) {
+                        var va = (a[sortCol] || '').toString();
+                        var vb = (b[sortCol] || '').toString();
+                        return va.localeCompare(vb, 'fr', {numeric: true}) * sortDir;
+                    });
+                    var cols = [
+                        {key:'proprietaire', label:'Propriétaire'},
+                        {key:'qrcode',       label:'QR Code'},
+                        {key:'date_ticket',  label:'Date ticket'},
+                        {key:'date_participation', label:'Date participation'},
+                        {key:'jetons_bonus_ins',   label:'Jetons bonus ins'}
+                    ];
+                    var html = '<h3 style="margin-bottom:10px;">🎟 Tickets éligibles (' + moisPrev + ') : ' + allTickets.length + '</h3>';
+                    html += '<table id="ticketsTable"><thead><tr><th>#</th>';
+                    cols.forEach(function(c) {
+                        var cls = sortCol === c.key ? (sortDir === 1 ? 'sort-asc' : 'sort-desc') : '';
+                        html += '<th class="' + cls + '" data-key="' + c.key + '">' + c.label + '</th>';
+                    });
+                    html += '</tr></thead><tbody>';
+                    sorted.forEach(function(t, i) {
+                        html += '<tr><td>' + (i+1) + '</td>';
+                        cols.forEach(function(c) {
+                            var val = t[c.key] || '';
+                            var style = c.key === 'qrcode' ? ' style="font-size:11px;word-break:break-all;"' : '';
+                            html += '<td' + style + '>' + val + '</td>';
+                        });
+                        html += '</tr>';
+                    });
+                    html += '</tbody></table>';
+                    container.innerHTML = html;
+                    container.querySelectorAll('#ticketsTable th[data-key]').forEach(function(th) {
+                        th.addEventListener('click', function() {
+                            var key = this.getAttribute('data-key');
+                            if (sortCol === key) { sortDir *= -1; } else { sortCol = key; sortDir = 1; }
+                            renderTable();
+                        });
+                    });
+                }
+                renderTable();
             })
             .catch(e => {
                 container.innerHTML = '<p style="color:red;">Erreur de connexion</p>';
