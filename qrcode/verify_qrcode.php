@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             AND MONTH(p.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
             AND YEAR(p.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
         ) >= 2
-        ORDER BY m.pseudo, ci.`date`
+        ORDER BY c.nom, ci.`date`
     ");
     if (!$result) {
         respondJson(['success' => false, 'message' => $conx->error]);
