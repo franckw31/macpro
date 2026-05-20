@@ -160,7 +160,7 @@ if ($id > 0) {
                 if (empty($rows)) {
                     echo '<tr style="color:#888;text-align:center">';
                     echo '<td>Aucun ticket trouvé.</td>';
-                    echo '<td></td><td></td><td></td>';
+                    echo '<td></td><td></td><td></td><td></td>';
                     echo '</tr>';
                 } else {
                     foreach ($rows as $row) {
@@ -170,10 +170,13 @@ if ($id > 0) {
                             $dq = @mysqli_query($con, "SELECT `titre-activite` FROM `activite` WHERE DATE(`date_depart`) = DATE('".mysqli_real_escape_string($con,$row['date'])."') LIMIT 1");
                             if ($dq && mysqli_num_rows($dq)>0) { $ar = mysqli_fetch_assoc($dq); $activite_titre = $ar['titre-activite']; }
                         }
+                        $jetons = intval($row['jetons_bonus_ins']);
+                        $jetons_color = ($jetons === 5000) ? '#16a34a' : '#c62828';
                         echo '<tr>';
                         echo '<td>'.esc($row['collection_nom']).'</td>';
                         echo '<td>'.esc(date('d/m/Y', strtotime($row['date']))).'</td>';
                         echo '<td>'.esc(strip_parenthesized($activite_titre ?: '-')).'</td>';
+                        echo '<td style="color:'.$jetons_color.';font-weight:700;text-align:center">'.$jetons.'</td>';
                         $checked = (intval($row['aff_rake'])===1)?'checked':'';
                         echo '<td><input type="checkbox" disabled '. $checked .' ></td>';
                         echo '</tr>';
