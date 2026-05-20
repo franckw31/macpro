@@ -199,6 +199,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     SELECT COUNT(*) FROM `collections-individu` ci
                     WHERE MONTH(ci.`date`) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
                     AND YEAR(ci.`date`)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                    AND EXISTS (
+                        SELECT 1 FROM participation p
+                        WHERE p.`id-membre` = ci.`id-indiv`
+                        AND p.`id-activite` = CAST(SUBSTRING(ci.co, LOCATE('#', ci.co)+1) AS UNSIGNED)
+                        AND p.jetons_bonus_ins = 5000
+                    )
                     AND (
                         SELECT COUNT(*) FROM participation p
                         WHERE p.`id-membre` = ci.`id-indiv`
