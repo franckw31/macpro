@@ -71,6 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             ci.`date` AS date_ticket,
             c.nom AS qrcode,
             COALESCE(m.pseudo, 'Inconnu') AS proprietaire,
+            CAST(SUBSTRING(ci.co, LOCATE('#', ci.co)+1) AS UNSIGNED) AS id_activite,
+            (SELECT p.`id-participation` FROM participation p WHERE p.`id-membre` = ci.`id-indiv` AND p.`id-activite` = CAST(SUBSTRING(ci.co, LOCATE('#', ci.co)+1) AS UNSIGNED) LIMIT 1) AS id_participation,
             (
                 SELECT COUNT(*) FROM participation p
                 WHERE p.`id-membre` = ci.`id-indiv`
@@ -579,6 +581,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         {key:'proprietaire',         label:'Propriétaire'},
                         {key:'qrcode',               label:'QR Code'},
                         {key:'date_ticket',          label:'Date ticket'},
+                        {key:'id_activite',          label:'ID Activité'},
+                        {key:'id_participation',      label:'ID Participation'},
                         {key:'nb_participations_5000', label:'Participations à 5000'}
                     ];
                     var html = '<h3 style="margin-bottom:10px;">🎟 Tickets éligibles (' + moisPrev + ') : ' + allTickets.length + '</h3>';
