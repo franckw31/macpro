@@ -841,6 +841,16 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       </div>
       <div class="v2-list-chev">›</div>
     </a>
+    <a class="v2-list-item tile-cyan" href="https://viendez.com/qrcode/verify_qrcode.php" style="text-decoration:none;color:inherit">
+      <div class="v2-list-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+      </div>
+      <div class="v2-list-body">
+        <div class="v2-list-name">Verif Tirage</div>
+        <div class="v2-list-sub">Vérification des tickets éligibles</div>
+      </div>
+      <div class="v2-list-chev">›</div>
+    </a>
     <?php endif; ?>
 
   </div><!-- /v2-list -->
