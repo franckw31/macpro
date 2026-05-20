@@ -80,7 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     
     // Préparer et exécuter la requête de recherche avec le nom du joueur depuis membres.pseudo
     $stmt = $conx->prepare("
-        SELECT c.id_collection, c.nom, c.valeur, COALESCE(m.pseudo, 'Non attribué') as nom_joueur, COALESCE(ci.date, '') as date_attribution, COALESCE(ci.`id-indiv`, 0) as id_membre
+        SELECT c.id_collection, c.nom, c.valeur, COALESCE(m.pseudo, 'Non attribué') as nom_joueur, COALESCE(ci.date, '') as date_attribution, COALESCE(ci.`id-indiv`, 0) as id_membre,
+               COALESCE((SELECT p.jetons_bonus_ins FROM participation p WHERE p.`id-membre` = ci.`id-indiv` ORDER BY p.`id-participation` DESC LIMIT 1), 0) as jetons_bonus_ins
         FROM collections c
         LEFT JOIN `collections-individu` ci ON c.id_collection = ci.id_col
         LEFT JOIN membres m ON ci.`id-indiv` = m.`id-membre`
@@ -99,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $stmt->store_result();
         
         if ($stmt->num_rows > 0) {
-            $stmt->bind_result($id, $nomResult, $valeur, $nomJoueur, $dateAttribution, $idMembre);
+            $stmt->bind_result($id, $nomResult, $valeur, $nomJoueur, $dateAttribution, $idMembre, $jetonsBonus);
             $stmt->fetch();
 
             // Compter les tickets distribués ce mois-ci pour ce joueur
@@ -143,6 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 'valeur' => $valeur,
                 'nom_joueur' => $nomJoueur,
                 'date_attribution' => $dateAttribution,
+                'jetons_bonus_ins' => $jetonsBonus,
                 'tickets_this_month' => $ticketsMonth,
                 'tickets_prev_month' => $ticketsPrevMonth
             ]);
@@ -531,7 +533,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 
                 if (data.success) {
                     if (data.found) {
-                        showFoundResult(data.id, data.nom, data.valeur, data.nom_joueur, data.date_attribution, data.tickets_this_month, data.tickets_prev_month);
+                        showFoundResult(data.id, data.nom, data.valeur, data.nom_joueur, data.date_attribution, data.jetons_bonus_ins, data.tickets_this_month, data.tickets_prev_month);
                     } else {
                         showNotFoundResult(content);
                     }
@@ -546,7 +548,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             });
         }
         
-        function showFoundResult(id, nom, valeur, nomJoueur, dateAttribution, ticketsMonth, ticketsPrevMonth) {
+        function showFoundResult(id, nom, valeur, nomJoueur, dateAttribution, jetonsBonus, ticketsMonth, ticketsPrevMonth) {
             const resultDiv = document.getElementById('resultDiv');
             resultDiv.className = 'result found';
             
@@ -557,7 +559,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             const metaDiv = document.getElementById('resultMeta');
             var metaHtml = '<strong>ID:</strong> ' + id + '<br><strong>Points:</strong> ' + valeur + '<br><strong>Joueur:</strong> ' + nomJoueur + '<br><strong>Statut:</strong> Enregistré dans la base de données';
             if (dateAttribution) {
-                metaHtml += '<br><strong>Date:</strong> ' + dateAttribution;
+                metaHtml += '<br><strong>Date:</strong> ' + dateAttribution + ' &nbsp; <strong>Jetons bonus ins:</strong> ' + (jetonsBonus || 0);
             }
             var now  = new Date();
             var prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
