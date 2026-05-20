@@ -2647,10 +2647,7 @@ if (!$member) {
             activiteDataTable = $('#activiteTable').DataTable({
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json' },
                 pageLength: 10,
-                order: [[0, 'desc']],
-                columnDefs: [
-                    { targets: 0, type: 'date-eu' }
-                ]
+                order: [[0, 'desc']]
             });
 
             $('#activiteTable').on('click', 'tr.clickable-row', function() {
