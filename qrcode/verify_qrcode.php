@@ -595,6 +595,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             var moisPrev = prev.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
             metaHtml += '<br><strong>Tickets mois précédent (' + moisPrev + '):</strong> ' + (ticketsPrevMonth || 0) + ' <em>(dont ' + (ticketsPrevMonth5000 || 0) + ' à 5000 jetons)</em>';
             metaHtml += '<br><strong>Tickets à 5000 jetons avec ≥2 participations (' + moisPrev + '):</strong> ' + (ticketsPrevMonth5000Min2 || 0);
+            if (jetonsBonus == 5000 && ticketsPrevMonth >= 2) {
+                metaHtml += '<br><span style="color:#2e7d32;font-size:18px;font-weight:bold;">✅ Ticket Validé</span>';
+            }
             metaDiv.innerHTML = metaHtml;
             metaDiv.style.display = 'block';
             
