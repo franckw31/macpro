@@ -457,6 +457,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             border-collapse: collapse;
             font-size: 13px;
         }
+        #ticketsListContainer {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
         #ticketsListContainer th {
             background: #1976d2;
             color: white;
@@ -465,6 +469,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             cursor: pointer;
             user-select: none;
             white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 1;
         }
         #ticketsListContainer th:hover { background: #1565c0; }
         #ticketsListContainer th.sort-asc::after  { content: ' ▲'; }
