@@ -138,8 +138,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $stmtPrev5k = $conx->prepare("
                     SELECT COUNT(*) FROM `collections-individu` ci
                     JOIN participation p ON p.`id-membre` = ci.`id-indiv`
-                        AND MONTH(p.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
-                        AND YEAR(p.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
                         AND p.jetons_bonus_ins = 5000
                     WHERE ci.`id-indiv` = ?
                     AND MONTH(ci.`date`) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
