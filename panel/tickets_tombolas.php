@@ -93,8 +93,6 @@ if ($id > 0) {
         .back{height:36px;border-radius:8px;background:transparent;border:1px solid rgba(255,157,59,0.12);display:flex;align-items:center;justify-content:center;padding:6px 10px;font-size:14px;cursor:pointer;color:#ff9d3b;font-weight:700}
         .title{font-weight:800;font-size:15px;text-align:center;flex:1;color:#16a34a}
         .card{padding:12px;overflow:auto}
-        /* Color the 'QRcode' column (1st column) yellow */
-        table.dataTable tbody td:nth-child(1), table.dataTable thead th:nth-child(1) { color: #ffd100; font-weight:700; }
         /* Color the 'Titre Activité' column (3rd column) blue */
         table.dataTable tbody td:nth-child(3), table.dataTable thead th:nth-child(3) { color: #3CA6FF; font-weight:700; }
         /* Ensure last column (Réduction Rake) remains visible but compact */
