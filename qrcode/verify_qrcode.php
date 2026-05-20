@@ -139,23 +139,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     $stmtPrev5k->fetch();
                     $stmtPrev5k->close();
                 }
-                // Tickets du joueur du mois précédent, si ce joueur a ≥2 participations à 5000 ce mois-là
+                // Nombre total de tickets valides du mois précédent (tous joueurs) :
+                // - le ticket est lié à une participation avec jetons_bonus_ins=5000 ce mois-là
+                // - ET le joueur possède ≥2 participations à 5000 ce même mois
                 $ticketsPrevMonth5000Min2 = 0;
                 $stmtPrev5kMin2 = $conx->prepare("
                     SELECT COUNT(*) FROM `collections-individu` ci
-                    WHERE ci.`id-indiv` = ?
-                    AND MONTH(ci.`date`) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
-                    AND YEAR(ci.`date`)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
-                    AND (
-                        SELECT COUNT(*) FROM participation p
-                        WHERE p.`id-membre` = ci.`id-indiv`
+                    JOIN participation p ON p.`id-membre` = ci.`id-indiv`
                         AND p.jetons_bonus_ins = 5000
                         AND MONTH(p.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
                         AND YEAR(p.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                    WHERE MONTH(ci.`date`) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                    AND YEAR(ci.`date`)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                    AND (
+                        SELECT COUNT(*) FROM participation p2
+                        WHERE p2.`id-membre` = ci.`id-indiv`
+                        AND p2.jetons_bonus_ins = 5000
+                        AND MONTH(p2.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                        AND YEAR(p2.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
                     ) >= 2
                 ");
                 if ($stmtPrev5kMin2) {
-                    $stmtPrev5kMin2->bind_param('i', $idMembre);
                     $stmtPrev5kMin2->execute();
                     $stmtPrev5kMin2->bind_result($ticketsPrevMonth5000Min2);
                     $stmtPrev5kMin2->fetch();
