@@ -139,11 +139,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     $stmtPrev5k->fetch();
                     $stmtPrev5k->close();
                 }
-                // Nombre total de tickets valides du mois précédent (tous joueurs ayant ≥2 participations à 5000 ce mois-là)
+                // Tickets du joueur du mois précédent, si ce joueur a ≥2 participations à 5000 ce mois-là
                 $ticketsPrevMonth5000Min2 = 0;
                 $stmtPrev5kMin2 = $conx->prepare("
                     SELECT COUNT(*) FROM `collections-individu` ci
-                    WHERE MONTH(ci.`date`) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                    WHERE ci.`id-indiv` = ?
+                    AND MONTH(ci.`date`) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
                     AND YEAR(ci.`date`)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
                     AND (
                         SELECT COUNT(*) FROM participation p
@@ -154,6 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     ) >= 2
                 ");
                 if ($stmtPrev5kMin2) {
+                    $stmtPrev5kMin2->bind_param('i', $idMembre);
                     $stmtPrev5kMin2->execute();
                     $stmtPrev5kMin2->bind_result($ticketsPrevMonth5000Min2);
                     $stmtPrev5kMin2->fetch();
