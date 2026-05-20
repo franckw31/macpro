@@ -53,7 +53,8 @@ if ($id > 0 && !empty($con) && (!$hasMonthFilter || !$hasYearFilter)) {
 
 $rows = [];
 if ($id > 0 && !empty($con)) {
-    $q = "SELECT ci.*, c.nom AS collection_nom, c.valeur AS collection_valeur
+    $q = "SELECT ci.*, c.nom AS collection_nom, c.valeur AS collection_valeur,
+          COALESCE((SELECT p.jetons_bonus_ins FROM participation p WHERE p.`id-membre` = ci.`id-indiv` AND p.`id-activite` = CAST(SUBSTRING(ci.co, LOCATE('#', ci.co)+1) AS UNSIGNED) LIMIT 1), 0) AS jetons_bonus_ins
           FROM `collections-individu` ci
           LEFT JOIN `collections` c ON ci.`id_col` = c.`id_collection`
           WHERE ci.`id-indiv` = ?
@@ -150,6 +151,7 @@ if ($id > 0) {
                         <th>QRcode</th>
                         <th>Date</th>
                         <th>Titre Activité</th>
+                        <th>Jetons ins</th>
                         <th>Rake</th>
                     </tr>
                 </thead>
