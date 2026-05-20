@@ -2515,6 +2515,16 @@ if (!$member) {
             // Show selected section
             leCalqueE.className = "rubrique bgImg montrer";
             leCalque.className = "btnnavA";
+
+            // Redraw DataTables when their tab becomes visible
+            if (id === 'ks' && typeof activiteDataTable !== 'undefined') {
+                activiteDataTable.columns.adjust().draw();
+            }
+            if (id === 'portefeuille' && typeof $.fn.dataTable !== 'undefined') {
+                if ($.fn.dataTable.isDataTable('#transactionsTable')) {
+                    $('#transactionsTable').DataTable().columns.adjust().draw();
+                }
+            }
         }
 
         // ══════════════════════════════════════════════
@@ -2632,15 +2642,15 @@ if (!$member) {
         <?php } ?>
     </script>
     <script>
+        var activiteDataTable;
         $(document).ready(function() {
-            const table = $('#activiteTable').DataTable({
+            activiteDataTable = $('#activiteTable').DataTable({
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json' },
                 pageLength: 10,
                 order: [[0, 'desc']],
                 columnDefs: [
                     { targets: 0, type: 'date-eu' }
-                ],
-                responsive: true
+                ]
             });
 
             $('#activiteTable').on('click', 'tr.clickable-row', function() {
