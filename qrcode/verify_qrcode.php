@@ -145,12 +145,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $ticketsPrevMonth5000Min2 = 0;
                 $stmtPrev5kMin2 = $conx->prepare("
                     SELECT COUNT(*) FROM `collections-individu` ci
-                    JOIN participation p ON p.`id-membre` = ci.`id-indiv`
+                    WHERE MONTH(ci.`date`) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                    AND YEAR(ci.`date`)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                    AND EXISTS (
+                        SELECT 1 FROM participation p
+                        WHERE p.`id-membre` = ci.`id-indiv`
                         AND p.jetons_bonus_ins = 5000
                         AND MONTH(p.ds) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
                         AND YEAR(p.ds)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
-                    WHERE MONTH(ci.`date`) = MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH))
-                    AND YEAR(ci.`date`)  = YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                    )
                     AND (
                         SELECT COUNT(*) FROM participation p2
                         WHERE p2.`id-membre` = ci.`id-indiv`
