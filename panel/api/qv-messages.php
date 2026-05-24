@@ -121,7 +121,6 @@ try {
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `id_activite` INT UNSIGNED NOT NULL,
   `id_expediteur` INT UNSIGNED NOT NULL,
-        `id_destinataire` INT UNSIGNED NOT NULL DEFAULT 0,
   `pseudo_exp` VARCHAR(80) NOT NULL DEFAULT '',
   `role` ENUM('joueur','organisateur') NOT NULL DEFAULT 'joueur',
   `message` TEXT NOT NULL,
@@ -129,7 +128,6 @@ try {
   `lu_joueur` TINYINT(1) NOT NULL DEFAULT 0,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_act (`id_activite`),
-        INDEX idx_dest (`id_destinataire`),
   INDEX idx_exp (`id_expediteur`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
@@ -166,13 +164,12 @@ $my_role = ($my_id === $organizer_id) ? 'organisateur' : 'joueur';
 
 // Actions
 if ($action === 'fetch') {
-    // Fetch only messages where the current user is sender or recipient
-    $q = mysqli_query($con, "SELECT id, id_expediteur, id_destinataire, pseudo_exp, role, message, lu_orga, lu_joueur, created_at FROM qv_messages WHERE id_activite=".intval($id_activite)." AND (id_expediteur=".intval($my_id)." OR id_destinataire=".intval($my_id).") ORDER BY created_at ASC LIMIT 200");
-    // mark read for messages addressed to this user
-    if ($q && $my_role === 'joueur') {
-        mysqli_query($con, "UPDATE qv_messages SET lu_joueur=1 WHERE id_activite=".intval($id_activite)." AND id_destinataire=".intval($my_id)." AND role='organisateur'");
-    } elseif ($q && $my_role === 'organisateur') {
-        mysqli_query($con, "UPDATE qv_messages SET lu_orga=1 WHERE id_activite=".intval($id_activite)." AND id_destinataire=".intval($my_id)." AND role='joueur'");
+    if ($my_role === 'organisateur') {
+        $q = mysqli_query($con, "SELECT id, id_expediteur, pseudo_exp, role, message, lu_orga, lu_joueur, created_at FROM qv_messages WHERE id_activite=".intval($id_activite)." ORDER BY created_at ASC LIMIT 100");
+    } else {
+        $q = mysqli_query($con, "SELECT id, id_expediteur, pseudo_exp, role, message, lu_orga, lu_joueur, created_at FROM qv_messages WHERE id_activite=".intval($id_activite)." AND (id_expediteur=".intval($my_id)." OR role='organisateur') ORDER BY created_at ASC LIMIT 50");
+        // mark read for player
+        mysqli_query($con, "UPDATE qv_messages SET lu_joueur=1 WHERE id_activite=".intval($id_activite)." AND role='organisateur'");
     }
     $msgs = [];
     if ($q) while ($r = mysqli_fetch_assoc($q)) {
@@ -183,15 +180,10 @@ if ($action === 'fetch') {
             'mine' => ((int)$r['id_expediteur'] === $my_id),
             'msg' => htmlspecialchars($r['message'], ENT_QUOTES, 'UTF-8'),
             'at' => $r['created_at'],
-            'unread' => (((int)$r['id_destinataire'] === $my_id) && ($my_role === 'joueur' ? !(bool)$r['lu_joueur'] : !(bool)$r['lu_orga']))
+            'unread' => ($my_role === 'joueur') ? !(bool)$r['lu_joueur'] : !(bool)$r['lu_orga']
         ];
     }
-    // unread count: messages addressed to current user and not read
-    if ($my_role === 'joueur') {
-        $unread_row = mysqli_fetch_assoc(mysqli_query($con, "SELECT COUNT(*) AS c FROM qv_messages WHERE id_activite=".intval($id_activite)." AND id_destinataire=".intval($my_id)." AND lu_joueur=0"));
-    } else {
-        $unread_row = mysqli_fetch_assoc(mysqli_query($con, "SELECT COUNT(*) AS c FROM qv_messages WHERE id_activite=".intval($id_activite)." AND id_destinataire=".intval($my_id)." AND lu_orga=0"));
-    }
+    $unread_row = mysqli_fetch_assoc(mysqli_query($con, "SELECT COUNT(*) AS c FROM qv_messages WHERE id_activite=".intval($id_activite)." AND role='organisateur' AND lu_joueur=0"));
     $unread = $unread_row ? (int)$unread_row['c'] : 0;
     echo json_encode(['ok'=>true,'msgs'=>$msgs,'my_role'=>$my_role,'unread'=>$unread,'organizer_id'=>$organizer_id]);
     exit;
