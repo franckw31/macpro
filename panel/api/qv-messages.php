@@ -121,6 +121,7 @@ try {
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `id_activite` INT UNSIGNED NOT NULL,
   `id_expediteur` INT UNSIGNED NOT NULL,
+        `id_destinataire` INT UNSIGNED NOT NULL DEFAULT 0,
   `pseudo_exp` VARCHAR(80) NOT NULL DEFAULT '',
   `role` ENUM('joueur','organisateur') NOT NULL DEFAULT 'joueur',
   `message` TEXT NOT NULL,
@@ -128,6 +129,7 @@ try {
   `lu_joueur` TINYINT(1) NOT NULL DEFAULT 0,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_act (`id_activite`),
+        INDEX idx_dest (`id_destinataire`),
   INDEX idx_exp (`id_expediteur`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
