@@ -768,9 +768,19 @@ function v2NavActivity(dir){
 
     <!-- Buttons -->
     <div class="v2-actions">
-      <button class="v2-btn filled" id="v2-details-btn" style="background:#1a7a3a;color:#fff">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Infos partie
+      <button class="v2-btn filled" id="v2-details-btn" style="background:#1a7a3a;color:#fff;flex-direction:column;align-items:center;gap:2px">
+        <span style="display:flex;align-items:center;gap:6px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Infos partie
+        </span>
+        <?php
+          $_max = !empty($serverActivity['max_participants']) ? intval($serverActivity['max_participants']) : null;
+          $_cur = isset($serverActivity['participants_count']) ? intval($serverActivity['participants_count']) : null;
+          if ($_max !== null && $_cur !== null):
+            $_dispo = $_max - $_cur;
+        ?>
+        <span style="font-size:11px;font-weight:600;opacity:0.9"><?php echo $_dispo > 0 ? $_dispo . ' place' . ($_dispo > 1 ? 's' : '') . ' dispo' : 'Complet'; ?></span>
+        <?php endif; ?>
       </button>
 <?php
 $_is_finished = !empty($serverActivity['date']) && (time() - strtotime($serverActivity['date'])) > 43200;
