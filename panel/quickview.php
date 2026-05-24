@@ -1205,7 +1205,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
             inputEl.textContent = '';
             fetchMsgs(true);
           } else {
-            alert('Erreur envoi : ' + (d.err||'?'));
+            // show server-side message when available
+            alert('Erreur envoi : ' + (d.err ? d.err + (d.msg ? ' — ' + d.msg : '') : (d.msg||'?')));
           }
         })
         .catch(function(){ btn.disabled = false; });
