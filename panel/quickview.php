@@ -995,7 +995,12 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
             </div>
           </div>
         </div>
-        <span class="qvm-badge" id="qvm-badge">!</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button id="qvm-prev" class="qvm-nav" title="Précédent" style="background:transparent;border:0;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;">‹</button>
+          <span id="qvm-index" style="font-size:11px;color:var(--muted)">0/0</span>
+          <button id="qvm-next" class="qvm-nav" title="Suivant" style="background:transparent;border:0;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;">›</button>
+          <span class="qvm-badge" id="qvm-badge">!</span>
+        </div>
       </div>
       <div class="qvm-thread" id="qvm-thread">
         <div class="qvm-empty" id="qvm-empty">Chargement…</div>
@@ -1020,6 +1025,11 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       var thread = document.getElementById('qvm-thread');
       var emptyEl = document.getElementById('qvm-empty');
       var badge = document.getElementById('qvm-badge');
+      var prevBtn = document.getElementById('qvm-prev');
+      var nextBtn = document.getElementById('qvm-next');
+      var idxEl = document.getElementById('qvm-index');
+      var msgsState = [];
+      var currentIdx = -1;
       var inputEl = document.getElementById('qvm-input');
       var lastCount = 0;
 
@@ -1035,22 +1045,36 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       }
 
       function renderMsgs(msgs) {
-        if (!msgs || !msgs.length) {
+        msgsState = msgs || [];
+        if (!msgsState.length) {
+          currentIdx = -1;
+          idxEl.textContent = '0/0';
           thread.innerHTML = '<div class="qvm-empty">Pas encore de message – posez votre question !</div>';
+          badge.style.display = 'none';
+          prevBtn.disabled = true; nextBtn.disabled = true;
           return;
         }
-        var html = '';
-        msgs.forEach(function(m){
-          var cls = m.mine ? 'mine' : 'other';
-          html += '<div class="qvm-bubble ' + cls + '">'
-            + (m.mine ? '' : '<span class="qvm-sender">' + m.from + '</span>')
-            + m.msg
-            + '<span class="qvm-time">' + fmtTime(m.at) + '</span>'
-            + '</div>';
-        });
-        thread.innerHTML = html;
-        thread.scrollTop = thread.scrollHeight;
+        currentIdx = msgsState.length - 1; // show last message by default
+        renderCurrent();
       }
+
+      function renderCurrent() {
+        if (currentIdx < 0 || !msgsState.length) return renderMsgs(msgsState);
+        var m = msgsState[currentIdx];
+        var cls = m.mine ? 'mine' : 'other';
+        var html = '<div class="qvm-bubble ' + cls + '">' + (m.mine ? '' : '<span class="qvm-sender">' + m.from + '</span>') + m.msg + '<span class="qvm-time">' + fmtTime(m.at) + '</span>' + '</div>';
+        thread.innerHTML = html;
+        thread.scrollTop = 0;
+        idxEl.textContent = (currentIdx + 1) + '/' + msgsState.length;
+        prevBtn.disabled = (currentIdx <= 0);
+        nextBtn.disabled = (currentIdx >= msgsState.length - 1);
+        // badge: show number of unread messages to player
+        var unread = msgsState.filter(function(x){ return x.unread; }).length;
+        if (unread > 0) { badge.textContent = unread; badge.style.display = 'inline-block'; } else { badge.style.display = 'none'; }
+      }
+
+      prevBtn.addEventListener('click', function(){ if (currentIdx > 0) { currentIdx--; renderCurrent(); } });
+      nextBtn.addEventListener('click', function(){ if (currentIdx < msgsState.length - 1) { currentIdx++; renderCurrent(); } });
 
       function fetchMsgs(silent) {
         fetch(API + '?action=fetch&id_activite=' + ACT_ID, {credentials:'include'})
