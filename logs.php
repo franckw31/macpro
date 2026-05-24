@@ -155,6 +155,7 @@ try {
 
 // Onglet & requete logs
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'all';
+$filter = isset($_GET['filter']) ? $_GET['filter'] : '';
 $page = max(1, intval($_GET['page'] ?? 1));
 $per_page = 9;
 $exclude_ids = 'user_id NOT IN(2, 265)';
@@ -168,6 +169,8 @@ if ($tab === 'ios') {
     $where = "source IN('iOS App','iOS Admin') AND $exclude_ids";
 } elseif ($tab === 'auth') {
     $where = "source IN('iOS App','iOS Admin') AND action IN('login_success','login_failure','verify_success','verify_failure','logout') AND $exclude_ids";
+} elseif ($filter === 'inscription') {
+    $where = "(action LIKE '%inscrip%' OR details LIKE '%inscrip%') AND $exclude_ids";
 } else {
     $where = $exclude_ids;
 }
