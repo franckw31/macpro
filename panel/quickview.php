@@ -1,3 +1,4 @@
+<?php
 ini_set('session.name', 'PHPSESSID');
 // DEBUG SESSION/COOKIE
 if (isset($_GET['debugsession'])) {
@@ -6,7 +7,6 @@ if (isset($_GET['debugsession'])) {
   echo '$_COOKIE = ' . print_r($_COOKIE, true) . "\n";
   echo '</pre>';
 }
-<?php
 if (PHP_VERSION_ID >= 70300) {
   session_set_cookie_params([
     'lifetime' => 0,
