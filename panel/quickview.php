@@ -779,7 +779,7 @@ function v2NavActivity(dir){
           if ($_max !== null && $_cur !== null):
             $_dispo = $_max - $_cur;
         ?>
-        <span style="font-size:11px;font-weight:600;opacity:0.9"><?php echo $_dispo > 0 ? $_dispo . ' place' . ($_dispo > 1 ? 's' : '') . ' dispo' : 'Complet'; ?></span>
+        <span style="font-size:11px;font-weight:600;opacity:0.9"><?php echo $_dispo > 0 ? $_dispo . ' place' . ($_dispo > 1 ? 's' : '') . ' dispo.' : 'Complet'; ?></span>
         <?php endif; ?>
       </button>
 <?php
