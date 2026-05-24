@@ -1,3 +1,10 @@
+// DEBUG SESSION/COOKIE
+if (isset($_GET['debugsession'])) {
+    header('Content-Type: text/plain; charset=utf-8');
+    echo "$_SESSION = "; print_r($_SESSION);
+    echo "\n$_COOKIE = "; print_r($_COOKIE);
+    exit;
+}
 ini_set('session.name', 'PHPSESSID');
 
 <?php
