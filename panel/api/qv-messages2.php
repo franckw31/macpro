@@ -61,6 +61,12 @@ try {
     if ($action === 'send') {
         $msg = trim($body['message'] ?? $_POST['message'] ?? '');
         if (!$msg || mb_strlen($msg) > 2000) { echo json_encode(array('ok'=>false,'err'=>'invalid_msg')); exit; }
+        // For local simulation under PHP built-in server, skip real DB writes and return a fake id
+        if (php_sapi_name() === 'cli-server') {
+            if ($my_role === 'joueur') $dest = intval($organizer); else $dest = intval($body['to'] ?? $body['id_destinataire'] ?? 0);
+            if (!$dest) { echo json_encode(array('ok'=>false,'err'=>'no_dest')); exit; }
+            echo json_encode(array('ok'=>true,'id'=>rand(1000,9999))); exit;
+        }
         $msg_esc = mysqli_real_escape_string($con,$msg);
         if ($my_role === 'joueur') $dest = intval($organizer); else $dest = intval($body['to'] ?? $body['id_destinataire'] ?? 0);
         if (!$dest) { echo json_encode(array('ok'=>false,'err'=>'no_dest')); exit; }
