@@ -1,3 +1,4 @@
+ini_set('session.name', 'PHPSESSID');
 // DEBUG SESSION/COOKIE
 if (isset($_GET['debugsession'])) {
   echo '<pre style="background:#222;color:#fff;padding:10px;z-index:99999;position:relative;">';
