@@ -257,6 +257,40 @@ if (!empty($id) && !empty($con)) {
 $participants_href = $is_past ? '/panel/resultats.php' . $uid_q : '/panel/participants.php' . $uid_q;
 
 // ── Dernière partie : joueurs payés ──────────────────────────────────────────
+// ── Classement Challenge du joueur connecté ──────────────────────────────────
+$my_challenge_rank  = null;
+$my_challenge_total = null;
+if (!empty($con) && !empty($_SESSION['id'])) {
+  $_my_uid   = intval($_SESSION['id']);
+  $_today    = date('Y-m-d');
+  $_chq = @mysqli_query($con, "SELECT id_challenge FROM challenge WHERE '$_today' BETWEEN chal_deb AND chal_fin ORDER BY chal_deb DESC LIMIT 1");
+  if ($_chq && ($_chr = mysqli_fetch_assoc($_chq))) {
+    $_chal_id = intval($_chr['id_challenge']);
+    $_rkq = @mysqli_query($con, "
+      SELECT m.`id-membre` AS mid, COALESCE(SUM(p.points),0) AS pts
+      FROM membres m
+      JOIN participation p  ON p.`id-membre`   = m.`id-membre`
+      JOIN activite a       ON p.`id-activite` = a.`id-activite`
+      LEFT JOIN blackliste b ON m.`id-membre`  = b.id_membre
+      WHERE a.`id_challenge` = $_chal_id
+        AND b.id_membre IS NULL
+        AND p.`option` NOT IN ('None','Desinscrit')
+        AND a.date_depart < '$_today'
+      GROUP BY m.`id-membre`
+      HAVING pts > 0
+      ORDER BY pts DESC
+    ");
+    if ($_rkq) {
+      $_rk = 1;
+      while ($_rkr = mysqli_fetch_assoc($_rkq)) {
+        if (intval($_rkr['mid']) === $_my_uid) { $my_challenge_rank = $_rk; }
+        $_rk++;
+      }
+      $my_challenge_total = $_rk - 1;
+    }
+  }
+}
+
 $last_game_payes = [];
 $last_game_titre = '';
 $last_game_date  = '';
