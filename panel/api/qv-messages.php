@@ -33,6 +33,7 @@ if (empty($_SESSION['id'])) { echo json_encode(['ok'=>false,'err'=>'not_logged']
 $my_id     = (int)$_SESSION['id'];
 $my_pseudo = htmlspecialchars($_SESSION['login'] ?? 'Joueur', ENT_QUOTES, 'UTF-8');
 
+$body   = [];
 $action = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $body   = json_decode(file_get_contents('php://input'), true) ?: [];
