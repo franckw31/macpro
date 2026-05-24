@@ -138,7 +138,7 @@ if (!empty($con)) {
 
     // Fetch leaderboard limited to activities matching the inferred scope
     // Define ITM as count of participations where gain > 0
-    $sql = "SELECT m.`id-membre` AS mid, m.pseudo AS pseudo, m.photo AS photo, COALESCE(SUM(COALESCE(p.points,0)),0) AS pts, SUM(CASE WHEN COALESCE(p.gain,0)>0 THEN 1 ELSE 0 END) AS itm, SUM(CASE WHEN COALESCE(p.classement,0)=1 AND COALESCE(p.gain,0)>0 THEN 1 ELSE 0 END) AS vic, SUM(CASE WHEN COALESCE(p.classement,999)>0 AND COALESCE(p.classement,999)<=3 THEN 1 ELSE 0 END) AS tf, COUNT(p.`id-activite`) AS parts, SUM(COALESCE(p.jetons,0) + COALESCE(p.jetons_bonus_ins,0) + COALESCE(p.jetons_bonus_arrivee,0)) AS jetons_total FROM participation p JOIN membres m ON m.`id-membre` = p.`id-membre` JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE " . $where_activity . " GROUP BY p.`id-membre` ORDER BY pts DESC, vic DESC LIMIT 200";
+    $sql = "SELECT m.`id-membre` AS mid, m.pseudo AS pseudo, m.photo AS photo, COALESCE(SUM(COALESCE(p.points,0)),0) AS pts, SUM(CASE WHEN COALESCE(p.gain,0)>0 THEN 1 ELSE 0 END) AS itm, SUM(CASE WHEN COALESCE(p.classement,0)=1 AND COALESCE(p.gain,0)>0 THEN 1 ELSE 0 END) AS vic, SUM(CASE WHEN COALESCE(p.classement,999)>0 AND COALESCE(p.classement,999)<=3 THEN 1 ELSE 0 END) AS tf, COUNT(p.`id-activite`) AS parts, COALESCE(SUM(p.gain),0) AS sum_gain FROM participation p JOIN membres m ON m.`id-membre` = p.`id-membre` JOIN activite a ON a.`id-activite` = p.`id-activite` WHERE " . $where_activity . " GROUP BY p.`id-membre` ORDER BY pts DESC, vic DESC LIMIT 200";
     $q = @mysqli_query($con, $sql);
     if ($q) {
         while ($r = mysqli_fetch_assoc($q)) { $rows[] = $r; }
@@ -189,10 +189,10 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
             <div style="width:36px"></div>
             <div style="flex:1">Pseudo</div>
             <div style="width:80px;">POINTS</div>
-            <div style="width:56px;">JETONS</div>
             <div style="width:48px;">ITM</div>
             <div style="width:48px;">WIN</div>
             <div style="width:40px;">PART</div>
+            <div style="width:56px;">JETONS</div>
         </div>
         <!-- detected challenge message intentionally hidden -->
         <div class="list">
@@ -221,11 +221,12 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
                         else { $colparam = 'chal_dates'; }
                         $link_params .= '&challenge=' . intval($provided_challenge) . '&challenge_col=' . urlencode($colparam);
                     }
+                    $jetons_val = min(50000, 35000 + (floatval($r['sum_gain']) / 10) * 200);
                     echo '<div class="pts"><a href="'. esc($link_params) .'" style="color:#ffffff;text-decoration:underline;text-decoration-color:#3CA6FF">'.number_format(intval($r['pts']),0,',',' ').'</a> </div>';
-                    echo '<div class="smallcol" style="width:56px;color:#ffd97d">'.number_format(intval($r['jetons_total']),0,',',' ').'</div>';
                     echo '<div class="smallcol">'.intval($r['itm']).'</div>';
                     echo '<div class="smallcol">'.intval($r['vic']).'</div>';
                     echo '<div class="smallcol">'.intval($r['parts']).'</div>';
+                    echo '<div class="smallcol" style="width:56px;color:#ffd97d">'.number_format((int)$jetons_val,0,',',' ').'</div>';
                     echo '</div>';
                 }
             }
