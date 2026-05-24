@@ -170,7 +170,7 @@ if ($action === 'fetch') {
     $q = mysqli_query($con, "SELECT id, id_expediteur, pseudo_exp, role, message, id_destinataire, lu_to_recipient, created_at FROM qv_messages WHERE id_activite=".intval($id_activite)." AND (id_expediteur=".intval($my_id)." OR id_destinataire=".intval($my_id).") ORDER BY created_at ASC LIMIT 200");
     // mark read for messages where current user is the recipient
     mysqli_query($con, "UPDATE qv_messages SET lu_to_recipient=1 WHERE id_activite=".intval($id_activite)." AND id_destinataire=".intval($my_id).");
-    $msgs = [];
+    $msgs = array();
     if ($q) while ($r = mysqli_fetch_assoc($q)) {
         $msgs[] = array(
             'id' => (int)$r['id'],
