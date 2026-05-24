@@ -657,6 +657,11 @@ a{color:inherit;text-decoration:none}
 .qvm-send svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .qvm-login-hint{font-size:11px;color:rgba(255,255,255,0.35);text-align:center;padding:4px 0}
 .qvm-input:empty::before,.qvm-input[data-empty]::before{content:attr(data-placeholder);color:rgba(255,255,255,0.28);pointer-events:none;position:absolute;left:10px;top:8px}
+
+/* Navigation buttons for mini-messagerie */
+.qvm-nav{background:transparent;border:0;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:4px;border-radius:6px}
+.qvm-nav:disabled{opacity:0.35;pointer-events:none;color:rgba(255,255,255,0.28)}
+.qvm-index{font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
