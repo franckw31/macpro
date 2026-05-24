@@ -614,6 +614,30 @@ a{color:inherit;text-decoration:none}
   .v2-fin-val{font-size:14px}
   .v2-btn{font-size:12px;padding:11px 8px}
 }
+
+/* ─── MINI MESSAGERIE ─── */
+.qvm-card{grid-column:1/-1;background:#111822;border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:12px 14px 10px;display:flex;flex-direction:column;gap:8px;min-height:70px;text-align:left;cursor:default}
+.qvm-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.qvm-title-row{display:flex;align-items:center;gap:7px}
+.qvm-icon{color:#0a84ff;display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex-shrink:0}
+.qvm-title{font-size:12px;font-weight:800;color:#fff;letter-spacing:-0.01em}
+.qvm-sub{font-size:8px;color:rgba(255,255,255,0.45);font-weight:500;margin-top:1px}
+.qvm-badge{background:#ff453a;color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:20px;line-height:1.4;display:none}
+.qvm-thread{display:flex;flex-direction:column;gap:5px;max-height:120px;overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.qvm-thread::-webkit-scrollbar{display:none}
+.qvm-bubble{max-width:82%;padding:6px 10px;border-radius:12px;font-size:11.5px;line-height:1.45;font-weight:500;word-break:break-word}
+.qvm-bubble.mine{align-self:flex-end;background:rgba(10,132,255,0.25);color:#d0e8ff;border-bottom-right-radius:4px}
+.qvm-bubble.other{align-self:flex-start;background:rgba(255,255,255,0.07);color:#dde6f2;border-bottom-left-radius:4px}
+.qvm-bubble .qvm-sender{font-size:9px;font-weight:700;opacity:0.55;margin-bottom:2px;display:block}
+.qvm-bubble .qvm-time{font-size:8px;opacity:0.38;margin-top:2px;display:block;text-align:right}
+.qvm-empty{font-size:11px;color:rgba(255,255,255,0.3);text-align:center;padding:10px 0;font-style:italic}
+.qvm-compose{display:flex;gap:6px;align-items:center}
+.qvm-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(10,132,255,0.3);border-radius:10px;padding:8px 10px;color:#fff;font-size:13px;outline:none;font-family:inherit;resize:none;min-height:34px;max-height:72px;overflow-y:auto;line-height:1.35;-webkit-user-select:text;user-select:text}
+.qvm-input:focus{border-color:rgba(10,132,255,0.7);background:rgba(255,255,255,0.09)}
+.qvm-send{width:34px;height:34px;border-radius:10px;background:#0a84ff;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:none;cursor:pointer;transition:opacity .15s}
+.qvm-send:active{opacity:.7}
+.qvm-send svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.qvm-login-hint{font-size:11px;color:rgba(255,255,255,0.35);text-align:center;padding:4px 0}
 </style>
 </head>
 <body>
