@@ -1007,19 +1007,21 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
           <span class="qvm-badge" id="qvm-badge">!</span>
         </div>
       </div>
-      <div class="qvm-thread" id="qvm-thread">
-        <div class="qvm-empty" id="qvm-empty">Chargement…</div>
-      </div>
-      <div class="qvm-compose">
-        <div class="qvm-input" id="qvm-input" contenteditable="true" role="textbox"
-          aria-multiline="false" aria-label="Votre message"
-          data-placeholder="Votre message…"
-          style="position:relative"
-          onkeydown="qvmKeyDown(event)"
-          oninput="qvmInputChanged(this)"></div>
-        <button class="qvm-send" id="qvm-send-btn" onclick="qvmSend()" title="Envoyer">
-          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="qvm-thread" id="qvm-thread" style="flex:1;min-width:0;max-height:84px;overflow:hidden">
+          <div class="qvm-empty" id="qvm-empty">Chargement…</div>
+        </div>
+        <div class="qvm-compose" style="flex-shrink:0;display:flex;align-items:center;gap:6px">
+          <div class="qvm-input" id="qvm-input" contenteditable="true" role="textbox"
+            aria-multiline="false" aria-label="Votre message"
+            data-placeholder="Votre message…"
+            style="position:relative;min-width:180px;max-width:260px"
+            onkeydown="qvmKeyDown(event)"
+            oninput="qvmInputChanged(this)"></div>
+          <button class="qvm-send" id="qvm-send-btn" onclick="qvmSend()" title="Envoyer">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
       </div>
     </div>
     <script>
