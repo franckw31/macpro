@@ -1,22 +1,27 @@
 <?php
-// qv-messages.php - Production private messaging API
+// panel/api/qv-messages.php
+// Clean production private messaging API (no debug/simulation)
+
 ini_set('session.name','PHPSESSID');
-if (PHP_VERSION_ID >= 70300 && session_status() !== PHP_SESSION_ACTIVE) session_set_cookie_params(['lifetime'=>0,'path'=>'/','domain'=>'.viendez.com','secure'=>true,'httponly'=>true,'samesite'=>'Lax']);
-if (!empty($_COOKIE[session_name()]) && session_status() !== PHP_SESSION_ACTIVE) @session_id($_COOKIE[session_name()]);
+if (PHP_VERSION_ID >= 70300 && session_status() !== PHP_SESSION_ACTIVE) {
+    session_set_cookie_params(['lifetime'=>0,'path'=>'/','domain'=>'.viendez.com','secure'=>true,'httponly'=>true,'samesite'=>'Lax']);
+}
+if (!empty($_COOKIE[session_name()]) && session_status() !== PHP_SESSION_ACTIVE) {
+    @session_id($_COOKIE[session_name()]);
+}
 @session_start();
 header('Content-Type: application/json; charset=utf-8');
 
 try {
     require_once __DIR__ . '/../include/config.php';
-    if (empty($con)) { echo json_encode(array('ok'=>false,'err'=>'db')); exit; }
-    if (empty($_SESSION['id'])) { echo json_encode(array('ok'=>false,'err'=>'not_logged')); exit; }
+    if (empty($con)) { echo json_encode(['ok'=>false,'err'=>'db']); exit; }
+    if (empty($_SESSION['id'])) { echo json_encode(['ok'=>false,'err'=>'not_logged']); exit; }
 
     $me = (int) $_SESSION['id'];
     $me_pseudo = isset($_SESSION['login']) ? $_SESSION['login'] : 'Joueur';
 
-    // Detect whether qv_messages has recipient/read columns in this schema
-    $has_dest = false;
-    $has_lu = false;
+    // detect optional schema columns
+    $has_dest = false; $has_lu = false;
     $hc = mysqli_query($con, "SHOW COLUMNS FROM `qv_messages` LIKE 'id_destinataire'");
     if ($hc && mysqli_num_rows($hc)) $has_dest = true;
     $hl = mysqli_query($con, "SHOW COLUMNS FROM `qv_messages` LIKE 'lu_to_recipient'");
