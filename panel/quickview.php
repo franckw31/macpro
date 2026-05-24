@@ -379,7 +379,7 @@ a{color:inherit;text-decoration:none}
 .v2-fin-val{font-size:15px;font-weight:800}
 
 /* Action buttons */
-.v2-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.v2-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}.v2-actions>*{flex:1 1 0;min-width:0}
 .v2-btn{padding:13px 10px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .15s}
 .v2-btn:active{opacity:.75}
 .v2-btn.outline{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:var(--text)}
