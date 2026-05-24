@@ -1036,7 +1036,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         <div class="qvm-compose">
           <div class="qvm-input" id="qvm-input" contenteditable="true" role="textbox"
             aria-multiline="false" aria-label="Message ?"
-            data-placeholder="Votre message…"
+            data-placeholder="Message ?"
             onkeydown="qvmKeyDown(event)"
             oninput="qvmInputChanged(this)"></div>
           <button class="qvm-send" id="qvm-send-btn" onclick="qvmSend()" title="Envoyer">
