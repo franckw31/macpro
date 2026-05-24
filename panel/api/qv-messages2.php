@@ -89,14 +89,18 @@ try {
         // For local simulation under PHP built-in server, skip real DB writes and return a fake id
         if (php_sapi_name() === 'cli-server') {
             if ($my_role === 'joueur') $dest = intval($organizer); else $dest = intval($body['to'] ?? $body['id_destinataire'] ?? 0);
-            if (!$dest) { echo json_encode(array('ok'=>false,'err'=>'no_dest')); exit; }
+            if ($has_dest && !$dest) { echo json_encode(array('ok'=>false,'err'=>'no_dest')); exit; }
             echo json_encode(array('ok'=>true,'id'=>rand(1000,9999))); exit;
         }
         $msg_esc = mysqli_real_escape_string($con,$msg);
         if ($my_role === 'joueur') $dest = intval($organizer); else $dest = intval($body['to'] ?? $body['id_destinataire'] ?? 0);
-        if (!$dest) { echo json_encode(array('ok'=>false,'err'=>'no_dest')); exit; }
+        if ($has_dest && !$dest) { echo json_encode(array('ok'=>false,'err'=>'no_dest')); exit; }
         $pseudo = mysqli_real_escape_string($con,$me_pseudo);
+        if ($has_dest) {
             $ins = 'INSERT INTO qv_messages (id_activite,id_expediteur,pseudo_exp,role,message,id_destinataire' . ($has_lu ? ',lu_to_recipient' : '') . ') VALUES (' . intval($id_activite) . ',' . $me . ',"' . $pseudo . '","' . mysqli_real_escape_string($con,$my_role) . '","' . $msg_esc . '",' . intval($dest) . ($has_lu ? ',0' : '') . ')';
+        } else {
+            $ins = 'INSERT INTO qv_messages (id_activite,id_expediteur,pseudo_exp,role,message) VALUES (' . intval($id_activite) . ',' . $me . ',"' . $pseudo . '","' . mysqli_real_escape_string($con,$my_role) . '","' . $msg_esc . '")';
+        }
         mysqli_query($con,$ins);
         echo json_encode(array('ok'=>true,'id'=>(int)mysqli_insert_id($con))); exit;
     }
@@ -104,16 +108,25 @@ try {
     if ($action === 'delete') {
         $mid = intval($body['id'] ?? $_POST['id'] ?? 0);
         if (!$mid) { echo json_encode(array('ok'=>false,'err'=>'no_id')); exit; }
-        $mq = mysqli_query($con,'SELECT id,id_expediteur,id_destinataire FROM qv_messages WHERE id='.intval($mid).' LIMIT 1');
-        if (!$mq || mysqli_num_rows($mq)===0) { echo json_encode(array('ok'=>false,'err'=>'not_found')); exit; }
-        $m = mysqli_fetch_assoc($mq);
-        if ((int)$m['id_expediteur'] !== $me && (int)$m['id_destinataire'] !== $me) { echo json_encode(array('ok'=>false,'err'=>'forbidden')); exit; }
+        if ($has_dest) {
+            $mq = mysqli_query($con,'SELECT id,id_expediteur,id_destinataire FROM qv_messages WHERE id='.intval($mid).' LIMIT 1');
+            if (!$mq || mysqli_num_rows($mq)===0) { echo json_encode(array('ok'=>false,'err'=>'not_found')); exit; }
+            $m = mysqli_fetch_assoc($mq);
+            if ((int)$m['id_expediteur'] !== $me && (int)$m['id_destinataire'] !== $me) { echo json_encode(array('ok'=>false,'err'=>'forbidden')); exit; }
+        } else {
+            $mq = mysqli_query($con,'SELECT id,id_expediteur FROM qv_messages WHERE id='.intval($mid).' LIMIT 1');
+            if (!$mq || mysqli_num_rows($mq)===0) { echo json_encode(array('ok'=>false,'err'=>'not_found')); exit; }
+            $m = mysqli_fetch_assoc($mq);
+            if ((int)$m['id_expediteur'] !== $me) { echo json_encode(array('ok'=>false,'err'=>'forbidden')); exit; }
+        }
         mysqli_query($con,'DELETE FROM qv_messages WHERE id=' . intval($mid));
         echo json_encode(array('ok'=>true,'id'=>$mid)); exit;
     }
 
     if ($action === 'mark_read') {
-        mysqli_query($con,'UPDATE qv_messages SET lu_to_recipient=1 WHERE id_activite=' . intval($id_activite) . ' AND id_destinataire=' . $me);
+        if ($has_dest && $has_lu) {
+            mysqli_query($con,'UPDATE qv_messages SET lu_to_recipient=1 WHERE id_activite=' . intval($id_activite) . ' AND id_destinataire=' . $me);
+        }
         echo json_encode(array('ok'=>true)); exit;
     }
 
