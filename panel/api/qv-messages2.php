@@ -20,6 +20,16 @@ try {
     $me = (int) $_SESSION['id'];
     $me_pseudo = isset($_SESSION['login']) ? $_SESSION['login'] : 'Joueur';
 
+    // Detect whether qv_messages has recipient/read columns in this schema
+    $has_dest = false;
+    $has_lu = false;
+    if (php_sapi_name() !== 'cli-server') {
+        $hc = mysqli_query($con, "SHOW COLUMNS FROM `qv_messages` LIKE 'id_destinataire'");
+        if ($hc && mysqli_num_rows($hc)) $has_dest = true;
+        $hl = mysqli_query($con, "SHOW COLUMNS FROM `qv_messages` LIKE 'lu_to_recipient'");
+        if ($hl && mysqli_num_rows($hl)) $has_lu = true;
+    }
+
     $raw = file_get_contents('php://input');
     $body = json_decode($raw, true) ?: array();
     $action = trim($body['action'] ?? $_POST['action'] ?? $_GET['action'] ?? 'fetch');
@@ -49,16 +59,28 @@ try {
 
     if ($action === 'fetch') {
         if (!$id_activite) { http_response_code(400); echo json_encode(array('ok'=>false,'err'=>'no_act')); exit; }
-        $sql = 'SELECT id,id_expediteur,pseudo_exp,role,message,id_destinataire,lu_to_recipient,created_at FROM qv_messages '
-             . 'WHERE id_activite=' . intval($id_activite) . ' AND (id_expediteur=' . $me . ' OR id_destinataire=' . $me . ') '
-             . 'ORDER BY created_at ASC LIMIT 500';
-        $q = mysqli_query($con, $sql);
-        mysqli_query($con, 'UPDATE qv_messages SET lu_to_recipient=1 WHERE id_activite=' . intval($id_activite) . ' AND id_destinataire=' . $me);
         $msgs = array();
-        if ($q) while ($row = mysqli_fetch_assoc($q)) $msgs[] = array('id'=>(int)$row['id'],'from'=>htmlspecialchars($row['pseudo_exp'],ENT_QUOTES,'UTF-8'),'from_id'=>(int)$row['id_expediteur'],'role'=>$row['role'],'mine'=>((int)$row['id_expediteur']=== $me),'msg'=>htmlspecialchars($row['message'],ENT_QUOTES,'UTF-8'),'at'=>$row['created_at'],'unread'=>!((bool)$row['lu_to_recipient']));
-        $ur = mysqli_query($con, 'SELECT COUNT(*) AS c FROM qv_messages WHERE id_activite=' . intval($id_activite) . ' AND id_destinataire=' . $me . ' AND lu_to_recipient=0');
-        $unread = 0; if ($ur && ($urrow = mysqli_fetch_assoc($ur))) $unread = (int)$urrow['c'];
-        echo json_encode(array('ok'=>true,'msgs'=>$msgs,'my_role'=>$my_role,'unread'=>$unread,'organizer_id'=>$organizer)); exit;
+        $unread = 0;
+        if ($has_dest) {
+            $sql = 'SELECT id,id_expediteur,pseudo_exp,role,message,id_destinataire,lu_to_recipient,created_at FROM qv_messages '
+                 . 'WHERE id_activite=' . intval($id_activite) . ' AND (id_expediteur=' . $me . ' OR id_destinataire=' . $me . ') '
+                 . 'ORDER BY created_at ASC LIMIT 500';
+            $q = mysqli_query($con, $sql);
+            if ($has_lu) mysqli_query($con, 'UPDATE qv_messages SET lu_to_recipient=1 WHERE id_activite=' . intval($id_activite) . ' AND id_destinataire=' . $me);
+            if ($q) while ($row = mysqli_fetch_assoc($q)) $msgs[] = array('id'=>(int)$row['id'],'from'=>htmlspecialchars($row['pseudo_exp'],ENT_QUOTES,'UTF-8'),'from_id'=>(int)$row['id_expediteur'],'role'=>$row['role'],'mine'=>((int)$row['id_expediteur']=== $me),'msg'=>htmlspecialchars($row['message'],ENT_QUOTES,'UTF-8'),'at'=>$row['created_at'],'unread'=>($has_lu ? !((bool)$row['lu_to_recipient']) : false));
+            if ($has_lu) {
+                $ur = mysqli_query($con, 'SELECT COUNT(*) AS c FROM qv_messages WHERE id_activite=' . intval($id_activite) . ' AND id_destinataire=' . $me . ' AND lu_to_recipient=0');
+                if ($ur && ($urrow = mysqli_fetch_assoc($ur))) $unread = (int)$urrow['c'];
+            }
+        } else {
+            // no recipient column: return messages where user is sender only
+            $sql = 'SELECT id,id_expediteur,pseudo_exp,role,message,created_at FROM qv_messages '
+                 . 'WHERE id_activite=' . intval($id_activite) . ' AND id_expediteur=' . $me . ' '
+                 . 'ORDER BY created_at ASC LIMIT 500';
+            $q = mysqli_query($con, $sql);
+            if ($q) while ($row = mysqli_fetch_assoc($q)) $msgs[] = array('id'=>(int)$row['id'],'from'=>htmlspecialchars($row['pseudo_exp'],ENT_QUOTES,'UTF-8'),'from_id'=>(int)$row['id_expediteur'],'role'=>$row['role'],'mine'=>true,'msg'=>htmlspecialchars($row['message'],ENT_QUOTES,'UTF-8'),'at'=>$row['created_at'],'unread'=>false);
+        }
+        echo json_encode(array('ok'=>true,'msgs'=>$msgs,'my_role'=>$my_role,'unread'=>$unread,'organizer_id'=>$organizer,'has_dest'=>$has_dest)); exit;
     }
 
     if ($action === 'send') {
