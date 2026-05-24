@@ -10,18 +10,6 @@ if (!empty($_COOKIE[session_name()]) && session_status() !== PHP_SESSION_ACTIVE)
     @session_id($_COOKIE[session_name()]);
 }
 @session_start();
-<?php
-// panel/api/qv-messages.php
-// Clean production private messaging API (no debug/simulation)
-
-ini_set('session.name','PHPSESSID');
-if (PHP_VERSION_ID >= 70300 && session_status() !== PHP_SESSION_ACTIVE) {
-    session_set_cookie_params(['lifetime'=>0,'path'=>'/','domain'=>'.viendez.com','secure'=>true,'httponly'=>true,'samesite'=>'Lax']);
-}
-if (!empty($_COOKIE[session_name()]) && session_status() !== PHP_SESSION_ACTIVE) {
-    @session_id($_COOKIE[session_name()]);
-}
-@session_start();
 header('Content-Type: application/json; charset=utf-8');
 
 try {
