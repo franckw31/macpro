@@ -168,162 +168,122 @@ try {
     $savePath = ini_get('session.save_path') ?: '';
     // If save_path contains a prefix like "N;/path", extract the path part
     if (strpos($savePath, ';') !== false) {
-        $parts = explode(';', $savePath);
-        $savePath = end($parts);
-    }
-    $sessInfo['session_save_path'] = $savePath;
-    $sessFile = $savePath ? rtrim($savePath, '/') . '/sess_' . $sessId : '';
-    $sessInfo['session_file'] = $sessFile;
-    if ($sessFile && @file_exists($sessFile)) {
-        $raw = @file_get_contents($sessFile);
-        $sessInfo['session_file_exists'] = true;
-        $sessInfo['session_file_size'] = strlen($raw);
-        // include a short preview (base64 to be safe)
-        $sessInfo['session_file_preview_b64'] = base64_encode(substr($raw, 0, 1024));
-    } else {
-        $sessInfo['session_file_exists'] = false;
-    }
+        <?php
+        // Minimal private mini-messaging API
+        // Actions: fetch, send, delete, mark_read
 
-    $out = array(
-        'ok' => true,
-        'request_uri' => $_SERVER['REQUEST_URI'] ?? '',
-        'headers' => $hdrs,
-        'http_cookie' => $_SERVER['HTTP_COOKIE'] ?? '',
-        '_COOKIE' => $_COOKIE,
-        '_SESSION' => isset($_SESSION) ? $_SESSION : array(),
-        'session_info' => $sessInfo
-    );
-    echo json_encode($out);
-    exit;
-}
+        ini_set('session.name','PHPSESSID');
+        if (PHP_VERSION_ID >= 70300) {
+            session_set_cookie_params(['lifetime'=>0,'path'=>'/','domain'=>'.viendez.com','secure'=>true,'httponly'=>true,'samesite'=>'Lax']);
+        }
 
-// Ensure session uses client's session id (if provided) before starting
-$cookieName = session_name();
-if (!empty($_COOKIE[$cookieName]) && session_status() !== PHP_SESSION_ACTIVE) {
-    @session_id($_COOKIE[$cookieName]);
-}
-@session_start();
-header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: no-store');
+        $cookie = session_name();
+        if (!empty($_COOKIE[$cookie]) && session_status() !== PHP_SESSION_ACTIVE) {
+            @session_id($_COOKIE[$cookie]);
+        }
+        @session_start();
+        header('Content-Type: application/json; charset=utf-8');
 
-try {
-    require_once __DIR__ . '/../include/config.php';
+        try {
+            require_once __DIR__ . '/../include/config.php';
+            if (empty($con)) { echo json_encode(array('ok'=>false,'err'=>'db')); exit; }
 
-    if (empty($con)) { echo json_encode(['ok'=>false,'err'=>'db']); exit; }
+            if (empty($_SESSION['id'])) { echo json_encode(array('ok'=>false,'err'=>'not_logged')); exit; }
+            $me = (int) $_SESSION['id'];
+            $me_pseudo = isset($_SESSION['login']) ? $_SESSION['login'] : 'Joueur';
 
-    // Create table if missing
-    mysqli_query($con, "CREATE TABLE IF NOT EXISTS `qv_messages` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `id_activite` INT UNSIGNED NOT NULL,
-  `id_expediteur` INT UNSIGNED NOT NULL,
-  `pseudo_exp` VARCHAR(80) NOT NULL DEFAULT '',
-  `role` ENUM('joueur','organisateur') NOT NULL DEFAULT 'joueur',
-        `message` TEXT NOT NULL,
-    `id_destinataire` INT UNSIGNED NOT NULL DEFAULT 0,
-    `lu_to_recipient` TINYINT(1) NOT NULL DEFAULT 0,
-    `lu_orga` TINYINT(1) NOT NULL DEFAULT 0,
-    `lu_joueur` TINYINT(1) NOT NULL DEFAULT 0,
-  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_act (`id_activite`),
-  INDEX idx_exp (`id_expediteur`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+            $raw = file_get_contents('php://input');
+            $body = json_decode($raw, true) ?: array();
+            $action = trim($body['action'] ?? $_POST['action'] ?? $_GET['action'] ?? 'fetch');
+            $id_activite = (int) ($body['id_activite'] ?? $_GET['id_activite'] ?? 0);
 
-// Session check
-if (empty($_SESSION['id'])) { echo json_encode(['ok'=>false,'err'=>'not_logged']); exit; }
-$my_id     = (int)$_SESSION['id'];
-$my_pseudo = htmlspecialchars($_SESSION['login'] ?? 'Joueur', ENT_QUOTES, 'UTF-8');
+            // find organizer
+            $organizer = 0;
+            if ($id_activite) {
+                $res = mysqli_query($con, "SELECT * FROM activite WHERE `id-activite`=" . intval($id_activite) . " LIMIT 1");
+                if ($res && ($r = mysqli_fetch_assoc($res))) {
+                    foreach (array('id-membre','id_membre','idmember','id') as $c) {
+                        if (!empty($r[$c])) { $organizer = (int)$r[$c]; break; }
+                    }
+                }
+            }
+            $my_role = ($me === $organizer) ? 'organisateur' : 'joueur';
 
-$body   = [];
-$action = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $body   = json_decode(file_get_contents('php://input'), true) ?: array();
-    $action = trim($body['action'] ?? ($_POST['action'] ?? ''));
-} else {
-    $action = trim($_GET['action'] ?? 'fetch');
-}
+            if ($action === 'fetch') {
+                if (!$id_activite) { http_response_code(400); echo json_encode(array('ok'=>false,'err'=>'no_act')); exit; }
+                $sql = 'SELECT id,id_expediteur,pseudo_exp,role,message,id_destinataire,lu_to_recipient,created_at FROM qv_messages '
+                     . 'WHERE id_activite=' . intval($id_activite) . ' AND (id_expediteur=' . $me . ' OR id_destinataire=' . $me . ') '
+                     . 'ORDER BY created_at ASC LIMIT 500';
+                $q = mysqli_query($con, $sql);
+                mysqli_query($con, 'UPDATE qv_messages SET lu_to_recipient=1 WHERE id_activite=' . intval($id_activite) . ' AND id_destinataire=' . $me);
+                $msgs = array();
+                if ($q) {
+                    while ($row = mysqli_fetch_assoc($q)) {
+                        $msgs[] = array(
+                            'id' => (int)$row['id'],
+                            'from' => htmlspecialchars($row['pseudo_exp'], ENT_QUOTES, 'UTF-8'),
+                            'from_id' => (int)$row['id_expediteur'],
+                            'role' => $row['role'],
+                            'mine' => ((int)$row['id_expediteur'] === $me),
+                            'msg' => htmlspecialchars($row['message'], ENT_QUOTES, 'UTF-8'),
+                            'at' => $row['created_at'],
+                            'unread' => !((bool)$row['lu_to_recipient'])
+                        );
+                    }
+                }
+                $ur = mysqli_query($con, 'SELECT COUNT(*) AS c FROM qv_messages WHERE id_activite=' . intval($id_activite) . ' AND id_destinataire=' . $me . ' AND lu_to_recipient=0');
+                $unread = 0; if ($ur && ($urrow = mysqli_fetch_assoc($ur))) $unread = (int)$urrow['c'];
+                echo json_encode(array('ok'=>true,'msgs'=>$msgs,'my_role'=>$my_role,'unread'=>$unread,'organizer_id'=>$organizer));
+                exit;
+            }
 
-$id_activite = (int)($body['id_activite'] ?? $_GET['id_activite'] ?? $_REQUEST['uid'] ?? $_GET['uid'] ?? 0);
-if (!$id_activite) {
-    http_response_code(400);
-    echo json_encode(['ok'=>false,'err'=>'no_act','msg'=>'Missing id_activite (try uid or id_activite)']);
-    exit;
-}
+            if ($action === 'send') {
+                $msg = trim($body['message'] ?? $_POST['message'] ?? '');
+                if (!$msg || mb_strlen($msg) > 2000) { echo json_encode(array('ok'=>false,'err'=>'invalid_msg')); exit; }
+                $msg_esc = mysqli_real_escape_string($con, $msg);
+                if ($my_role === 'joueur') {
+                    $dest = intval($organizer);
+                } else {
+                    $dest = intval($body['to'] ?? $body['id_destinataire'] ?? 0);
+                    if (!$dest) { echo json_encode(array('ok'=>false,'err'=>'no_dest')); exit; }
+                }
+                $pseudo = mysqli_real_escape_string($con, $me_pseudo);
+                $ins = 'INSERT INTO qv_messages (id_activite,id_expediteur,pseudo_exp,role,message,id_destinataire,lu_to_recipient) VALUES ('
+                     . intval($id_activite) . ',' . $me . ',"' . $pseudo . '","' . mysqli_real_escape_string($con,$my_role) . '","' . $msg_esc . '",' . intval($dest) . ',0)';
+                mysqli_query($con, $ins);
+                $nid = (int) mysqli_insert_id($con);
+                echo json_encode(array('ok'=>true,'id'=>$nid));
+                exit;
+            }
 
-$organizer_id = 0;
-// attempt to read activite row and detect organizer column name
-$act_res = mysqli_query($con, "SELECT * FROM activite WHERE `id-activite`=".intval($id_activite)." LIMIT 1");
-if ($act_res && ($act_row = mysqli_fetch_assoc($act_res))) {
-    foreach (array('id-membre','id_membre','id_membre','idmember','id') as $col) {
-        if (isset($act_row[$col]) && $act_row[$col] !== '') { $organizer_id = (int)$act_row[$col]; break; }
-    }
-}
-$my_role = ($my_id === $organizer_id) ? 'organisateur' : 'joueur';
+            if ($action === 'delete') {
+                $mid = intval($body['id'] ?? $_POST['id'] ?? 0);
+                if (!$mid) { echo json_encode(array('ok'=>false,'err'=>'no_id')); exit; }
+                $mq = mysqli_query($con, 'SELECT id,id_expediteur,id_destinataire FROM qv_messages WHERE id=' . intval($mid) . ' LIMIT 1');
+                if (!$mq || mysqli_num_rows($mq) === 0) { echo json_encode(array('ok'=>false,'err'=>'not_found')); exit; }
+                $m = mysqli_fetch_assoc($mq);
+                if ((int)$m['id_expediteur'] !== $me && (int)$m['id_destinataire'] !== $me) { echo json_encode(array('ok'=>false,'err'=>'forbidden')); exit; }
+                mysqli_query($con, 'DELETE FROM qv_messages WHERE id=' . intval($mid));
+                echo json_encode(array('ok'=>true,'id'=>$mid));
+                exit;
+            }
 
-// Actions
-if ($action === 'fetch') {
-    // Only messages where the user is sender or recipient are visible
-    $q = mysqli_query($con, "SELECT id, id_expediteur, pseudo_exp, role, message, id_destinataire, lu_to_recipient, created_at FROM qv_messages WHERE id_activite=".intval($id_activite)." AND (id_expediteur=".intval($my_id)." OR id_destinataire=".intval($my_id).") ORDER BY created_at ASC LIMIT 200");
-    // mark read for messages where current user is the recipient
-    mysqli_query($con, "UPDATE qv_messages SET lu_to_recipient=1 WHERE id_activite=".intval($id_activite)." AND id_destinataire=".intval($my_id).");
-    $msgs = array();
-    if ($q) while ($r = mysqli_fetch_assoc($q)) {
-        $msgs[] = array(
-            'id' => (int)$r['id'],
-            'from' => htmlspecialchars($r['pseudo_exp'], ENT_QUOTES, 'UTF-8'),
-            'from_id' => (int)$r['id_expediteur'],
-            'role' => $r['role'],
-            'mine' => ((int)$r['id_expediteur'] === $my_id),
-            'msg' => htmlspecialchars($r['message'], ENT_QUOTES, 'UTF-8'),
-            'at' => $r['created_at'],
-            'unread' => !((bool)$r['lu_to_recipient'])
-        );
-    }
-    $unread_row = mysqli_fetch_assoc(mysqli_query($con, "SELECT COUNT(*) AS c FROM qv_messages WHERE id_activite=".intval($id_activite)." AND id_destinataire=".intval($my_id)." AND lu_to_recipient=0"));
-    $unread = $unread_row ? (int)$unread_row['c'] : 0;
-    echo json_encode(['ok'=>true,'msgs'=>$msgs,'my_role'=>$my_role,'unread'=>$unread,'organizer_id'=>$organizer_id]);
-    exit;
-}
+            if ($action === 'mark_read') {
+                if (!$id_activite) { echo json_encode(array('ok'=>false,'err'=>'no_act')); exit; }
+                mysqli_query($con, 'UPDATE qv_messages SET lu_to_recipient=1 WHERE id_activite=' . intval($id_activite) . ' AND id_destinataire=' . $me);
+                echo json_encode(array('ok'=>true));
+                exit;
+            }
 
-if ($action === 'send') {
-    $msg_raw = trim($body['message'] ?? $_POST['message'] ?? '');
-    if (!$msg_raw || mb_strlen($msg_raw) > 1000) { echo json_encode(['ok'=>false,'err'=>'invalid_msg']); exit; }
-    $msg_esc = mysqli_real_escape_string($con, $msg_raw);
-    $role_esc = mysqli_real_escape_string($con, $my_role);
-    $pseudo_esc = mysqli_real_escape_string($con, $my_pseudo);
-    $lu_orga = ($my_role === 'organisateur') ? 1 : 0;
-    $lu_joueur = ($my_role === 'joueur') ? 1 : 0;
-    // determine destinataire: joueur -> organisateur; organisateur must provide target player id in payload
-    if ($my_role === 'joueur') {
-        $dest_id = intval($organizer_id);
-    } else {
-        $dest_id = intval($body['to'] ?? $body['id_destinataire'] ?? 0);
-        if (!$dest_id) { echo json_encode(['ok'=>false,'err'=>'no_dest']); exit; }
-    }
-    // insert with destinataire and unread flag
-    mysqli_query($con, "INSERT INTO qv_messages (id_activite,id_expediteur,pseudo_exp,role,message,id_destinataire,lu_to_recipient,lu_orga,lu_joueur) VALUES (".intval($id_activite).",".intval($my_id).",'".$pseudo_esc."','".$role_esc."','".$msg_esc."',".intval($dest_id).",0,".$lu_orga.",".$lu_joueur.")");
-    $new_id = (int)mysqli_insert_id($con);
-    echo json_encode(['ok'=>true,'id'=>$new_id,'msg'=>['id'=>$new_id,'from'=>$my_pseudo,'from_id'=>$my_id,'role'=>$my_role,'mine'=>true,'msg'=>htmlspecialchars($msg_raw,ENT_QUOTES,'UTF-8'),'at'=>date('Y-m-d H:i:s'),'unread'=>false]]);
-    exit;
-}
+            echo json_encode(array('ok'=>false,'err'=>'unknown_action'));
+            exit;
 
-// DELETE a message (allowed only for sender or recipient)
-if ($action === 'delete') {
-    $mid = intval($body['id'] ?? 0);
-    if (!$mid) { echo json_encode(['ok'=>false,'err'=>'no_id']); exit; }
-    // fetch message
-    $mq = mysqli_query($con, "SELECT id, id_expediteur, id_destinataire, role, id_activite FROM qv_messages WHERE id=".intval($mid)." LIMIT 1");
-    if (!$mq || mysqli_num_rows($mq) === 0) { echo json_encode(['ok'=>false,'err'=>'not_found']); exit; }
-    $mrow = mysqli_fetch_assoc($mq);
-    // permission: organizer for this activity or the original sender
-    $can = false;
-    if ((int)$mrow['id_expediteur'] === $my_id) $can = true;
-    if (!empty($mrow['id_destinataire']) && (int)$mrow['id_destinataire'] === $my_id) $can = true;
-    if (!$can) { echo json_encode(['ok'=>false,'err'=>'forbidden']); exit; }
-    // delete
-    mysqli_query($con, "DELETE FROM qv_messages WHERE id=".intval($mid));
-    echo json_encode(['ok'=>true,'id'=>$mid]);
-    exit;
-}
+        } catch (Throwable $e) {
+            @file_put_contents('/tmp/qv-errors.log', date('c') . 'CATCH: ' . $e->getMessage() . "\n", FILE_APPEND);
+            http_response_code(500);
+            echo json_encode(array('ok'=>false,'err'=>'exception','msg'=>$e->getMessage()));
+            exit;
+        }
 
 if ($action === 'mark_read') {
     // mark all messages as read where current user is the recipient for this activity
