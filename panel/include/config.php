@@ -1,4 +1,14 @@
 <?php
+if (PHP_VERSION_ID >= 70300) {
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'domain' => '.viendez.com',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+}
 $conn = mysqli_connect('localhost', 'root', 'Kookies7*', 'dbs9616600');
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
