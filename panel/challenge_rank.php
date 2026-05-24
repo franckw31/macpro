@@ -189,6 +189,7 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
             <div style="width:36px"></div>
             <div style="flex:1">Pseudo</div>
             <div style="width:80px;">POINTS</div>
+            <div style="width:56px;">JETONS</div>
             <div style="width:48px;">ITM</div>
             <div style="width:48px;">WIN</div>
             <div style="width:40px;">PART</div>
@@ -221,6 +222,7 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
                         $link_params .= '&challenge=' . intval($provided_challenge) . '&challenge_col=' . urlencode($colparam);
                     }
                     echo '<div class="pts"><a href="'. esc($link_params) .'" style="color:#ffffff;text-decoration:underline;text-decoration-color:#3CA6FF">'.number_format(intval($r['pts']),0,',',' ').'</a> </div>';
+                    echo '<div class="smallcol" style="width:56px;color:#ffd97d">'.number_format(intval($r['jetons_total']),0,',',' ').'</div>';
                     echo '<div class="smallcol">'.intval($r['itm']).'</div>';
                     echo '<div class="smallcol">'.intval($r['vic']).'</div>';
                     echo '<div class="smallcol">'.intval($r['parts']).'</div>';
