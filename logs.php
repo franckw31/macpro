@@ -471,6 +471,7 @@ function showMsg(el, text, type) {
 
 <?php
 $base_url = '?tab='.urlencode($tab).'&sort='.urlencode($sort).'&dir='.urlencode($dir);
+if (!empty($filter)) $base_url .= '&filter='.urlencode($filter);
 if ($total_pages > 1):
 ?>
 <div class="pagination">
