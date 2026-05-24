@@ -151,9 +151,14 @@ if (!$id_activite) {
     exit;
 }
 
-// get organizer
-$org_row = mysqli_fetch_assoc(mysqli_query($con, "SELECT COALESCE(`id-membre`,`id_membre`) AS org_id FROM activite WHERE `id-activite`=".intval($id_activite)." LIMIT 1"));
-$organizer_id = $org_row ? (int)$org_row['org_id'] : 0;
+$organizer_id = 0;
+// attempt to read activite row and detect organizer column name
+$act_res = mysqli_query($con, "SELECT * FROM activite WHERE `id-activite`=".intval($id_activite)." LIMIT 1");
+if ($act_res && ($act_row = mysqli_fetch_assoc($act_res))) {
+    foreach (array('id-membre','id_membre','id_membre','idmember','id') as $col) {
+        if (isset($act_row[$col]) && $act_row[$col] !== '') { $organizer_id = (int)$act_row[$col]; break; }
+    }
+}
 $my_role = ($my_id === $organizer_id) ? 'organisateur' : 'joueur';
 
 // Actions
