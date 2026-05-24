@@ -32,13 +32,40 @@ if (isset($_GET['debugsession'])) {
 if (isset($_GET['logheaders'])) {
     header('Content-Type: application/json; charset=utf-8');
     $hdrs = function_exists('getallheaders') ? getallheaders() : [];
+    // Ensure session is started so $_SESSION is populated
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        @session_start();
+    }
+
+    $sessId = session_id();
+    $sessInfo = ['session_id' => $sessId];
+    $savePath = ini_get('session.save_path') ?: '';
+    // If save_path contains a prefix like "N;/path", extract the path part
+    if (strpos($savePath, ';') !== false) {
+        $parts = explode(';', $savePath);
+        $savePath = end($parts);
+    }
+    $sessInfo['session_save_path'] = $savePath;
+    $sessFile = $savePath ? rtrim($savePath, '/') . '/sess_' . $sessId : '';
+    $sessInfo['session_file'] = $sessFile;
+    if ($sessFile && @file_exists($sessFile)) {
+        $raw = @file_get_contents($sessFile);
+        $sessInfo['session_file_exists'] = true;
+        $sessInfo['session_file_size'] = strlen($raw);
+        // include a short preview (base64 to be safe)
+        $sessInfo['session_file_preview_b64'] = base64_encode(substr($raw, 0, 1024));
+    } else {
+        $sessInfo['session_file_exists'] = false;
+    }
+
     $out = [
         'ok' => true,
         'request_uri' => $_SERVER['REQUEST_URI'] ?? '',
         'headers' => $hdrs,
         'http_cookie' => $_SERVER['HTTP_COOKIE'] ?? '',
         '_COOKIE' => $_COOKIE,
-        '_SESSION' => isset($_SESSION) ? $_SESSION : []
+        '_SESSION' => isset($_SESSION) ? $_SESSION : [],
+        'session_info' => $sessInfo
     ];
     echo json_encode($out);
     exit;
