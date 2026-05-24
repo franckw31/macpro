@@ -19,6 +19,13 @@ try {
     $action = trim($body['action'] ?? $_POST['action'] ?? $_GET['action'] ?? 'fetch');
     $id_activite = (int) ($body['id_activite'] ?? $_GET['id_activite'] ?? 0);
 
+    // Debug endpoint: show session and cookies (for troubleshooting in browser)
+    if (isset($_GET['debugsession'])) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(array('ok'=>true,'_SESSION'=>isset($_SESSION)?$_SESSION:array(), '_COOKIE'=>$_COOKIE));
+        exit;
+    }
+
     // find organizer
     $organizer = 0;
     if ($id_activite) {
