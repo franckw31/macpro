@@ -649,7 +649,7 @@ a{color:inherit;text-decoration:none}
 .qvm-bubble .qvm-sender{font-size:9px;font-weight:700;opacity:0.55;margin-bottom:2px;display:block}
 .qvm-bubble .qvm-time{font-size:8px;opacity:0.38;margin-top:2px;display:block;text-align:right}
 .qvm-empty{font-size:11px;color:rgba(255,255,255,0.3);text-align:center;padding:10px 0;font-style:italic}
-.qvm-compose{display:flex;gap:6px;align-items:center}
+.qvm-compose{display:flex;gap:6px;align-items:center;flex-shrink:0}
 .qvm-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(10,132,255,0.3);border-radius:10px;padding:8px 10px;color:#fff;font-size:13px;outline:none;font-family:inherit;resize:none;min-height:34px;max-height:72px;overflow-y:auto;line-height:1.35;-webkit-user-select:text;user-select:text}
 .qvm-input:focus{border-color:rgba(10,132,255,0.7);background:rgba(255,255,255,0.09)}
 .qvm-send{width:34px;height:34px;border-radius:10px;background:#0a84ff;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:none;cursor:pointer;transition:opacity .15s}
@@ -657,6 +657,14 @@ a{color:inherit;text-decoration:none}
 .qvm-send svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .qvm-login-hint{font-size:11px;color:rgba(255,255,255,0.35);text-align:center;padding:4px 0}
 .qvm-input:empty::before,.qvm-input[data-empty]::before{content:attr(data-placeholder);color:rgba(255,255,255,0.28);pointer-events:none;position:absolute;left:10px;top:8px}
+
+/* Layout helpers for qvm header and thread */
+.qvm-title-row .qvm-title-wrap{display:flex;align-items:center;gap:8px;min-width:0}
+.qvm-title{flex:1;min-width:0}
+.qvm-controls{display:flex;align-items:center;gap:8px}
+.qvm-thread{flex:1;min-width:0;max-height:84px;overflow:hidden}
+.qvm-input{position:relative;min-width:180px;max-width:260px}
+.qvm-index{font-size:11px;color:var(--muted)}
 
 /* Navigation buttons for mini-messagerie */
 .qvm-nav{background:transparent;border:0;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:4px;border-radius:6px}
