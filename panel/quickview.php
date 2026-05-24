@@ -671,7 +671,13 @@ a{color:inherit;text-decoration:none}
 .qvm-thread{display:flex;align-items:center;flex:1;min-width:0;max-height:84px;overflow:hidden}
 .qvm-bubble{max-width:60%}
 .qvm-bubble.mine{max-width:60%}
-.qvm-compose{flex-shrink:0;width:320px;display:flex;align-items:center;gap:6px}
+.qvm-compose{flex:0 0 36%;display:flex;align-items:center;gap:6px}
+.qvm-input{min-width:120px;max-width:calc(100% - 44px)}
+
+@media(max-width:420px){
+  .qvm-compose{flex:1 1 100%;width:100%}
+  .qvm-bubble{max-width:65%}
+}
 
 /* Navigation buttons for mini-messagerie */
 .qvm-nav{background:transparent;border:0;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:4px;border-radius:6px}
