@@ -1,3 +1,4 @@
+ini_set('session.name', 'PHPSESSID');
 
 <?php
 /**
