@@ -311,6 +311,7 @@ td { color: var(--text); }
     <a href="?tab=ios"   class="tab-ios <?php echo ($tab==='ios'   ? 'active' : ''); ?>">iOS App</a>
     <a href="?tab=auth"  class="tab-ios <?php echo ($tab==='auth'  ? 'active' : ''); ?>">Auth iOS</a>
     <a href="?tab=admin" class="tab-admin <?php echo ($tab==='admin' ? 'active' : ''); ?>">Gestion acces</a>
+    <a href="?tab=all&filter=inscription" class="<?php echo ($filter==='inscription' ? 'active' : ''); ?>">Modifs inscription</a>
 </div>
 
 <?php if ($tab === 'admin'): ?>
