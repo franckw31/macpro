@@ -1,5 +1,5 @@
 <?php
-if (PHP_VERSION_ID >= 70300) {
+if (PHP_VERSION_ID >= 70300 && session_status() !== PHP_SESSION_ACTIVE) {
     session_set_cookie_params([
         'lifetime' => 0,
         'path' => '/',
