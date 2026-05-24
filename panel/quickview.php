@@ -993,16 +993,14 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     <div class="qvm-card" id="qvm-card">
       <div class="qvm-header">
         <div class="qvm-title-row">
-          <div class="qvm-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          </div>
-          <div>
-            <div class="qvm-title">Message à l'organisateur</div>
-            <div class="qvm-sub" id="qvm-orga-name">
-              <?php echo !empty($serverActivity['organizer']) ? htmlspecialchars($serverActivity['organizer']) : 'Organisateur'; ?>
+            <div class="qvm-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+              <div class="qvm-title" style="flex:1;min-width:0">Message à l'organisateur</div>
+              <div class="qvm-orga-right" id="qvm-orga-name"><?php echo !empty($serverActivity['organizer']) ? htmlspecialchars($serverActivity['organizer']) : 'Organisateur'; ?></div>
             </div>
           </div>
-        </div>
         <div style="display:flex;align-items:center;gap:8px">
           <button id="qvm-prev" class="qvm-nav" title="Précédent" style="background:transparent;border:0;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;">‹</button>
           <span id="qvm-index" style="font-size:11px;color:var(--muted)">0/0</span>
