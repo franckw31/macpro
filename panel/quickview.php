@@ -1,4 +1,14 @@
 <?php
+if (PHP_VERSION_ID >= 70300) {
+  session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'domain' => '.viendez.com',
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'Lax'
+  ]);
+}
 session_start();
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
@@ -1035,10 +1045,25 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       }
 
       function fetchMsgs(silent) {
-        fetch(API + '?action=fetch&id_activite=' + ACT_ID)
-          .then(function(r){ return r.json(); })
-          .then(function(d){
-            if (!d.ok) return;
+        fetch(API + '?action=fetch&id_activite=' + ACT_ID, {credentials:'same-origin'})
+          .then(function(r){
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.text();
+          })
+          .then(function(txt){
+            var d;
+            try { d = JSON.parse(txt); } catch(e) {
+              thread.innerHTML = '<div class="qvm-empty" style="color:#ff6b6b">Erreur serveur – réessayez</div>';
+              return;
+            }
+            if (!d.ok) {
+              if (d.err === 'not_logged') {
+                thread.innerHTML = '<div class="qvm-empty">Session expirée – <a href="/panel/quickview.php" style="color:#0a84ff">reconnectez-vous</a></div>';
+              } else {
+                thread.innerHTML = '<div class="qvm-empty" style="color:#ff6b6b">Err: ' + (d.err||'?') + '</div>';
+              }
+              return;
+            }
             renderMsgs(d.msgs);
             if (d.unread > 0) {
               badge.textContent = d.unread;
@@ -1047,7 +1072,9 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
               badge.style.display = 'none';
             }
             lastCount = (d.msgs||[]).length;
-          }).catch(function(){});
+          }).catch(function(e){
+            thread.innerHTML = '<div class="qvm-empty" style="color:#ff9f0a">Connexion impossible</div>';
+          });
       }
 
       // Charger au démarrage
