@@ -961,6 +961,149 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <div class="v2-list-chev">›</div>
     </a>
 
+    <!-- ══════ MINI MESSAGERIE JOUEUR ↔ ORGANISATEUR ══════ -->
+    <?php if (!empty($_SESSION['id']) && !empty($serverActivity['id'])): ?>
+    <div class="qvm-card" id="qvm-card">
+      <div class="qvm-header">
+        <div class="qvm-title-row">
+          <div class="qvm-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div>
+            <div class="qvm-title">Message à l'organisateur</div>
+            <div class="qvm-sub" id="qvm-orga-name">
+              <?php echo !empty($serverActivity['organizer']) ? htmlspecialchars($serverActivity['organizer']) : 'Organisateur'; ?>
+            </div>
+          </div>
+        </div>
+        <span class="qvm-badge" id="qvm-badge">!</span>
+      </div>
+      <div class="qvm-thread" id="qvm-thread">
+        <div class="qvm-empty" id="qvm-empty">Chargement…</div>
+      </div>
+      <div class="qvm-compose">
+        <div class="qvm-input" id="qvm-input" contenteditable="true" role="textbox"
+          aria-multiline="false" aria-label="Votre message"
+          data-placeholder="Votre message…"
+          style="position:relative"
+          onkeydown="qvmKeyDown(event)"
+          oninput="qvmInputChanged(this)"></div>
+        <button class="qvm-send" id="qvm-send-btn" onclick="qvmSend()" title="Envoyer">
+          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+    <script>
+    (function(){
+      var ACT_ID = <?php echo intval($serverActivity['id']); ?>;
+      var MY_ROLE = '<?php echo ($organizer_id && (int)$_SESSION['id'] === (int)$organizer_id) ? 'organisateur' : 'joueur'; ?>';
+      var API = '/panel/api/qv-messages.php';
+      var thread = document.getElementById('qvm-thread');
+      var emptyEl = document.getElementById('qvm-empty');
+      var badge = document.getElementById('qvm-badge');
+      var inputEl = document.getElementById('qvm-input');
+      var lastCount = 0;
+
+      function fmtTime(at) {
+        if (!at) return '';
+        var d = new Date(at.replace(' ', 'T'));
+        var now = new Date();
+        var diff = (now - d) / 1000;
+        if (diff < 60) return 'à l\'instant';
+        if (diff < 3600) return Math.floor(diff/60) + 'min';
+        if (diff < 86400) return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');
+        return d.getDate()+'/'+(d.getMonth()+1)+' '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');
+      }
+
+      function renderMsgs(msgs) {
+        if (!msgs || !msgs.length) {
+          thread.innerHTML = '<div class="qvm-empty">Pas encore de message – posez votre question !</div>';
+          return;
+        }
+        var html = '';
+        msgs.forEach(function(m){
+          var cls = m.mine ? 'mine' : 'other';
+          html += '<div class="qvm-bubble ' + cls + '">'
+            + (m.mine ? '' : '<span class="qvm-sender">' + m.from + '</span>')
+            + m.msg
+            + '<span class="qvm-time">' + fmtTime(m.at) + '</span>'
+            + '</div>';
+        });
+        thread.innerHTML = html;
+        thread.scrollTop = thread.scrollHeight;
+      }
+
+      function fetchMsgs(silent) {
+        fetch(API + '?action=fetch&id_activite=' + ACT_ID)
+          .then(function(r){ return r.json(); })
+          .then(function(d){
+            if (!d.ok) return;
+            renderMsgs(d.msgs);
+            if (d.unread > 0) {
+              badge.textContent = d.unread;
+              badge.style.display = 'inline-block';
+            } else {
+              badge.style.display = 'none';
+            }
+            lastCount = (d.msgs||[]).length;
+          }).catch(function(){});
+      }
+
+      // Charger au démarrage
+      fetchMsgs(true);
+      // Rafraîchissement toutes les 30s
+      setInterval(function(){ fetchMsgs(true); }, 30000);
+
+      // Placeholder
+      inputEl.addEventListener('focus', function(){
+        if (inputEl.textContent === '') inputEl.setAttribute('data-empty','1');
+      });
+      inputEl.addEventListener('blur', function(){
+        if (inputEl.textContent.trim() === '') { inputEl.textContent=''; inputEl.setAttribute('data-empty','1'); }
+        else inputEl.removeAttribute('data-empty');
+      });
+
+      window.qvmInputChanged = function(el){
+        el.removeAttribute('data-empty');
+      };
+
+      window.qvmKeyDown = function(e){
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); qvmSend(); }
+      };
+
+      window.qvmSend = function(){
+        var msg = inputEl.textContent.trim();
+        if (!msg) return;
+        var btn = document.getElementById('qvm-send-btn');
+        btn.disabled = true;
+        fetch(API, {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({action:'send', id_activite:ACT_ID, message:msg})
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          btn.disabled = false;
+          if (d.ok) {
+            inputEl.textContent = '';
+            fetchMsgs(true);
+          } else {
+            alert('Erreur envoi : ' + (d.err||'?'));
+          }
+        })
+        .catch(function(){ btn.disabled = false; });
+      };
+    })();
+    </script>
+    <?php else: ?>
+    <div class="qvm-card" style="align-items:center;justify-content:center;min-height:70px">
+      <div class="qvm-login-hint">
+        <a href="/panel/quickview.php" style="color:#0a84ff">Connectez-vous</a> pour envoyer un message à l'organisateur
+      </div>
+    </div>
+    <?php endif; ?>
+    <!-- ══════ /MINI MESSAGERIE ══════ -->
+
     <?php if (!empty($_SESSION['id']) && in_array((int) $_SESSION['id'], [2, 265], true)): ?>
     <a class="v2-list-item tile-cyan" href="/qrcode/affectation_collection_activite.php" style="text-decoration:none;color:inherit">
       <div class="v2-list-icon">
