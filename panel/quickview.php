@@ -784,7 +784,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       <?php else: ?>
       <button class="v2-btn filled" id="v2-reg-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-        <?php echo $is_registered ? 'Modifier mon inscription' : "S'inscrire"; ?>
+        <?php echo $is_registered ? 'Modifier inscription' : "S'inscrire"; ?>
       </button>
       <?php endif; ?>
       <a class="v2-btn filled" href="/panel/challenge_rank.php<?php echo $uid_q; ?>" style="background:var(--orange,#ff9d3b);color:#fff;text-decoration:none;flex-direction:column;align-items:center;gap:2px">
