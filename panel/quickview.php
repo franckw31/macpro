@@ -1053,7 +1053,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       }
 
       function fetchMsgs(silent) {
-        fetch(API + '?action=fetch&id_activite=' + ACT_ID, {credentials:'same-origin'})
+        fetch(API + '?action=fetch&id_activite=' + ACT_ID, {credentials:'include'})
           .then(function(r){
             if (!r.ok) throw new Error('HTTP ' + r.status);
             return r.text();
@@ -1114,6 +1114,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         btn.disabled = true;
         fetch(API, {
           method:'POST',
+          credentials: 'include',
           headers:{'Content-Type':'application/json'},
           body: JSON.stringify({action:'send', id_activite:ACT_ID, message:msg})
         })
