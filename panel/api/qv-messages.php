@@ -144,8 +144,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = trim($_GET['action'] ?? 'fetch');
 }
 
-$id_activite = (int)($body['id_activite'] ?? $_GET['id_activite'] ?? 0);
-if (!$id_activite) { echo json_encode(['ok'=>false,'err'=>'no_act']); exit; }
+$id_activite = (int)($body['id_activite'] ?? $_GET['id_activite'] ?? $_REQUEST['uid'] ?? $_GET['uid'] ?? 0);
+if (!$id_activite) {
+    http_response_code(400);
+    echo json_encode(['ok'=>false,'err'=>'no_act','msg'=>'Missing id_activite (try uid or id_activite)']);
+    exit;
+}
 
 // get organizer
 $org_row = mysqli_fetch_assoc(mysqli_query($con, "SELECT COALESCE(`id-membre`,`id_membre`) AS org_id FROM activite WHERE `id-activite`=".intval($id_activite)." LIMIT 1"));
