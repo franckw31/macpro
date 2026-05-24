@@ -17,6 +17,32 @@ if (PHP_VERSION_ID >= 70300) {
     ]);
 }
 
+// Temporary: capture PHP errors/exceptions to a server-side log for debugging
+error_reporting(E_ALL);
+set_error_handler(function($errno, $errstr, $errfile, $errline){
+    $entry = date('c') . " ERROR [$errno]: $errstr in $errfile:$errline\n";
+    @file_put_contents('/tmp/qv-errors.log', $entry, FILE_APPEND);
+});
+set_exception_handler(function($e){
+    $entry = date('c') . " EXCEPTION: " . $e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine() . "\n" . $e->getTraceAsString() . "\n";
+    @file_put_contents('/tmp/qv-errors.log', $entry, FILE_APPEND);
+});
+register_shutdown_function(function(){
+    $err = error_get_last();
+    if ($err) {
+        $entry = date('c') . " SHUTDOWN: [{$err['type']}] {$err['message']} in {$err['file']}:{$err['line']}\n";
+        @file_put_contents('/tmp/qv-errors.log', $entry, FILE_APPEND);
+    }
+});
+
+// Debug endpoint to read the collected error log
+if (isset($_GET['readerrors'])) {
+    header('Content-Type: text/plain; charset=utf-8');
+    $c = @file_get_contents('/tmp/qv-errors.log');
+    echo $c === false ? "(no log)" : $c;
+    exit;
+}
+
 // Debug endpoint to inspect session/cookies
 if (isset($_GET['debugsession'])) {
     header('Content-Type: text/plain; charset=utf-8');
