@@ -1018,7 +1018,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           </div>
           <div class="qvm-title-wrap">
-            <div class="qvm-title">Message à l'organisateur</div>
+            <div class="qvm-title">Message Privé à l'organisateur : </div>
             <div class="qvm-orga-right" id="qvm-orga-name"><?php echo !empty($serverActivity['organizer']) ? htmlspecialchars($serverActivity['organizer']) : 'Organisateur'; ?></div>
           </div>
         </div>
