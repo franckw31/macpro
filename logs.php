@@ -427,9 +427,11 @@ function showMsg(el, text, type) {
 
 <div class="table-wrap"><table>
     <?php
-    function sort_url($col, $current_sort, $current_dir, $tab, $page) {
+    function sort_url($col, $current_sort, $current_dir, $tab, $page, $filter) {
         $new_dir = ($current_sort === $col && $current_dir === 'DESC') ? 'ASC' : 'DESC';
-        return '?tab='.urlencode($tab).'&sort='.urlencode($col).'&dir='.$new_dir.'&page=1';
+        $u = '?tab='.urlencode($tab).'&sort='.urlencode($col).'&dir='.$new_dir.'&page=1';
+        if (!empty($filter)) $u .= '&filter='.urlencode($filter);
+        return $u;
     }
     function sort_icon($col, $current_sort, $current_dir) {
         if ($current_sort !== $col) return '<span class="sort-icon">⇕</span>';
@@ -437,12 +439,12 @@ function showMsg(el, text, type) {
     }
     ?>
     <thead><tr>
-        <th class="th-sort <?php echo $sort==='timestamp'?'active':''; ?>"><a href="<?php echo sort_url('timestamp',$sort,$dir,$tab,$page); ?>" style="text-decoration:none;color:inherit">Date<?php echo sort_icon('timestamp',$sort,$dir); ?></a></th>
-        <th class="th-sort <?php echo $sort==='username'?'active':''; ?>"><a href="<?php echo sort_url('username',$sort,$dir,$tab,$page); ?>" style="text-decoration:none;color:inherit">Utilisateur<?php echo sort_icon('username',$sort,$dir); ?></a></th>
-        <th class="th-sort <?php echo $sort==='action'?'active':''; ?>"><a href="<?php echo sort_url('action',$sort,$dir,$tab,$page); ?>" style="text-decoration:none;color:inherit">Action<?php echo sort_icon('action',$sort,$dir); ?></a></th>
-        <th class="th-sort <?php echo $sort==='source'?'active':''; ?>"><a href="<?php echo sort_url('source',$sort,$dir,$tab,$page); ?>" style="text-decoration:none;color:inherit">Source<?php echo sort_icon('source',$sort,$dir); ?></a></th>
-        <th class="th-sort <?php echo $sort==='details'?'active':''; ?>"><a href="<?php echo sort_url('details',$sort,$dir,$tab,$page); ?>" style="text-decoration:none;color:inherit">Details<?php echo sort_icon('details',$sort,$dir); ?></a></th>
-        <th class="th-sort <?php echo $sort==='ip_address'?'active':''; ?>"><a href="<?php echo sort_url('ip_address',$sort,$dir,$tab,$page); ?>" style="text-decoration:none;color:inherit">IP<?php echo sort_icon('ip_address',$sort,$dir); ?></a></th>
+        <th class="th-sort <?php echo $sort==='timestamp'?'active':''; ?>"><a href="<?php echo sort_url('timestamp',$sort,$dir,$tab,$page,$filter); ?>" style="text-decoration:none;color:inherit">Date<?php echo sort_icon('timestamp',$sort,$dir); ?></a></th>
+        <th class="th-sort <?php echo $sort==='username'?'active':''; ?>"><a href="<?php echo sort_url('username',$sort,$dir,$tab,$page,$filter); ?>" style="text-decoration:none;color:inherit">Utilisateur<?php echo sort_icon('username',$sort,$dir); ?></a></th>
+        <th class="th-sort <?php echo $sort==='action'?'active':''; ?>"><a href="<?php echo sort_url('action',$sort,$dir,$tab,$page,$filter); ?>" style="text-decoration:none;color:inherit">Action<?php echo sort_icon('action',$sort,$dir); ?></a></th>
+        <th class="th-sort <?php echo $sort==='source'?'active':''; ?>"><a href="<?php echo sort_url('source',$sort,$dir,$tab,$page,$filter); ?>" style="text-decoration:none;color:inherit">Source<?php echo sort_icon('source',$sort,$dir); ?></a></th>
+        <th class="th-sort <?php echo $sort==='details'?'active':''; ?>"><a href="<?php echo sort_url('details',$sort,$dir,$tab,$page,$filter); ?>" style="text-decoration:none;color:inherit">Details<?php echo sort_icon('details',$sort,$dir); ?></a></th>
+        <th class="th-sort <?php echo $sort==='ip_address'?'active':''; ?>"><a href="<?php echo sort_url('ip_address',$sort,$dir,$tab,$page,$filter); ?>" style="text-decoration:none;color:inherit">IP<?php echo sort_icon('ip_address',$sort,$dir); ?></a></th>
         <th>Ville</th>
     </tr></thead>
     <tbody>
