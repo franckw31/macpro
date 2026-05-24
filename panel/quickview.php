@@ -745,9 +745,18 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
         <?php echo $is_registered ? 'Modifier mon inscription' : "S'inscrire"; ?>
       </button>
-      <a class="v2-btn filled" href="/panel/challenge_rank.php<?php echo $uid_q; ?>" style="background:var(--orange,#ff9d3b);color:#fff;text-decoration:none">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
-        Challenge
+      <a class="v2-btn filled" href="/panel/challenge_rank.php<?php echo $uid_q; ?>" style="background:var(--orange,#ff9d3b);color:#fff;text-decoration:none;flex-direction:column;align-items:center;gap:2px">
+        <span style="display:flex;align-items:center;gap:6px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+          Challenge
+        </span>
+        <span style="font-size:11px;font-weight:600;opacity:0.9">
+          <?php if ($my_challenge_rank !== null): ?>
+            #<?php echo $my_challenge_rank; ?> / <?php echo $my_challenge_total; ?>
+          <?php else: ?>
+            —
+          <?php endif; ?>
+        </span>
       </a>
       <?php endif; ?>
     </div>
