@@ -32,9 +32,9 @@ try {
         exit;
     }
 
-    // find organizer
+    // find organizer (skip real DB lookup when simulating under cli-server)
     $organizer = 0;
-    if ($id_activite) {
+    if ($id_activite && php_sapi_name() !== 'cli-server') {
         $res = mysqli_query($con, 'SELECT * FROM activite WHERE `id-activite`=' . intval($id_activite) . ' LIMIT 1');
         if ($res && ($r = mysqli_fetch_assoc($res))) {
             foreach (array('id-membre','id_membre','idmember','id') as $c) {
