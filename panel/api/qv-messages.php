@@ -197,10 +197,17 @@ if ($action === 'send') {
     $pseudo_esc = mysqli_real_escape_string($con, $my_pseudo);
     $lu_orga = ($my_role === 'organisateur') ? 1 : 0;
     $lu_joueur = ($my_role === 'joueur') ? 1 : 0;
-    mysqli_query($con, "INSERT INTO qv_messages (id_activite,id_expediteur,pseudo_exp,role,message,lu_orga,lu_joueur) VALUES (".intval($id_activite).",".intval($my_id).",'".$pseudo_esc."','".$role_esc."','".$msg_esc."',".$lu_orga.",".$lu_joueur.")");
+    // determine destinataire: joueur -> organisateur; organisateur must provide target player id in payload
+    if ($my_role === 'joueur') {
+        $dest_id = intval($organizer_id);
+    } else {
+        $dest_id = intval($body['to'] ?? $body['id_destinataire'] ?? 0);
+        if (!$dest_id) { echo json_encode(['ok'=>false,'err'=>'no_dest']); exit; }
+    }
+    // insert with destinataire and unread flag
+    mysqli_query($con, "INSERT INTO qv_messages (id_activite,id_expediteur,pseudo_exp,role,message,id_destinataire,lu_to_recipient,lu_orga,lu_joueur) VALUES (".intval($id_activite).",".intval($my_id).",'".$pseudo_esc."','".$role_esc."','".$msg_esc."',".intval($dest_id).",0,".$lu_orga.",".$lu_joueur.")");
     $new_id = (int)mysqli_insert_id($con);
-    if ($my_role === 'organisateur') mysqli_query($con, "UPDATE qv_messages SET lu_orga=1 WHERE id_activite=".intval($id_activite)." AND role='joueur'");
-    echo json_encode(['ok'=>true,'id'=>$new_id,'msg'=>['id'=>$new_id,'from'=>$my_pseudo,'role'=>$my_role,'mine'=>true,'msg'=>htmlspecialchars($msg_raw,ENT_QUOTES,'UTF-8'),'at'=>date('Y-m-d H:i:s'),'unread'=>false]]);
+    echo json_encode(['ok'=>true,'id'=>$new_id,'msg'=>['id'=>$new_id,'from'=>$my_pseudo,'from_id'=>$my_id,'role'=>$my_role,'mine'=>true,'msg'=>htmlspecialchars($msg_raw,ENT_QUOTES,'UTF-8'),'at'=>date('Y-m-d H:i:s'),'unread'=>false]]);
     exit;
 }
 
