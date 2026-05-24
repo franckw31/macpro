@@ -19,12 +19,10 @@ try {
     // Detect whether qv_messages has recipient/read columns in this schema
     $has_dest = false;
     $has_lu = false;
-    if (php_sapi_name() !== 'cli-server') {
-        $hc = mysqli_query($con, "SHOW COLUMNS FROM `qv_messages` LIKE 'id_destinataire'");
-        if ($hc && mysqli_num_rows($hc)) $has_dest = true;
-        $hl = mysqli_query($con, "SHOW COLUMNS FROM `qv_messages` LIKE 'lu_to_recipient'");
-        if ($hl && mysqli_num_rows($hl)) $has_lu = true;
-    }
+    $hc = mysqli_query($con, "SHOW COLUMNS FROM `qv_messages` LIKE 'id_destinataire'");
+    if ($hc && mysqli_num_rows($hc)) $has_dest = true;
+    $hl = mysqli_query($con, "SHOW COLUMNS FROM `qv_messages` LIKE 'lu_to_recipient'");
+    if ($hl && mysqli_num_rows($hl)) $has_lu = true;
 
     $raw = file_get_contents('php://input');
     $body = json_decode($raw, true) ?: array();
