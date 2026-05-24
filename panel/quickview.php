@@ -638,6 +638,7 @@ a{color:inherit;text-decoration:none}
 .qvm-send:active{opacity:.7}
 .qvm-send svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .qvm-login-hint{font-size:11px;color:rgba(255,255,255,0.35);text-align:center;padding:4px 0}
+.qvm-input:empty::before,.qvm-input[data-empty]::before{content:attr(data-placeholder);color:rgba(255,255,255,0.28);pointer-events:none;position:absolute;left:10px;top:8px}
 </style>
 </head>
 <body>
