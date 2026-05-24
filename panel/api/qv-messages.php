@@ -60,13 +60,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     $action = trim($_GET['action'] ?? 'fetch');
 }
+session_start();
 
 $id_activite = (int)($body['id_activite'] ?? $_GET['id_activite'] ?? 0);
 if (!$id_activite) { echo json_encode(['ok'=>false,'err'=>'no_act']); exit; }
 
 // ── Récupérer l'organisateur de cette activité ────────────────────────────────
 $org_row = mysqli_fetch_assoc(mysqli_query($con,
-    "SELECT COALESCE(`id-membre`,`id_membre`) AS org_id FROM activite WHERE `id-activite`=$id_activite LIMIT 1"));
 $organizer_id = $org_row ? (int)$org_row['org_id'] : 0;
 
 // Rôle de l'utilisateur courant
