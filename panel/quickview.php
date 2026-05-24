@@ -1071,6 +1071,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         thread.innerHTML = html;
         thread.scrollTop = 0;
         idxEl.textContent = (currentIdx + 1) + '/' + msgsState.length;
+        // hide index when there's only one message
+        idxEl.style.display = (msgsState.length > 1) ? 'inline-block' : 'none';
         prevBtn.disabled = (currentIdx <= 0);
         nextBtn.disabled = (currentIdx >= msgsState.length - 1);
         // badge: show number of unread messages to player
