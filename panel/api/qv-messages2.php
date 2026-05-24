@@ -96,7 +96,7 @@ try {
         if ($my_role === 'joueur') $dest = intval($organizer); else $dest = intval($body['to'] ?? $body['id_destinataire'] ?? 0);
         if (!$dest) { echo json_encode(array('ok'=>false,'err'=>'no_dest')); exit; }
         $pseudo = mysqli_real_escape_string($con,$me_pseudo);
-        $ins = 'INSERT INTO qv_messages (id_activite,id_expediteur,pseudo_exp,role,message,id_destinataire,lu_to_recipient) VALUES (' . intval($id_activite) . ',' . $me . ',"' . $pseudo . '","' . mysqli_real_escape_string($con,$my_role) . '","' . $msg_esc . '",' . intval($dest) . ',0)';
+            $ins = 'INSERT INTO qv_messages (id_activite,id_expediteur,pseudo_exp,role,message,id_destinataire' . ($has_lu ? ',lu_to_recipient' : '') . ') VALUES (' . intval($id_activite) . ',' . $me . ',"' . $pseudo . '","' . mysqli_real_escape_string($con,$my_role) . '","' . $msg_esc . '",' . intval($dest) . ($has_lu ? ',0' : '') . ')';
         mysqli_query($con,$ins);
         echo json_encode(array('ok'=>true,'id'=>(int)mysqli_insert_id($con))); exit;
     }
