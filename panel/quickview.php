@@ -662,6 +662,9 @@ a{color:inherit;text-decoration:none}
 .qvm-nav{background:transparent;border:0;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:4px;border-radius:6px}
 .qvm-nav:disabled{opacity:0.35;pointer-events:none;color:rgba(255,255,255,0.28)}
 .qvm-index{font-size:11px;color:var(--muted)}
+
+/* Organizer name on the title row */
+.qvm-orga-right{font-size:11px;color:var(--muted);font-weight:700;margin-left:10px;white-space:nowrap}
 </style>
 </head>
 <body>
