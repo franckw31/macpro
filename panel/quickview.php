@@ -1001,30 +1001,29 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     <div class="qvm-card" id="qvm-card">
       <div class="qvm-header">
         <div class="qvm-title-row">
-            <div class="qvm-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;min-width:0;">
-              <div class="qvm-title" style="flex:1;min-width:0">Message à l'organisateur</div>
-              <div class="qvm-orga-right" id="qvm-orga-name"><?php echo !empty($serverActivity['organizer']) ? htmlspecialchars($serverActivity['organizer']) : 'Organisateur'; ?></div>
-            </div>
+          <div class="qvm-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <button id="qvm-prev" class="qvm-nav" title="Précédent" style="background:transparent;border:0;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;">‹</button>
-          <span id="qvm-index" style="font-size:11px;color:var(--muted)">0/0</span>
-          <button id="qvm-next" class="qvm-nav" title="Suivant" style="background:transparent;border:0;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;">›</button>
+          <div class="qvm-title-wrap">
+            <div class="qvm-title">Message à l'organisateur</div>
+            <div class="qvm-orga-right" id="qvm-orga-name"><?php echo !empty($serverActivity['organizer']) ? htmlspecialchars($serverActivity['organizer']) : 'Organisateur'; ?></div>
+          </div>
+        </div>
+        <div class="qvm-controls">
+          <button id="qvm-prev" class="qvm-nav" title="Précédent">‹</button>
+          <span id="qvm-index" class="qvm-index">0/0</span>
+          <button id="qvm-next" class="qvm-nav" title="Suivant">›</button>
           <span class="qvm-badge" id="qvm-badge">!</span>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <div class="qvm-thread" id="qvm-thread" style="flex:1;min-width:0;max-height:84px;overflow:hidden">
+      <div class="qvm-compose-row">
+        <div class="qvm-thread" id="qvm-thread">
           <div class="qvm-empty" id="qvm-empty">Chargement…</div>
         </div>
-        <div class="qvm-compose" style="flex-shrink:0;display:flex;align-items:center;gap:6px">
+        <div class="qvm-compose">
           <div class="qvm-input" id="qvm-input" contenteditable="true" role="textbox"
             aria-multiline="false" aria-label="Votre message"
             data-placeholder="Votre message…"
-            style="position:relative;min-width:180px;max-width:260px"
             onkeydown="qvmKeyDown(event)"
             oninput="qvmInputChanged(this)"></div>
           <button class="qvm-send" id="qvm-send-btn" onclick="qvmSend()" title="Envoyer">
