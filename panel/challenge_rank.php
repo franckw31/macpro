@@ -174,9 +174,7 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
         .pts{width:80px;text-align:left}
         .rank{width:36px;text-align:left}
         .who{flex:1;display:flex;align-items:center;justify-content:flex-start;gap:8px}
-        .smallcol{width:48px;text-align:left;color:#9fd;font-size:13px}
-        /* Narrow the last column (Parts) to save horizontal space */
-        .smallcol:last-child { width:40px; }
+        .smallcol{width:32px;text-align:left;color:#9fd;font-size:13px}
     </style>
 </head>
 <body>
@@ -189,10 +187,10 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
             <div style="width:36px"></div>
             <div style="flex:1">Pseudo</div>
             <div style="width:80px;">POINTS</div>
-            <div style="width:48px;">ITM</div>
-            <div style="width:48px;">WIN</div>
-            <div style="width:40px;">PART</div>
-            <div style="width:56px;">JETONS</div>
+            <div style="width:32px;">ITM</div>
+            <div style="width:32px;">WIN</div>
+            <div style="width:32px;">PART</div>
+            <div style="width:48px;">JETONS</div>
         </div>
         <!-- detected challenge message intentionally hidden -->
         <div class="list">
@@ -226,7 +224,7 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
                     echo '<div class="smallcol">'.intval($r['itm']).'</div>';
                     echo '<div class="smallcol">'.intval($r['vic']).'</div>';
                     echo '<div class="smallcol">'.intval($r['parts']).'</div>';
-                    echo '<div class="smallcol" style="width:56px;color:#ffd97d">'.number_format((int)$jetons_val,0,',',' ').'</div>';
+                    echo '<div class="smallcol" style="width:48px;color:#ffd97d">'.number_format((int)$jetons_val,0,',',' ').'</div>';
                     echo '</div>';
                 }
             }
