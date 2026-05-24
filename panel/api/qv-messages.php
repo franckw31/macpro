@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Mini-messagerie Joueur ↔ Organisateur
@@ -5,6 +6,16 @@
  * POST {action:"send", id_activite, message}  → envoi
  * POST {action:"mark_read", id_activite}       → marquer lu (côté orga)
  */
+if (PHP_VERSION_ID >= 70300) {
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'domain' => '.viendez.com',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+}
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
