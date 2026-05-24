@@ -9,6 +9,11 @@ if (PHP_VERSION_ID >= 70300 && session_status() !== PHP_SESSION_ACTIVE) {
         'samesite' => 'Lax'
     ]);
 }
+// When running under PHP built-in webserver for local simulation, skip real DB connect
+if (php_sapi_name() === 'cli-server') {
+    $con = (object)array();
+    return;
+}
 $conn = mysqli_connect('localhost', 'root', 'Kookies7*', 'dbs9616600');
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
