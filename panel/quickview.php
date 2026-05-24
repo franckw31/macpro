@@ -666,6 +666,13 @@ a{color:inherit;text-decoration:none}
 .qvm-input{position:relative;min-width:180px;max-width:260px}
 .qvm-index{font-size:11px;color:var(--muted)}
 
+/* Ensure compose sits on same row as the displayed message */
+.qvm-compose-row{display:flex;align-items:center;gap:8px}
+.qvm-thread{display:flex;align-items:center;flex:1;min-width:0;max-height:84px;overflow:hidden}
+.qvm-bubble{max-width:60%}
+.qvm-bubble.mine{max-width:60%}
+.qvm-compose{flex-shrink:0;width:320px;display:flex;align-items:center;gap:6px}
+
 /* Navigation buttons for mini-messagerie */
 .qvm-nav{background:transparent;border:0;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:4px;border-radius:6px}
 .qvm-nav:disabled{opacity:0.35;pointer-events:none;color:rgba(255,255,255,0.28)}
