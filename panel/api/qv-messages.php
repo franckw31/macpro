@@ -62,7 +62,6 @@ try {
     }
 
     $id_activite = (int) ($body['id_activite'] ?? $_GET['id_activite'] ?? $_REQUEST['uid'] ?? $_GET['uid'] ?? 0);
-    if (!$id_activite && $action !== 'unknown') { /* require activity for most actions */ }
 
     // find organizer id for this activity
     $organizer_id = 0;
