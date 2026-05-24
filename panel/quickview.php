@@ -768,7 +768,7 @@ function v2NavActivity(dir){
 
     <!-- Buttons -->
     <div class="v2-actions">
-      <button class="v2-btn outline" id="v2-details-btn">
+      <button class="v2-btn filled" id="v2-details-btn" style="background:#1a7a3a;color:#fff">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         Infos partie
       </button>
