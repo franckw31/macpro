@@ -121,4 +121,3 @@ if ($action === 'mark_read' && $my_role === 'organisateur') {
 }
 
 echo json_encode(['ok'=>false,'err'=>'unknown_action']);
-             ORDER BY created_at ASC
