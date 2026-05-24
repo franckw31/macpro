@@ -76,7 +76,12 @@ if (isset($_GET['logheaders'])) {
     exit;
 }
 
-session_start();
+// Ensure session uses client's session id (if provided) before starting
+$cookieName = session_name();
+if (!empty($_COOKIE[$cookieName]) && session_status() !== PHP_SESSION_ACTIVE) {
+    @session_id($_COOKIE[$cookieName]);
+}
+@session_start();
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 
