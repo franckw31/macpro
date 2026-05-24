@@ -1049,7 +1049,7 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     (function(){
       var ACT_ID = <?php echo intval($serverActivity['id']); ?>;
       var MY_ROLE = '<?php echo ($organizer_id && (int)$_SESSION['id'] === (int)$organizer_id) ? 'organisateur' : 'joueur'; ?>';
-      var API = '/panel/api/qv-messages2.php';
+      var API = '/panel/api/qv-messages.php';
       var thread = document.getElementById('qvm-thread');
       var emptyEl = document.getElementById('qvm-empty');
       var badge = document.getElementById('qvm-badge');
