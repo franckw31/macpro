@@ -57,7 +57,7 @@ if (isset($_GET['debugsession'])) {
 // Debug: log raw request headers and cookies to /tmp/qv-headers.log
 if (isset($_GET['logheaders'])) {
     header('Content-Type: application/json; charset=utf-8');
-    $hdrs = function_exists('getallheaders') ? getallheaders() : [];
+    $hdrs = function_exists('getallheaders') ? getallheaders() : array();
     // Ensure session is started so $_SESSION is populated
     if (session_status() !== PHP_SESSION_ACTIVE) {
         // If cookie contains session id, force it before starting session
@@ -89,15 +89,15 @@ if (isset($_GET['logheaders'])) {
         $sessInfo['session_file_exists'] = false;
     }
 
-    $out = [
+    $out = array(
         'ok' => true,
         'request_uri' => $_SERVER['REQUEST_URI'] ?? '',
         'headers' => $hdrs,
         'http_cookie' => $_SERVER['HTTP_COOKIE'] ?? '',
         '_COOKIE' => $_COOKIE,
-        '_SESSION' => isset($_SESSION) ? $_SESSION : [],
+        '_SESSION' => isset($_SESSION) ? $_SESSION : array(),
         'session_info' => $sessInfo
-    ];
+    );
     echo json_encode($out);
     exit;
 }
@@ -141,7 +141,7 @@ $my_pseudo = htmlspecialchars($_SESSION['login'] ?? 'Joueur', ENT_QUOTES, 'UTF-8
 $body   = [];
 $action = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $body   = json_decode(file_get_contents('php://input'), true) ?: [];
+    $body   = json_decode(file_get_contents('php://input'), true) ?: array();
     $action = trim($body['action'] ?? ($_POST['action'] ?? ''));
 } else {
     $action = trim($_GET['action'] ?? 'fetch');
