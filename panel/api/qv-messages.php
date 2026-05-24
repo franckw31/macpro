@@ -30,15 +30,17 @@ if (isset($_GET['debugsession'])) {
 
 // Debug: log raw request headers and cookies to /tmp/qv-headers.log
 if (isset($_GET['logheaders'])) {
-    header('Content-Type: text/plain; charset=utf-8');
+    header('Content-Type: application/json; charset=utf-8');
     $hdrs = function_exists('getallheaders') ? getallheaders() : [];
-    $entry = date('c') . " REQUEST_URI: " . ($_SERVER['REQUEST_URI'] ?? '') . "\n";
-    $entry .= "HEADERS: " . json_encode($hdrs) . "\n";
-    $entry .= "HTTP_COOKIE: " . ($_SERVER['HTTP_COOKIE'] ?? '') . "\n";
-    $entry .= "_COOKIE: " . json_encode($_COOKIE) . "\n";
-    $entry .= "_SESSION: " . json_encode(isset($_SESSION) ? $_SESSION : []) . "\n\n";
-    @file_put_contents('/tmp/qv-headers.log', $entry, FILE_APPEND);
-    echo json_encode(['ok'=>true,'logged'=>true]);
+    $out = [
+        'ok' => true,
+        'request_uri' => $_SERVER['REQUEST_URI'] ?? '',
+        'headers' => $hdrs,
+        'http_cookie' => $_SERVER['HTTP_COOKIE'] ?? '',
+        '_COOKIE' => $_COOKIE,
+        '_SESSION' => isset($_SESSION) ? $_SESSION : []
+    ];
+    echo json_encode($out);
     exit;
 }
 
