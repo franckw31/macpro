@@ -83,6 +83,13 @@ try {
             $dest = intval($organizer);
         } else {
             $dest = intval($body['to'] ?? $body['id_destinataire'] ?? 0);
+            // If organizer didn't send explicit destination, try to infer from last non-organizer sender
+            if ($has_dest && !$dest) {
+                $lastq = mysqli_query($con, 'SELECT id_expediteur FROM qv_messages WHERE id_activite=' . intval($id_activite) . ' AND id_expediteur!=' . $me . ' ORDER BY created_at DESC LIMIT 1');
+                if ($lastq && ($lr = mysqli_fetch_assoc($lastq))) {
+                    $dest = (int)$lr['id_expediteur'];
+                }
+            }
         }
         if ($has_dest && !$dest) { echo json_encode(['ok'=>false,'err'=>'no_dest']); exit; }
         $pseudo = mysqli_real_escape_string($con,$me_pseudo);
