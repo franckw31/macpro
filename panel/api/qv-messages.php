@@ -1,23 +1,4 @@
 <?php
-// API: mini-messagerie privée joueur <-> organisateur
-// Actions:
-// GET  ?action=fetch&id_activite=X
-// POST {action:'send', id_activite, message, to?}
-// POST {action:'delete', id}
-// POST {action:'mark_read', id_activite}
-
-ini_set('session.name', 'PHPSESSID');
-if (PHP_VERSION_ID >= 70300) {
-    session_set_cookie_params([
-        'lifetime' => 0,
-        'path' => '/',
-        'domain' => '.viendez.com',
-        'secure' => true,
-        'httponly' => true,
-        'samesite' => 'Lax'
-    ]);
-}
-<?php
 // API: mini-messagerie privée (private between sender and recipient)
 
 ini_set('session.name', 'PHPSESSID');
