@@ -205,7 +205,14 @@ function esc($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
                     echo '<div class="row">';
                     echo '<div class="rank">' . $i . '</div>';
                     $is_me = (intval($r['mid']) === intval($uid));
-                    $display_name = $is_me ? ('<span style="color:#16a34a">' . esc($r['pseudo']) . '</span>') : esc($r['pseudo']);
+                    $few_parts = intval($r['parts']) < 3;
+                    if ($is_me) {
+                        $display_name = '<span style="color:#16a34a">' . esc($r['pseudo']) . '</span>';
+                    } elseif ($few_parts) {
+                        $display_name = '<span style="color:#ff5c5c">' . esc($r['pseudo']) . '</span>';
+                    } else {
+                        $display_name = esc($r['pseudo']);
+                    }
                     echo '<div class="who"><div class="avatar"><img src="'.esc($photo).'" alt="" style="width:100%;height:100%;object-fit:cover"></div><div><div class="name">' . $display_name . '</div></div></div>';
                     // Build link to activities that contributed to points
                     $link_params = '/panel/activities_points.php?uid=' . intval($r['mid']);
