@@ -1,19 +1,22 @@
-// DEBUG SESSION/COOKIE
+<?php
+ini_set('session.name', 'PHPSESSID');
 if (isset($_GET['debugsession'])) {
     header('Content-Type: text/plain; charset=utf-8');
-    echo "$_SESSION = "; print_r($_SESSION);
-    echo "\n$_COOKIE = "; print_r($_COOKIE);
+    if (PHP_VERSION_ID >= 70300) {
+        session_set_cookie_params([
+            'lifetime' => 0,
+            'path' => '/',
+            'domain' => '.viendez.com',
+            'secure' => true,
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
+    }
+    session_start();
+    echo '$_SESSION = '; print_r($_SESSION);
+    echo "\n\$_COOKIE = "; print_r($_COOKIE);
     exit;
 }
-ini_set('session.name', 'PHPSESSID');
-
-<?php
-/**
- * Mini-messagerie Joueur ↔ Organisateur
- * GET  ?action=fetch&id_activite=X   → liste des messages
- * POST {action:"send", id_activite, message}  → envoi
- * POST {action:"mark_read", id_activite}       → marquer lu (côté orga)
- */
 if (PHP_VERSION_ID >= 70300) {
     session_set_cookie_params([
         'lifetime' => 0,
@@ -57,39 +60,6 @@ $action = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $body   = json_decode(file_get_contents('php://input'), true) ?: [];
     $action = trim($body['action'] ?? ($_POST['action'] ?? ''));
-
-<?php
-ini_set('session.name', 'PHPSESSID');
-if (isset($_GET['debugsession'])) {
-    header('Content-Type: text/plain; charset=utf-8');
-    if (PHP_VERSION_ID >= 70300) {
-        session_set_cookie_params([
-            'lifetime' => 0,
-            'path' => '/',
-            'domain' => '.viendez.com',
-            'secure' => true,
-            'httponly' => true,
-            'samesite' => 'Lax'
-        ]);
-    }
-    session_start();
-    echo '$_SESSION = '; print_r($_SESSION);
-    echo "\n\$_COOKIE = "; print_r($_COOKIE);
-    exit;
-}
-if (PHP_VERSION_ID >= 70300) {
-    session_set_cookie_params([
-        'lifetime' => 0,
-        'path' => '/',
-        'domain' => '.viendez.com',
-        'secure' => true,
-        'httponly' => true,
-        'samesite' => 'Lax'
-    ]);
-}
-session_start();
-header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: no-store');
              ORDER BY created_at ASC
              LIMIT 100");
     } else {
