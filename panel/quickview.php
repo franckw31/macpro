@@ -639,7 +639,7 @@ a{color:inherit;text-decoration:none}
 .qvm-title-row{display:flex;align-items:center;gap:7px}
 .qvm-icon{color:#0a84ff;display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex-shrink:0}
 .qvm-title{font-size:12px;font-weight:800;color:#fff;letter-spacing:-0.01em}
-.qvm-sub{font-size:8px;color:rgba(255,255,255,0.45);font-weight:500;margin-top:1px}
+.qvm-sub{display:none}
 .qvm-badge{background:#ff453a;color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:20px;line-height:1.4;display:none}
 .qvm-thread{display:flex;flex-direction:column;gap:5px;max-height:120px;overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .qvm-thread::-webkit-scrollbar{display:none}
