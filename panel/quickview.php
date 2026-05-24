@@ -1059,6 +1059,23 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       var msgsState = [];
       var currentIdx = -1;
       var inputEl = document.getElementById('qvm-input');
+      var composeEl = document.querySelector('.qvm-compose');
+      // reply target state (id of user to reply to)
+      var replyTarget = 0;
+      // create a small reply bar above the input to show current reply target
+      var replyBar = document.createElement('div');
+      replyBar.id = 'qvm-reply-bar';
+      replyBar.style.display = 'none';
+      replyBar.style.padding = '6px 8px';
+      replyBar.style.fontSize = '13px';
+      replyBar.style.color = '#444';
+      replyBar.style.borderTop = '1px solid rgba(0,0,0,0.06)';
+      replyBar.style.background = 'rgba(0,0,0,0.02)';
+      replyBar.innerHTML = '<span id="qvm-reply-text"></span> <button id="qvm-reply-clear" title="Annuler" style="margin-left:8px;padding:2px 6px;border-radius:4px;border:1px solid rgba(0,0,0,0.06);background:#fff;">✕</button>';
+      if (composeEl) composeEl.insertBefore(replyBar, composeEl.firstChild);
+      function setReply(id,name){ replyTarget = parseInt(id)||0; if (replyTarget>0){ document.getElementById('qvm-reply-text').textContent = 'Répondre à ' + name; replyBar.style.display = 'block'; inputEl.focus(); } else { clearReply(); } }
+      function clearReply(){ replyTarget = 0; if (document.getElementById('qvm-reply-text')) document.getElementById('qvm-reply-text').textContent = ''; if (replyBar) replyBar.style.display = 'none'; }
+      document.addEventListener('click', function(e){ if (e.target && e.target.id === 'qvm-reply-clear') { clearReply(); } });
       var lastCount = 0;
 
       function fmtTime(at) {
@@ -1090,7 +1107,8 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         if (currentIdx < 0 || !msgsState.length) return renderMsgs(msgsState);
         var m = msgsState[currentIdx];
         var cls = m.mine ? 'mine' : 'other';
-        var html = '<div class="qvm-bubble ' + cls + '" data-qvm-id="'+m.id+'">' + (m.mine ? '' : '<span class="qvm-sender">' + m.from + '</span>') + m.msg + '<span class="qvm-time">' + fmtTime(m.at) + '</span>' + '</div>';
+        var dataTo = (m.from_id && !m.mine) ? ' data-to="'+m.from_id+'"' : '';
+        var html = '<div class="qvm-bubble ' + cls + '" data-qvm-id="'+m.id+'"' + dataTo + '>' + (m.mine ? '' : '<span class="qvm-sender">' + m.from + '</span>') + m.msg + '<span class="qvm-time">' + fmtTime(m.at) + '</span>' + '</div>';
         thread.innerHTML = html;
         // attach long-press delete handler
         (function(){
@@ -1117,6 +1135,15 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
           bubble.addEventListener('mouseleave', cancel);
           bubble.addEventListener('touchend', cancel);
           bubble.addEventListener('touchcancel', cancel);
+          // click on a message sets reply target when possible
+          bubble.addEventListener('click', function(ev){
+            var to = bubble.getAttribute('data-to');
+            if (to) {
+              var nameEl = bubble.querySelector('.qvm-sender');
+              var name = nameEl ? nameEl.textContent.trim() : '';
+              setReply(to, name || '');
+            }
+          });
         })();
         thread.scrollTop = 0;
         idxEl.textContent = (currentIdx + 1) + '/' + msgsState.length;
