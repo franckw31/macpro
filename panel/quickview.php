@@ -1219,17 +1219,19 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         if (!msg) return;
         var btn = document.getElementById('qvm-send-btn');
         btn.disabled = true;
+        var payload = {action:'send', id_activite:ACT_ID, message:msg, to: replyTarget};
         fetch(API, {
           method:'POST',
           credentials: 'include',
           headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({action:'send', id_activite:ACT_ID, message:msg})
+          body: JSON.stringify(payload)
         })
         .then(function(r){ return r.json(); })
         .then(function(d){
           btn.disabled = false;
           if (d.ok) {
             inputEl.textContent = '';
+            clearReply();
             fetchMsgs(true);
           } else {
             // show server-side message when available
