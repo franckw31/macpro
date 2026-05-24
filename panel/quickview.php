@@ -797,9 +797,9 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
             #<?php echo $my_challenge_rank; ?> / <?php echo $my_challenge_total; ?>
             <?php if ($my_challenge_variation !== null && $my_challenge_variation !== 0): ?>
               <?php if ($my_challenge_variation > 0): ?>
-                <span style="color:#4cff8a">▲<?php echo $my_challenge_variation; ?></span>
+                <span style="color:#4cff8a">▲+<?php echo $my_challenge_variation; ?></span>
               <?php else: ?>
-                <span style="color:#ff5c5c">▼<?php echo abs($my_challenge_variation); ?></span>
+                <span style="color:#ff5c5c">▼-<?php echo abs($my_challenge_variation); ?></span>
               <?php endif; ?>
             <?php elseif ($my_challenge_variation === 0): ?>
               <span style="opacity:0.6">—</span>
