@@ -258,35 +258,76 @@ $participants_href = $is_past ? '/panel/resultats.php' . $uid_q : '/panel/partic
 
 // ── Dernière partie : joueurs payés ──────────────────────────────────────────
 // ── Classement Challenge du joueur connecté ──────────────────────────────────
-$my_challenge_rank  = null;
-$my_challenge_total = null;
+$my_challenge_rank      = null;
+$my_challenge_total     = null;
+$my_challenge_rank_prev = null;
+$my_challenge_variation = null; // positive = monté, negative = descendu
 if (!empty($con) && !empty($_SESSION['id'])) {
   $_my_uid   = intval($_SESSION['id']);
   $_today    = date('Y-m-d');
   $_chq = @mysqli_query($con, "SELECT id_challenge FROM challenge WHERE '$_today' BETWEEN chal_deb AND chal_fin ORDER BY chal_deb DESC LIMIT 1");
   if ($_chq && ($_chr = mysqli_fetch_assoc($_chq))) {
     $_chal_id = intval($_chr['id_challenge']);
-    $_rkq = @mysqli_query($con, "
-      SELECT m.`id-membre` AS mid, COALESCE(SUM(p.points),0) AS pts
-      FROM membres m
-      JOIN participation p  ON p.`id-membre`   = m.`id-membre`
-      JOIN activite a       ON p.`id-activite` = a.`id-activite`
-      LEFT JOIN blackliste b ON m.`id-membre`  = b.id_membre
+
+    // Récupérer les 2 dernières parties comptabilisées du challenge
+    $_actq = @mysqli_query($con, "
+      SELECT a.`id-activite`, a.date_depart
+      FROM activite a
+      JOIN participation p ON p.`id-activite` = a.`id-activite`
       WHERE a.`id_challenge` = $_chal_id
-        AND b.id_membre IS NULL
-        AND p.`option` NOT IN ('None','Desinscrit')
+        AND p.classement = 1
         AND a.date_depart < '$_today'
-      GROUP BY m.`id-membre`
-      HAVING pts > 0
-      ORDER BY pts DESC
+      GROUP BY a.`id-activite`, a.date_depart
+      ORDER BY a.date_depart DESC
+      LIMIT 2
     ");
-    if ($_rkq) {
-      $_rk = 1;
-      while ($_rkr = mysqli_fetch_assoc($_rkq)) {
-        if (intval($_rkr['mid']) === $_my_uid) { $my_challenge_rank = $_rk; }
-        $_rk++;
+    $_act_ids = [];
+    if ($_actq) { while ($_ar = mysqli_fetch_assoc($_actq)) $_act_ids[] = (int)$_ar['id-activite']; }
+    $_last_act_id = $_act_ids[0] ?? null;
+    $_prev_act_id = $_act_ids[1] ?? null;
+
+    // Fonction interne : rang du joueur en excluant une activité
+    $fn_rank = function($exclude_act_id) use ($con, $_chal_id, $_today, $_my_uid) {
+      $excl = $exclude_act_id ? "AND a.`id-activite` != $exclude_act_id" : '';
+      $_rkq = @mysqli_query($con, "
+        SELECT m.`id-membre` AS mid, COALESCE(SUM(p.points),0) AS pts
+        FROM membres m
+        JOIN participation p  ON p.`id-membre`   = m.`id-membre`
+        JOIN activite a       ON p.`id-activite` = a.`id-activite`
+        LEFT JOIN blackliste b ON m.`id-membre`  = b.id_membre
+        WHERE a.`id_challenge` = $_chal_id
+          AND b.id_membre IS NULL
+          AND p.`option` NOT IN ('None','Desinscrit')
+          AND a.date_depart < '$_today'
+          $excl
+        GROUP BY m.`id-membre`
+        HAVING pts > 0
+        ORDER BY pts DESC
+      ");
+      $rank = null; $total = 0;
+      if ($_rkq) {
+        $i = 1;
+        while ($r = mysqli_fetch_assoc($_rkq)) {
+          if (intval($r['mid']) === $_my_uid) $rank = $i;
+          $i++;
+        }
+        $total = $i - 1;
       }
-      $my_challenge_total = $_rk - 1;
+      return ['rank' => $rank, 'total' => $total];
+    };
+
+    // Classement actuel (toutes les parties)
+    $_cur = $fn_rank(null);
+    $my_challenge_rank  = $_cur['rank'];
+    $my_challenge_total = $_cur['total'];
+
+    // Classement avant la dernière partie (exclure $_last_act_id)
+    if ($_last_act_id) {
+      $_prev = $fn_rank($_last_act_id);
+      $my_challenge_rank_prev = $_prev['rank'];
+      if ($my_challenge_rank !== null && $my_challenge_rank_prev !== null) {
+        $my_challenge_variation = $my_challenge_rank_prev - $my_challenge_rank; // positif = monté
+      }
     }
   }
 }
