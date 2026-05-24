@@ -172,7 +172,7 @@ if ($action === 'fetch') {
     mysqli_query($con, "UPDATE qv_messages SET lu_to_recipient=1 WHERE id_activite=".intval($id_activite)." AND id_destinataire=".intval($my_id).");
     $msgs = [];
     if ($q) while ($r = mysqli_fetch_assoc($q)) {
-        $msgs[] = [
+        $msgs[] = array(
             'id' => (int)$r['id'],
             'from' => htmlspecialchars($r['pseudo_exp'], ENT_QUOTES, 'UTF-8'),
             'from_id' => (int)$r['id_expediteur'],
@@ -181,7 +181,7 @@ if ($action === 'fetch') {
             'msg' => htmlspecialchars($r['message'], ENT_QUOTES, 'UTF-8'),
             'at' => $r['created_at'],
             'unread' => !((bool)$r['lu_to_recipient'])
-        ];
+        );
     }
     $unread_row = mysqli_fetch_assoc(mysqli_query($con, "SELECT COUNT(*) AS c FROM qv_messages WHERE id_activite=".intval($id_activite)." AND id_destinataire=".intval($my_id)." AND lu_to_recipient=0"));
     $unread = $unread_row ? (int)$unread_row['c'] : 0;
