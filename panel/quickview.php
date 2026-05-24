@@ -1,3 +1,10 @@
+// DEBUG SESSION/COOKIE
+if (isset($_GET['debugsession'])) {
+  echo '<pre style="background:#222;color:#fff;padding:10px;z-index:99999;position:relative;">';
+  echo '$_SESSION = ' . print_r($_SESSION, true) . "\n";
+  echo '$_COOKIE = ' . print_r($_COOKIE, true) . "\n";
+  echo '</pre>';
+}
 <?php
 if (PHP_VERSION_ID >= 70300) {
   session_set_cookie_params([
