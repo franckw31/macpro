@@ -6,6 +6,12 @@ if (!empty($_COOKIE[session_name()]) && session_status() !== PHP_SESSION_ACTIVE)
 @session_start();
 header('Content-Type: application/json; charset=utf-8');
 
+// For local simulation with PHP built-in server, allow setting a fake session via ?simulate_user=ID
+if (php_sapi_name() === 'cli-server' && !empty($_GET['simulate_user'])) {
+    $_SESSION['id'] = (int) $_GET['simulate_user'];
+    $_SESSION['login'] = $_GET['simulate_login'] ?? 'simuser';
+}
+
 try {
     require_once __DIR__ . '/../include/config.php';
     if (empty($con)) { echo json_encode(array('ok'=>false,'err'=>'db')); exit; }
