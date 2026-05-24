@@ -211,18 +211,18 @@ if ($action === 'send') {
     exit;
 }
 
-// DELETE a message (allowed for sender or organizer)
+// DELETE a message (allowed only for sender or recipient)
 if ($action === 'delete') {
     $mid = intval($body['id'] ?? 0);
     if (!$mid) { echo json_encode(['ok'=>false,'err'=>'no_id']); exit; }
     // fetch message
-    $mq = mysqli_query($con, "SELECT id, id_expediteur, role, id_activite FROM qv_messages WHERE id=".intval($mid)." LIMIT 1");
+    $mq = mysqli_query($con, "SELECT id, id_expediteur, id_destinataire, role, id_activite FROM qv_messages WHERE id=".intval($mid)." LIMIT 1");
     if (!$mq || mysqli_num_rows($mq) === 0) { echo json_encode(['ok'=>false,'err'=>'not_found']); exit; }
     $mrow = mysqli_fetch_assoc($mq);
     // permission: organizer for this activity or the original sender
     $can = false;
-    if ($my_role === 'organisateur') $can = true;
     if ((int)$mrow['id_expediteur'] === $my_id) $can = true;
+    if (!empty($mrow['id_destinataire']) && (int)$mrow['id_destinataire'] === $my_id) $can = true;
     if (!$can) { echo json_encode(['ok'=>false,'err'=>'forbidden']); exit; }
     // delete
     mysqli_query($con, "DELETE FROM qv_messages WHERE id=".intval($mid));
@@ -230,8 +230,9 @@ if ($action === 'delete') {
     exit;
 }
 
-if ($action === 'mark_read' && $my_role === 'organisateur') {
-    mysqli_query($con, "UPDATE qv_messages SET lu_orga=1 WHERE id_activite=".intval($id_activite));
+if ($action === 'mark_read') {
+    // mark all messages as read where current user is the recipient for this activity
+    mysqli_query($con, "UPDATE qv_messages SET lu_to_recipient=1 WHERE id_activite=".intval($id_activite)." AND id_destinataire=".intval($my_id));
     echo json_encode(['ok'=>true]); exit;
 }
 
