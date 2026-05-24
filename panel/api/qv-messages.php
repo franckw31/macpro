@@ -166,26 +166,24 @@ $my_role = ($my_id === $organizer_id) ? 'organisateur' : 'joueur';
 
 // Actions
 if ($action === 'fetch') {
-    if ($my_role === 'organisateur') {
-        $q = mysqli_query($con, "SELECT id, id_expediteur, pseudo_exp, role, message, lu_orga, lu_joueur, created_at FROM qv_messages WHERE id_activite=".intval($id_activite)." ORDER BY created_at ASC LIMIT 100");
-    } else {
-        $q = mysqli_query($con, "SELECT id, id_expediteur, pseudo_exp, role, message, lu_orga, lu_joueur, created_at FROM qv_messages WHERE id_activite=".intval($id_activite)." AND (id_expediteur=".intval($my_id)." OR role='organisateur') ORDER BY created_at ASC LIMIT 50");
-        // mark read for player
-        mysqli_query($con, "UPDATE qv_messages SET lu_joueur=1 WHERE id_activite=".intval($id_activite)." AND role='organisateur'");
-    }
+    // Only messages where the user is sender or recipient are visible
+    $q = mysqli_query($con, "SELECT id, id_expediteur, pseudo_exp, role, message, id_destinataire, lu_to_recipient, created_at FROM qv_messages WHERE id_activite=".intval($id_activite)." AND (id_expediteur=".intval($my_id)." OR id_destinataire=".intval($my_id).") ORDER BY created_at ASC LIMIT 200");
+    // mark read for messages where current user is the recipient
+    mysqli_query($con, "UPDATE qv_messages SET lu_to_recipient=1 WHERE id_activite=".intval($id_activite)." AND id_destinataire=".intval($my_id).");
     $msgs = [];
     if ($q) while ($r = mysqli_fetch_assoc($q)) {
         $msgs[] = [
             'id' => (int)$r['id'],
             'from' => htmlspecialchars($r['pseudo_exp'], ENT_QUOTES, 'UTF-8'),
+            'from_id' => (int)$r['id_expediteur'],
             'role' => $r['role'],
             'mine' => ((int)$r['id_expediteur'] === $my_id),
             'msg' => htmlspecialchars($r['message'], ENT_QUOTES, 'UTF-8'),
             'at' => $r['created_at'],
-            'unread' => ($my_role === 'joueur') ? !(bool)$r['lu_joueur'] : !(bool)$r['lu_orga']
+            'unread' => !((bool)$r['lu_to_recipient'])
         ];
     }
-    $unread_row = mysqli_fetch_assoc(mysqli_query($con, "SELECT COUNT(*) AS c FROM qv_messages WHERE id_activite=".intval($id_activite)." AND role='organisateur' AND lu_joueur=0"));
+    $unread_row = mysqli_fetch_assoc(mysqli_query($con, "SELECT COUNT(*) AS c FROM qv_messages WHERE id_activite=".intval($id_activite)." AND id_destinataire=".intval($my_id)." AND lu_to_recipient=0"));
     $unread = $unread_row ? (int)$unread_row['c'] : 0;
     echo json_encode(['ok'=>true,'msgs'=>$msgs,'my_role'=>$my_role,'unread'=>$unread,'organizer_id'=>$organizer_id]);
     exit;
