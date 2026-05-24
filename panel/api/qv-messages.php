@@ -34,6 +34,11 @@ if (isset($_GET['logheaders'])) {
     $hdrs = function_exists('getallheaders') ? getallheaders() : [];
     // Ensure session is started so $_SESSION is populated
     if (session_status() !== PHP_SESSION_ACTIVE) {
+        // If cookie contains session id, force it before starting session
+        $cookieName = session_name();
+        if (!empty($_COOKIE[$cookieName])) {
+            @session_id($_COOKIE[$cookieName]);
+        }
         @session_start();
     }
 
