@@ -57,30 +57,39 @@ $action = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $body   = json_decode(file_get_contents('php://input'), true) ?: [];
     $action = trim($body['action'] ?? ($_POST['action'] ?? ''));
-} else {
-    $action = trim($_GET['action'] ?? 'fetch');
+
+<?php
+ini_set('session.name', 'PHPSESSID');
+if (isset($_GET['debugsession'])) {
+    header('Content-Type: text/plain; charset=utf-8');
+    if (PHP_VERSION_ID >= 70300) {
+        session_set_cookie_params([
+            'lifetime' => 0,
+            'path' => '/',
+            'domain' => '.viendez.com',
+            'secure' => true,
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
+    }
+    session_start();
+    echo '$_SESSION = '; print_r($_SESSION);
+    echo "\n\$_COOKIE = "; print_r($_COOKIE);
+    exit;
+}
+if (PHP_VERSION_ID >= 70300) {
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'domain' => '.viendez.com',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
 }
 session_start();
-
-$id_activite = (int)($body['id_activite'] ?? $_GET['id_activite'] ?? 0);
-if (!$id_activite) { echo json_encode(['ok'=>false,'err'=>'no_act']); exit; }
-
-// ── Récupérer l'organisateur de cette activité ────────────────────────────────
-$org_row = mysqli_fetch_assoc(mysqli_query($con,
-$organizer_id = $org_row ? (int)$org_row['org_id'] : 0;
-
-// Rôle de l'utilisateur courant
-$my_role = ($my_id === $organizer_id) ? 'organisateur' : 'joueur';
-
-// ── Action : fetch ────────────────────────────────────────────────────────────
-if ($action === 'fetch') {
-    // Le joueur voit uniquement ses propres échanges avec l'orga
-    // L'orga voit tous les messages de cette activité
-    if ($my_role === 'organisateur') {
-        $q = mysqli_query($con,
-            "SELECT id, id_expediteur, pseudo_exp, role, message, lu_orga, lu_joueur, created_at
-             FROM qv_messages
-             WHERE id_activite=$id_activite
+header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-store');
              ORDER BY created_at ASC
              LIMIT 100");
     } else {
