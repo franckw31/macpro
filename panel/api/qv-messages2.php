@@ -84,8 +84,9 @@ try {
     exit;
 
 } catch (Throwable $e) {
-    @file_put_contents('/tmp/qv-errors.log', date('c') . 'CATCH: ' . $e->getMessage() . "\n", FILE_APPEND);
+    $log = date('c') . ' CATCH: ' . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine() . "\n" . $e->getTraceAsString() . "\n";
+    @file_put_contents('/tmp/qv-errors.log', $log, FILE_APPEND);
     http_response_code(500);
-    echo json_encode(array('ok'=>false,'err'=>'exception','msg'=>$e->getMessage()));
+    echo json_encode(array('ok'=>false,'err'=>'exception','msg'=>$e->getMessage(),'file'=>$e->getFile(),'line'=>$e->getLine()));
     exit;
 }
