@@ -6,11 +6,7 @@ if (!empty($_COOKIE[session_name()]) && session_status() !== PHP_SESSION_ACTIVE)
 @session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-// For local simulation with PHP built-in server, allow setting a fake session via ?simulate_user=ID
-if (php_sapi_name() === 'cli-server' && !empty($_GET['simulate_user'])) {
-    $_SESSION['id'] = (int) $_GET['simulate_user'];
-    $_SESSION['login'] = $_GET['simulate_login'] ?? 'simuser';
-}
+// No simulation hooks in production.
 
 try {
     require_once __DIR__ . '/../include/config.php';
@@ -35,19 +31,11 @@ try {
     $action = trim($body['action'] ?? $_POST['action'] ?? $_GET['action'] ?? 'fetch');
     $id_activite = (int) ($body['id_activite'] ?? $_GET['id_activite'] ?? 0);
 
-    // Debug endpoint: show session and cookies (for troubleshooting in browser)
-    if (isset($_GET['debugsession'])) {
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(array('ok'=>true,'_SESSION'=>isset($_SESSION)?$_SESSION:array(), '_COOKIE'=>$_COOKIE));
-        exit;
-    }
+    // Production: no debugsession endpoint exposed.
 
-    // find organizer (skip real DB lookup when simulating under cli-server)
+    // find organizer
     $organizer = 0;
-    if (php_sapi_name() === 'cli-server' && !empty($_GET['simulate_organizer'])) {
-        $organizer = (int) $_GET['simulate_organizer'];
-    }
-    if ($id_activite && php_sapi_name() !== 'cli-server') {
+    if ($id_activite) {
         $res = mysqli_query($con, 'SELECT * FROM activite WHERE `id-activite`=' . intval($id_activite) . ' LIMIT 1');
         if ($res && ($r = mysqli_fetch_assoc($res))) {
             foreach (array('id-membre','id_membre','idmember','id') as $c) {
