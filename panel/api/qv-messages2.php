@@ -34,6 +34,9 @@ try {
 
     // find organizer (skip real DB lookup when simulating under cli-server)
     $organizer = 0;
+    if (php_sapi_name() === 'cli-server' && !empty($_GET['simulate_organizer'])) {
+        $organizer = (int) $_GET['simulate_organizer'];
+    }
     if ($id_activite && php_sapi_name() !== 'cli-server') {
         $res = mysqli_query($con, 'SELECT * FROM activite WHERE `id-activite`=' . intval($id_activite) . ' LIMIT 1');
         if ($res && ($r = mysqli_fetch_assoc($res))) {
