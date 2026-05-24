@@ -1077,8 +1077,34 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
         if (currentIdx < 0 || !msgsState.length) return renderMsgs(msgsState);
         var m = msgsState[currentIdx];
         var cls = m.mine ? 'mine' : 'other';
-        var html = '<div class="qvm-bubble ' + cls + '">' + (m.mine ? '' : '<span class="qvm-sender">' + m.from + '</span>') + m.msg + '<span class="qvm-time">' + fmtTime(m.at) + '</span>' + '</div>';
+        var html = '<div class="qvm-bubble ' + cls + '" data-qvm-id="'+m.id+'">' + (m.mine ? '' : '<span class="qvm-sender">' + m.from + '</span>') + m.msg + '<span class="qvm-time">' + fmtTime(m.at) + '</span>' + '</div>';
         thread.innerHTML = html;
+        // attach long-press delete handler
+        (function(){
+          var bubble = thread.querySelector('.qvm-bubble');
+          if (!bubble) return;
+          var msgId = bubble.getAttribute('data-qvm-id');
+          var longTimer = null;
+          var start = function(e){
+            e.preventDefault && e.preventDefault();
+            longTimer = setTimeout(function(){
+              // on long press
+              var ok = confirm('Supprimer ce message ?');
+              if (!ok) return;
+              fetch(API, {method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'delete', id:msgId, id_activite:ACT_ID})})
+                .then(function(r){ return r.json(); })
+                .then(function(d){ if (d && d.ok) { fetchMsgs(); } else { alert('Impossible de supprimer'); } })
+                .catch(function(){ alert('Erreur réseau'); });
+            }, 700);
+          };
+          var cancel = function(){ if (longTimer) { clearTimeout(longTimer); longTimer = null; } };
+          bubble.addEventListener('mousedown', start);
+          bubble.addEventListener('touchstart', start);
+          bubble.addEventListener('mouseup', cancel);
+          bubble.addEventListener('mouseleave', cancel);
+          bubble.addEventListener('touchend', cancel);
+          bubble.addEventListener('touchcancel', cancel);
+        })();
         thread.scrollTop = 0;
         idxEl.textContent = (currentIdx + 1) + '/' + msgsState.length;
         // hide index when there's only one message
