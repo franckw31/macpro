@@ -111,12 +111,13 @@ if (!empty($_COOKIE[$cookieName]) && session_status() !== PHP_SESSION_ACTIVE) {
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 
-require_once __DIR__ . '/../include/config.php';
+try {
+    require_once __DIR__ . '/../include/config.php';
 
-if (empty($con)) { echo json_encode(['ok'=>false,'err'=>'db']); exit; }
+    if (empty($con)) { echo json_encode(['ok'=>false,'err'=>'db']); exit; }
 
-// Create table if missing
-mysqli_query($con, "CREATE TABLE IF NOT EXISTS `qv_messages` (
+    // Create table if missing
+    mysqli_query($con, "CREATE TABLE IF NOT EXISTS `qv_messages` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `id_activite` INT UNSIGNED NOT NULL,
   `id_expediteur` INT UNSIGNED NOT NULL,
@@ -208,4 +209,13 @@ if ($action === 'mark_read' && $my_role === 'organisateur') {
     echo json_encode(['ok'=>true]); exit;
 }
 
-echo json_encode(['ok'=>false,'err'=>'unknown_action']);
+    echo json_encode(['ok'=>false,'err'=>'unknown_action']);
+    exit;
+
+} catch (Throwable $e) {
+    // Log and return JSON error
+    @file_put_contents('/tmp/qv-errors.log', date('c') . " CATCH: " . $e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine() . "\n" . $e->getTraceAsString() . "\n", FILE_APPEND);
+    http_response_code(500);
+    echo json_encode(['ok'=>false,'err'=>'exception','msg'=>$e->getMessage()]);
+    exit;
+}
