@@ -156,10 +156,11 @@ window.PAGE_PARTICIPANTS = <?php echo json_encode($participants, JSON_UNESCAPED_
             if(suffix.length) pseudo += ' ' + suffix.join(' ');
             const avatarSrc = (p.photo_url && String(p.anonyme) !== '1') ? p.photo_url : 'https://viendez.com/images/noprofil.jpg';
             const trakBtn = (String(p.anonyme) !== '1') ? `<button onclick="openTrak('${escapeHtml(p.pseudo||'')}')" style="background:none;border:0;cursor:pointer;font-size:16px;padding:0 4px" title="Notes Trak">📝</button>` : '';
+            const tombolasChk = `<label title="Tombolas" style="display:inline-block;margin-left:8px"><input type=\"checkbox\" disabled ${p.tombolas==1 ? 'checked' : ''} /></label>`;
             const pseudoEl = (p.mid && String(p.anonyme) !== '1')
                 ? `<a href="/panel/sergio.php?mid=${p.mid}" style="font-weight:700;font-size:14px;color:var(--green,#2ecc71);text-decoration:none">${escapeHtml(pseudo)}</a>`
                 : `<div class="pseudo">${escapeHtml(pseudo)}</div>`;
-            return `<div class="item" role="listitem"><div class="left"><img class="p-avatar" src="${avatarSrc}" alt="" onerror="this.src='https://viendez.com/images/noprofil.jpg'">${pseudoEl}</div><div style="display:flex;align-items:center;gap:8px"><div class="muted">${escapeHtml(formattedDate)}</div><div class="accent">${escapeHtml(jet)}</div>${trakBtn}</div></div>`;
+            return `<div class="item" role="listitem"><div class="left"><img class="p-avatar" src="${avatarSrc}" alt="" onerror="this.src='https://viendez.com/images/noprofil.jpg'">${pseudoEl}</div><div style="display:flex;align-items:center;gap:8px"><div class="muted">${escapeHtml(formattedDate)}${tombolasChk}</div><div class="accent">${escapeHtml(jet)}</div>${trakBtn}</div></div>`;
         }).join('');
     }
 
