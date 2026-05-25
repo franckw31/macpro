@@ -611,7 +611,33 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
             }
         }
 
+        // Lecture d'un fichier MP3 de marche funèbre avant le message vocal (pour joueur id=2)
+        function playFuneralThenSpeak(text) {
+            try {
+                var audio = new Audio('/assets/audio/funeral_march_midi_10s_loud.mp3');
+
+                audio.addEventListener('ended', function() {
+                    speakWithFemaleVoice(text);
+                });
+
+                audio.play().catch(function(err) {
+                    console.warn('Lecture funeral échouée, fallback voix directe', err);
+                    speakWithFemaleVoice(text);
+                });
+            } catch (e) {
+                console.warn('Erreur initialisation funeral, fallback voix directe', e);
+                speakWithFemaleVoice(text);
+            }
+        }
+
         function speakWithSirenIfNeeded(memberIdElimine, text) {
+            // Pikachu (id=2) : jouer la marche funèbre
+            if (memberIdElimine === '2' || memberIdElimine === 2) {
+                playFuneralThenSpeak(text);
+                return;
+            }
+
+            // Autres joueurs spéciaux : sirène
             if (memberIdElimine === '1100' || memberIdElimine === 1100 ||
                 memberIdElimine === '1103' || memberIdElimine === 1103) {
                 playSirenThenSpeak(text);
