@@ -261,6 +261,10 @@ if ($userId > 0 && $activityId > 0) {
             $columns[] = '`classement`';
             $values[] = "'0'";
         }
+        if (has_column($db, 'participation', 'tombolas')) {
+            $columns[] = '`tombolas`';
+            $values[] = "'$tombolas'";
+        }
         mysqli_query($db, "INSERT INTO participation (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ")");
         if (function_exists('log_activity')) {
             $logDetails = "Activite #$activityId | Statut: Inscrit (auto via URL)";
