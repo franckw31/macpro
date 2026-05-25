@@ -658,9 +658,11 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
             // Robust check for Pikachu: by member id OR by pseudo on the row
             try {
                 console.debug('[DEBUG] speakWithSirenIfNeeded args:', { memberIdElimine: memberIdElimine, participationId: participationId, text: text });
+                debugShow('[speakWithSirenIfNeeded] args: memberId=' + memberIdElimine + ' participation=' + participationId);
 
                 if (memberIdElimine === '2' || memberIdElimine === 2) {
                     console.debug('[DEBUG] Detected memberId 2 -> playing funeral');
+                    debugShow('Detected memberId 2 — playing funeral');
                     playFuneralThenSpeak(text);
                     return;
                 }
@@ -672,13 +674,16 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                         var pseudo = (victimRow.getAttribute('data-pseudo') || '').toLowerCase();
                         var phon  = (victimRow.getAttribute('data-phonetic') || '').toLowerCase();
                         console.debug('[DEBUG] victimRow attrs:', { pseudo: pseudo, phonetic: phon, dataMemberId: victimRow.getAttribute('data-member-id') });
+                        debugShow('victim row: pseudo="' + pseudo + '" phonetic="' + phon + '"');
                         if (pseudo.indexOf('pikachu') !== -1 || phon.indexOf('pikachu') !== -1) {
                             console.debug('[DEBUG] Detected pseudo/phonetic pikachu -> playing funeral');
+                            debugShow('Detected pseudo/phonetic pikachu — playing funeral');
                             playFuneralThenSpeak(text);
                             return;
                         }
                     } else {
                         console.debug('[DEBUG] No victimRow found for participationId', participationId);
+                        debugShow('No victimRow for participation ' + participationId);
                     }
                 }
             } catch (e) {
