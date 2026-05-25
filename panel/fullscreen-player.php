@@ -548,6 +548,7 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
     <!-- Bouton micro flottant -->
     <button id="voiceMicBtn" title="Commande vocale (ex: élimine Jean)" onclick="toggleVoiceMic()">🎙️</button>
     <div id="voiceToast"></div>
+    <div id="debugPanel" aria-live="polite"></div>
 
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
