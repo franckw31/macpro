@@ -191,7 +191,10 @@ if ($activity) {
         out = out.filter(p => ((p.option||'') !== 'Desinscrit'));
         const s = sort.value;
         if(s === 'name') out.sort((a,b)=> String(a.pseudo||'').localeCompare(String(b.pseudo||'')) );
-        else if(s === 'date') out.sort((a,b)=> String(a.date||'').localeCompare(String(b.date||'')) );
+        else if(s === 'date') {
+          function dateValue(x){ if(!x) return 0; var t = Date.parse(String(x).replace(' ', 'T')); return isNaN(t)?0:t; }
+          out.sort((a,b)=> dateValue(a.date) - dateValue(b.date));
+        }
         else if(s === 'jetons') out.sort((a,b)=> (Number(b.jetons||0) - Number(a.jetons||0)) );
         // update visible count
         try{ var cntEl = document.getElementById('participants-count'); if(cntEl) cntEl.textContent = out.length; }catch(e){}
