@@ -869,7 +869,7 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                             var messageBase = eliminatorVoiceName + " a éliminé " + victimVoiceName ;
                             var texteVocal = messageBase + ", " + victimVoiceName + " finit en " + rangCalcule + suffixe + " position";
                             var victimMemberId = getMemberIdByParticipationId(victimParticipationId);
-                            speakWithSirenIfNeeded(victimMemberId, texteVocal);
+                            speakWithSirenIfNeeded(victimMemberId, texteVocal, victimParticipationId);
                             
                             finalizeElimination();
                         },
@@ -941,7 +941,7 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
                                 messageBase2 = eliminatorVoiceName2 + " a éliminé " + victimVoiceName2;
                             }
                             var texteVocal2 = messageBase2;
-                            speakWithSirenIfNeeded(victimMemberId2, texteVocal2);
+                            speakWithSirenIfNeeded(victimMemberId2, texteVocal2, victimParticipationId);
 
                             finalizeElimination();
                         },
