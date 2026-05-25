@@ -117,10 +117,10 @@ if ($activity) {
     <div class="controls">
         <input id="search" class="search" placeholder="Rechercher (nom)" />
         <select id="sort" style="padding:8px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);color:var(--white)">
-            <option value="idx">Ordre</option>
-            <option value="name" selected>Nom</option>
-            <option value="date">Date</option>
-            <option value="jetons">Jetons</option>
+          <option value="idx">Ordre</option>
+          <option value="name">Nom</option>
+          <option value="date" selected>Date</option>
+          <option value="jetons">Jetons</option>
         </select>
     </div>
 
