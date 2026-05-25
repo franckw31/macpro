@@ -824,7 +824,7 @@ function v2NavActivity(dir){
         </div>
         <div>
           <div class="v2-fin-lbl">ReBuy</div>
-          <div class="v2-fin-val" style="color:var(--cyan)"><?php echo isset($serverActivity['recave']) +EB ? htmlspecialchars($serverActivity['recave']) : '—'; ?></div>
+          <div class="v2-fin-val" style="color:var(--cyan)"><?php echo isset($serverActivity['recave']) .'+EB' ? htmlspecialchars($serverActivity['recave']) : '—'; ?></div>
         </div>
       </div>
       <div class="v2-fin-item">
