@@ -311,6 +311,27 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
         #voiceToast.error { border-color: #ef4444; color: #fca5a5; }
         #voiceToast.success { border-color: #4ade80; color: #86efac; }
 
+        /* Debug panel (temporary) */
+        #debugPanel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 8px 10px;
+            border-radius: 8px;
+            z-index: 10000;
+            max-width: 360px;
+            font-size: 13px;
+            line-height: 1.2;
+            max-height: 40vh;
+            overflow: auto;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+        }
+        #debugPanel .dbg-item { margin-bottom:6px; opacity:0.95; }
+        #debugPanel .dbg-time { color:#9ca3af; font-size:11px; margin-right:6px; }
+
         /* Bouton Annuler dernière élimination */
         #undoElimBtn {
             position: fixed;
