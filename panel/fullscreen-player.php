@@ -630,11 +630,30 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
             }
         }
 
-        function speakWithSirenIfNeeded(memberIdElimine, text) {
-            // Pikachu (id=2) : jouer la marche funèbre
-            if (memberIdElimine === '2' || memberIdElimine === 2) {
-                playFuneralThenSpeak(text);
-                return;
+        // memberIdElimine: possible member id (string/number) OR empty
+        // participationId (optional): tr[data-id] value to lookup pseudo when member id is missing
+        function speakWithSirenIfNeeded(memberIdElimine, text, participationId) {
+            // Robust check for Pikachu: by member id OR by pseudo on the row
+            try {
+                if (memberIdElimine === '2' || memberIdElimine === 2) {
+                    playFuneralThenSpeak(text);
+                    return;
+                }
+
+                // If participationId provided, try to resolve pseudo and check name
+                if ((!memberIdElimine || memberIdElimine === '0') && participationId) {
+                    var victimRow = document.querySelector('#joueurs-list tr[data-id="' + participationId + '"]');
+                    if (victimRow) {
+                        var pseudo = (victimRow.getAttribute('data-pseudo') || '').toLowerCase();
+                        var phon  = (victimRow.getAttribute('data-phonetic') || '').toLowerCase();
+                        if (pseudo.indexOf('pikachu') !== -1 || phon.indexOf('pikachu') !== -1) {
+                            playFuneralThenSpeak(text);
+                            return;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('speakWithSirenIfNeeded detection error', e);
             }
 
             // Autres joueurs spéciaux : sirène
