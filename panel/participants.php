@@ -207,6 +207,8 @@ if ($activity) {
     applyFilters();
 })();
 
+  })();
+
   function toggleTombolas(id_membre, id_activite, el) {
     var val = el.checked ? '1' : '0';
     var form = new URLSearchParams();
