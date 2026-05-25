@@ -59,6 +59,17 @@ if($activity){
     }
 }
 
+// Determine if current session user is the organizer of this activity
+$is_organizer = false;
+if (!empty($_SESSION['id']) && $activity) {
+  $myId = intval($_SESSION['id']);
+  $org_id = null;
+  if (isset($activity['id-membre'])) $org_id = $activity['id-membre'];
+  elseif (isset($activity['id_membre'])) $org_id = $activity['id_membre'];
+  elseif (isset($activity['organizer_id'])) $org_id = $activity['organizer_id'];
+  if (!is_null($org_id) && intval($org_id) === $myId) $is_organizer = true;
+}
+
 function h($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 $display_title = 'Participants';
 if($activity){
