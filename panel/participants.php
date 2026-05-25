@@ -132,7 +132,10 @@ if ($activity) {
 </div>
 
 <script>
-window.PAGE_PARTICIPANTS = <?php echo json_encode($participants, JSON_UNESCAPED_UNICODE); ?>;
+(function(){
+  // Activity id available to JS
+  var ACT_ID = <?php echo intval($activity_id ?: ($activity['id-activite'] ?? 0)); ?>;
+  window.PAGE_PARTICIPANTS = <?php echo json_encode($participants, JSON_UNESCAPED_UNICODE); ?>;
 (function(){
     const listEl = document.getElementById('list');
     const search = document.getElementById('search');
