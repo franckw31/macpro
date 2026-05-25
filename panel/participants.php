@@ -144,8 +144,9 @@ if ($activity) {
 
 <script>
 (function(){
-  // Activity id available to JS
+  // Activity id and permissions available to JS
   var ACT_ID = <?php echo intval($activity_id ?: ($activity['id-activite'] ?? 0)); ?>;
+  var USER_IS_ORGANIZER = <?php echo $is_organizer ? 'true' : 'false'; ?>;
   window.PAGE_PARTICIPANTS = <?php echo json_encode($participants, JSON_UNESCAPED_UNICODE); ?>;
 (function(){
     const listEl = document.getElementById('list');
