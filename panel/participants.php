@@ -201,6 +201,31 @@ window.PAGE_PARTICIPANTS = <?php echo json_encode($participants, JSON_UNESCAPED_
     // initial render (apply default filters/sort)
     applyFilters();
 })();
+
+  function toggleTombolas(id_membre, id_activite, el) {
+    var val = el.checked ? '1' : '0';
+    var form = new URLSearchParams();
+    form.append('id_membre', id_membre);
+    form.append('id_activite', id_activite);
+    form.append('field', 'tombolas');
+    form.append('value', val);
+
+    fetch('/panel/update_field.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form.toString(),
+      credentials: 'include'
+    }).then(r=>r.json()).then(d=>{
+      if (!d || !d.success) {
+        alert('Erreur mise à jour tombolas: ' + (d && d.error ? d.error : 'Erreur inconnue'));
+        // revert checkbox
+        el.checked = !el.checked;
+      }
+    }).catch(e=>{
+      alert('Erreur réseau');
+      el.checked = !el.checked;
+    });
+  }
 </script>
 
 <!-- ══════════ TRAK MODAL ══════════ -->
