@@ -143,6 +143,7 @@ window.PAGE_PARTICIPANTS = <?php echo json_encode($participants, JSON_UNESCAPED_
             const optVal = (p.option||'').toString();
             if(optVal === 'Desinscrit') return '';
             const date = p.date? p.date : '';
+            const formattedDate = formatShortDate(date);
             const jet = p.jetons? ('+'+p.jetons) : '';
             // build pseudo with suffixes
             let pseudo = p.pseudo || '(inconnu)';
@@ -157,9 +158,21 @@ window.PAGE_PARTICIPANTS = <?php echo json_encode($participants, JSON_UNESCAPED_
             const pseudoEl = (p.mid && String(p.anonyme) !== '1')
                 ? `<a href="/panel/sergio.php?mid=${p.mid}" style="font-weight:700;font-size:14px;color:var(--green,#2ecc71);text-decoration:none">${escapeHtml(pseudo)}</a>`
                 : `<div class="pseudo">${escapeHtml(pseudo)}</div>`;
-            return `<div class="item" role="listitem"><div class="left"><img class="p-avatar" src="${avatarSrc}" alt="" onerror="this.src='https://viendez.com/images/noprofil.jpg'">${pseudoEl}</div><div style="display:flex;align-items:center;gap:8px"><div class="muted">${escapeHtml(date)}</div><div class="accent">${escapeHtml(jet)}</div>${trakBtn}</div></div>`;
+            return `<div class="item" role="listitem"><div class="left"><img class="p-avatar" src="${avatarSrc}" alt="" onerror="this.src='https://viendez.com/images/noprofil.jpg'">${pseudoEl}</div><div style="display:flex;align-items:center;gap:8px"><div class="muted">${escapeHtml(formattedDate)}</div><div class="accent">${escapeHtml(jet)}</div>${trakBtn}</div></div>`;
         }).join('');
     }
+
+        function formatShortDate(ds){
+          if(!ds) return '';
+          // Accept "YYYY-MM-DD HH:MM:SS" or ISO; convert space to T for Date parsing
+          var d = new Date(String(ds).replace(' ', 'T'));
+          if (isNaN(d)) return ds;
+          var day = d.getDate();
+          var month = d.getMonth() + 1;
+          var hour = d.getHours();
+          var minute = String(d.getMinutes()).padStart(2,'0');
+          return day + '-' + month + ' ' + hour + 'h' + minute;
+        }
 
     function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>\"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
 
