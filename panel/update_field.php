@@ -85,7 +85,7 @@ try {
         'classement', 'recave', 'points', 'tf',
         'rake', 'rake_0', 'rake_5', 'rake_10', 'rake_12', 'rake_15', 'rake_20',
         'cout_in', 'latereg', 'option', 'valide', 'gain',
-        'addon', 'win', 'bonbon', 'ordre', 'position', 'heure_arrivee', 'jetons_bonus_arrivee', 'jetons_bonus_ins'
+        'addon', 'win', 'bonbon', 'ordre', 'position', 'heure_arrivee', 'jetons_bonus_arrivee', 'jetons_bonus_ins', 'tombolas'
     ];
     if (!in_array($field, $allowed_fields)) {
         error_log("Invalid field: $field");
