@@ -234,6 +234,19 @@ if ($userId > 0 && $activityId > 0) {
         $memberRow = $memberQuery ? mysqli_fetch_assoc($memberQuery) : null;
         $memberName = $memberRow && isset($memberRow['pseudo']) ? mysqli_real_escape_string($db, $memberRow['pseudo']) : '';
 
+        // Determine tombolas for auto-URL registration (>24h before start)
+        $tombolas = 0;
+        $actQuery = mysqli_query($db, "SELECT date_depart FROM activite WHERE `id-activite` = '" . intval($activityId) . "' LIMIT 1");
+        if ($actQuery && ($actRow = mysqli_fetch_assoc($actQuery)) && has_column($db, 'participation', 'tombolas')) {
+            $actDate = $actRow['date_depart'] ?? '';
+            if (!empty($actDate)) {
+                $timeUntil = strtotime($actDate) - time();
+                if ($timeUntil > 24 * 3600) {
+                    $tombolas = 1;
+                }
+            }
+        }
+
         $columns = ['`id-membre`', '`id-activite`', '`ordre`', '`id-siege`', '`id-table`'];
         $values = ["'" . intval($userId) . "'", "'" . intval($activityId) . "'", "'" . intval($nextOrder) . "'", "'0'", "'0'"];
         if (has_column($db, 'participation', 'nom-membre')) {
