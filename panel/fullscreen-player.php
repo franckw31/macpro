@@ -635,21 +635,28 @@ $can_bust = ($current_user_id === 265 || $current_user_id === $organizer_id);
         function speakWithSirenIfNeeded(memberIdElimine, text, participationId) {
             // Robust check for Pikachu: by member id OR by pseudo on the row
             try {
+                console.debug('[DEBUG] speakWithSirenIfNeeded args:', { memberIdElimine: memberIdElimine, participationId: participationId, text: text });
+
                 if (memberIdElimine === '2' || memberIdElimine === 2) {
+                    console.debug('[DEBUG] Detected memberId 2 -> playing funeral');
                     playFuneralThenSpeak(text);
                     return;
                 }
 
                 // If participationId provided, try to resolve pseudo and check name
-                if ((!memberIdElimine || memberIdElimine === '0') && participationId) {
+                if (participationId) {
                     var victimRow = document.querySelector('#joueurs-list tr[data-id="' + participationId + '"]');
                     if (victimRow) {
                         var pseudo = (victimRow.getAttribute('data-pseudo') || '').toLowerCase();
                         var phon  = (victimRow.getAttribute('data-phonetic') || '').toLowerCase();
+                        console.debug('[DEBUG] victimRow attrs:', { pseudo: pseudo, phonetic: phon, dataMemberId: victimRow.getAttribute('data-member-id') });
                         if (pseudo.indexOf('pikachu') !== -1 || phon.indexOf('pikachu') !== -1) {
+                            console.debug('[DEBUG] Detected pseudo/phonetic pikachu -> playing funeral');
                             playFuneralThenSpeak(text);
                             return;
                         }
+                    } else {
+                        console.debug('[DEBUG] No victimRow found for participationId', participationId);
                     }
                 }
             } catch (e) {
