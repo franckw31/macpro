@@ -219,14 +219,30 @@ window.PAGE_PARTICIPANTS = <?php echo json_encode($participants, JSON_UNESCAPED_
       credentials: 'include'
     }).then(r=>r.json()).then(d=>{
       if (!d || !d.success) {
-        alert('Erreur mise à jour tombolas: ' + (d && d.error ? d.error : 'Erreur inconnue'));
+        showToast('Erreur mise à jour tombolas: ' + (d && d.error ? d.error : 'Erreur inconnue'));
         // revert checkbox
         el.checked = !el.checked;
+      } else {
+        showToast('Mise à jour enregistrée');
       }
     }).catch(e=>{
-      alert('Erreur réseau');
+      showToast('Erreur réseau');
       el.checked = !el.checked;
     });
+  }
+
+  function showToast(msg, timeout){
+    timeout = timeout || 2000;
+    var t = document.getElementById('toast');
+    if(!t) return;
+    t.textContent = msg;
+    t.style.display = 'block';
+    t.style.opacity = '1';
+    clearTimeout(t._h);
+    t._h = setTimeout(function(){
+      t.style.opacity = '0';
+      setTimeout(function(){ t.style.display = 'none'; }, 300);
+    }, timeout);
   }
 </script>
 
