@@ -124,6 +124,8 @@ if ($activity) {
         </select>
     </div>
 
+    <div id="toast" style="display:none;position:fixed;right:20px;bottom:20px;padding:10px 14px;border-radius:8px;background:rgba(0,0,0,0.8);color:#fff;z-index:9999;box-shadow:0 6px 18px rgba(0,0,0,0.4)"></div>
+
     <div id="list" class="list" role="list" aria-label="Liste des participants">
         <!-- rendered by JS -->
     </div>
