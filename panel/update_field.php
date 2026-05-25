@@ -78,11 +78,11 @@ try {
         exit;
     }
 
-    // Special rule: only the organizer (not admin) can modify tombolas via this endpoint
-    if ($field === 'tombolas' && !$is_organizer) {
+    // Special rule: only the organizer or admin can modify tombolas via this endpoint
+    if ($field === 'tombolas' && !$is_organizer && !$is_admin) {
         http_response_code(403);
         error_log("Permission denied for user $current_user_id trying to modify tombolas for activity $id_activite");
-        echo json_encode(['success' => false, 'error' => 'Seul l\'organisateur peut modifier le ticket tombolas']);
+        echo json_encode(['success' => false, 'error' => 'Seul l\'organisateur ou un administrateur peut modifier le ticket tombolas']);
         mysqli_close($conn);
         exit;
     }
