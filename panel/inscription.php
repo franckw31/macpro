@@ -122,6 +122,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg'])) {
             $updates[] = "`jetons_bonus_ins` = '$bonus_ins'";
             $updates[] = "`jetons_total` = '$jetons_total'";
             $updates[] = "`rake` = '$actRake'";
+
+            // Tombolas: give 1 if registering more than 24 hours before start
+            if (has_column($db, 'participation', 'tombolas')) {
+                $tombolas = 0;
+                if (!empty($actDateDepart)) {
+                    $timeUntil = strtotime($actDateDepart) - time();
+                    if ($timeUntil > 24 * 3600) {
+                        $tombolas = 1;
+                    }
+                }
+                $updates[] = "`tombolas` = '$tombolas'";
+            }
         }
 
         mysqli_query($db, "UPDATE participation SET " . implode(', ', $updates) . " WHERE `id-participation` = '" . intval($existing['id-participation']) . "'");
@@ -143,6 +155,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg'])) {
         }
         $jetons_total = $actJetons + $bonus_ins;
 
+        // Tombolas: give 1 if registering more than 24 hours before start
+        $tombolas = 0;
+        if (has_column($db, 'participation', 'tombolas') && !empty($actDateDepart)) {
+            $timeUntil = strtotime($actDateDepart) - time();
+            if ($timeUntil > 24 * 3600) {
+                $tombolas = 1;
+            }
+        }
+
         $columns = ['`id-membre`', '`id-activite`', '`ordre`', '`id-siege`', '`id-table`', '`option`', '`rake`', '`jetons_bonus_ins`', '`jetons_total`'];
         $values = ["'" . intval($userId) . "'", "'" . intval($activityId) . "'", "'" . intval($nextOrder) . "'", "'0'", "'0'", "'" . mysqli_real_escape_string($db, $status) . "'", "'$actRake'", "'$bonus_ins'", "'$jetons_total'"];
 
@@ -157,6 +178,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_reg'])) {
         if ($hasLatereg) {
             $columns[] = '`latereg`';
             $values[] = "'$latereg'";
+        }
+        if (has_column($db, 'participation', 'tombolas')) {
+            $columns[] = '`tombolas`';
+            $values[] = "'$tombolas'";
         }
         if ($hasOptionChapitre) {
             $columns[] = '`option_chapitre`';
