@@ -81,15 +81,11 @@ if (strlen($_SESSION['id']) == 0) {
     function formatFrenchDate($dateStr) {
         if (!$dateStr || $dateStr == '0000-00-00 00:00:00') return '-';
         $date = new DateTime($dateStr);
-        $months = [
-            1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril', 5 => 'Mai', 6 => 'Juin',
-            7 => 'Juillet', 8 => 'Août', 9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'
-        ];
-        $day = $date->format('j');
-        $month = $months[(int)$date->format('n')];
-        $hour = $date->format('G');
-        $minute = $date->format('i');
-        return "$day $month {$hour}h{$minute}";
+        $day = (int)$date->format('j');
+        $month = (int)$date->format('n');
+        $hour = (int)$date->format('G');
+        $minute = (int)$date->format('i');
+        return sprintf('%d-%d %dh%02d', $day, $month, $hour, $minute);
     }
 
     function fetchParticipants() {
