@@ -157,9 +157,10 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
             <thead><tr><th>Date</th><th>Participation</th><th>Opération</th><th>Montant</th></tr></thead>
             <tbody>
             <?php foreach($transactions as $t){
-                $class = ($t['id_type_mvt'] == 1) ? 'text-danger' : 'text-success';
+                $isDebit = in_array(intval($t['id_type_mvt']), [1,2,3], true);
+                $rowClass = $isDebit ? 'tx-debit' : 'tx-credit';
                 $label = 'Inconnu';
-                switch($t['id_type_mvt']){
+                switch(intval($t['id_type_mvt'])){
                     case 1: $label='Débit Buyin'; break;
                     case 2: $label='Débit Rake'; break;
                     case 3: $label='Débit Gestion'; break;
@@ -167,7 +168,13 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                     case 5: $label='Crédit Gestion'; break;
                     case 6: $label='Crédit Tombola'; break;
                 }
-                echo '<tr><td>' . htmlspecialchars(date('d/m/Y', strtotime($t['date_mvt']))) . '</td><td>' . htmlspecialchars($t['id_participation'] ?: '-') . '</td><td>' . htmlspecialchars($label) . '</td><td>' . htmlspecialchars(number_format($t['montant'],2,',',' ')) . ' €</td></tr>';
+                $amt = number_format($t['montant'],2,',',' ');
+                echo '<tr class="' . $rowClass . '">\n';
+                echo '<td>' . htmlspecialchars(date('d/m/Y', strtotime($t['date_mvt']))) . '</td>';
+                echo '<td>' . htmlspecialchars($t['id_participation'] ?: '-') . '</td>';
+                echo '<td class="' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($label) . '</td>';
+                echo '<td class="' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €</td>';
+                echo '</tr>';
             }
             if (count($transactions) === 0) echo '<tr><td colspan="4" style="text-align:center;color:#888">Aucune transaction</td></tr>';
             ?>
