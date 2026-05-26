@@ -148,7 +148,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 }
 
 /* Truncate long operation labels and style small D/C badge */
-.op-label{display:inline-block;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+.op-label{display:inline-block;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
 .dir-badge{display:inline-block;padding:6px 8px;border-radius:8px;font-weight:800;font-size:12px}
 
 
