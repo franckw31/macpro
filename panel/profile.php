@@ -580,7 +580,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                 }
             }
             ?>
-            <div class="card-row"><div class="label">Solde actuel</div><div class="value"><?php echo fmt_money(intval(round(floatval($solde)))); ?></div></div>
+            <div class="card-row"><div class="label">Solde actuel</div><div class="value"><a href="money.php" style="color:inherit;text-decoration:underline"><?php echo fmt_money(intval(round(floatval($solde)))); ?></a></div></div>
             <div class="card-row"><div class="label">Vos Tickets de Tombola</div><div class="value"><?php echo intval($tombola_count); ?> <a id="link-tombola" href="/panel/tickets_tombolas.php?id=<?php echo intval($uid); ?>" onclick="window.location.href=this.href;" style="margin-left:8px;color:#16a34a;font-weight:700">Voir</a></div></div>
             <div class="card-row"><div class="label">SergioScore</div><div class="value"><?php
                 $sergio_avg = null;
