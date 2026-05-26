@@ -71,6 +71,29 @@ $participations = [];
 $q = @mysqli_query($con, "SELECT p.`id-participation`, a.`titre-activite`, a.date_depart FROM participation p JOIN activite a ON p.`id-activite` = a.`id-activite` WHERE p.`id-membre` = " . intval($uid) . " ORDER BY a.date_depart DESC");
 if ($q) while ($r = mysqli_fetch_assoc($q)) $participations[] = $r;
 
+// Load movement types from DB (table `type_mvt`) if available; fallback to defaults
+$mvt_types = [
+    1 => 'Débit Buyin',
+    2 => 'Débit Rake',
+    3 => 'Débit Gestion',
+    4 => 'Crédit Gain',
+    5 => 'Crédit Gestion',
+    6 => 'Crédit Tombola',
+];
+$mvt_directions = []; // optional: 'debit' or 'credit'
+$mtq = @mysqli_query($con, "SELECT id_type_mvt, label, direction FROM type_mvt ORDER BY id_type_mvt ASC");
+if ($mtq) {
+    while ($mr = mysqli_fetch_assoc($mtq)) {
+        $id = intval($mr['id_type_mvt']);
+        if ($id <= 0) continue;
+        $mvt_types[$id] = isset($mr['label']) && $mr['label'] !== '' ? $mr['label'] : ($mvt_types[$id] ?? ('Type ' . $id));
+        if (isset($mr['direction']) && $mr['direction'] !== '') {
+            $dir = strtolower(trim($mr['direction']));
+            $mvt_directions[$id] = ($dir === 'debit' || $dir === 'd' || $dir === 'deb') ? 'debit' : 'credit';
+        }
+    }
+}
+
 // Fetch transactions
 $transactions = [];
 $qt = @mysqli_query($con, "SELECT * FROM portefeuille WHERE id_mvt_membre = " . intval($uid) . " ORDER BY date_mvt ASC");
