@@ -215,7 +215,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     <div class="card" style="margin-top:14px">
         <div style="margin-bottom:10px;font-weight:700">Transactions</div>
         <table class="table">
-            <thead><tr><th>Date</th><th>Participation</th><th>Opération</th><th>Montant</th></tr></thead>
+            <thead><tr><th>Date</th><th style="width:60px;text-align:center">D/C</th><th>Participation</th><th>Opération</th><th>Montant</th></tr></thead>
             <tbody>
             <?php foreach($transactions as $t){
                 $tid = intval($t['id_type_mvt']);
@@ -224,10 +224,13 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 $isDebit = ($dir === 'debit');
                 $rowClass = $isDebit ? 'tx-debit' : 'tx-credit';
                 $amt = number_format($t['montant'],2,',',' ');
-                // echo '<tr class="' . $rowClass . '">\n';
+                echo '<tr class="' . $rowClass . '">';
                 echo '<td>' . htmlspecialchars(date('d/m/Y', strtotime($t['date_mvt']))) . '</td>';
+                echo '<td style="text-align:center;white-space:nowrap">';
+                echo '<span style="display:inline-block;padding:6px 8px;border-radius:8px;font-weight:800;font-size:12px" class="' . ($isDebit ? 'debit' : 'credit') . '">' . ($isDebit ? 'D' : 'C') . '</span>';
+                echo '</td>';
                 echo '<td>' . htmlspecialchars($t['id_participation'] ?: '-') . '</td>';
-                echo '<td class="' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($label) . '</td>';
+                echo '<td><span class="op-label ' . ($isDebit ? 'debit' : 'credit') . '" title="' . htmlspecialchars($label) . '">' . htmlspecialchars($label) . '</span></td>';
                 echo '<td class="' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €</td>';
                 echo '</tr>';
             }
