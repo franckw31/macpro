@@ -84,6 +84,11 @@ $sq = @mysqli_query($con, "SELECT
     FROM portefeuille WHERE id_mvt_membre = " . intval($uid));
 if ($sq) { $sr = mysqli_fetch_assoc($sq); $solde = $sr['balance']; }
 
+// Fetch pseudo for header
+$pseudo = 'Utilisateur';
+$pq = @mysqli_query($con, "SELECT pseudo FROM membres WHERE `id-membre` = " . intval($uid) . " LIMIT 1");
+if ($pq && ($pr = mysqli_fetch_assoc($pq))) { $pseudo = $pr['pseudo']; }
+
 ?><!doctype html>
 <html lang="fr">
 <head>
