@@ -538,11 +538,6 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             </div>
         </div>
         <div class="card">
-            <div style="font-weight:700;margin-bottom:8px"><?php echo !empty($activity_title) ? htmlspecialchars($activity_title) : ((!empty($last_insc))? fmt_fr_date($last_insc, 'EEEE d MMM (dd/MM)') : '—'); ?></div>
-            <div class="card-row"><div class="label">Dernière Inscription (Bonus)</div><div class="value"><?php echo $last_insc ? fmt_fr_date($last_insc, 'd MMM HH:mm') : '—'; ?><?php $bi = intval(isset($stats['bonus_ins']) ? $stats['bonus_ins'] : 0); if ($bi > 0) { echo ' (<span style="color:#ffd100">+'.intval(min($bi, 5000)).'</span>)'; } ?></div></div>
-        </div>
-
-        <div class="card">
             <?php $challenge_uid = isset($_GET['uid']) && is_numeric($_GET['uid']) ? intval($_GET['uid']) : null;
             $challenge_rank_display = '#—';
             if ($challenge_uid && !empty($con)) {
