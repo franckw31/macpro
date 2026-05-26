@@ -108,6 +108,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 .table thead th{color:#a9c2d6;text-align:left;font-weight:800}
 .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:#08b0ff;color:#04131d;text-decoration:none;font-weight:800}
 .btn.secondary{background:#16a34a;color:#071017}
+.btn.orange{background:#ff8a00;color:#fff;border:1px solid rgba(0,0,0,0.08)}
 .form-control{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
 .muted{color:#9aa6b1;font-size:13px}
 .balance-box{background:linear-gradient(90deg,#164a8a,#0aa3ff);padding:14px;border-radius:10px;color:#fff;font-weight:800;text-align:center}
