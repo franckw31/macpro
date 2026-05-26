@@ -188,10 +188,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
             </tbody>
         </table>
 
-        <div style="background-color: #2e6da4; color: white; padding: 12px; margin: 12px 0; border-radius: 8px; font-size: 18px; text-align:center">
-            <strong>Solde actuel : </strong>
-            <span style="font-size:22px;font-weight:800;color:white; margin-left:8px"><?php echo number_format($solde,2,',',' '); ?> €</span>
-        </div>
+        
     </div>
 
     <div style="margin-top:12px;text-align:center"><a class="btn" href="/panel/profile.php">Retour au profil</a></div>
