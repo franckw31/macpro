@@ -198,7 +198,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
         
     </div>
 
-    <div style="margin-top:12px;text-align:center"><a class="btn" href="/panel/profile.php">Retour au profil</a></div>
+    
 </div>
 </body>
 </html>
