@@ -80,9 +80,10 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
         @media (max-width: 720px){
             body{padding:12px}
             .sheet{padding:12px;border-radius:10px}
-            .btn{width:100%;display:inline-block;text-align:center}
+            .btn{display:inline-block;text-align:center;padding:8px 10px}
             form.inline{display:block}
-            form.inline input, form.inline select, form.inline button{width:100%;margin:6px 0}
+            form.inline input, form.inline select{width:100%;margin:6px 0}
+            form.inline button{width:auto;margin:6px 0;display:inline-block}
             .actions{flex-direction:column;align-items:stretch}
             table{min-width:0}
         }
