@@ -127,7 +127,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 </head>
 <body>
 <div class="sheet">
-    <h2 style="margin:0 0 12px">Mon Portefeuille</h2>
+    <h2 style="margin:0 0 12px">Portefeuille de <?php echo htmlspecialchars($pseudo); ?></h2>
     <?php if (!empty($_SESSION['msg'])) { echo '<div style="background:#163b5a;padding:10px;border-radius:8px;margin-bottom:10px">' . htmlspecialchars($_SESSION['msg']) . '</div>'; $_SESSION['msg']=''; }
           if (!empty($_SESSION['error'])) { echo '<div style="background:#5a1616;padding:10px;border-radius:8px;margin-bottom:10px">' . htmlspecialchars($_SESSION['error']) . '</div>'; $_SESSION['error']=''; }
     ?>
