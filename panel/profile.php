@@ -568,15 +568,21 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             // Calcul du solde actuel (mêmes règles que dans voir-membre.php)
             $solde = 0;
             if (!empty($con)) {
-                $solq = @mysqli_query($con, "SELECT \
-                    COALESCE(SUM(CASE WHEN id_type_mvt = 4 THEN montant ELSE 0 END), 0) +\
-                    COALESCE(SUM(CASE WHEN id_type_mvt = 6 THEN montant ELSE 0 END), 0) +\
-                    COALESCE(SUM(CASE WHEN id_type_mvt = 5 THEN montant ELSE 0 END), 0) -\
-                    COALESCE(SUM(CASE WHEN id_type_mvt = 1 THEN montant ELSE 0 END), 0) -\
-                    COALESCE(SUM(CASE WHEN id_type_mvt = 2 THEN montant ELSE 0 END), 0) -\
-                    COALESCE(SUM(CASE WHEN id_type_mvt = 3 THEN montant ELSE 0 END), 0) as balance\
-                    FROM portefeuille WHERE id_mvt_membre = '" . intval($uid) . "'");
-                if ($solq && ($sr = mysqli_fetch_assoc($solq))) { $solde = $sr['balance']; }
+                $sql = "SELECT 
+                    COALESCE(SUM(CASE WHEN id_type_mvt = 4 THEN montant ELSE 0 END), 0) + 
+                    COALESCE(SUM(CASE WHEN id_type_mvt = 6 THEN montant ELSE 0 END), 0) + 
+                    COALESCE(SUM(CASE WHEN id_type_mvt = 5 THEN montant ELSE 0 END), 0) - 
+                    COALESCE(SUM(CASE WHEN id_type_mvt = 1 THEN montant ELSE 0 END), 0) - 
+                    COALESCE(SUM(CASE WHEN id_type_mvt = 2 THEN montant ELSE 0 END), 0) - 
+                    COALESCE(SUM(CASE WHEN id_type_mvt = 3 THEN montant ELSE 0 END), 0) AS balance 
+                    FROM portefeuille WHERE id_mvt_membre = " . intval($uid);
+                $solq = @mysqli_query($con, $sql);
+                if ($solq) {
+                    $sr = mysqli_fetch_assoc($solq);
+                    $solde = $sr['balance'];
+                } else {
+                    error_log("Solde SQL error: " . mysqli_error($con) . " | SQL: " . $sql);
+                }
             }
             ?>
             <div class="card-row"><div class="label">Solde actuel</div><div class="value"><?php echo fmt_money(intval(round(floatval($solde)))); ?></div></div>
