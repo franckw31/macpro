@@ -215,17 +215,11 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
             <thead><tr><th>Date</th><th>Participation</th><th>Opération</th><th>Montant</th></tr></thead>
             <tbody>
             <?php foreach($transactions as $t){
-                $isDebit = in_array(intval($t['id_type_mvt']), [1,2,3], true);
+                $tid = intval($t['id_type_mvt']);
+                $label = isset($mvt_types[$tid]) ? $mvt_types[$tid] : 'Inconnu';
+                $dir = $mvt_directions[$tid] ?? (($tid >= 1 && $tid <= 3) ? 'debit' : 'credit');
+                $isDebit = ($dir === 'debit');
                 $rowClass = $isDebit ? 'tx-debit' : 'tx-credit';
-                $label = 'Inconnu';
-                switch(intval($t['id_type_mvt'])){
-                    case 1: $label='Débit Buyin'; break;
-                    case 2: $label='Débit Rake'; break;
-                    case 3: $label='Débit Gestion'; break;
-                    case 4: $label='Crédit Gain'; break;
-                    case 5: $label='Crédit Gestion'; break;
-                    case 6: $label='Crédit Tombola'; break;
-                }
                 $amt = number_format($t['montant'],2,',',' ');
                 // echo '<tr class="' . $rowClass . '">\n';
                 echo '<td>' . htmlspecialchars(date('d/m/Y', strtotime($t['date_mvt']))) . '</td>';
