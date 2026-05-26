@@ -40,8 +40,13 @@ function updateMemberBalance($membre_id, $con) {
     }
 }
 
-// Handle add transaction
+// Handle add transaction (only allowed for user 2 or 265)
 if (isset($_POST['submit_portefeuille'])) {
+    if (!in_array(intval($uid), [2, 265], true)) {
+        $_SESSION['error'] = 'Permission refusée';
+        header('Location: money.php');
+        exit;
+    }
     try {
         if (!isset($_POST['id_type_mvt']) || !isset($_POST['montant'])) throw new Exception('Type et montant sont obligatoires');
         $id_type_mvt = intval($_POST['id_type_mvt']);
@@ -123,6 +128,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     ?>
 
     <div class="top">
+        <?php if (in_array(intval($uid), [2, 265], true)): ?>
         <div class="card">
             <form method="post">
                 <table class="table">
@@ -140,6 +146,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
             </table>
             </form>
         </div>
+        <?php endif; ?>
 
         <aside class="card" style="height:100%">
             <div style="margin-bottom:8px;font-weight:700">Solde</div>
