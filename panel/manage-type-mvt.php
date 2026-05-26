@@ -67,13 +67,25 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
         .sheet{max-width:900px;margin:18px auto;background:#08131a;padding:16px;border-radius:12px}
         .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:#08b0ff;color:#04131d;text-decoration:none;font-weight:800}
         .danger{background:#ff6b6b;color:#fff}
-        table{width:100%;border-collapse:collapse}
-        th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.04)}
+        .table-wrap{overflow-x:auto}
+        table{width:100%;min-width:640px;border-collapse:collapse}
+        th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle}
         input,select{padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
-        form.inline{display:inline-block;margin:0}
+        form.inline{display:inline-flex;gap:6px;align-items:center;margin:0}
+        .actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
         .flash{padding:8px;margin-bottom:10px;border-radius:8px}
         .success{background:rgba(22,163,74,0.12);color:#7cf0a8}
         .error{background:rgba(255,77,77,0.12);color:#ff9c9c}
+
+        @media (max-width: 720px){
+            body{padding:12px}
+            .sheet{padding:12px;border-radius:10px}
+            .btn{width:100%;display:inline-block;text-align:center}
+            form.inline{display:block}
+            form.inline input, form.inline select, form.inline button{width:100%;margin:6px 0}
+            .actions{flex-direction:column;align-items:stretch}
+            table{min-width:0}
+        }
     </style>
 </head>
 <body>
