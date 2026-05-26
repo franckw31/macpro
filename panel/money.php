@@ -154,7 +154,6 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 <div class="muted">Solde actuel</div>
                 <div class="balance-amount"><?php echo number_format($solde,2,',',' '); ?> €</div>
             </div>
-            <div style="margin-top:12px;text-align:center"><a class="btn secondary" href="/panel/profile.php">Retour</a></div>
         </aside>
     </div>
 
