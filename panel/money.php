@@ -166,8 +166,28 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 <table class="table">
                 <tr><th class="label">Opération</th><td><select class="form-control" name="id_type_mvt" required>
                     <option value="">-- Sélectionner --</option>
-                    <optgroup label="Débit"><option value="1">Buyin</option><option value="2">Rake</option><option value="3">Gestion</option></optgroup>
-                    <optgroup label="Crédit"><option value="4">Gain</option><option value="6">Tombola</option><option value="5">Gestion</option></optgroup>
+                    <?php
+                    // Build optgroups from $mvt_types and optional $mvt_directions
+                    $debits = $credits = [];
+                    foreach ($mvt_types as $id => $lbl) {
+                        $dir = $mvt_directions[$id] ?? (($id >= 1 && $id <= 3) ? 'debit' : 'credit');
+                        if ($dir === 'debit') $debits[$id] = $lbl; else $credits[$id] = $lbl;
+                    }
+                    if (!empty($debits)) {
+                        echo '<optgroup label="Débit">';
+                        foreach ($debits as $id => $lbl) {
+                            echo '<option value="' . intval($id) . '">' . htmlspecialchars($lbl) . '</option>';
+                        }
+                        echo '</optgroup>';
+                    }
+                    if (!empty($credits)) {
+                        echo '<optgroup label="Crédit">';
+                        foreach ($credits as $id => $lbl) {
+                            echo '<option value="' . intval($id) . '">' . htmlspecialchars($lbl) . '</option>';
+                        }
+                        echo '</optgroup>';
+                    }
+                    ?>
                 </select></td></tr>
                 <tr><th class="label">Montant</th><td><input class="form-control" type="number" step="0.01" name="montant" required></td></tr>
                 <tr style="display:none"><th class="label">Date</th><td><input class="form-control" type="date" name="date_mvt"></td></tr>
