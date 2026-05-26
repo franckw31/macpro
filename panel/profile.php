@@ -581,7 +581,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             }
             ?>
             <?php $sol_val = floatval($solde); $sol_color = ($sol_val >= 0) ? '#16a34a' : '#ff4d4d'; ?>
-            <div class="card-row"><div class="label">Solde actuel</div><div class="value"><a href="/panel/money.php" style="color:inherit;text-decoration:underline"><span style="color:<?php echo $sol_color; ?>"><?php echo fmt_money(intval(round($sol_val))); ?></span></a><a href="/panel/money.php" style="margin-left:8px;color:#ff9d3b;font-weight:700">Mouvements</a></div></div>
+            <div class="card-row"><div class="label">Solde actuel</div><div class="value"><span style="color:<?php echo $sol_color; ?>"><?php echo fmt_money(intval(round($sol_val))); ?></span> <a href="/panel/money.php" style="margin-left:8px;color:#ff9d3b;font-weight:700">Mouvements</a></div></div>
             <div class="card-row"><div class="label">Vos Tickets de Tombola</div><div class="value"><?php echo intval($tombola_count); ?> <a id="link-tombola" href="/panel/tickets_tombolas.php?id=<?php echo intval($uid); ?>" onclick="window.location.href=this.href;" style="margin-left:8px;color:#16a34a;font-weight:700">Voir</a></div></div>
             <div class="card-row"><div class="label">SergioScore</div><div class="value"><?php
                 $sergio_avg = null;
