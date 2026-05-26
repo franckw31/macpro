@@ -122,9 +122,10 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
           if (!empty($_SESSION['error'])) { echo '<div style="background:#5a1616;padding:10px;border-radius:8px;margin-bottom:10px">' . htmlspecialchars($_SESSION['error']) . '</div>'; $_SESSION['error']=''; }
     ?>
 
-    <div class="card">
-        <form method="post">
-            <table class="table">
+    <div class="top">
+        <div class="card">
+            <form method="post">
+                <table class="table">
                 <tr><th class="label">Opération</th><td><select class="form-control" name="id_type_mvt" required>
                     <option value="">-- Sélectionner --</option>
                     <optgroup label="Débit"><option value="1">Buyin</option><option value="2">Rake</option><option value="3">Gestion</option></optgroup>
@@ -137,7 +138,17 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 </select></td></tr>
                 <tr><td colspan="2" style="text-align:center"><button class="btn" type="submit" name="submit_portefeuille">Ajouter Transaction</button></td></tr>
             </table>
-        </form>
+            </form>
+        </div>
+
+        <aside class="card" style="height:100%">
+            <div style="margin-bottom:8px;font-weight:700">Solde</div>
+            <div class="balance-box">
+                <div class="muted">Solde actuel</div>
+                <div class="balance-amount"><?php echo number_format($solde,2,',',' '); ?> €</div>
+            </div>
+            <div style="margin-top:12px;text-align:center"><a class="btn secondary" href="/panel/profile.php">Retour</a></div>
+        </aside>
     </div>
 
     <div class="card" style="margin-top:14px">
