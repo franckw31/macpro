@@ -110,6 +110,7 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
         </form>
 
         <h3>Types existants</h3>
+        <div class="table-wrap">
         <table>
             <thead><tr><th>ID</th><th>Libellé</th><th>Direction</th><th>Actions</th></tr></thead>
             <tbody>
@@ -143,6 +144,7 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
             ?>
             </tbody>
         </table>
+        </div>
     </div>
 </body>
 </html>
