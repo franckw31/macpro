@@ -86,16 +86,33 @@ if ($sq) { $sr = mysqli_fetch_assoc($sq); $solde = $sr['balance']; }
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mon Portefeuille</title>
 <style>
-/* copy minimal profile styles */
-body{background:rgba(0,0,0,0.85);font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;margin:0;padding:18px;color:#eef6fb}
-.sheet{max-width:920px;margin:18px auto;background:#071019;color:#eef6fb;border-radius:12px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
-.card{background:rgba(255,255,255,0.03);padding:12px;border-radius:12px;margin-top:12px;border:1px solid rgba(255,255,255,0.03)}
-.label{color:#9aa6b1}
-.value{font-weight:700;color:#eef6fb}
+/* copy minimal profile styles with responsive layout and color accents */
+body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;margin:0;padding:18px;color:#eef6fb}
+.sheet{max-width:980px;margin:18px auto;background:linear-gradient(180deg,#071019,#08131a);color:#eef6fb;border-radius:14px;padding:18px;box-shadow:0 14px 50px rgba(0,0,0,0.6)}
+.top{display:grid;grid-template-columns:1fr 420px;gap:14px;align-items:start}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;margin-top:8px;border:1px solid rgba(255,255,255,0.04)}
+.label{color:#9aa6b1;font-weight:700;font-size:13px}
+.value{font-weight:800;color:#eef6fb}
 .table{width:100%;border-collapse:collapse}
-.table th,.table td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03)}
-.btn{display:inline-block;padding:8px 12px;border-radius:8px;background:#08b0ff;color:#04131d;text-decoration:none;font-weight:800}
-.form-control{width:100%;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+.table th,.table td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}
+.table thead th{color:#a9c2d6;text-align:left;font-weight:800}
+.btn{display:inline-block;padding:10px 14px;border-radius:10px;background:#08b0ff;color:#04131d;text-decoration:none;font-weight:800}
+.btn.secondary{background:#16a34a;color:#071017}
+.form-control{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+.muted{color:#9aa6b1;font-size:13px}
+.balance-box{background:linear-gradient(90deg,#164a8a,#0aa3ff);padding:14px;border-radius:10px;color:#fff;font-weight:800;text-align:center}
+.balance-amount{font-size:22px;font-weight:900}
+.debit {color:#ff6b6b}
+.credit {color:#8be38b}
+.tx-debit td{background:linear-gradient(90deg, rgba(255,107,107,0.03), transparent)}
+.tx-credit td{background:linear-gradient(90deg, rgba(139,227,139,0.03), transparent)}
+
+@media (max-width: 880px){
+    .top{grid-template-columns:1fr;}
+    .sheet{padding:12px}
+    .balance-box{padding:12px}
+}
+
 </style>
 </head>
 <body>
