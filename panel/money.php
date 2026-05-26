@@ -184,7 +184,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                     case 6: $label='Crédit Tombola'; break;
                 }
                 $amt = number_format($t['montant'],2,',',' ');
-                echo '<tr class="' . $rowClass . '">\n';
+                // echo '<tr class="' . $rowClass . '">\n';
                 echo '<td>' . htmlspecialchars(date('d/m/Y', strtotime($t['date_mvt']))) . '</td>';
                 echo '<td>' . htmlspecialchars($t['id_participation'] ?: '-') . '</td>';
                 echo '<td class="' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($label) . '</td>';
