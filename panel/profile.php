@@ -564,6 +564,22 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
             }
             ?>
             <div class="card-row"><div class="label">Rang Challenge</div><div class="value"><?php echo htmlspecialchars($challenge_rank_display); ?> <a id="link-challenge" href="/panel/challenge_rank.php<?php echo $challenge_uid? '?uid=' . $challenge_uid : ''; ?>" onclick="logPanelAction('vue_classement_challenge')" style="margin-left:8px;color:#ff9d3b;font-weight:700">Consulter</a></div></div>
+            <?php
+            // Calcul du solde actuel (mêmes règles que dans voir-membre.php)
+            $solde = 0;
+            if (!empty($con)) {
+                $solq = @mysqli_query($con, "SELECT \
+                    COALESCE(SUM(CASE WHEN id_type_mvt = 4 THEN montant ELSE 0 END), 0) +\
+                    COALESCE(SUM(CASE WHEN id_type_mvt = 6 THEN montant ELSE 0 END), 0) +\
+                    COALESCE(SUM(CASE WHEN id_type_mvt = 5 THEN montant ELSE 0 END), 0) -\
+                    COALESCE(SUM(CASE WHEN id_type_mvt = 1 THEN montant ELSE 0 END), 0) -\
+                    COALESCE(SUM(CASE WHEN id_type_mvt = 2 THEN montant ELSE 0 END), 0) -\
+                    COALESCE(SUM(CASE WHEN id_type_mvt = 3 THEN montant ELSE 0 END), 0) as balance\
+                    FROM portefeuille WHERE id_mvt_membre = '" . intval($uid) . "'");
+                if ($solq && ($sr = mysqli_fetch_assoc($solq))) { $solde = $sr['balance']; }
+            }
+            ?>
+            <div class="card-row"><div class="label">Solde actuel</div><div class="value"><?php echo fmt_money(intval(round(floatval($solde)))); ?></div></div>
             <div class="card-row"><div class="label">Vos Tickets de Tombola</div><div class="value"><?php echo intval($tombola_count); ?> <a id="link-tombola" href="/panel/tickets_tombolas.php?id=<?php echo intval($uid); ?>" onclick="window.location.href=this.href;" style="margin-left:8px;color:#16a34a;font-weight:700">Voir</a></div></div>
             <div class="card-row"><div class="label">SergioScore</div><div class="value"><?php
                 $sergio_avg = null;
