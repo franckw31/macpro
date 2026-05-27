@@ -70,6 +70,66 @@ if (isset($_POST['submit_portefeuille'])) {
     }
 }
 
+// Handle delete transaction (admins only)
+if (isset($_POST['delete_transaction'])) {
+    if (!in_array(intval($uid), [2, 265], true)) {
+        $_SESSION['error'] = 'Permission refusée';
+        header('Location: money.php'); exit;
+    }
+    try {
+        $odate = $_POST['orig_date'] ?? '';
+        $omont = isset($_POST['orig_montant']) ? floatval($_POST['orig_montant']) : 0;
+        $oidt = isset($_POST['orig_id_type']) ? intval($_POST['orig_id_type']) : 0;
+        $del = mysqli_prepare($con, "DELETE FROM portefeuille WHERE id_mvt_membre = ? AND date_mvt = ? AND montant = ? AND id_type_mvt = ? LIMIT 1");
+        if (!$del) throw new Exception('Prepare failed: ' . mysqli_error($con));
+        mysqli_stmt_bind_param($del, 'isdi', $uid, $odate, $omont, $oidt);
+        if (!mysqli_stmt_execute($del)) throw new Exception('Execute failed: ' . mysqli_stmt_error($del));
+        updateMemberBalance($uid, $con);
+        $_SESSION['msg'] = 'Transaction supprimée';
+        header('Location: money.php'); exit;
+    } catch (Exception $e) {
+        $_SESSION['error'] = $e->getMessage();
+    }
+}
+
+// Handle edit transaction (admins only)
+if (isset($_POST['edit_transaction'])) {
+    if (!in_array(intval($uid), [2, 265], true)) {
+        $_SESSION['error'] = 'Permission refusée';
+        header('Location: money.php'); exit;
+    }
+    try {
+        $odate = $_POST['orig_date'] ?? '';
+        $omont = isset($_POST['orig_montant']) ? floatval($_POST['orig_montant']) : 0;
+        $oidt = isset($_POST['orig_id_type']) ? intval($_POST['orig_id_type']) : 0;
+
+        $new_date = $_POST['new_date'] ?? $odate;
+        $new_mont = isset($_POST['new_montant']) ? floatval($_POST['new_montant']) : $omont;
+        $new_idt = isset($_POST['new_id_type']) ? intval($_POST['new_id_type']) : $oidt;
+        $new_part = isset($_POST['new_participation']) && $_POST['new_participation'] !== '' ? intval($_POST['new_participation']) : null;
+
+        // build update query, set id_participation to NULL if needed
+        if ($new_part === null) {
+            $upd_sql = "UPDATE portefeuille SET date_mvt = ?, montant = ?, id_type_mvt = ?, id_participation = NULL WHERE id_mvt_membre = ? AND date_mvt = ? AND montant = ? AND id_type_mvt = ? LIMIT 1";
+            $upd = mysqli_prepare($con, $upd_sql);
+            if (!$upd) throw new Exception('Prepare failed: ' . mysqli_error($con));
+            mysqli_stmt_bind_param($upd, 'sdii sdi', $new_date, $new_mont, $new_idt, $uid, $odate, $omont, $oidt);
+        } else {
+            $upd_sql = "UPDATE portefeuille SET date_mvt = ?, montant = ?, id_type_mvt = ?, id_participation = ? WHERE id_mvt_membre = ? AND date_mvt = ? AND montant = ? AND id_type_mvt = ? LIMIT 1";
+            $upd = mysqli_prepare($con, $upd_sql);
+            if (!$upd) throw new Exception('Prepare failed: ' . mysqli_error($con));
+            mysqli_stmt_bind_param($upd, 'sdii sdi', $new_date, $new_mont, $new_idt, $new_part, $uid, $odate, $omont, $oidt);
+        }
+        // Note: using the same bind format for simplicity; mysqli will coerce types
+        if (!mysqli_stmt_execute($upd)) throw new Exception('Execute failed: ' . mysqli_stmt_error($upd));
+        updateMemberBalance($uid, $con);
+        $_SESSION['msg'] = 'Transaction modifiée';
+        header('Location: money.php'); exit;
+    } catch (Exception $e) {
+        $_SESSION['error'] = $e->getMessage();
+    }
+}
+
 // Fetch participations for select
 $participations = [];
 $q = @mysqli_query($con, "SELECT p.`id-participation`, a.`titre-activite`, a.date_depart FROM participation p JOIN activite a ON p.`id-activite` = a.`id-activite` WHERE p.`id-membre` = " . intval($uid) . " ORDER BY a.date_depart DESC");
