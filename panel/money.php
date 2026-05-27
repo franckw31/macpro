@@ -301,11 +301,12 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 <!-- Mobile day/night mode: use system preference when on small screens -->
 <style>
 @media (max-width:880px) and (prefers-color-scheme: light) {
-    body{background:#ffffff;color:#071017}
-    .sheet{background:#ffffff;color:#071017}
-    .card{background:#f7f7f8;border:1px solid rgba(0,0,0,0.06)}
+    /* remove white backgrounds but keep light colors for text/buttons */
+    body{background:transparent;color:#071017}
+    .sheet{background:transparent;color:#071017}
+    .card{background:transparent;border:1px solid rgba(0,0,0,0.06)}
     .label{color:#344054}
-    .form-control{background:#fff;color:#071017;border:1px solid rgba(0,0,0,0.08)}
+    .form-control{background:transparent;color:#071017;border:1px solid rgba(0,0,0,0.08)}
     .btn{background:#08b0ff;color:#04131d}
     .btn.secondary{background:#16a34a;color:#fff}
     .btn.orange{background:#ff8a00;color:#fff}
@@ -368,11 +369,12 @@ document.addEventListener('DOMContentLoaded', function(){
 <!-- Apply data-theme overrides on mobile -->
 <style>
 @media (max-width:880px) {
-    body[data-theme="light"]{background:#ffffff;color:#071017}
-    body[data-theme="light"] .sheet{background:#ffffff;color:#071017}
-    body[data-theme="light"] .card{background:#f7f7f8;border:1px solid rgba(0,0,0,0.06)}
+    /* light theme: avoid white blocks, use transparent backgrounds */
+    body[data-theme="light"]{background:transparent;color:#071017}
+    body[data-theme="light"] .sheet{background:transparent;color:#071017}
+    body[data-theme="light"] .card{background:transparent;border:1px solid rgba(0,0,0,0.06)}
     body[data-theme="light"] .label{color:#344054}
-    body[data-theme="light"] .form-control{background:#fff;color:#071017;border:1px solid rgba(0,0,0,0.08)}
+    body[data-theme="light"] .form-control{background:transparent;color:#071017;border:1px solid rgba(0,0,0,0.08)}
     body[data-theme="light"] .btn{background:#08b0ff;color:#04131d}
     body[data-theme="light"] .btn.secondary{background:#16a34a;color:#fff}
     body[data-theme="light"] .balance-box{background:linear-gradient(90deg,#f0f4f8,#dbeafe);color:#071017}
