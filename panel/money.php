@@ -279,6 +279,12 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 .btn.icon svg{width:12px;height:12px}
 .part-date{color:#9aa6b1;font-size:13px;margin-top:4px}
 
+/* Compact form fields used for small inline selects/inputs */
+.compact-field{width:180px;min-width:120px;max-width:260px;display:inline-block}
+@media (max-width:880px){
+    .compact-field{width:140px;min-width:90px;max-width:220px}
+}
+
 /* On small screens, hide the separate Montant column and show amount under the Opération label */
 .mobile-amt{display:none;color:#cfe8d6;margin-top:6px;font-size:13px}
 @media (max-width:880px){
