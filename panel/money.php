@@ -301,8 +301,17 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 echo '<span style="display:inline-block;padding:6px 8px;border-radius:8px;font-weight:800;font-size:12px" class="' . ($isDebit ? 'debit' : 'credit') . '">' . ($isDebit ? 'D' : 'C') . '</span>';
                 echo '</td>';
                 echo '<td>' . htmlspecialchars($t['id_participation'] ?: '-') . '</td>';
+                $mid = intval($t['id_mvt'] ?? 0);
                 echo '<td><span class="op-label ' . ($isDebit ? 'debit' : 'credit') . '" title="' . htmlspecialchars($label) . '">' . htmlspecialchars($label) . '</span>';
-                echo '<div class="mobile-amt ' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €</div>';
+                echo '<div class="mobile-amt ' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €';
+                // mobile delete button (shown only on small screens)
+                if ($mid > 0 && (in_array(intval($uid), [2,265], true) || intval($t['id_mvt_membre'] ?? 0) === intval($uid))) {
+                    echo ' <form method="post" class="mobile-only" style="display:inline" onsubmit="return confirm(\'Confirmer suppression ?\')">';
+                    echo '<input type="hidden" name="delete_mvt" value="' . $mid . '">';
+                    echo '<button class="btn small" type="submit" style="background:#ff4d4d;color:#fff;border:none;margin-left:8px">Suppr</button>';
+                    echo '</form>';
+                }
+                echo '</div>';
                 echo '</td>';
                 echo '<td class="' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €';
                 // delete button (admin or owner)
