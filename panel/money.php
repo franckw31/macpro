@@ -76,13 +76,16 @@ if (isset($_POST['delete_mvt'])) {
     $del_id = intval($_POST['delete_mvt']);
     try {
         // fetch the movement to check ownership
-        $g = mysqli_prepare($con, "SELECT id_mvt_membre FROM portefeuille WHERE id_mvt = ? LIMIT 1");
+        $g = mysqli_prepare($con, "SELECT id_mvt_membre, montant, id_type_mvt, date_mvt FROM portefeuille WHERE id_mvt = ? LIMIT 1");
         mysqli_stmt_bind_param($g, 'i', $del_id);
         mysqli_stmt_execute($g);
         $gres = mysqli_stmt_get_result($g);
         $row = mysqli_fetch_assoc($gres);
         if (!$row) throw new Exception('Mouvement introuvable');
         $owner = intval($row['id_mvt_membre']);
+        $mv_montant = isset($row['montant']) ? $row['montant'] : '';
+        $mv_type = isset($row['id_type_mvt']) ? $row['id_type_mvt'] : '';
+        $mv_date = isset($row['date_mvt']) ? $row['date_mvt'] : '';
         // allow if admin (2 or 265) or owner
         if (!in_array(intval($uid), [2,265], true) && $owner !== intval($uid)) {
             throw new Exception('Permission refusée');
@@ -91,6 +94,11 @@ if (isset($_POST['delete_mvt'])) {
         mysqli_stmt_bind_param($d, 'i', $del_id);
         if (!mysqli_stmt_execute($d)) throw new Exception('Erreur suppression: ' . mysqli_stmt_error($d));
         updateMemberBalance($owner, $con);
+        // log activity if helper available
+        if (function_exists('log_activity')) {
+            $details = "Supprimé id_mvt={$del_id} owner={$owner} montant={$mv_montant} type={$mv_type} date={$mv_date}";
+            log_activity($con, 'delete_portefeuille', $details);
+        }
         $_SESSION['msg'] = 'Mouvement supprimé';
         header('Location: money.php');
         exit;
