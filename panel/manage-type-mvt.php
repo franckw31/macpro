@@ -72,7 +72,11 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
     .table{width:100%;border-collapse:collapse}
     .table-wrap{overflow-x:auto}
     form.inline{display:inline-flex;gap:8px;align-items:center;flex-wrap:nowrap}
-    .table td{vertical-align:middle;white-space:nowrap}
+    .table td{vertical-align:middle}
+    /* Force ID cell to one line and truncate if too long */
+    .table td:first-child{white-space:nowrap;width:80px;overflow:hidden;text-overflow:ellipsis}
+    /* Allow actions cell content to wrap when needed */
+    .table td:last-child{white-space:normal}
     .inline input[type="text"], .inline input[type="number"]{min-width:120px;max-width:220px}
     .inline select{min-width:90px;max-width:140px}
     .inline button{white-space:nowrap}
