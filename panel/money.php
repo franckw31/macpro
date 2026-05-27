@@ -93,7 +93,7 @@ if (isset($_POST['delete_transaction'])) {
 }
 
 // Handle edit transaction (admins only)
-if (isset($_POST['edit_transaction'])) {
+        if (isset($_POST['edit_transaction'])) {
     if (!in_array(intval($uid), [2, 265], true)) {
         $_SESSION['error'] = 'Permission refusée';
         header('Location: money.php'); exit;
@@ -113,12 +113,12 @@ if (isset($_POST['edit_transaction'])) {
             $upd_sql = "UPDATE portefeuille SET date_mvt = ?, montant = ?, id_type_mvt = ?, id_participation = NULL WHERE id_mvt_membre = ? AND date_mvt = ? AND montant = ? AND id_type_mvt = ? LIMIT 1";
             $upd = mysqli_prepare($con, $upd_sql);
             if (!$upd) throw new Exception('Prepare failed: ' . mysqli_error($con));
-            mysqli_stmt_bind_param($upd, 'sdii sdi', $new_date, $new_mont, $new_idt, $uid, $odate, $omont, $oidt);
+                    mysqli_stmt_bind_param($upd, 'sdiisdi', $new_date, $new_mont, $new_idt, $uid, $odate, $omont, $oidt);
         } else {
             $upd_sql = "UPDATE portefeuille SET date_mvt = ?, montant = ?, id_type_mvt = ?, id_participation = ? WHERE id_mvt_membre = ? AND date_mvt = ? AND montant = ? AND id_type_mvt = ? LIMIT 1";
             $upd = mysqli_prepare($con, $upd_sql);
             if (!$upd) throw new Exception('Prepare failed: ' . mysqli_error($con));
-            mysqli_stmt_bind_param($upd, 'sdii sdi', $new_date, $new_mont, $new_idt, $new_part, $uid, $odate, $omont, $oidt);
+                    mysqli_stmt_bind_param($upd, 'sdiiisdi', $new_date, $new_mont, $new_idt, $new_part, $uid, $odate, $omont, $oidt);
         }
         // Note: using the same bind format for simplicity; mysqli will coerce types
         if (!mysqli_stmt_execute($upd)) throw new Exception('Execute failed: ' . mysqli_stmt_error($upd));
