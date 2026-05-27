@@ -163,6 +163,13 @@ if ($mtq) {
     }
 }
 
+// Load members list for admin selector
+$members = [];
+if ($is_admin_viewer) {
+    $mq = @mysqli_query($con, "SELECT `id-membre`, pseudo FROM membres ORDER BY pseudo ASC LIMIT 1000");
+    if ($mq) while ($mr = mysqli_fetch_assoc($mq)) $members[] = $mr;
+}
+
 // Fetch transactions
 $transactions = [];
 $qt = @mysqli_query($con, "SELECT * FROM portefeuille WHERE id_mvt_membre = " . intval($uid) . " ORDER BY date_mvt ASC");
