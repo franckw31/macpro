@@ -263,7 +263,19 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 echo '<td><span class="op-label ' . ($isDebit ? 'debit' : 'credit') . '" title="' . htmlspecialchars($label) . '">' . htmlspecialchars($label) . '</span>';
                 echo '<div class="mobile-amt ' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €</div>';
                 echo '</td>';
-                echo '<td class="' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €</td>';
+                // amount clickable to toggle detail row
+                echo '<td class="' . ($isDebit ? 'debit' : 'credit') . '"><a href="#" class="amt-link" style="color:inherit;text-decoration:none;font-weight:800">' . htmlspecialchars($amt) . ' €</a></td>';
+                echo '</tr>';
+                // hidden detail row (toggle visible when amount clicked)
+                echo '<tr class="tx-detail-row" style="display:none">';
+                echo '<td colspan="5">';
+                echo '<div style="display:flex;flex-direction:column;gap:6px">';
+                echo '<div><strong>Date:</strong> ' . htmlspecialchars(date('d/m/Y H:i', strtotime($t['date_mvt']))) . '</div>';
+                echo '<div><strong>Opération:</strong> ' . htmlspecialchars($label) . ' (id ' . intval($t['id_type_mvt']) . ')</div>';
+                echo '<div><strong>Participation:</strong> ' . htmlspecialchars($t['id_participation'] ?: '-') . '</div>';
+                echo '<div><strong>Montant:</strong> ' . htmlspecialchars($amt) . ' €</div>';
+                echo '</div>';
+                echo '</td>';
                 echo '</tr>';
             }
             if (count($transactions) === 0) echo '<tr><td colspan="4" style="text-align:center;color:#888">Aucune transaction</td></tr>';
