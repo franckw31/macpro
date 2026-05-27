@@ -464,75 +464,33 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 </html>
 
 <script>
-// Autocomplete live-search for member selector (debounced, keyboard nav)
+// Simple client-side filtering using server-provided members list.
+// This avoids relying on the AJAX autocomplete; typing filters the select immediately.
 (function(){
     var input = document.getElementById('member_search_input');
     var select = document.getElementById('member_select');
     if (!input || !select) return;
-    // use the input's parent as container (don't move the input node)
-    var container = input.parentNode || document.body;
-    container.classList.add('ac-suggestions');
-    var list = document.createElement('div'); list.className = 'ac-list'; list.style.display = 'none';
-    // append suggestion list after the input
-    input.insertAdjacentElement('afterend', list);
-    var timeout = null; var active = -1; var items = [];
-    function render(){
-        list.innerHTML = '';
-        // also update the select options so the dropdown matches suggestions
+    // Build a JS members list from server-side $members
+    var membersList = <?php echo json_encode(array_map(function($m){ return ['id' => intval($m['id-membre']), 'pseudo' => $m['pseudo']]; }, $members), JSON_UNESCAPED_UNICODE); ?>;
+    function normalize(s){ return String(s || '').toLowerCase(); }
+    function applyFilter(){
+        var q = normalize(input.value).trim();
         select.innerHTML = '<option value="">-- Choisir membre --</option>';
-        if (!items || items.length === 0) { list.style.display = 'none'; return; }
-        items.forEach(function(it, idx){
-            var opt = document.createElement('option'); opt.value = it.id; opt.text = it.pseudo + ' (' + it.id + ')';
-            select.appendChild(opt);
-            var div = document.createElement('div'); div.className = 'ac-item'; div.tabIndex = -1;
-            div.dataset.id = it.id; div.dataset.pseudo = it.pseudo;
-            div.innerHTML = '<strong>' + escapeHtml(it.pseudo) + '</strong> <span class="ac-muted">(' + it.id + ')</span>';
-            div.addEventListener('mousedown', function(e){
-                e.preventDefault(); // prevent blur
-                choose(idx);
-            });
-            list.appendChild(div);
-        });
-        active = -1; list.style.display = 'block';
+        if (q === '') {
+            // show full list
+            membersList.forEach(function(it){ var o = document.createElement('option'); o.value = it.id; o.text = it.pseudo + ' ('+it.id+')'; select.appendChild(o); });
+            return;
+        }
+        var matched = membersList.filter(function(it){ return normalize(it.pseudo).indexOf(q) === 0; });
+        matched.forEach(function(it){ var o = document.createElement('option'); o.value = it.id; o.text = it.pseudo + ' ('+it.id+')'; select.appendChild(o); });
     }
-    function escapeHtml(s){ return String(s).replace(/[&<>\"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-    function choose(idx){
-        if (!items[idx]) return;
-        var it = items[idx];
-        // ensure select has the option and set it
-        var opt = select.querySelector('option[value="' + it.id + '"]');
-        if (!opt){ opt = document.createElement('option'); opt.value = it.id; opt.text = it.pseudo + ' (' + it.id + ')'; select.appendChild(opt); }
-        select.value = it.id;
-        // also set input value to pseudo
-        input.value = it.pseudo;
-        // hide suggestions
-        list.style.display = 'none';
-        // submit the GET form (find closest form)
-        var f = select.closest ? select.closest('form') : (select.form || input.form);
-        if (!f) f = document.querySelector('form[action="money.php"]');
-        if (f) f.submit();
-    }
-    function doSearch(q){
-        var spinner = document.getElementById('member_search_spinner');
-        if (String(q).trim() === '') { items = []; render(); if (spinner) spinner.style.display = 'none'; return; }
-        if (spinner) spinner.style.display = 'inline-block';
-        var url = './api/members_search.php?q=' + encodeURIComponent(q || '');
-        fetch(url, {credentials: 'same-origin'})
-            .then(function(r){ if (spinner) spinner.style.display = 'none'; if (!r.ok) return []; return r.json(); })
-            .then(function(json){ if (!Array.isArray(json)) json = []; items = json; render(); })
-            .catch(function(){ if (spinner) spinner.style.display = 'none'; items = []; render(); });
-    }
-    input.addEventListener('input', function(){ clearTimeout(timeout); timeout = setTimeout(function(){ doSearch(input.value); }, 250); });
-    input.addEventListener('keydown', function(e){
-        var nodes = list.querySelectorAll('.ac-item');
-        if (e.key === 'ArrowDown') { e.preventDefault(); if (active < nodes.length - 1) active++; else active = 0; updateActive(nodes); }
-        else if (e.key === 'ArrowUp') { e.preventDefault(); if (active > 0) active--; else active = nodes.length - 1; updateActive(nodes); }
-        else if (e.key === 'Enter') { if (active >= 0 && items[active]) { e.preventDefault(); choose(active); } }
-        else if (e.key === 'Escape') { list.style.display = 'none'; }
-    });
-    function updateActive(nodes){ nodes.forEach(function(n,i){ n.classList.toggle('active', i === active); if (i === active) n.scrollIntoView({block:'nearest'}); }); }
-    document.addEventListener('click', function(ev){ if (!container.contains(ev.target)) { list.style.display = 'none'; } });
-    // initial fetch when page loads
-    if (input.value && input.value.trim() !== '') doSearch(input.value.trim());
+    // initial populate
+    applyFilter();
+    input.addEventListener('input', function(){ applyFilter(); });
+    // Enter: if there is at least one option, set select and submit
+    input.addEventListener('keydown', function(e){ if (e.key === 'Enter'){
+        var first = select.querySelector('option[value]:not([value=""])');
+        if (first) { select.value = first.value; var f = select.form || input.form; if (f) f.submit(); }
+    }});
 })();
 </script>
