@@ -176,8 +176,9 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
                 echo '<td>';
                 // show label/direction briefly for context inside actions
                 echo '<div class="muted" style="margin-bottom:6px">' . htmlspecialchars($t['label']) . ' — ' . htmlspecialchars($t['direction']) . '</div>';
+                echo '<div class="actions">';
                 // edit form
-                echo '<form method="post" class="inline" style="margin-right:6px">';
+                echo '<form method="post" class="inline">';
                 echo '<input type="hidden" name="action" value="edit">';
                 echo '<input type="hidden" name="id_type_mvt" value="' . intval($t['id_type_mvt']) . '">';
                 echo '<input name="label" value="' . htmlspecialchars($t['label']) . '" required style="width:180px"> ';
@@ -193,6 +194,7 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
                 echo '<input type="hidden" name="id_type_mvt" value="' . intval($t['id_type_mvt']) . '">';
                 echo '<button class="btn danger small" type="submit" title="Supprimer"><svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg><span class="btn-text">Sup</span></button>';
                 echo '</form>';
+                echo '</div>';
                 echo '</td>';
                 echo '</tr>';
             }
