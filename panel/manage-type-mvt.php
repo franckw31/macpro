@@ -81,6 +81,7 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
     .table thead th{color:#a9c2d6;text-align:left;font-weight:800}
     .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:#08b0ff;color:#04131d;text-decoration:none;font-weight:800}
     .btn .icon{display:inline-block;width:16px;height:16px;vertical-align:middle;margin-right:8px;fill:currentColor}
+    .btn .btn-text{display:inline-block;vertical-align:middle}
     .btn.small{padding:6px 8px;font-size:13px;border-radius:8px}
     .btn.secondary{background:#16a34a;color:#071017}
     .btn.orange{background:#ff8a00;color:#fff;border:1px solid rgba(0,0,0,0.08)}
@@ -104,6 +105,12 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
         form.inline{flex-wrap:wrap}
         form.inline input, form.inline select, form.inline button{width:100%;box-sizing:border-box}
         .table td{white-space:normal}
+    }
+
+    @media (max-width: 480px){
+        .btn{padding:8px 10px}
+        .btn .btn-text{display:none}
+        .btn .icon{margin-right:0}
     }
     </style>
 </head>
