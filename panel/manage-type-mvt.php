@@ -131,10 +131,17 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
     /* Keep rows single-line on small screens; allow horizontal scroll */
     @media (max-width: 720px){
         .table-wrap{overflow-x:auto}
-        .table{min-width:640px}
+        /* reduce min-width to limit horizontal scroll while keeping one line per row */
+        .table{min-width:480px}
+        .table th,.table td{padding:6px 8px}
         .table td{white-space:nowrap}
-        form.inline{flex-wrap:nowrap}
-        .btn.small{width:34px;height:34px}
+        .table td:first-child{width:36px;min-width:36px;text-align:center}
+        form.inline{flex-wrap:nowrap;gap:6px;align-items:center}
+        form.inline input, form.inline select{width:110px;max-width:120px;padding:6px}
+        .actions{display:flex;gap:6px;align-items:center}
+        .btn.small{width:34px;height:34px;padding:4px}
+        /* hide contextual label on narrow screens to free space */
+        .muted{display:none}
     }
     </style>
 </head>
