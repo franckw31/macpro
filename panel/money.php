@@ -356,7 +356,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
             <form method="post">
                 <input type="hidden" name="target_membre" value="<?php echo intval($target_membre); ?>">
                 <table class="table">
-                <tr><th class="label">Opération</th><td><div style="display:flex;align-items:center;gap:8px"><select class="form-control" name="id_type_mvt" required style="width:180px;min-width:120px;max-width:260px;display:inline-block">
+                <tr><th class="label">Opération</th><td><div style="display:flex;align-items:center;gap:8px"><select class="form-control compact-field" name="id_type_mvt" required>
                     <option value="">-- Sélectionner --</option>
                     <?php
                     // Build optgroups from $mvt_types and optional $mvt_directions
@@ -383,9 +383,9 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 </select>
                 <a class="btn small secondary" href="/panel/manage-type-mvt.php" style="vertical-align:middle;padding:4px 4px">Autres</a>
                 </div></td></tr>
-                <tr><th class="label">Montant</th><td><input class="form-control" type="number" step="0.01" name="montant" required style="width:120px;min-width:90px;max-width:180px;display:inline-block"></td></tr>
+                <tr><th class="label">Montant</th><td><input class="form-control compact-field" type="number" step="0.01" name="montant" required></td></tr>
                 <tr style="display:none"><th class="label">Date</th><td><input class="form-control" type="date" name="date_mvt"></td></tr>
-                <tr><th class="label">ID Participation</th><td><select class="form-control" name="id_participation" style="width:180px;min-width:120px;max-width:260px;display:inline-block"><option value="">-- Aucune --</option>
+                <tr><th class="label">ID Participation</th><td><select class="form-control compact-field" name="id_participation"><option value="">-- Aucune --</option>
                 <?php foreach($participations as $p){ echo '<option value="' . intval($p['id-participation']) . '">' . htmlspecialchars(date('d/m/Y', strtotime($p['date_depart'])) . ' - ' . $p['titre-activite']) . '</option>'; } ?>
                 </select></td></tr>
                 <tr><td colspan="2" style="text-align:center"><button class="btn" type="submit" name="submit_portefeuille">Ajouter Transaction</button></td></tr>
