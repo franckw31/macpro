@@ -84,9 +84,8 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
     .table td{vertical-align:middle}
     /* Force single-line cells with truncation */
     .table th, .table td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    /* Force ID cell to one line, truncate and use minimal width */
-    .table td:first-child{width:36px;min-width:36px;text-align:center;padding-right:8px;padding-left:8px}
-    .table thead th:first-child{text-align:center;width:36px;min-width:36px;padding-right:8px;padding-left:8px}
+    /* Compact table cells */
+    .table td{padding-right:8px;padding-left:8px}
     .inline input[type="text"], .inline input[type="number"]{min-width:120px;max-width:220px}
     .inline select{min-width:90px;max-width:140px}
     .inline button{white-space:nowrap}
