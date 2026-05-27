@@ -170,6 +170,13 @@ if ($is_admin_viewer) {
     // load full initial list (no LIMIT) — admin live-search still available
     $mq = @mysqli_query($con, "SELECT `id-membre`, pseudo FROM membres ORDER BY pseudo ASC");
     if ($mq) while ($mr = mysqli_fetch_assoc($mq)) $members[] = $mr;
+    // ensure target member appears in the initial list
+    $found = false;
+    foreach ($members as $m) { if (intval($m['id-membre']) === intval($target_membre)) { $found = true; break; } }
+    if (!$found) {
+        $tp = @mysqli_query($con, "SELECT `id-membre`, pseudo FROM membres WHERE `id-membre` = " . intval($target_membre) . " LIMIT 1");
+        if ($tp && ($tr = mysqli_fetch_assoc($tp))) $members[] = $tr;
+    }
 }
 
 // Fetch transactions for the target member
