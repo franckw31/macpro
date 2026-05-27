@@ -71,6 +71,9 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
     .value{font-weight:800;color:#eef6fb}
     .table{width:100%;border-collapse:collapse}
     .table-wrap{overflow-x:auto}
+    form.inline{display:inline-flex;gap:8px;align-items:center;flex-wrap:nowrap}
+    .table td{vertical-align:middle;white-space:nowrap}
+    .table-wrap{overflow-x:auto}
     .table th,.table td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}
     .table thead th{color:#a9c2d6;text-align:left;font-weight:800}
     .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:#08b0ff;color:#04131d;text-decoration:none;font-weight:800}
