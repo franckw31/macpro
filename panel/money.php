@@ -2,6 +2,7 @@
 session_start();
 error_reporting(0);
 include(__DIR__ . '/include/config.php');
+include(__DIR__ . '/../include/functions_logs.php');
 
 // Ensure user logged in
 $uid = isset($_SESSION['id']) ? intval($_SESSION['id']) : 0;
