@@ -311,6 +311,12 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 </style>
 
 </head>
+
+<style>
+/* Spinner */
+#member_search_spinner{display:none;box-sizing:border-box;animation:ac-spin 1s linear infinite}
+@keyframes ac-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+</style>
 <body>
 <div class="sheet">
         <div style="display:flex;align-items:center;justify-content:space-between;margin:0 0 12px">
