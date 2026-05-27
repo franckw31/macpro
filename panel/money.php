@@ -518,9 +518,14 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
         if (f) f.submit();
     }
     function doSearch(q){
-        if (String(q).trim() === '') { items = []; render(); return; }
+        var spinner = document.getElementById('member_search_spinner');
+        if (String(q).trim() === '') { items = []; render(); if (spinner) spinner.style.display = 'none'; return; }
+        if (spinner) spinner.style.display = 'inline-block';
         var url = 'api/members_search.php?q=' + encodeURIComponent(q || '');
-        fetch(url, {credentials: 'same-origin'}).then(function(r){ if (!r.ok) return []; return r.json(); }).then(function(json){ if (!Array.isArray(json)) json = []; items = json; render(); }).catch(function(){ items = []; render(); });
+        fetch(url, {credentials: 'same-origin'})
+            .then(function(r){ if (spinner) spinner.style.display = 'none'; if (!r.ok) return []; return r.json(); })
+            .then(function(json){ if (!Array.isArray(json)) json = []; items = json; render(); })
+            .catch(function(){ if (spinner) spinner.style.display = 'none'; items = []; render(); });
     }
     input.addEventListener('input', function(){ clearTimeout(timeout); timeout = setTimeout(function(){ doSearch(input.value); }, 250); });
     input.addEventListener('keydown', function(e){
