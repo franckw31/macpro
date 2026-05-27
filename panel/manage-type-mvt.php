@@ -86,7 +86,8 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
     .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:#08b0ff;color:#04131d;text-decoration:none;font-weight:800}
     .btn .icon{display:inline-block;width:16px;height:16px;vertical-align:middle;margin-right:8px;fill:currentColor}
     .btn .btn-text{display:inline-block;vertical-align:middle}
-    .btn.small{padding:6px 8px;font-size:13px;border-radius:8px;min-width:36px;display:inline-flex;align-items:center;justify-content:center}
+    .btn.small{padding:4px;font-size:13px;border-radius:8px;min-width:34px;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center}
+    .btn.small .icon{width:16px;height:16px;margin-right:0}
     .btn.small .btn-text{display:none}
     .btn.secondary{background:#16a34a;color:#071017}
     .btn.orange{background:#ff8a00;color:#fff;border:1px solid rgba(0,0,0,0.08)}
