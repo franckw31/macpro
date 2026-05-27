@@ -446,3 +446,37 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 </div>
 </body>
 </html>
+
+<script>
+// AJAX live-search for member selector (debounced)
+(function(){
+    var input = document.getElementById('member_search_input');
+    var select = document.getElementById('member_select');
+    if (!input || !select) return;
+    var timeout = null;
+    function setOptions(items){
+        var cur = select.value;
+        select.innerHTML = '<option value="">-- Choisir membre --</option>';
+        items.forEach(function(it){
+            var opt = document.createElement('option');
+            opt.value = it.id;
+            opt.textContent = it.pseudo + ' (' + it.id + ')';
+            if (String(it.id) === String(cur)) opt.selected = true;
+            select.appendChild(opt);
+        });
+    }
+    function doSearch(q){
+        var url = 'api/members_search.php?q=' + encodeURIComponent(q || '');
+        fetch(url, {credentials: 'same-origin'}).then(function(r){
+            if (!r.ok) return [];
+            return r.json();
+        }).then(function(json){ if (Array.isArray(json)) setOptions(json); }).catch(function(){ /* ignore */ });
+    }
+    input.addEventListener('input', function(){
+        clearTimeout(timeout);
+        timeout = setTimeout(function(){ doSearch(input.value); }, 300);
+    });
+    // initial fetch when page loads if search box has content
+    if (input.value && input.value.trim() !== '') doSearch(input.value.trim());
+})();
+</script>
