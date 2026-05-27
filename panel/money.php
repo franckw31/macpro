@@ -14,6 +14,14 @@ if ($uid <= 0) {
 
 function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 
+function fmt_fr_date_short($dt){
+    if (empty($dt)) return '';
+    $ts = strtotime($dt);
+    if (!$ts) return $dt;
+    $months = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+    return intval(date('j', $ts)) . ' ' . $months[intval(date('n', $ts)) - 1] . ' ' . date('Y', $ts);
+}
+
 // Update balance helper (best-effort)
 function updateMemberBalance($membre_id, $con) {
     try {
