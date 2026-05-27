@@ -347,11 +347,11 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                     echo '<input type="hidden" name="orig_date" value="' . htmlspecialchars($t['date_mvt']) . '">';
                     echo '<input type="hidden" name="orig_montant" value="' . htmlspecialchars($t['montant']) . '">';
                     echo '<input type="hidden" name="orig_id_type" value="' . intval($t['id_type_mvt']) . '">';
-                    echo '<button class="btn" name="delete_transaction" type="submit" style="background:#b91c1c;color:#fff">Supprimer</button>';
+                    echo '<button class="btn" name="delete_transaction" type="submit" style="background:#b91c1c;color:#fff" onclick="event.stopPropagation();">Supprimer</button>';
                     echo '</form>';
 
                     // edit toggle
-                    echo '<button class="btn" type="button" onclick="var f=this.parentNode.nextElementSibling; f.style.display=(f.style.display==\'none\'?\'block\':\'none\')">Modifier</button>';
+                    echo '<button class="btn" type="button" onclick="event.stopPropagation();var f=this.parentNode.nextElementSibling; f.style.display=(f.style.display==\'none\'?\'block\':\'none\')">Modifier</button>';
                     echo '</div>';
 
                     // edit form (hidden)
@@ -373,7 +373,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                     }
                     echo '</select></div>';
                     echo '</div>';
-                    echo '<div style="margin-top:8px"><button class="btn" name="edit_transaction" type="submit">Enregistrer</button></div>';
+                    echo '<div style="margin-top:8px"><button class="btn" name="edit_transaction" type="submit" onclick="event.stopPropagation();">Enregistrer</button></div>';
                     echo '</form>';
                 }
 
