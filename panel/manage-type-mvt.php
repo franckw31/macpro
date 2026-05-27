@@ -63,30 +63,36 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Gérer types Mouvements</title>
     <style>
-        body{background:#071019;color:#eef6fb;font-family:system-ui;padding:18px}
-        .sheet{max-width:900px;margin:18px auto;background:#08131a;padding:16px;border-radius:12px}
-        .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:#08b0ff;color:#04131d;text-decoration:none;font-weight:800}
-        .danger{background:#ff6b6b;color:#fff}
-        .table-wrap{overflow-x:auto}
-        table{width:100%;min-width:640px;border-collapse:collapse}
-        th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle}
-        input,select{padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
-        form.inline{display:inline-flex;gap:6px;align-items:center;margin:0}
-        .actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-        .flash{padding:8px;margin-bottom:10px;border-radius:8px}
-        .success{background:rgba(22,163,74,0.12);color:#7cf0a8}
-        .error{background:rgba(255,77,77,0.12);color:#ff9c9c}
+    body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;margin:0;padding:18px;color:#eef6fb}
+    .sheet{max-width:980px;margin:18px auto;background:linear-gradient(180deg,#071019,#08131a);color:#eef6fb;border-radius:14px;padding:18px;box-shadow:0 14px 50px rgba(0,0,0,0.6)}
+    .top{display:grid;grid-template-columns:1fr 320px;gap:14px;align-items:start}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;margin-top:8px;border:1px solid rgba(255,255,255,0.04)}
+    .label{color:#9aa6b1;font-weight:700;font-size:13px}
+    .value{font-weight:800;color:#eef6fb}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}
+    .table thead th{color:#a9c2d6;text-align:left;font-weight:800}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:#08b0ff;color:#04131d;text-decoration:none;font-weight:800}
+    .btn.secondary{background:#16a34a;color:#071017}
+    .btn.orange{background:#ff8a00;color:#fff;border:1px solid rgba(0,0,0,0.08)}
+    .form-control{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+    .muted{color:#9aa6b1;font-size:13px}
+    .danger{background:#ff6b6b;color:#fff}
+    .actions{display:flex;gap:8px;align-items:center}
+    .flash{padding:10px;border-radius:8px;margin-bottom:10px}
+    .success{background:#163b5a;color:#aef0c9}
+    .error{background:#5a1616;color:#ffb6b6}
 
-        @media (max-width: 720px){
-            body{padding:12px}
-            .sheet{padding:12px;border-radius:10px}
-            .btn{display:inline-block;text-align:center;padding:8px 10px}
-            form.inline{display:block}
-            form.inline input, form.inline select{width:100%;margin:6px 0}
-            form.inline button{width:auto;margin:6px 0;display:inline-block}
-            .actions{flex-direction:column;align-items:stretch}
-            table{min-width:0}
-        }
+    @media (max-width: 880px){
+        .top{grid-template-columns:1fr}
+        .sheet{padding:12px}
+    }
+    @media (max-width: 720px){
+        body{padding:12px}
+        .sheet{padding:12px;border-radius:10px}
+        .btn{display:inline-block;text-align:center;padding:8px 10px}
+        .actions{flex-direction:column;align-items:stretch}
+    }
     </style>
 </head>
 <body>
