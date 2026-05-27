@@ -167,7 +167,6 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
         <h3>Types existants</h3>
         <div class="table-wrap">
         <table class="table">
-            <thead><tr><th>Actions</th></tr></thead>
             <tbody>
             <?php if (count($types) === 0) echo '<tr><td colspan="2">Aucun type enregistré</td></tr>';
             foreach ($types as $t) {
