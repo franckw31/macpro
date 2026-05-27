@@ -128,18 +128,12 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
         .btn .btn-text{display:none}
         .btn .icon{margin-right:0}
     }
-    /* Mobile: convert table rows into stacked cards for better readability */
+    /* Keep rows single-line on small screens; allow horizontal scroll */
     @media (max-width: 720px){
-        .table{border:none}
-        .table thead{display:none}
-        .table tbody tr{display:block;margin-bottom:12px;padding:10px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border:1px solid rgba(255,255,255,0.03)}
-        .table tbody td{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:none}
-        .table tbody td:first-child{flex:0 0 44px;text-align:center}
-        .table tbody td:last-child{flex:1 1 auto;display:block}
-        .table tbody td:last-child .muted{margin-bottom:8px}
-        form.inline{display:flex;flex-wrap:wrap;gap:8px}
-        form.inline input, form.inline select{width:48%;min-width:120px}
-        form.inline button{width:40px;padding:6px}
+        .table-wrap{overflow-x:auto}
+        .table{min-width:640px}
+        .table td{white-space:nowrap}
+        form.inline{flex-wrap:nowrap}
         .btn.small{width:34px;height:34px}
     }
     </style>
