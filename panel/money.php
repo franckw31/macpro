@@ -389,7 +389,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                     <select class="form-control compact-field" name="id_participation"><option value="">-- Aucune --</option>
                     <?php foreach($participations as $p){ echo '<option value="' . intval($p['id-participation']) . '">' . htmlspecialchars(date('d/m/Y', strtotime($p['date_depart'])) . ' - ' . $p['titre-activite']) . '</option>'; } ?>
                     </select>
-                    <button class="btn small" type="submit" name="submit_portefeuille" style="padding:4px 6px;vertical-align:middle">Ajouter</button>
+                    <button class="btn small" type="submit" name="submit_portefeuille" style="padding:4px 6px;vertical-align:middle">Ajout</button>
                 </div></td></tr>
                 
             </table>
