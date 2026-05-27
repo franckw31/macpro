@@ -316,7 +316,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     <div class="card" style="margin-top:14px">
         <div style="margin-bottom:10px;font-weight:700">Transactions</div>
         <table class="table">
-            <thead><tr><th>Date</th><th>Activité</th><th>Opération</th><th>Montant</th></tr></thead>
+            <thead><tr><th>Date</th><th>Activité</th><th>Opération</th><th>Montant</th><th style="width:90px;text-align:center">Actions</th></tr></thead>
             <tbody>
             <?php foreach($transactions as $t){
                 $tid = intval($t['id_type_mvt']);
@@ -348,29 +348,21 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 echo '</td>';
                 $mid = intval($t['id_mvt'] ?? 0);
                 echo '<td><span class="op-label ' . ($isDebit ? 'debit' : 'credit') . '" title="' . htmlspecialchars($label) . '">' . htmlspecialchars($label) . '</span>';
-                echo '<div class="mobile-amt ' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €';
-                // mobile delete button (shown only on small screens)
-                if ($mid > 0 && (in_array(intval($uid), [2,265], true) || intval($t['id_mvt_membre'] ?? 0) === intval($uid))) {
-                    echo ' <form method="post" class="mobile-only" style="display:inline" onsubmit="return confirm(\'Confirmer suppression ?\')">';
-                    echo '<input type="hidden" name="delete_mvt" value="' . $mid . '">';
-                    echo '<button class="btn small" type="submit" style="background:#ff4d4d;color:#fff;border:none;margin-left:8px">Sup</button>';
-                    echo '</form>';
-                }
-                echo '</div>';
+                echo '<div class="mobile-amt ' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €</div>';
                 echo '</td>';
-                echo '<td class="' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €';
-                // delete button (admin or owner)
-                $mid = intval($t['id_mvt'] ?? 0);
+                echo '<td class="' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €</td>';
+                // Actions column
+                echo '<td style="text-align:center;white-space:nowrap">';
                 if ($mid > 0 && (in_array(intval($uid), [2,265], true) || intval($t['id_mvt_membre'] ?? 0) === intval($uid))) {
-                    echo '<form method="post" style="display:inline;margin-left:8px" onsubmit="return confirm(\'Confirmer suppression ?\')">';
+                    echo '<form method="post" style="display:inline" onsubmit="return confirm(\'Confirmer suppression ?\')">';
                     echo '<input type="hidden" name="delete_mvt" value="' . $mid . '">';
-                    echo '<button class="btn" type="submit" style="padding:6px 8px;background:#ff4d4d;color:#fff;border-radius:8px;border:none">Suppr</button>';
+                    echo '<button class="btn small" type="submit" style="padding:6px 8px;background:#ff4d4d;color:#fff;border:none;border-radius:8px">Suppr</button>';
                     echo '</form>';
                 }
                 echo '</td>';
                 echo '</tr>';
             }
-            if (count($transactions) === 0) echo '<tr><td colspan="4" style="text-align:center;color:#888">Aucune transaction</td></tr>';
+            if (count($transactions) === 0) echo '<tr><td colspan="5" style="text-align:center;color:#888">Aucune transaction</td></tr>';
             ?>
             </tbody>
         </table>
