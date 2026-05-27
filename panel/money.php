@@ -350,7 +350,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
             <form method="post">
                 <input type="hidden" name="target_membre" value="<?php echo intval($target_membre); ?>">
                 <table class="table">
-                <tr><th class="label">Opération</th><td><div style="display:flex;align-items:center;gap:8px"><select class="form-control" name="id_type_mvt" required style="width:auto;min-width:220px;max-width:420px;display:inline-block">
+                <tr><th class="label">Opération</th><td><div style="display:flex;align-items:center;gap:8px"><select class="form-control" name="id_type_mvt" required style="width:180px;min-width:120px;max-width:260px;display:inline-block">
                     <option value="">-- Sélectionner --</option>
                     <?php
                     // Build optgroups from $mvt_types and optional $mvt_directions
