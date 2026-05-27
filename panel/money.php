@@ -307,8 +307,8 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
         <div class="card">
             <form method="get" action="money.php" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
                 <label class="label" style="margin:0 8px 0 0">Voir membre</label>
-                <input name="q" value="<?php echo htmlspecialchars($member_search); ?>" placeholder="Rechercher pseudo..." class="form-control" style="max-width:220px">
-                <select name="membre" class="form-control" onchange="this.form.submit()" style="min-width:220px">
+                <input id="member_search_input" name="q" value="<?php echo htmlspecialchars($member_search); ?>" placeholder="Rechercher pseudo..." class="form-control" style="max-width:220px">
+                <select id="member_select" name="membre" class="form-control" onchange="this.form.submit()" style="min-width:220px">
                     <option value="">-- Choisir membre --</option>
                     <?php foreach($members as $m){ $mid = intval($m['id-membre']); $sel = ($mid === intval($target_membre)) ? ' selected' : ''; echo '<option value="' . $mid . '"' . $sel . '>' . htmlspecialchars($m['pseudo']) . ' (' . $mid . ')</option>'; } ?>
                 </select>
