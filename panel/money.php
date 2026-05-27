@@ -289,6 +289,18 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
         ?>
 
     <div class="top">
+        <?php if ($is_admin_viewer): ?>
+        <div class="card">
+            <form method="get" action="money.php" style="display:flex;gap:8px;align-items:center">
+                <label class="label" style="margin:0 8px 0 0">Voir membre</label>
+                <select name="membre" class="form-control" onchange="this.form.submit()">
+                    <option value="">-- Choisir membre --</option>
+                    <?php foreach($members as $m){ $mid = intval($m['id-membre']); $sel = ($mid === intval($target_membre)) ? ' selected' : ''; echo '<option value="' . $mid . '"' . $sel . '>' . htmlspecialchars($m['pseudo']) . ' (' . $mid . ')</option>'; } ?>
+                </select>
+                <noscript><button class="btn" type="submit">Voir</button></noscript>
+            </form>
+        </div>
+        <?php endif; ?>
         <?php if (in_array(intval($uid), [2, 265], true)): ?>
         <div class="card">
             <form method="post">
