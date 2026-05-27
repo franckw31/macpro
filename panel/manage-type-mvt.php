@@ -102,7 +102,7 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
     .btn.secondary{background:#16a34a;color:#071017}
     .btn.orange{background:#ff8a00;color:#fff;border:1px solid rgba(0,0,0,0.08)}
     .form-control{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
-    .muted{color:#9aa6b1;font-size:13px}
+    .muted{color:#9aa6b1;font-size:13px;display:inline-block;vertical-align:middle;margin-right:10px}
     .danger{background:#ff6b6b;color:#fff}
     .actions{display:flex;gap:8px;align-items:center}
     .flash{padding:10px;border-radius:8px;margin-bottom:10px}
@@ -168,8 +168,8 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
                 echo '<tr>';
                 echo '<td style="width:80px">' . intval($t['id_type_mvt']) . '</td>';
                 echo '<td>';
-                // show label/direction briefly for context inside actions
-                echo '<div class="muted" style="margin-bottom:6px">' . htmlspecialchars($t['label']) . ' — ' . htmlspecialchars($t['direction']) . '</div>';
+                // show label/direction briefly for context inside actions (inline)
+                echo '<span class="muted">' . htmlspecialchars($t['label']) . ' — ' . htmlspecialchars($t['direction']) . '</span>';
                 echo '<div class="actions">';
                 // edit form
                 echo '<form method="post" class="inline">';
