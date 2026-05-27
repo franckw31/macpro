@@ -176,6 +176,10 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     .op-label{max-width:120px}
 }
 
+/* detail row style */
+.tx-detail-row td{background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);color:#cfe8ef;padding:12px;font-size:13px}
+
+
 
 </style>
 </head>
