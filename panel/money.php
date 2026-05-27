@@ -300,6 +300,16 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 .ac-muted{color:#9aa6b1;font-size:12px}
 </style>
 </style>
+
+<style>
+/* Autocomplete suggestions */
+.ac-suggestions{position:relative}
+.ac-list{position:absolute;left:0;right:0;top:46px;z-index:40;background:#071019;border:1px solid rgba(255,255,255,0.06);max-height:260px;overflow:auto;border-radius:8px;padding:6px}
+.ac-item{padding:8px 10px;border-radius:6px;cursor:pointer;color:#e6f3fb}
+.ac-item:hover,.ac-item.active{background:rgba(10,163,255,0.08);color:#fff}
+.ac-muted{color:#9aa6b1;font-size:12px}
+</style>
+
 </head>
 <body>
 <div class="sheet">
@@ -457,35 +467,63 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 </html>
 
 <script>
-// AJAX live-search for member selector (debounced)
+// Autocomplete live-search for member selector (debounced, keyboard nav)
 (function(){
     var input = document.getElementById('member_search_input');
     var select = document.getElementById('member_select');
     if (!input || !select) return;
-    var timeout = null;
-    function setOptions(items){
-        var cur = select.value;
-        select.innerHTML = '<option value="">-- Choisir membre --</option>';
-        items.forEach(function(it){
-            var opt = document.createElement('option');
-            opt.value = it.id;
-            opt.textContent = it.pseudo + ' (' + it.id + ')';
-            if (String(it.id) === String(cur)) opt.selected = true;
-            select.appendChild(opt);
+    // wrap input into suggestions container
+    var container = document.createElement('div'); container.className = 'ac-suggestions';
+    input.parentNode.insertBefore(container, input);
+    container.appendChild(input);
+    var list = document.createElement('div'); list.className = 'ac-list'; list.style.display = 'none';
+    container.appendChild(list);
+    var timeout = null; var active = -1; var items = [];
+    function render(){
+        list.innerHTML = '';
+        if (!items || items.length === 0) { list.style.display = 'none'; return; }
+        items.forEach(function(it, idx){
+            var div = document.createElement('div'); div.className = 'ac-item'; div.tabIndex = -1;
+            div.dataset.id = it.id; div.dataset.pseudo = it.pseudo;
+            div.innerHTML = '<strong>' + escapeHtml(it.pseudo) + '</strong> <span class="ac-muted">(' + it.id + ')</span>';
+            div.addEventListener('mousedown', function(e){
+                e.preventDefault(); // prevent blur
+                choose(idx);
+            });
+            list.appendChild(div);
         });
+        active = -1; list.style.display = 'block';
+    }
+    function escapeHtml(s){ return String(s).replace(/[&<>\"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+    function choose(idx){
+        if (!items[idx]) return;
+        var it = items[idx];
+        // set select value (create option if missing)
+        var opt = select.querySelector('option[value="' + it.id + '"]');
+        if (!opt){ opt = document.createElement('option'); opt.value = it.id; opt.text = it.pseudo + ' (' + it.id + ')'; select.appendChild(opt); }
+        select.value = it.id;
+        // also set input value to pseudo
+        input.value = it.pseudo;
+        // submit the GET form to load selected member
+        var f = select.form || input.form;
+        if (f) f.submit();
     }
     function doSearch(q){
+        if (String(q).trim() === '') { items = []; render(); return; }
         var url = 'api/members_search.php?q=' + encodeURIComponent(q || '');
-        fetch(url, {credentials: 'same-origin'}).then(function(r){
-            if (!r.ok) return [];
-            return r.json();
-        }).then(function(json){ if (Array.isArray(json)) setOptions(json); }).catch(function(){ /* ignore */ });
+        fetch(url, {credentials: 'same-origin'}).then(function(r){ if (!r.ok) return []; return r.json(); }).then(function(json){ if (!Array.isArray(json)) json = []; items = json; render(); }).catch(function(){ items = []; render(); });
     }
-    input.addEventListener('input', function(){
-        clearTimeout(timeout);
-        timeout = setTimeout(function(){ doSearch(input.value); }, 300);
+    input.addEventListener('input', function(){ clearTimeout(timeout); timeout = setTimeout(function(){ doSearch(input.value); }, 250); });
+    input.addEventListener('keydown', function(e){
+        var nodes = list.querySelectorAll('.ac-item');
+        if (e.key === 'ArrowDown') { e.preventDefault(); if (active < nodes.length - 1) active++; else active = 0; updateActive(nodes); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); if (active > 0) active--; else active = nodes.length - 1; updateActive(nodes); }
+        else if (e.key === 'Enter') { if (active >= 0 && items[active]) { e.preventDefault(); choose(active); } }
+        else if (e.key === 'Escape') { list.style.display = 'none'; }
     });
-    // initial fetch when page loads if search box has content
+    function updateActive(nodes){ nodes.forEach(function(n,i){ n.classList.toggle('active', i === active); if (i === active) n.scrollIntoView({block:'nearest'}); }); }
+    document.addEventListener('click', function(ev){ if (!container.contains(ev.target)) { list.style.display = 'none'; } });
+    // initial fetch when page loads
     if (input.value && input.value.trim() !== '') doSearch(input.value.trim());
 })();
 </script>
