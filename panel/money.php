@@ -375,7 +375,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                     }
                     ?>
                 </select>
-                <a class="btn small secondary" href="/panel/manage-type-mvt.php" style="vertical-align:middle;padding:4px 4px">Autre</a>
+                <a class="btn small secondary" href="/panel/manage-type-mvt.php" style="vertical-align:middle;padding:4px 4px">Autres</a>
                 </div></td></tr>
                 <tr><th class="label">Montant</th><td><input class="form-control" type="number" step="0.01" name="montant" required style="width:120px;min-width:90px;max-width:180px;display:inline-block"></td></tr>
                 <tr style="display:none"><th class="label">Date</th><td><input class="form-control" type="date" name="date_mvt"></td></tr>
