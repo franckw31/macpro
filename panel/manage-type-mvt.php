@@ -116,10 +116,11 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
         body{padding:12px}
         .sheet{padding:12px;border-radius:10px}
         .btn{display:inline-block;text-align:center;padding:8px 10px}
-        .actions{flex-direction:column;align-items:stretch}
-        form.inline{flex-wrap:wrap}
-        form.inline input, form.inline select, form.inline button{width:100%;box-sizing:border-box}
-        .table td{white-space:normal}
+        .actions{flex-direction:row;align-items:center;gap:6px}
+        form.inline{flex-wrap:nowrap}
+        form.inline input, form.inline select{width:auto;max-width:140px}
+        form.inline button{width:auto}
+        .table td{white-space:nowrap}
     }
 
     @media (max-width: 480px){
