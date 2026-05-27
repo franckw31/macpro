@@ -466,8 +466,12 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     var timeout = null; var active = -1; var items = [];
     function render(){
         list.innerHTML = '';
+        // also update the select options so the dropdown matches suggestions
+        select.innerHTML = '<option value="">-- Choisir membre --</option>';
         if (!items || items.length === 0) { list.style.display = 'none'; return; }
         items.forEach(function(it, idx){
+            var opt = document.createElement('option'); opt.value = it.id; opt.text = it.pseudo + ' (' + it.id + ')';
+            select.appendChild(opt);
             var div = document.createElement('div'); div.className = 'ac-item'; div.tabIndex = -1;
             div.dataset.id = it.id; div.dataset.pseudo = it.pseudo;
             div.innerHTML = '<strong>' + escapeHtml(it.pseudo) + '</strong> <span class="ac-muted">(' + it.id + ')</span>';
@@ -483,14 +487,17 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     function choose(idx){
         if (!items[idx]) return;
         var it = items[idx];
-        // set select value (create option if missing)
+        // ensure select has the option and set it
         var opt = select.querySelector('option[value="' + it.id + '"]');
         if (!opt){ opt = document.createElement('option'); opt.value = it.id; opt.text = it.pseudo + ' (' + it.id + ')'; select.appendChild(opt); }
         select.value = it.id;
         // also set input value to pseudo
         input.value = it.pseudo;
-        // submit the GET form to load selected member
-        var f = select.form || input.form;
+        // hide suggestions
+        list.style.display = 'none';
+        // submit the GET form (find closest form)
+        var f = select.closest ? select.closest('form') : (select.form || input.form);
+        if (!f) f = document.querySelector('form[action="money.php"]');
         if (f) f.submit();
     }
     function doSearch(q){
