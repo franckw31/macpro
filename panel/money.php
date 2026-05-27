@@ -321,6 +321,57 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     .balance-box{background:linear-gradient(90deg,#164a8a,#0aa3ff);color:#fff}
 }
 </style>
+
+<script>
+// Theme toggle: persist preference in localStorage and apply via data-theme attribute.
+(function(){
+    var btn = document.getElementById('theme_toggle_btn');
+    if (!btn) return;
+    var KEY = 'panel_money_theme';
+    function applyTheme(theme){
+        if (!theme) {
+            document.body.removeAttribute('data-theme');
+            return;
+        }
+        document.body.setAttribute('data-theme', theme);
+    }
+    function currentStored(){ return localStorage.getItem(KEY); }
+    // initialize from storage
+    var stored = currentStored();
+    if (stored === 'light' || stored === 'dark') applyTheme(stored);
+    // update button label
+    function updateBtn(){ var t = document.body.getAttribute('data-theme'); btn.textContent = (t === 'light') ? 'Jour' : (t === 'dark' ? 'Nuit' : 'Thème'); }
+    updateBtn();
+    btn.addEventListener('click', function(){
+        var cur = document.body.getAttribute('data-theme');
+        var next = cur === 'light' ? 'dark' : 'light';
+        // toggle between light and dark; persist
+        localStorage.setItem(KEY, next);
+        applyTheme(next);
+        updateBtn();
+    });
+    // allow clearing preference via long-press (optional)
+    btn.addEventListener('contextmenu', function(e){ e.preventDefault(); localStorage.removeItem(KEY); applyTheme(null); updateBtn(); });
+})();
+</script>
+
+<!-- Apply data-theme overrides on mobile -->
+<style>
+@media (max-width:880px) {
+    body[data-theme="light"]{background:#ffffff;color:#071017}
+    body[data-theme="light"] .sheet{background:#ffffff;color:#071017}
+    body[data-theme="light"] .card{background:#f7f7f8;border:1px solid rgba(0,0,0,0.06)}
+    body[data-theme="light"] .label{color:#344054}
+    body[data-theme="light"] .form-control{background:#fff;color:#071017;border:1px solid rgba(0,0,0,0.08)}
+    body[data-theme="light"] .btn{background:#08b0ff;color:#04131d}
+    body[data-theme="light"] .btn.secondary{background:#16a34a;color:#fff}
+    body[data-theme="light"] .balance-box{background:linear-gradient(90deg,#f0f4f8,#dbeafe);color:#071017}
+
+    body[data-theme="dark"]{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);color:#eef6fb}
+    body[data-theme="dark"] .sheet{background:linear-gradient(180deg,#071019,#08131a);color:#eef6fb}
+    body[data-theme="dark"] .card{background:#000;border:1px solid rgba(255,255,255,0.04)}
+}
+</style>
 <style>
 /* Autocomplete suggestions */
 .ac-suggestions{position:relative}
