@@ -340,7 +340,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                     <option value="">-- Choisir membre --</option>
                     <?php foreach($members as $m){ $mid = intval($m['id-membre']); $sel = ($mid === intval($target_membre)) ? ' selected' : ''; echo '<option value="' . $mid . '"' . $sel . '>' . htmlspecialchars($m['pseudo']) . ' (' . $mid . ')</option>'; } ?>
                 </select>
-                <button class="btn" type="submit">Filtrer</button>
+                <!-- Filtrer button removed: selection updates live -->
                 
             </form>
         </div>
