@@ -396,6 +396,8 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 document.addEventListener('click', function(ev){
     var a = ev.target.closest && ev.target.closest('.amt-link');
     if (!a) return;
+    // ignore clicks that originate from form controls or buttons
+    if (ev.target.closest && ev.target.closest('button, input, select, textarea, label, form')) return;
     ev.preventDefault();
     var tr = a.closest('tr');
     if (!tr) return;
