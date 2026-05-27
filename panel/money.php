@@ -340,12 +340,22 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     var stored = currentStored();
     if (stored === 'light' || stored === 'dark') applyTheme(stored);
     // update button label
-    function updateBtn(){ var t = document.body.getAttribute('data-theme'); btn.textContent = (t === 'light') ? 'Jour' : (t === 'dark' ? 'Nuit' : 'Thème'); }
+    function svgSun(){ return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'; }
+    function svgMoon(){ return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="currentColor"/></svg>'; }
+    function updateBtn(){
+        var t = document.body.getAttribute('data-theme');
+        if (t === 'light') btn.innerHTML = svgSun();
+        else if (t === 'dark') btn.innerHTML = svgMoon();
+        else {
+            // follow system preference
+            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            btn.innerHTML = prefersDark ? svgMoon() : svgSun();
+        }
+    }
     updateBtn();
     btn.addEventListener('click', function(){
         var cur = document.body.getAttribute('data-theme');
         var next = cur === 'light' ? 'dark' : 'light';
-        // toggle between light and dark; persist
         localStorage.setItem(KEY, next);
         applyTheme(next);
         updateBtn();
