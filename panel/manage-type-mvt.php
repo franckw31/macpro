@@ -167,12 +167,11 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
         <h3>Types existants</h3>
         <div class="table-wrap">
         <table class="table">
-            <thead><tr><th>ID</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Actions</th></tr></thead>
             <tbody>
             <?php if (count($types) === 0) echo '<tr><td colspan="2">Aucun type enregistré</td></tr>';
             foreach ($types as $t) {
                 echo '<tr>';
-                echo '<td style="width:36px">' . intval($t['id_type_mvt']) . '</td>';
                 echo '<td>';
                 // show label/direction briefly for context inside actions (inline)
                 echo '<span class="muted">' . htmlspecialchars($t['label']) . ' — ' . htmlspecialchars($t['direction']) . '</span>';
