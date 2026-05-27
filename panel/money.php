@@ -457,12 +457,12 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     var input = document.getElementById('member_search_input');
     var select = document.getElementById('member_select');
     if (!input || !select) return;
-    // wrap input into suggestions container
-    var container = document.createElement('div'); container.className = 'ac-suggestions';
-    input.parentNode.insertBefore(container, input);
-    container.appendChild(input);
+    // use the input's parent as container (don't move the input node)
+    var container = input.parentNode || document.body;
+    container.classList.add('ac-suggestions');
     var list = document.createElement('div'); list.className = 'ac-list'; list.style.display = 'none';
-    container.appendChild(list);
+    // append suggestion list after the input
+    input.insertAdjacentElement('afterend', list);
     var timeout = null; var active = -1; var items = [];
     function render(){
         list.innerHTML = '';
@@ -497,7 +497,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
         var spinner = document.getElementById('member_search_spinner');
         if (String(q).trim() === '') { items = []; render(); if (spinner) spinner.style.display = 'none'; return; }
         if (spinner) spinner.style.display = 'inline-block';
-        var url = 'api/members_search.php?q=' + encodeURIComponent(q || '');
+        var url = './api/members_search.php?q=' + encodeURIComponent(q || '');
         fetch(url, {credentials: 'same-origin'})
             .then(function(r){ if (spinner) spinner.style.display = 'none'; if (!r.ok) return []; return r.json(); })
             .then(function(json){ if (!Array.isArray(json)) json = []; items = json; render(); })
