@@ -235,8 +235,8 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 .dir-badge{display:inline-block;padding:6px 8px;border-radius:8px;font-weight:800;font-size:12px}
 .mobile-only{display:none}
 .btn.small{padding:6px 8px;border-radius:8px;font-size:13px}
-.btn.icon{width:36px;height:34px;padding:6px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px}
-.btn.icon svg{width:14px;height:14px}
+.btn.icon{width:30px;height:30px;padding:4px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px}
+.btn.icon svg{width:12px;height:12px}
 .part-date{color:#9aa6b1;font-size:13px;margin-top:4px}
 
 /* On small screens, hide the separate Montant column and show amount under the Opération label */
