@@ -463,7 +463,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 </div></td></tr>
                 <tr><th class="label">Montant</th><td><input class="form-control compact-field" type="number" step="0.01" name="montant" required></td></tr>
                 <tr style="display:none"><th class="label">Date</th><td><input class="form-control" type="date" name="date_mvt"></td></tr>
-                <tr><th class="label">ID Participation</th><td><div style="display:flex;align-items:center;gap:8px">
+                <tr><th class="label">Activité</th><td><div style="display:flex;align-items:center;gap:8px">
                     <select class="form-control compact-field" name="id_participation"><option value="">-- Aucune --</option>
                     <?php foreach($participations as $p){ echo '<option value="' . intval($p['id-participation']) . '">' . htmlspecialchars(date('d/m/Y', strtotime($p['date_depart'])) . ' - ' . $p['titre-activite']) . '</option>'; } ?>
                     </select>
