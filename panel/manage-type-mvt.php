@@ -70,6 +70,7 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
     .label{color:#9aa6b1;font-weight:700;font-size:13px}
     .value{font-weight:800;color:#eef6fb}
     .table{width:100%;border-collapse:collapse}
+    .table-wrap{overflow-x:auto}
     .table th,.table td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}
     .table thead th{color:#a9c2d6;text-align:left;font-weight:800}
     .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:#08b0ff;color:#04131d;text-decoration:none;font-weight:800}
@@ -118,7 +119,7 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
 
         <h3>Types existants</h3>
         <div class="table-wrap">
-        <table>
+        <table class="table">
             <thead><tr><th>ID</th><th>Libellé</th><th>Direction</th><th>Actions</th></tr></thead>
             <tbody>
             <?php if (count($types) === 0) echo '<tr><td colspan="4">Aucun type enregistré</td></tr>';
