@@ -246,7 +246,7 @@ if ($pq && ($pr = mysqli_fetch_assoc($pq))) { $pseudo = $pr['pseudo']; }
 body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;margin:0;padding:18px;color:#eef6fb}
 .sheet{max-width:980px;margin:18px auto;background:linear-gradient(180deg,#071019,#08131a);color:#eef6fb;border-radius:14px;padding:18px;box-shadow:0 14px 50px rgba(0,0,0,0.6)}
 .top{display:grid;grid-template-columns:1fr 420px;gap:14px;align-items:start}
-.card{background:transparent;padding:14px;border-radius:12px;margin-top:8px;border:1px solid rgba(255,255,255,0.04)}
+.card{background:#000;padding:14px;border-radius:12px;margin-top:8px;border:1px solid rgba(255,255,255,0.04)}
 .label{color:#9aa6b1;font-weight:700;font-size:13px}
 .value{font-weight:800;color:#eef6fb}
 .table{width:100%;border-collapse:collapse}
