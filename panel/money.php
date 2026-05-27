@@ -324,7 +324,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 
 <script>
 // Theme toggle: persist preference in localStorage and apply via data-theme attribute.
-(function(){
+document.addEventListener('DOMContentLoaded', function(){
     var btn = document.getElementById('theme_toggle_btn');
     if (!btn) return;
     var KEY = 'panel_money_theme';
@@ -362,7 +362,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     });
     // allow clearing preference via long-press (optional)
     btn.addEventListener('contextmenu', function(e){ e.preventDefault(); localStorage.removeItem(KEY); applyTheme(null); updateBtn(); });
-})();
+});
 </script>
 
 <!-- Apply data-theme overrides on mobile -->
