@@ -173,8 +173,7 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
             foreach ($types as $t) {
                 echo '<tr>';
                 echo '<td>';
-                // show label/direction briefly for context inside actions (inline)
-                echo '<span class="muted">' . htmlspecialchars($t['label']) . ' — ' . htmlspecialchars($t['direction']) . '</span>';
+                // label/direction removed from actions per request
                 echo '<div class="actions">';
                 // edit form
                 echo '<form method="post" class="inline">';
