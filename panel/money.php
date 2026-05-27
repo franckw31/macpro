@@ -97,6 +97,7 @@ if (isset($_POST['submit_portefeuille'])) {
 // Handle delete movement
 if (isset($_POST['delete_mvt'])) {
     $del_id = intval($_POST['delete_mvt']);
+    $posted_target = isset($_POST['target_membre']) ? intval($_POST['target_membre']) : (isset($_GET['membre']) ? intval($_GET['membre']) : $uid);
     try {
         // fetch the movement to check ownership
         $g = mysqli_prepare($con, "SELECT id_mvt_membre, montant, id_type_mvt, date_mvt FROM portefeuille WHERE id_mvt = ? LIMIT 1");
@@ -123,7 +124,11 @@ if (isset($_POST['delete_mvt'])) {
             log_activity($con, 'delete_portefeuille', $details);
         }
         $_SESSION['msg'] = 'Mouvement supprimé';
-        header('Location: money.php');
+        if (in_array(intval($uid), [2,265], true) && $posted_target !== intval($uid)) {
+            header('Location: money.php?membre=' . $posted_target);
+        } else {
+            header('Location: money.php');
+        }
         exit;
     } catch (Exception $e) {
         $_SESSION['error'] = $e->getMessage();
