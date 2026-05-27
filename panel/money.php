@@ -151,6 +151,14 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 .op-label{display:inline-block;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
 .dir-badge{display:inline-block;padding:6px 8px;border-radius:8px;font-weight:800;font-size:12px}
 
+/* On small screens, hide the separate Montant column and show amount under the Opération label */
+.mobile-amt{display:none;color:#cfe8d6;margin-top:6px;font-size:13px}
+@media (max-width:880px){
+    .table thead th:nth-child(5), .table tbody td:nth-child(5){display:none}
+    .mobile-amt{display:block}
+    .op-label{max-width:120px}
+}
+
 
 </style>
 </head>
