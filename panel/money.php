@@ -196,9 +196,8 @@ if (count($part_ids) > 0) {
     }
 }
 
-// Compute balance
+// Compute balance for the target member
 $solde = 0;
-// Compute balance for display using same logic as updateMemberBalance
 $sq_stmt = mysqli_prepare($con, "SELECT COALESCE(SUM(
     CASE
         WHEN (tm.direction IS NOT NULL AND LOWER(tm.direction) IN ('credit','c')) THEN p.montant
@@ -211,7 +210,7 @@ FROM portefeuille p
 LEFT JOIN type_mvt tm ON p.id_type_mvt = tm.id_type_mvt
 WHERE p.id_mvt_membre = ?");
 if ($sq_stmt) {
-    mysqli_stmt_bind_param($sq_stmt, 'i', $uid);
+    mysqli_stmt_bind_param($sq_stmt, 'i', $target_membre);
     mysqli_stmt_execute($sq_stmt);
     $res = mysqli_stmt_get_result($sq_stmt);
     if ($res && ($sr = mysqli_fetch_assoc($res))) $solde = $sr['balance'];
