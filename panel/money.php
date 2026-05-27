@@ -308,7 +308,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 if ($mid > 0 && (in_array(intval($uid), [2,265], true) || intval($t['id_mvt_membre'] ?? 0) === intval($uid))) {
                     echo ' <form method="post" class="mobile-only" style="display:inline" onsubmit="return confirm(\'Confirmer suppression ?\')">';
                     echo '<input type="hidden" name="delete_mvt" value="' . $mid . '">';
-                    echo '<button class="btn small" type="submit" style="background:#ff4d4d;color:#fff;border:none;margin-left:8px">Suppr</button>';
+                    echo '<button class="btn small" type="submit" style="background:#ff4d4d;color:#fff;border:none;margin-left:8px">Sup</button>';
                     echo '</form>';
                 }
                 echo '</div>';
