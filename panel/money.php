@@ -135,9 +135,9 @@ if (isset($_POST['delete_mvt'])) {
     }
 }
 
-// Fetch participations for select
+// Fetch participations for select (for the target member)
 $participations = [];
-$q = @mysqli_query($con, "SELECT p.`id-participation`, a.`titre-activite`, a.date_depart FROM participation p JOIN activite a ON p.`id-activite` = a.`id-activite` WHERE p.`id-membre` = " . intval($uid) . " ORDER BY a.date_depart DESC");
+$q = @mysqli_query($con, "SELECT p.`id-participation`, a.`titre-activite`, a.date_depart FROM participation p JOIN activite a ON p.`id-activite` = a.`id-activite` WHERE p.`id-membre` = " . intval($target_membre) . " ORDER BY a.date_depart DESC");
 if ($q) while ($r = mysqli_fetch_assoc($q)) $participations[] = $r;
 
 // Load movement types from DB (table `type_mvt`) if available; fallback to defaults
@@ -170,9 +170,9 @@ if ($is_admin_viewer) {
     if ($mq) while ($mr = mysqli_fetch_assoc($mq)) $members[] = $mr;
 }
 
-// Fetch transactions
+// Fetch transactions for the target member
 $transactions = [];
-$qt = @mysqli_query($con, "SELECT * FROM portefeuille WHERE id_mvt_membre = " . intval($uid) . " ORDER BY date_mvt ASC");
+$qt = @mysqli_query($con, "SELECT * FROM portefeuille WHERE id_mvt_membre = " . intval($target_membre) . " ORDER BY date_mvt ASC");
 if ($qt) while ($tr = mysqli_fetch_assoc($qt)) $transactions[] = $tr;
 
 // Build participation id -> activity title map for transactions (to display activity title instead of id)
