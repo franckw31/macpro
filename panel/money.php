@@ -318,7 +318,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     <div class="card" style="margin-top:14px">
         <div style="margin-bottom:10px;font-weight:700">Transactions</div>
         <table class="table">
-            <thead><tr><th>Date</th><th>Activité</th><th>Opération</th><th>Montant</th><th style="width:90px;text-align:center">Sup</th></tr></thead>
+            <thead><tr><th>Date</th><th>Activité</th><th>Opération</th><th>Montant</th><th style="width:36px;text-align:center" title="Actions">&nbsp;</th></tr></thead>
             <tbody>
             <?php foreach($transactions as $t){
                 $tid = intval($t['id_type_mvt']);
