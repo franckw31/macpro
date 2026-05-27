@@ -326,7 +326,9 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 $rowClass = $isDebit ? 'tx-debit' : 'tx-credit';
                 $amt = number_format($t['montant'],2,',',' ');
                 echo '<tr class="' . $rowClass . '">';
-                echo '<td>' . htmlspecialchars(date('d/m/Y', strtotime($t['date_mvt']))) . '</td>';
+                $tx_full = date('d/m/Y', strtotime($t['date_mvt']));
+                $tx_short = date('d-m', strtotime($t['date_mvt']));
+                echo '<td title="' . htmlspecialchars($tx_full) . '">' . htmlspecialchars($tx_short) . '</td>';
                 $pid = $t['id_participation'] ?? '';
                 $part_label = '-';
                 if (!empty($pid)) {
