@@ -80,6 +80,8 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
     .table th,.table td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}
     .table thead th{color:#a9c2d6;text-align:left;font-weight:800}
     .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:#08b0ff;color:#04131d;text-decoration:none;font-weight:800}
+    .btn .icon{display:inline-block;width:16px;height:16px;vertical-align:middle;margin-right:8px;fill:currentColor}
+    .btn.small{padding:6px 8px;font-size:13px;border-radius:8px}
     .btn.secondary{background:#16a34a;color:#071017}
     .btn.orange{background:#ff8a00;color:#fff;border:1px solid rgba(0,0,0,0.08)}
     .form-control{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
@@ -123,7 +125,7 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
                 <option value="credit">Crédit</option>
                 <option value="debit">Débit</option>
             </select>
-            <button class="btn" type="submit">Ajouter / Mettre à jour</button>
+            <button class="btn" type="submit"><svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>Ajouter / Mettre à jour</button>
         </form>
 
         <h3>Types existants</h3>
@@ -147,13 +149,13 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
                 echo '<option value="credit"' . ($t['direction']==='credit' ? ' selected' : '') . '>Crédit</option>';
                 echo '<option value="debit"' . ($t['direction']==='debit' ? ' selected' : '') . '>Débit</option>';
                 echo '</select> ';
-                echo '<button class="btn" type="submit">Mettre à jour</button>';
+                echo '<button class="btn" type="submit" title="Mettre à jour"><svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>Mettre à jour</button>';
                 echo '</form>';
                 // delete form
                 echo '<form method="post" class="inline" onsubmit="return confirm(\'Supprimer ce type ?\');">';
                 echo '<input type="hidden" name="action" value="delete">';
                 echo '<input type="hidden" name="id_type_mvt" value="' . intval($t['id_type_mvt']) . '">';
-                echo '<button class="btn danger" type="submit">Supprimer</button>';
+                echo '<button class="btn danger" type="submit" title="Supprimer"><svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>Supprimer</button>';
                 echo '</form>';
                 echo '</td>';
                 echo '</tr>';
