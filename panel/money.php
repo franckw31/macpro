@@ -16,20 +16,24 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 // Update balance helper (best-effort)
 function updateMemberBalance($membre_id, $con) {
     try {
-        $query = "SELECT \
-            COALESCE(SUM(CASE WHEN id_type_mvt = 4 THEN montant ELSE 0 END), 0) + \
-            COALESCE(SUM(CASE WHEN id_type_mvt = 6 THEN montant ELSE 0 END), 0) + \
-            COALESCE(SUM(CASE WHEN id_type_mvt = 5 THEN montant ELSE 0 END), 0) - \
-            COALESCE(SUM(CASE WHEN id_type_mvt = 1 THEN montant ELSE 0 END), 0) - \
-            COALESCE(SUM(CASE WHEN id_type_mvt = 2 THEN montant ELSE 0 END), 0) - \
-            COALESCE(SUM(CASE WHEN id_type_mvt = 3 THEN montant ELSE 0 END), 0) as balance \
-            FROM portefeuille WHERE id_mvt_membre = ?";
+        // Compute balance using type_mvt.direction when available; fallback to id ranges
+        $query = "SELECT COALESCE(SUM(
+            CASE
+                WHEN (tm.direction IS NOT NULL AND LOWER(tm.direction) IN ('credit','c')) THEN p.montant
+                WHEN (tm.direction IS NOT NULL AND LOWER(tm.direction) IN ('debit','d')) THEN -p.montant
+                WHEN (tm.direction IS NULL AND p.id_type_mvt NOT BETWEEN 1 AND 3) THEN p.montant
+                ELSE -p.montant
+            END
+        ),0) AS balance
+        FROM portefeuille p
+        LEFT JOIN type_mvt tm ON p.id_type_mvt = tm.id_type_mvt
+        WHERE p.id_mvt_membre = ?";
         $stmt = mysqli_prepare($con, $query);
         mysqli_stmt_bind_param($stmt, 'i', $membre_id);
         mysqli_stmt_execute($stmt);
         $res = mysqli_stmt_get_result($stmt);
         $row = mysqli_fetch_assoc($res);
-        $balance = $row['balance'] ?? 0;
+        $balance = isset($row['balance']) ? $row['balance'] : 0;
         $upd = mysqli_prepare($con, "UPDATE membres SET solde = ? WHERE `id-membre` = ?");
         mysqli_stmt_bind_param($upd, 'di', $balance, $membre_id);
         mysqli_stmt_execute($upd);
@@ -101,11 +105,24 @@ if ($qt) while ($tr = mysqli_fetch_assoc($qt)) $transactions[] = $tr;
 
 // Compute balance
 $solde = 0;
-$sq = @mysqli_query($con, "SELECT 
-    COALESCE(SUM(CASE WHEN id_type_mvt = 4 THEN montant ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN id_type_mvt = 6 THEN montant ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN id_type_mvt = 5 THEN montant ELSE 0 END), 0) - 
-    COALESCE(SUM(CASE WHEN id_type_mvt = 1 THEN montant ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN id_type_mvt = 2 THEN montant ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN id_type_mvt = 3 THEN montant ELSE 0 END), 0) as balance 
-    FROM portefeuille WHERE id_mvt_membre = " . intval($uid));
-if ($sq) { $sr = mysqli_fetch_assoc($sq); $solde = $sr['balance']; }
+// Compute balance for display using same logic as updateMemberBalance
+$sq_stmt = mysqli_prepare($con, "SELECT COALESCE(SUM(
+    CASE
+        WHEN (tm.direction IS NOT NULL AND LOWER(tm.direction) IN ('credit','c')) THEN p.montant
+        WHEN (tm.direction IS NOT NULL AND LOWER(tm.direction) IN ('debit','d')) THEN -p.montant
+        WHEN (tm.direction IS NULL AND p.id_type_mvt NOT BETWEEN 1 AND 3) THEN p.montant
+        ELSE -p.montant
+    END
+),0) AS balance
+FROM portefeuille p
+LEFT JOIN type_mvt tm ON p.id_type_mvt = tm.id_type_mvt
+WHERE p.id_mvt_membre = ?");
+if ($sq_stmt) {
+    mysqli_stmt_bind_param($sq_stmt, 'i', $uid);
+    mysqli_stmt_execute($sq_stmt);
+    $res = mysqli_stmt_get_result($sq_stmt);
+    if ($res && ($sr = mysqli_fetch_assoc($res))) $solde = $sr['balance'];
+}
 
 // Fetch pseudo for header
 $pseudo = 'Utilisateur';
