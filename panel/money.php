@@ -392,18 +392,17 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function(){
-    document.querySelectorAll('.amt-link').forEach(function(a){
-        a.addEventListener('click', function(ev){
-            ev.preventDefault();
-            var tr = a.closest('tr');
-            if (!tr) return;
-            var next = tr.nextElementSibling;
-            if (next && next.classList.contains('tx-detail-row')){
-                next.style.display = (next.style.display === 'none' || next.style.display === '') ? 'table-row' : 'none';
-            }
-        });
-    });
+// Delegated click handler: more robust when DOM changes (forms/buttons added)
+document.addEventListener('click', function(ev){
+    var a = ev.target.closest && ev.target.closest('.amt-link');
+    if (!a) return;
+    ev.preventDefault();
+    var tr = a.closest('tr');
+    if (!tr) return;
+    var next = tr.nextElementSibling;
+    if (next && next.classList.contains('tx-detail-row')){
+        next.style.display = (next.style.display === 'table-row') ? 'none' : 'table-row';
+    }
 });
 </script>
 
