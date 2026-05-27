@@ -374,16 +374,16 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                         echo '</optgroup>';
                     }
                     ?>
-                </select></td></tr>
+                </select>
+                <a class="btn secondary" href="/panel/manage-type-mvt.php" style="margin-left:8px;vertical-align:middle">Gérer types Mouvements</a>
+                </td></tr>
                 <tr><th class="label">Montant</th><td><input class="form-control" type="number" step="0.01" name="montant" required></td></tr>
                 <tr style="display:none"><th class="label">Date</th><td><input class="form-control" type="date" name="date_mvt"></td></tr>
                 <tr><th class="label">ID Participation</th><td><select class="form-control" name="id_participation"><option value="">-- Aucune --</option>
                 <?php foreach($participations as $p){ echo '<option value="' . intval($p['id-participation']) . '">' . htmlspecialchars(date('d/m/Y', strtotime($p['date_depart'])) . ' - ' . $p['titre-activite']) . '</option>'; } ?>
                 </select></td></tr>
                 <tr><td colspan="2" style="text-align:center"><button class="btn" type="submit" name="submit_portefeuille">Ajouter Transaction</button></td></tr>
-                <tr><td colspan="2" style="text-align:center;margin-top:8px">
-                    <a class="btn secondary" href="/panel/manage-type-mvt.php" style="margin-top:8px">Gérer types Mouvements</a>
-                </td></tr>
+                
             </table>
             </form>
         </div>
