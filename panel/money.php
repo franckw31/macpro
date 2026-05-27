@@ -329,19 +329,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                     <?php foreach($members as $m){ $mid = intval($m['id-membre']); $sel = ($mid === intval($target_membre)) ? ' selected' : ''; echo '<option value="' . $mid . '"' . $sel . '>' . htmlspecialchars($m['pseudo']) . ' (' . $mid . ')</option>'; } ?>
                 </select>
                 <button class="btn" type="submit">Filtrer</button>
-                <?php if ($member_total > $member_perpage):
-                    $last = (int)ceil($member_total / $member_perpage);
-                ?>
-                <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
-                    <?php if ($member_page > 1): ?>
-                        <a class="btn small" href="money.php?<?php echo 'q=' . urlencode($member_search) . '&page=' . ($member_page - 1); ?>">Préc</a>
-                    <?php endif; ?>
-                    <div class="muted">Page <?php echo $member_page; ?> / <?php echo $last; ?></div>
-                    <?php if ($member_page < $last): ?>
-                        <a class="btn small" href="money.php?<?php echo 'q=' . urlencode($member_search) . '&page=' . ($member_page + 1); ?>">Suiv</a>
-                    <?php endif; ?>
-                </div>
-                <?php endif; ?>
+                
             </form>
         </div>
         <?php endif; ?>
