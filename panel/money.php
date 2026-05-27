@@ -140,6 +140,24 @@ $transactions = [];
 $qt = @mysqli_query($con, "SELECT * FROM portefeuille WHERE id_mvt_membre = " . intval($uid) . " ORDER BY date_mvt ASC");
 if ($qt) while ($tr = mysqli_fetch_assoc($qt)) $transactions[] = $tr;
 
+// Build participation id -> activity title map for transactions (to display activity title instead of id)
+$participation_titles = [];
+$part_ids = [];
+foreach ($transactions as $tr) {
+    if (!empty($tr['id_participation'])) $part_ids[] = intval($tr['id_participation']);
+}
+$part_ids = array_values(array_unique($part_ids));
+if (count($part_ids) > 0) {
+    $ids = implode(',', $part_ids);
+    $pq = @mysqli_query($con, "SELECT p.`id-participation`, a.`titre-activite` FROM participation p JOIN activite a ON p.`id-activite` = a.`id-activite` WHERE p.`id-participation` IN (" . $ids . ")");
+    if ($pq) {
+        while ($pr = mysqli_fetch_assoc($pq)) {
+            $pid = intval($pr['id-participation']);
+            $participation_titles[$pid] = $pr['titre-activite'];
+        }
+    }
+}
+
 // Compute balance
 $solde = 0;
 // Compute balance for display using same logic as updateMemberBalance
