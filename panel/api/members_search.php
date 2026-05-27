@@ -25,7 +25,9 @@ if ($safe !== '') {
     if (ctype_digit($q)) {
         $sql .= " WHERE `id-membre` = " . intval($q);
     } else {
-        $sql .= " WHERE pseudo LIKE '%" . $safe . "%' OR email LIKE '%" . $safe . "%'";
+        // prefix match on pseudo (case-insensitive) and email prefix
+        $esc = mysqli_real_escape_string($con, strtolower($q));
+        $sql .= " WHERE LOWER(pseudo) LIKE '" . $esc . "%' OR LOWER(email) LIKE '" . $esc . "%'";
     }
 }
 // return a reasonable limit to avoid huge payloads
