@@ -294,3 +294,19 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 </div>
 </body>
 </html>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('.amt-link').forEach(function(a){
+        a.addEventListener('click', function(ev){
+            ev.preventDefault();
+            var tr = a.closest('tr');
+            if (!tr) return;
+            var next = tr.nextElementSibling;
+            if (next && next.classList.contains('tx-detail-row')){
+                next.style.display = (next.style.display === 'none' || next.style.display === '') ? 'table-row' : 'none';
+            }
+        });
+    });
+});
+</script>
