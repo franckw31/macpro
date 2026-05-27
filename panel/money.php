@@ -163,10 +163,24 @@ if ($mtq) {
     }
 }
 
-// Load members list for admin selector
+// Load members list for admin selector with search + pagination
 $members = [];
+$member_search = '';
+$member_page = 1;
+$member_perpage = 30;
+$member_total = 0;
 if ($is_admin_viewer) {
-    $mq = @mysqli_query($con, "SELECT `id-membre`, pseudo FROM membres ORDER BY pseudo ASC LIMIT 1000");
+    $member_search = isset($_GET['q']) ? trim($_GET['q']) : '';
+    $member_page = isset($_GET['page']) ? max(1,intval($_GET['page'])) : 1;
+    $offset = ($member_page - 1) * $member_perpage;
+    $where = '';
+    if ($member_search !== '') {
+        $esc = mysqli_real_escape_string($con, $member_search);
+        $where = "WHERE pseudo LIKE '%" . $esc . "%'";
+    }
+    $cq = @mysqli_query($con, "SELECT COUNT(*) AS cnt FROM membres " . $where);
+    if ($cq && ($cr = mysqli_fetch_assoc($cq))) $member_total = intval($cr['cnt']);
+    $mq = @mysqli_query($con, "SELECT `id-membre`, pseudo FROM membres " . $where . " ORDER BY pseudo ASC LIMIT " . intval($offset) . "," . intval($member_perpage));
     if ($mq) while ($mr = mysqli_fetch_assoc($mq)) $members[] = $mr;
 }
 
