@@ -70,6 +70,34 @@ if (isset($_POST['submit_portefeuille'])) {
     }
 }
 
+// Handle delete movement
+if (isset($_POST['delete_mvt'])) {
+    $del_id = intval($_POST['delete_mvt']);
+    try {
+        // fetch the movement to check ownership
+        $g = mysqli_prepare($con, "SELECT id_mvt_membre FROM portefeuille WHERE id_mvt = ? LIMIT 1");
+        mysqli_stmt_bind_param($g, 'i', $del_id);
+        mysqli_stmt_execute($g);
+        $gres = mysqli_stmt_get_result($g);
+        $row = mysqli_fetch_assoc($gres);
+        if (!$row) throw new Exception('Mouvement introuvable');
+        $owner = intval($row['id_mvt_membre']);
+        // allow if admin (2 or 265) or owner
+        if (!in_array(intval($uid), [2,265], true) && $owner !== intval($uid)) {
+            throw new Exception('Permission refusée');
+        }
+        $d = mysqli_prepare($con, "DELETE FROM portefeuille WHERE id_mvt = ? LIMIT 1");
+        mysqli_stmt_bind_param($d, 'i', $del_id);
+        if (!mysqli_stmt_execute($d)) throw new Exception('Erreur suppression: ' . mysqli_stmt_error($d));
+        updateMemberBalance($owner, $con);
+        $_SESSION['msg'] = 'Mouvement supprimé';
+        header('Location: money.php');
+        exit;
+    } catch (Exception $e) {
+        $_SESSION['error'] = $e->getMessage();
+    }
+}
+
 // Fetch participations for select
 $participations = [];
 $q = @mysqli_query($con, "SELECT p.`id-participation`, a.`titre-activite`, a.date_depart FROM participation p JOIN activite a ON p.`id-activite` = a.`id-activite` WHERE p.`id-membre` = " . intval($uid) . " ORDER BY a.date_depart DESC");
