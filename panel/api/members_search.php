@@ -19,15 +19,21 @@ if (!in_array($uid, [2,265], true)) {
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $out = [];
 $safe = mysqli_real_escape_string($con, $q);
-$sql = "SELECT `id-membre`, pseudo FROM membres";
+$sql = "SELECT `id-membre`, pseudo, email FROM membres";
 if ($safe !== '') {
-    $sql .= " WHERE pseudo LIKE '%" . $safe . "%'";
+    // If user typed a number only, allow searching by id
+    if (ctype_digit($q)) {
+        $sql .= " WHERE `id-membre` = " . intval($q);
+    } else {
+        $sql .= " WHERE pseudo LIKE '%" . $safe . "%' OR email LIKE '%" . $safe . "%'";
+    }
 }
-$sql .= " ORDER BY pseudo ASC LIMIT 50";
+// return a reasonable limit to avoid huge payloads
+$sql .= " ORDER BY pseudo ASC LIMIT 200";
 $res = @mysqli_query($con, $sql);
 if ($res) {
     while ($r = mysqli_fetch_assoc($res)) {
-        $out[] = ['id' => intval($r['id-membre']), 'pseudo' => $r['pseudo']];
+        $out[] = ['id' => intval($r['id-membre']), 'pseudo' => $r['pseudo'], 'email' => $r['email'] ?? ''];
     }
 }
 header('Content-Type: application/json; charset=utf-8');
