@@ -330,10 +330,19 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 $part_label = '-';
                 if (!empty($pid)) {
                     $pid_i = intval($pid);
-                    if (isset($participation_titles[$pid_i])) $part_label = $participation_titles[$pid_i];
-                    else $part_label = 'Participation ' . $pid_i;
+                    if (isset($participation_titles[$pid_i])) {
+                        $part_label = $participation_titles[$pid_i]['title'];
+                        $part_date = $participation_titles[$pid_i]['date'];
+                    } else {
+                        $part_label = 'Participation ' . $pid_i;
+                        $part_date = '';
+                    }
                 }
-                echo '<td>' . htmlspecialchars($part_label) . '</td>';
+                echo '<td>' . htmlspecialchars($part_label);
+                if (!empty($part_date)) {
+                    echo '<div class="part-date muted">' . htmlspecialchars(fmt_fr_date_short($part_date)) . '</div>';
+                }
+                echo '</td>';
                 $mid = intval($t['id_mvt'] ?? 0);
                 echo '<td><span class="op-label ' . ($isDebit ? 'debit' : 'credit') . '" title="' . htmlspecialchars($label) . '">' . htmlspecialchars($label) . '</span>';
                 echo '<div class="mobile-amt ' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €';
