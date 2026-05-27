@@ -235,6 +235,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 .dir-badge{display:inline-block;padding:6px 8px;border-radius:8px;font-weight:800;font-size:12px}
 .mobile-only{display:none}
 .btn.small{padding:6px 8px;border-radius:8px;font-size:13px}
+.part-date{color:#9aa6b1;font-size:13px;margin-top:4px}
 
 /* On small screens, hide the separate Montant column and show amount under the Opération label */
 .mobile-amt{display:none;color:#cfe8d6;margin-top:6px;font-size:13px}
