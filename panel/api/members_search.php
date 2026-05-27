@@ -38,5 +38,15 @@ if ($res) {
         $out[] = ['id' => intval($r['id-membre']), 'pseudo' => $r['pseudo'], 'email' => $r['email'] ?? ''];
     }
 }
+// Debug log for admin troubleshooting
+$logfile = __DIR__ . '/members_search.log';
+if (in_array($uid, [2,265], true)) {
+    $log = date('Y-m-d H:i:s') . " | uid=" . intval($uid) . " q=" . addslashes($q) . " | sql=" . addslashes($sql) . " | results=" . count($out) . "\n";
+    // also log first 10 results for quick inspection
+    $sample = array_slice($out, 0, 10);
+    $log .= "sample: " . addslashes(json_encode($sample, JSON_UNESCAPED_UNICODE)) . "\n\n";
+    @file_put_contents($logfile, $log, FILE_APPEND | LOCK_EX);
+}
+
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode($out);
