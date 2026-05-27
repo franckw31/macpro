@@ -297,6 +297,30 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 
 
 </style>
+
+<!-- Mobile day/night mode: use system preference when on small screens -->
+<style>
+@media (max-width:880px) and (prefers-color-scheme: light) {
+    body{background:#ffffff;color:#071017}
+    .sheet{background:#ffffff;color:#071017}
+    .card{background:#f7f7f8;border:1px solid rgba(0,0,0,0.06)}
+    .label{color:#344054}
+    .form-control{background:#fff;color:#071017;border:1px solid rgba(0,0,0,0.08)}
+    .btn{background:#08b0ff;color:#04131d}
+    .btn.secondary{background:#16a34a;color:#fff}
+    .btn.orange{background:#ff8a00;color:#fff}
+    .balance-box{background:linear-gradient(90deg,#f0f4f8,#dbeafe);color:#071017}
+}
+
+@media (max-width:880px) and (prefers-color-scheme: dark) {
+    /* keep existing dark styles */
+    body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);color:#eef6fb}
+    .sheet{background:linear-gradient(180deg,#071019,#08131a);color:#eef6fb}
+    .card{background:#000;border:1px solid rgba(255,255,255,0.04)}
+    .form-control{background:transparent;color:inherit;border:1px solid rgba(255,255,255,0.06)}
+    .balance-box{background:linear-gradient(90deg,#164a8a,#0aa3ff);color:#fff}
+}
+</style>
 <style>
 /* Autocomplete suggestions */
 .ac-suggestions{position:relative}
