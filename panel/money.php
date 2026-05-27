@@ -333,11 +333,50 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 // hidden detail row (toggle visible when amount clicked)
                 echo '<tr class="tx-detail-row" style="display:none">';
                 echo '<td colspan="5">';
-                echo '<div style="display:flex;flex-direction:column;gap:6px">';
+                echo '<div style="display:flex;flex-direction:column;gap:8px">';
                 echo '<div><strong>Date:</strong> ' . htmlspecialchars(date('d/m/Y H:i', strtotime($t['date_mvt']))) . '</div>';
                 echo '<div><strong>Opération:</strong> ' . htmlspecialchars($label) . ' (id ' . intval($t['id_type_mvt']) . ')</div>';
                 echo '<div><strong>Participation:</strong> ' . htmlspecialchars($t['id_participation'] ?: '-') . '</div>';
                 echo '<div><strong>Montant:</strong> ' . htmlspecialchars($amt) . ' €</div>';
+
+                // admin controls: edit / delete
+                if (in_array(intval($uid), [2,265], true)) {
+                    echo '<div style="display:flex;gap:8px;margin-top:6px;align-items:center">';
+                    // delete form
+                    echo '<form method="post" onsubmit="return confirm(\'Confirmer suppression ?\')" style="display:inline;margin:0">';
+                    echo '<input type="hidden" name="orig_date" value="' . htmlspecialchars($t['date_mvt']) . '">';
+                    echo '<input type="hidden" name="orig_montant" value="' . htmlspecialchars($t['montant']) . '">';
+                    echo '<input type="hidden" name="orig_id_type" value="' . intval($t['id_type_mvt']) . '">';
+                    echo '<button class="btn" name="delete_transaction" type="submit" style="background:#b91c1c;color:#fff">Supprimer</button>';
+                    echo '</form>';
+
+                    // edit toggle
+                    echo '<button class="btn" type="button" onclick="var f=this.parentNode.nextElementSibling; f.style.display=(f.style.display==\'none\'?\'block\':\'none\')">Modifier</button>';
+                    echo '</div>';
+
+                    // edit form (hidden)
+                    echo '<form method="post" class="edit-form" style="display:none;margin-top:8px">';
+                    echo '<input type="hidden" name="orig_date" value="' . htmlspecialchars($t['date_mvt']) . '">';
+                    echo '<input type="hidden" name="orig_montant" value="' . htmlspecialchars($t['montant']) . '">';
+                    echo '<input type="hidden" name="orig_id_type" value="' . intval($t['id_type_mvt']) . '">';
+                    echo '<div style="display:flex;gap:8px;flex-wrap:wrap">';
+                    echo '<div style="flex:1;min-width:140px"><label style="font-weight:700">Date</label><input class="form-control" type="date" name="new_date" value="' . htmlspecialchars(date('Y-m-d', strtotime($t['date_mvt']))) . '"></div>';
+                    echo '<div style="width:120px"><label style="font-weight:700">Montant</label><input class="form-control" type="number" step="0.01" name="new_montant" value="' . htmlspecialchars($t['montant']) . '"></div>';
+                    echo '<div style="width:220px"><label style="font-weight:700">Type</label><select class="form-control" name="new_id_type">';
+                    foreach ($mvt_types as $mid => $mylbl) {
+                        echo '<option value="' . intval($mid) . '"' . ($mid == intval($t['id_type_mvt']) ? ' selected' : '') . '>' . htmlspecialchars($mylbl) . '</option>';
+                    }
+                    echo '</select></div>';
+                    echo '<div style="width:180px"><label style="font-weight:700">Participation</label><select class="form-control" name="new_participation"><option value="">-- Aucune --</option>';
+                    foreach ($participations as $p) {
+                        echo '<option value="' . intval($p['id-participation']) . '"' . ((isset($t['id_participation']) && $p['id-participation'] == $t['id_participation']) ? ' selected' : '') . '>' . htmlspecialchars(date('d/m/Y', strtotime($p['date_depart'])) . ' - ' . $p['titre-activite']) . '</option>';
+                    }
+                    echo '</select></div>';
+                    echo '</div>';
+                    echo '<div style="margin-top:8px"><button class="btn" name="edit_transaction" type="submit">Enregistrer</button></div>';
+                    echo '</form>';
+                }
+
                 echo '</div>';
                 echo '</td>';
                 echo '</tr>';
