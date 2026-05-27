@@ -167,7 +167,7 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
                 echo '<form method="post" class="inline" onsubmit="return confirm(\'Supprimer ce type ?\');">';
                 echo '<input type="hidden" name="action" value="delete">';
                 echo '<input type="hidden" name="id_type_mvt" value="' . intval($t['id_type_mvt']) . '">';
-                echo '<button class="btn danger" type="submit" title="Supprimer"><svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg><span class="btn-text">Supprimer</span></button>';
+                echo '<button class="btn danger" type="submit" title="Supprimer"><svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg><span class="btn-text">Sup</span></button>';
                 echo '</form>';
                 echo '</td>';
                 echo '</tr>';
