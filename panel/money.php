@@ -157,11 +157,14 @@ foreach ($transactions as $tr) {
 $part_ids = array_values(array_unique($part_ids));
 if (count($part_ids) > 0) {
     $ids = implode(',', $part_ids);
-    $pq = @mysqli_query($con, "SELECT p.`id-participation`, a.`titre-activite` FROM participation p JOIN activite a ON p.`id-activite` = a.`id-activite` WHERE p.`id-participation` IN (" . $ids . ")");
+    $pq = @mysqli_query($con, "SELECT p.`id-participation`, a.`titre-activite`, a.date_depart FROM participation p JOIN activite a ON p.`id-activite` = a.`id-activite` WHERE p.`id-participation` IN (" . $ids . ")");
     if ($pq) {
         while ($pr = mysqli_fetch_assoc($pq)) {
             $pid = intval($pr['id-participation']);
-            $participation_titles[$pid] = $pr['titre-activite'];
+            $participation_titles[$pid] = [
+                'title' => $pr['titre-activite'],
+                'date' => $pr['date_depart'] ?? ''
+            ];
         }
     }
 }
