@@ -62,7 +62,10 @@ function updateMemberBalance($membre_id, $con) {
 
 // Handle add transaction (only allowed for user 2 or 265)
 if (isset($_POST['submit_portefeuille'])) {
-    if (!in_array(intval($uid), [2, 265], true)) {
+    // determine who we're adding for
+    $posted_target = isset($_POST['target_membre']) ? intval($_POST['target_membre']) : $uid;
+    // non-admins may only add for themselves
+    if (!in_array(intval($uid), [2, 265], true) && $posted_target !== intval($uid)) {
         $_SESSION['error'] = 'Permission refusée';
         header('Location: money.php');
         exit;
@@ -75,11 +78,16 @@ if (isset($_POST['submit_portefeuille'])) {
         $id_participation = !empty($_POST['id_participation']) ? intval($_POST['id_participation']) : null;
         $stmt = mysqli_prepare($con, "INSERT INTO portefeuille (id_mvt_membre, date_mvt, montant, id_type_mvt, id_participation) VALUES (?, ?, ?, ?, ?)");
         if (!$stmt) throw new Exception('Prepare failed: ' . mysqli_error($con));
-        mysqli_stmt_bind_param($stmt, 'isdii', $uid, $date_mvt, $montant, $id_type_mvt, $id_participation);
+        mysqli_stmt_bind_param($stmt, 'isdii', $posted_target, $date_mvt, $montant, $id_type_mvt, $id_participation);
         if (!mysqli_stmt_execute($stmt)) throw new Exception('Execute failed: ' . mysqli_stmt_error($stmt));
-        updateMemberBalance($uid, $con);
+        updateMemberBalance($posted_target, $con);
         $_SESSION['msg'] = 'Transaction ajoutée avec succès';
-        header('Location: money.php');
+        // preserve selected member in redirect for admins
+        if (in_array(intval($uid), [2,265], true) && $posted_target !== intval($uid)) {
+            header('Location: money.php?membre=' . $posted_target);
+        } else {
+            header('Location: money.php');
+        }
         exit;
     } catch (Exception $e) {
         $_SESSION['error'] = $e->getMessage();
