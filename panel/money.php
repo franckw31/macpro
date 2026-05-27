@@ -291,6 +291,15 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 
 
 </style>
+<style>
+/* Autocomplete suggestions */
+.ac-suggestions{position:relative}
+.ac-list{position:absolute;left:0;right:0;top:46px;z-index:40;background:#071019;border:1px solid rgba(255,255,255,0.06);max-height:260px;overflow:auto;border-radius:8px;padding:6px}
+.ac-item{padding:8px 10px;border-radius:6px;cursor:pointer;color:#e6f3fb}
+.ac-item:hover,.ac-item.active{background:rgba(10,163,255,0.08);color:#fff}
+.ac-muted{color:#9aa6b1;font-size:12px}
+</style>
+</style>
 </head>
 <body>
 <div class="sheet">
