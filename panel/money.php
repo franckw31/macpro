@@ -403,7 +403,10 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
         <div style="display:flex;align-items:center;justify-content:space-between;margin:0 0 12px">
         <h2 style="margin:0">Portefeuille de <?php echo htmlspecialchars($pseudo); ?></h2>
         <div style="display:flex;gap:8px;align-items:center">
-            <button id="theme_toggle_btn" class="btn small" type="button" title="Basculer thème" style="padding:6px 8px">Thème</button>
+            <button id="theme_toggle_btn" class="btn small" type="button" title="Basculer thème" style="padding:6px 8px">
+                <!-- default icon (will be replaced by JS) -->
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>
+            </button>
             <a class="btn orange" href="/panel/profile.php">Retour</a>
         </div>
         </div>
