@@ -123,7 +123,7 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
         <?php if (!empty($_SESSION['msg'])) { echo '<div class="flash success">' . htmlspecialchars($_SESSION['msg']) . '</div>'; unset($_SESSION['msg']); }
               if (!empty($_SESSION['error'])) { echo '<div class="flash error">' . htmlspecialchars($_SESSION['error']) . '</div>'; unset($_SESSION['error']); } ?>
 
-        <h3>Ajouter / Mettre à jour</h3>
+        <h3>Ajouter</h3>
         <form method="post" style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
             <input type="hidden" name="action" value="add">
             <input name="id_type_mvt" type="number" placeholder="ID (ex: 7)" required style="width:100px">
