@@ -216,9 +216,9 @@ if ($sq_stmt) {
     if ($res && ($sr = mysqli_fetch_assoc($res))) $solde = $sr['balance'];
 }
 
-// Fetch pseudo for header
+// Fetch pseudo for header (target member)
 $pseudo = 'Utilisateur';
-$pq = @mysqli_query($con, "SELECT pseudo FROM membres WHERE `id-membre` = " . intval($uid) . " LIMIT 1");
+$pq = @mysqli_query($con, "SELECT pseudo FROM membres WHERE `id-membre` = " . intval($target_membre) . " LIMIT 1");
 if ($pq && ($pr = mysqli_fetch_assoc($pq))) { $pseudo = $pr['pseudo']; }
 
 ?><!doctype html>
