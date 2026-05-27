@@ -305,13 +305,27 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     <div class="top">
         <?php if ($is_admin_viewer): ?>
         <div class="card">
-            <form method="get" action="money.php" style="display:flex;gap:8px;align-items:center">
+            <form method="get" action="money.php" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
                 <label class="label" style="margin:0 8px 0 0">Voir membre</label>
-                <select name="membre" class="form-control" onchange="this.form.submit()">
+                <input name="q" value="<?php echo htmlspecialchars($member_search); ?>" placeholder="Rechercher pseudo..." class="form-control" style="max-width:220px">
+                <select name="membre" class="form-control" onchange="this.form.submit()" style="min-width:220px">
                     <option value="">-- Choisir membre --</option>
                     <?php foreach($members as $m){ $mid = intval($m['id-membre']); $sel = ($mid === intval($target_membre)) ? ' selected' : ''; echo '<option value="' . $mid . '"' . $sel . '>' . htmlspecialchars($m['pseudo']) . ' (' . $mid . ')</option>'; } ?>
                 </select>
-                <noscript><button class="btn" type="submit">Voir</button></noscript>
+                <button class="btn" type="submit">Filtrer</button>
+                <?php if ($member_total > $member_perpage):
+                    $last = (int)ceil($member_total / $member_perpage);
+                ?>
+                <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
+                    <?php if ($member_page > 1): ?>
+                        <a class="btn small" href="money.php?<?php echo 'q=' . urlencode($member_search) . '&page=' . ($member_page - 1); ?>">Préc</a>
+                    <?php endif; ?>
+                    <div class="muted">Page <?php echo $member_page; ?> / <?php echo $last; ?></div>
+                    <?php if ($member_page < $last): ?>
+                        <a class="btn small" href="money.php?<?php echo 'q=' . urlencode($member_search) . '&page=' . ($member_page + 1); ?>">Suiv</a>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
             </form>
         </div>
         <?php endif; ?>
