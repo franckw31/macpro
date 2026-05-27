@@ -19,7 +19,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = intval($_POST['id_type_mvt'] ?? 0);
             $label = trim($_POST['label'] ?? '');
             $direction = in_array(strtolower(trim($_POST['direction'] ?? '')), ['debit','credit']) ? strtolower(trim($_POST['direction'])) : 'credit';
-            if ($id <= 0 || $label === '') throw new Exception('ID et label requis');
+            if ($label === '') throw new Exception('Label requis');
+            // If no id provided, pick next available id
+            if ($id <= 0) {
+                $rq = @mysqli_query($con, "SELECT COALESCE(MAX(id_type_mvt),0)+1 AS nextid FROM type_mvt");
+                if ($rq && ($row = mysqli_fetch_assoc($rq))) {
+                    $id = intval($row['nextid']);
+                } else {
+                    $id = 1;
+                }
+            }
             $stmt = mysqli_prepare($con, "INSERT INTO type_mvt (id_type_mvt,label,direction) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE label = VALUES(label), direction = VALUES(direction)");
             if (!$stmt) throw new Exception('Prepare failed: ' . mysqli_error($con));
             mysqli_stmt_bind_param($stmt, 'iss', $id, $label, $direction);
