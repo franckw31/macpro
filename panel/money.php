@@ -391,9 +391,6 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 
     
 </div>
-</body>
-</html>
-
 <script>
 document.addEventListener('DOMContentLoaded', function(){
     document.querySelectorAll('.amt-link').forEach(function(a){
@@ -409,3 +406,6 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 });
 </script>
+
+</body>
+</html>
