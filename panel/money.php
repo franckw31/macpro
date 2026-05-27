@@ -167,8 +167,8 @@ if ($mtq) {
 $members = [];
 $member_search = isset($_GET['q']) ? trim($_GET['q']) : '';
 if ($is_admin_viewer) {
-    // load a small initial set (AJAX will provide full live-search)
-    $mq = @mysqli_query($con, "SELECT `id-membre`, pseudo FROM membres ORDER BY pseudo ASC LIMIT 100");
+    // load full initial list (no LIMIT) — admin live-search still available
+    $mq = @mysqli_query($con, "SELECT `id-membre`, pseudo FROM membres ORDER BY pseudo ASC");
     if ($mq) while ($mr = mysqli_fetch_assoc($mq)) $members[] = $mr;
 }
 
