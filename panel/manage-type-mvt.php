@@ -149,7 +149,7 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
     <div class="sheet">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
             <h2 style="margin:0">Gérer types Mouvements</h2>
-            <a class="btn" href="/panel/money.php">Retour portefeuille</a>
+            <a class="btn" href="/panel/money.php">Retour</a>
         </div>
         <?php if (!empty($_SESSION['msg'])) { echo '<div class="flash success">' . htmlspecialchars($_SESSION['msg']) . '</div>'; unset($_SESSION['msg']); }
               if (!empty($_SESSION['error'])) { echo '<div class="flash error">' . htmlspecialchars($_SESSION['error']) . '</div>'; unset($_SESSION['error']); } ?>
