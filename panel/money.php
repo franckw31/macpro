@@ -70,66 +70,6 @@ if (isset($_POST['submit_portefeuille'])) {
     }
 }
 
-// Handle delete transaction (admins only)
-if (isset($_POST['delete_transaction'])) {
-    if (!in_array(intval($uid), [2, 265], true)) {
-        $_SESSION['error'] = 'Permission refusée';
-        header('Location: money.php'); exit;
-    }
-    try {
-        $odate = $_POST['orig_date'] ?? '';
-        $omont = isset($_POST['orig_montant']) ? floatval($_POST['orig_montant']) : 0;
-        $oidt = isset($_POST['orig_id_type']) ? intval($_POST['orig_id_type']) : 0;
-        $del = mysqli_prepare($con, "DELETE FROM portefeuille WHERE id_mvt_membre = ? AND date_mvt = ? AND montant = ? AND id_type_mvt = ? LIMIT 1");
-        if (!$del) throw new Exception('Prepare failed: ' . mysqli_error($con));
-        mysqli_stmt_bind_param($del, 'isdi', $uid, $odate, $omont, $oidt);
-        if (!mysqli_stmt_execute($del)) throw new Exception('Execute failed: ' . mysqli_stmt_error($del));
-        updateMemberBalance($uid, $con);
-        $_SESSION['msg'] = 'Transaction supprimée';
-        header('Location: money.php'); exit;
-    } catch (Exception $e) {
-        $_SESSION['error'] = $e->getMessage();
-    }
-}
-
-// Handle edit transaction (admins only)
-        if (isset($_POST['edit_transaction'])) {
-    if (!in_array(intval($uid), [2, 265], true)) {
-        $_SESSION['error'] = 'Permission refusée';
-        header('Location: money.php'); exit;
-    }
-    try {
-        $odate = $_POST['orig_date'] ?? '';
-        $omont = isset($_POST['orig_montant']) ? floatval($_POST['orig_montant']) : 0;
-        $oidt = isset($_POST['orig_id_type']) ? intval($_POST['orig_id_type']) : 0;
-
-        $new_date = $_POST['new_date'] ?? $odate;
-        $new_mont = isset($_POST['new_montant']) ? floatval($_POST['new_montant']) : $omont;
-        $new_idt = isset($_POST['new_id_type']) ? intval($_POST['new_id_type']) : $oidt;
-        $new_part = isset($_POST['new_participation']) && $_POST['new_participation'] !== '' ? intval($_POST['new_participation']) : null;
-
-        // build update query, set id_participation to NULL if needed
-        if ($new_part === null) {
-            $upd_sql = "UPDATE portefeuille SET date_mvt = ?, montant = ?, id_type_mvt = ?, id_participation = NULL WHERE id_mvt_membre = ? AND date_mvt = ? AND montant = ? AND id_type_mvt = ? LIMIT 1";
-            $upd = mysqli_prepare($con, $upd_sql);
-            if (!$upd) throw new Exception('Prepare failed: ' . mysqli_error($con));
-                    mysqli_stmt_bind_param($upd, 'sdiisdi', $new_date, $new_mont, $new_idt, $uid, $odate, $omont, $oidt);
-        } else {
-            $upd_sql = "UPDATE portefeuille SET date_mvt = ?, montant = ?, id_type_mvt = ?, id_participation = ? WHERE id_mvt_membre = ? AND date_mvt = ? AND montant = ? AND id_type_mvt = ? LIMIT 1";
-            $upd = mysqli_prepare($con, $upd_sql);
-            if (!$upd) throw new Exception('Prepare failed: ' . mysqli_error($con));
-                    mysqli_stmt_bind_param($upd, 'sdiiisdi', $new_date, $new_mont, $new_idt, $new_part, $uid, $odate, $omont, $oidt);
-        }
-        // Note: using the same bind format for simplicity; mysqli will coerce types
-        if (!mysqli_stmt_execute($upd)) throw new Exception('Execute failed: ' . mysqli_stmt_error($upd));
-        updateMemberBalance($uid, $con);
-        $_SESSION['msg'] = 'Transaction modifiée';
-        header('Location: money.php'); exit;
-    } catch (Exception $e) {
-        $_SESSION['error'] = $e->getMessage();
-    }
-}
-
 // Fetch participations for select
 $participations = [];
 $q = @mysqli_query($con, "SELECT p.`id-participation`, a.`titre-activite`, a.date_depart FROM participation p JOIN activite a ON p.`id-activite` = a.`id-activite` WHERE p.`id-membre` = " . intval($uid) . " ORDER BY a.date_depart DESC");
@@ -236,10 +176,6 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
     .op-label{max-width:120px}
 }
 
-/* detail row style */
-.tx-detail-row td{background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);color:#cfe8ef;padding:12px;font-size:13px}
-
-
 
 </style>
 </head>
@@ -327,58 +263,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 echo '<td><span class="op-label ' . ($isDebit ? 'debit' : 'credit') . '" title="' . htmlspecialchars($label) . '">' . htmlspecialchars($label) . '</span>';
                 echo '<div class="mobile-amt ' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €</div>';
                 echo '</td>';
-                // amount clickable to toggle detail row
-                echo '<td class="' . ($isDebit ? 'debit' : 'credit') . '"><a href="#" class="amt-link" style="color:inherit;text-decoration:none;font-weight:800">' . htmlspecialchars($amt) . ' €</a></td>';
-                echo '</tr>';
-                // hidden detail row (toggle visible when amount clicked)
-                echo '<tr class="tx-detail-row" style="display:none">';
-                echo '<td colspan="5">';
-                echo '<div style="display:flex;flex-direction:column;gap:8px">';
-                echo '<div><strong>Date:</strong> ' . htmlspecialchars(date('d/m/Y H:i', strtotime($t['date_mvt']))) . '</div>';
-                echo '<div><strong>Opération:</strong> ' . htmlspecialchars($label) . ' (id ' . intval($t['id_type_mvt']) . ')</div>';
-                echo '<div><strong>Participation:</strong> ' . htmlspecialchars($t['id_participation'] ?: '-') . '</div>';
-                echo '<div><strong>Montant:</strong> ' . htmlspecialchars($amt) . ' €</div>';
-
-                // admin controls: edit / delete
-                if (in_array(intval($uid), [2,265], true)) {
-                    echo '<div style="display:flex;gap:8px;margin-top:6px;align-items:center">';
-                    // delete form
-                    echo '<form method="post" onsubmit="return confirm(\'Confirmer suppression ?\')" style="display:inline;margin:0">';
-                    echo '<input type="hidden" name="orig_date" value="' . htmlspecialchars($t['date_mvt']) . '">';
-                    echo '<input type="hidden" name="orig_montant" value="' . htmlspecialchars($t['montant']) . '">';
-                    echo '<input type="hidden" name="orig_id_type" value="' . intval($t['id_type_mvt']) . '">';
-                    echo '<button class="btn" name="delete_transaction" type="submit" style="background:#b91c1c;color:#fff" onclick="event.stopPropagation();">Supprimer</button>';
-                    echo '</form>';
-
-                    // edit toggle
-                    echo '<button class="btn" type="button" onclick="event.stopPropagation();var f=this.parentNode.nextElementSibling; f.style.display=(f.style.display==\'none\'?\'block\':\'none\')">Modifier</button>';
-                    echo '</div>';
-
-                    // edit form (hidden)
-                    echo '<form method="post" class="edit-form" style="display:none;margin-top:8px">';
-                    echo '<input type="hidden" name="orig_date" value="' . htmlspecialchars($t['date_mvt']) . '">';
-                    echo '<input type="hidden" name="orig_montant" value="' . htmlspecialchars($t['montant']) . '">';
-                    echo '<input type="hidden" name="orig_id_type" value="' . intval($t['id_type_mvt']) . '">';
-                    echo '<div style="display:flex;gap:8px;flex-wrap:wrap">';
-                    echo '<div style="flex:1;min-width:140px"><label style="font-weight:700">Date</label><input class="form-control" type="date" name="new_date" value="' . htmlspecialchars(date('Y-m-d', strtotime($t['date_mvt']))) . '"></div>';
-                    echo '<div style="width:120px"><label style="font-weight:700">Montant</label><input class="form-control" type="number" step="0.01" name="new_montant" value="' . htmlspecialchars($t['montant']) . '"></div>';
-                    echo '<div style="width:220px"><label style="font-weight:700">Type</label><select class="form-control" name="new_id_type">';
-                    foreach ($mvt_types as $mid => $mylbl) {
-                        echo '<option value="' . intval($mid) . '"' . ($mid == intval($t['id_type_mvt']) ? ' selected' : '') . '>' . htmlspecialchars($mylbl) . '</option>';
-                    }
-                    echo '</select></div>';
-                    echo '<div style="width:180px"><label style="font-weight:700">Participation</label><select class="form-control" name="new_participation"><option value="">-- Aucune --</option>';
-                    foreach ($participations as $p) {
-                        echo '<option value="' . intval($p['id-participation']) . '"' . ((isset($t['id_participation']) && $p['id-participation'] == $t['id_participation']) ? ' selected' : '') . '>' . htmlspecialchars(date('d/m/Y', strtotime($p['date_depart'])) . ' - ' . $p['titre-activite']) . '</option>';
-                    }
-                    echo '</select></div>';
-                    echo '</div>';
-                    echo '<div style="margin-top:8px"><button class="btn" name="edit_transaction" type="submit" onclick="event.stopPropagation();">Enregistrer</button></div>';
-                    echo '</form>';
-                }
-
-                echo '</div>';
-                echo '</td>';
+                echo '<td class="' . ($isDebit ? 'debit' : 'credit') . '">' . htmlspecialchars($amt) . ' €</td>';
                 echo '</tr>';
             }
             if (count($transactions) === 0) echo '<tr><td colspan="4" style="text-align:center;color:#888">Aucune transaction</td></tr>';
@@ -391,22 +276,5 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 
     
 </div>
-<script>
-// Delegated click handler: more robust when DOM changes (forms/buttons added)
-document.addEventListener('click', function(ev){
-    var a = ev.target.closest && ev.target.closest('.amt-link');
-    if (!a) return;
-    // ignore clicks that originate from form controls or buttons
-    if (ev.target.closest && ev.target.closest('button, input, select, textarea, label, form')) return;
-    ev.preventDefault();
-    var tr = a.closest('tr');
-    if (!tr) return;
-    var next = tr.nextElementSibling;
-    if (next && next.classList.contains('tx-detail-row')){
-        next.style.display = (next.style.display === 'table-row') ? 'none' : 'table-row';
-    }
-});
-</script>
-
 </body>
 </html>
