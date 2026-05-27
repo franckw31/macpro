@@ -210,7 +210,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
 /* On small screens, hide the separate Montant column and show amount under the Opération label */
 .mobile-amt{display:none;color:#cfe8d6;margin-top:6px;font-size:13px}
 @media (max-width:880px){
-    .table thead th:nth-child(5), .table tbody td:nth-child(5){display:none}
+    .table thead th:nth-child(4), .table tbody td:nth-child(4){display:none}
     .mobile-amt{display:block}
     .op-label{max-width:120px}
     .mobile-only{display:inline-block}
