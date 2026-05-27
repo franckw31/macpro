@@ -167,8 +167,13 @@ if ($mtq) {
 $members = [];
 $member_search = isset($_GET['q']) ? trim($_GET['q']) : '';
 if ($is_admin_viewer) {
-    // load full initial list (no LIMIT) — admin live-search still available
-    $mq = @mysqli_query($con, "SELECT `id-membre`, pseudo FROM membres ORDER BY pseudo ASC");
+    // If a search query is present, server-side filter (prefix match) so Enter submits produce results
+    if (!empty($member_search)) {
+        $esc = mysqli_real_escape_string($con, strtolower($member_search));
+        $mq = @mysqli_query($con, "SELECT `id-membre`, pseudo FROM membres WHERE LOWER(pseudo) LIKE '" . $esc . "%' ORDER BY pseudo ASC");
+    } else {
+        $mq = @mysqli_query($con, "SELECT `id-membre`, pseudo FROM membres ORDER BY pseudo ASC");
+    }
     if ($mq) while ($mr = mysqli_fetch_assoc($mq)) $members[] = $mr;
     // ensure target member appears in the initial list
     $found = false;
