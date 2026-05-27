@@ -379,7 +379,7 @@ body{background:linear-gradient(180deg,#051018 0%, rgba(2,8,12,0.85) 100%);font-
                 </div></td></tr>
                 <tr><th class="label">Montant</th><td><input class="form-control" type="number" step="0.01" name="montant" required style="width:120px;min-width:90px;max-width:180px;display:inline-block"></td></tr>
                 <tr style="display:none"><th class="label">Date</th><td><input class="form-control" type="date" name="date_mvt"></td></tr>
-                <tr><th class="label">ID Participation</th><td><select class="form-control" name="id_participation" style="width:200px;min-width:140px;max-width:260px;display:inline-block"><option value="">-- Aucune --</option>
+                <tr><th class="label">ID Participation</th><td><select class="form-control" name="id_participation" style="width:180px;min-width:120px;max-width:260px;display:inline-block"><option value="">-- Aucune --</option>
                 <?php foreach($participations as $p){ echo '<option value="' . intval($p['id-participation']) . '">' . htmlspecialchars(date('d/m/Y', strtotime($p['date_depart'])) . ' - ' . $p['titre-activite']) . '</option>'; } ?>
                 </select></td></tr>
                 <tr><td colspan="2" style="text-align:center"><button class="btn" type="submit" name="submit_portefeuille">Ajouter Transaction</button></td></tr>
