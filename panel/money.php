@@ -12,6 +12,13 @@ if ($uid <= 0) {
     exit;
 }
 
+// Admins (id 2 and 265) can choose a member to view/modify
+$is_admin_viewer = in_array(intval($uid), [2,265], true);
+$target_membre = $uid;
+if ($is_admin_viewer && isset($_GET['membre'])) {
+    $target_membre = intval($_GET['membre']);
+}
+
 function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
 
 function fmt_fr_date_short($dt){
