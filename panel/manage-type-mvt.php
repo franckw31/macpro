@@ -73,6 +73,9 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
     .table-wrap{overflow-x:auto}
     form.inline{display:inline-flex;gap:8px;align-items:center;flex-wrap:nowrap}
     .table td{vertical-align:middle;white-space:nowrap}
+    .inline input[type="text"], .inline input[type="number"]{min-width:120px;max-width:220px}
+    .inline select{min-width:90px;max-width:140px}
+    .inline button{white-space:nowrap}
     .table-wrap{overflow-x:auto}
     .table th,.table td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}
     .table thead th{color:#a9c2d6;text-align:left;font-weight:800}
@@ -96,6 +99,9 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
         .sheet{padding:12px;border-radius:10px}
         .btn{display:inline-block;text-align:center;padding:8px 10px}
         .actions{flex-direction:column;align-items:stretch}
+        form.inline{flex-wrap:wrap}
+        form.inline input, form.inline select, form.inline button{width:100%;box-sizing:border-box}
+        .table td{white-space:normal}
     }
     </style>
 </head>
