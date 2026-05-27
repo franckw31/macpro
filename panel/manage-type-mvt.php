@@ -157,8 +157,8 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
         <h3>Ajouter</h3>
         <form method="post" style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
             <input type="hidden" name="action" value="add">
-            <input name="label" type="text" placeholder="Libellé" required style="width:140px;max-width:60vw">
-            <select name="direction">
+            <input name="label" type="text" placeholder="Libellé" required style="width:180px">
+            <select name="direction" style="width:110px">
                 <option value="credit">Crédit</option>
                 <option value="debit">Débit</option>
             </select>
