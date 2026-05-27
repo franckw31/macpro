@@ -120,21 +120,21 @@ if ($tq) while ($r = mysqli_fetch_assoc($tq)) $types[] = $r;
         <h3>Types existants</h3>
         <div class="table-wrap">
         <table class="table">
-            <thead><tr><th>ID</th><th>Libellé</th><th>Direction</th><th>Actions</th></tr></thead>
+            <thead><tr><th>ID</th><th>Actions</th></tr></thead>
             <tbody>
-            <?php if (count($types) === 0) echo '<tr><td colspan="4">Aucun type enregistré</td></tr>';
+            <?php if (count($types) === 0) echo '<tr><td colspan="2">Aucun type enregistré</td></tr>';
             foreach ($types as $t) {
                 echo '<tr>';
-                echo '<td>' . intval($t['id_type_mvt']) . '</td>';
-                echo '<td>' . htmlspecialchars($t['label']) . '</td>';
-                echo '<td>' . htmlspecialchars($t['direction']) . '</td>';
+                echo '<td style="width:80px">' . intval($t['id_type_mvt']) . '</td>';
                 echo '<td>';
+                // show label/direction briefly for context inside actions
+                echo '<div class="muted" style="margin-bottom:6px">' . htmlspecialchars($t['label']) . ' — ' . htmlspecialchars($t['direction']) . '</div>';
                 // edit form
                 echo '<form method="post" class="inline" style="margin-right:6px">';
                 echo '<input type="hidden" name="action" value="edit">';
                 echo '<input type="hidden" name="id_type_mvt" value="' . intval($t['id_type_mvt']) . '">';
-                echo '<input name="label" value="' . htmlspecialchars($t['label']) . '" required style="width:220px"> ';
-                echo '<select name="direction">';
+                echo '<input name="label" value="' . htmlspecialchars($t['label']) . '" required style="width:180px"> ';
+                echo '<select name="direction" style="width:110px">';
                 echo '<option value="credit"' . ($t['direction']==='credit' ? ' selected' : '') . '>Crédit</option>';
                 echo '<option value="debit"' . ($t['direction']==='debit' ? ' selected' : '') . '>Débit</option>';
                 echo '</select> ';
