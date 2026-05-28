@@ -130,6 +130,7 @@ if ($activity) {
                 <?php if(!is_null($max_places)){ ?> sur <span style="color:#ff7a45;font-weight:700"><?php echo intval($max_places); ?></span> max<?php } ?>
             </div>
         </div>
+        <a href="https://viendez.com/panel/fullscreen-player.php?uid=752" class="button ghost" style="color:#ff7a45;text-decoration:none;font-weight:700;margin-right:8px">Mouvements</a>
         <a href="/panel/quickview.php" class="button ghost" style="color:#ff7a45;text-decoration:none;font-weight:700">Fermer</a>
     </div>
 
