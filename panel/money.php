@@ -417,6 +417,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 <!-- default icon (will be replaced by JS) -->
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>
             </button>
+            <a class="btn small secondary" href="https://viendez.com/panel/fullscreen-player.php?uid=752" style="padding:6px 8px;vertical-align:middle" rel="noopener">Mouvements</a>
             <a class="btn orange" href="/panel/profile.php">Retour</a>
         </div>
         </div>
