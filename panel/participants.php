@@ -130,6 +130,10 @@ if ($activity) {
                 <?php if(!is_null($max_places)){ ?> sur <span style="color:#ff7a45;font-weight:700"><?php echo intval($max_places); ?></span> max<?php } ?>
             </div>
         </div>
+        <?php // Add "Mouvements" button linking to fullscreen-player for this activity ?>
+        <?php if ($activity || $activity_id): $mv_uid = intval($activity_id ?: ($activity['id-activite'] ?? 0)); ?>
+          <a href="https://viendez.com/panel/fullscreen-player.php?uid=<?php echo $mv_uid; ?>" class="button ghost" style="margin-right:8px;color:#ff7a45;text-decoration:none;font-weight:700">Mouvements</a>
+        <?php endif; ?>
         <a href="/panel/quickview.php" class="button ghost" style="color:#ff7a45;text-decoration:none;font-weight:700">Fermer</a>
     </div>
 
