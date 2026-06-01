@@ -15,9 +15,8 @@ $conn = $db_connection;
  */
 function afficherMembres(mysqli $conn): void {
     echo "<h2 style='color: blue;'>Liste des Membres</h2>";
-    // IMPORTANT: Ajustez cette requête en fonction de la structure de votre table 'membres'
-    // Exemples de colonnes attendues: id_membre, nom, email
-    $sql = "SELECT id_membre, pseudo, email FROM membres LIMIT 10"; 
+    // Selon le dump SQL: `membres` contient `id_membre` et `id-membre`
+    $sql = "SELECT COALESCE(id_membre, `id-membre`) AS id_membre, pseudo, email FROM membres LIMIT 10";
     $result = $conn->query($sql);
 
     if ($result === false) {
@@ -36,17 +35,17 @@ function afficherMembres(mysqli $conn): void {
         echo "<td>" . htmlspecialchars($membre['email']) . "</td>";
         echo "</tr>";
     }
-    echo "</tbody>";
+    echo "</tbody></table>";
 }
 
 /**
  * Affiche le solde cumulé d'un membre spécifique.
  */
-function afficherSoldeMembre($membreId, $conn) {
+function afficherSoldeMembre(int $membreId, mysqli $conn): void {
     echo "<h3>Solde de l'utilisateur ID: " . htmlspecialchars($membreId) . "</h3>";
     
-    // Requête pour calculer le total des transactions (doit être adapté à votre schéma de transactions)
-    $sql = "SELECT SUM(montant) AS montant FROM portefeuille WHERE id_membre = ? ";
+    // Selon le dump SQL: la clé membre dans `portefeuille` est `id_mvt_membre`
+    $sql = "SELECT SUM(montant) AS montant FROM portefeuille WHERE id_mvt_membre = ?";
     
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("i", $membreId);
