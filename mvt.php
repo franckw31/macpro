@@ -25,7 +25,7 @@ function afficherMembres(mysqli $conn): void {
     }
 
     echo "<table border='1' cellpadding='5' cellspacing='0'>";
-    echo "<thead><tr><th>ID Membre</th><th>Nom</th><th>Email</th><th>...</th></tr></thead><tbody>";
+    echo "<thead><tr><th>ID Membres</th><th>Nom</th><th>Email</th><th>...</th></tr></thead><tbody>";
 
     while ($membre = $result->fetch_assoc()) {
         // ATTENTION : Assurez-vous que les clés correspondent aux colonnes réelles.
