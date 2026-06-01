@@ -32,7 +32,7 @@ function afficherMembres(mysqli $conn): void {
         // ATTENTION : Assurez-vous que les clés correspondent aux colonnes réelles.
         echo "<tr>";
         echo "<td>" . htmlspecialchars($membre['id_membre'] ?? 'N/A') . "</td>";
-        echo "<td>" . htmlspecialchars($membre['nom'] ?? 'N/A') . "</td>";
+        echo "<td>" . htmlspecialchars($membre['pseudo'] ?? 'N/A') . "</td>";
         echo "<td>" . htmlspecialchars($membre['email'] ?? 'N/A') . "</td>";
         echo "<td>...</td>";
         echo "</tr>";
