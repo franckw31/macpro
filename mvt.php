@@ -16,7 +16,7 @@ function afficherMembres(mysqli $conn): void {
     echo "<h2>Liste des Membres</h2>";
     // IMPORTANT: Ajustez cette requête en fonction de la structure de votre table 'membres'
     // Exemple de requête (ajustez les noms de colonnes : id_membre, nom, email)
-    $sql = "SELECT id_membre, nom, email FROM membres LIMIT 650";
+    $sql = "SELECT id_membre, nom, email FROM membres LIMIT 50";
     $result = $conn->query($sql);
 
     if ($result === false) {
