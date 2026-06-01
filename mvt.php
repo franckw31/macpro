@@ -78,7 +78,7 @@ afficherMembres($conn);
 echo "<hr>";
 
 // 2. Exemple d'utilisation : Afficher le portefeuille d'un membre spécifique (remplacez 1 par un ID réel)
-$testMemberId = 1;
+$testMemberId = 2;
 afficherPortefuille($conn, $testMemberId);
 
 ?>
