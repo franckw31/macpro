@@ -76,12 +76,11 @@ function afficherTableauSoldesMouvements(mysqli $conn): void {
         SELECT
             COALESCE(m.id_membre, m.`id-membre`) AS id_membre,
             m.pseudo,
-            m.email,
             COALESCE(SUM(p.montant), 0) AS solde
         FROM membres m
         INNER JOIN portefeuille p
             ON p.id_mvt_membre = COALESCE(m.id_membre, m.`id-membre`)
-        GROUP BY COALESCE(m.id_membre, m.`id-membre`), m.pseudo, m.email
+        GROUP BY COALESCE(m.id_membre, m.`id-membre`), m.pseudo
         HAVING COALESCE(SUM(p.montant), 0) > 0
         ORDER BY solde DESC, m.pseudo ASC
     ";
@@ -98,13 +97,12 @@ function afficherTableauSoldesMouvements(mysqli $conn): void {
     }
 
     echo "<table border='1' cellpadding='6' cellspacing='0' style='width: 100%; border-collapse: collapse;'>";
-    echo "<thead><tr style='background:#f3f4f6;'><th>ID</th><th>Pseudo</th><th>Email</th><th>Solde mouvements (€)</th></tr></thead><tbody>";
+    echo "<thead><tr style='background:#f3f4f6;'><th>ID</th><th>Pseudo</th><th>Solde mouvements (€)</th></tr></thead><tbody>";
 
     while ($row = $result->fetch_assoc()) {
         echo "<tr>";
         echo "<td>" . htmlspecialchars((string)$row['id_membre']) . "</td>";
         echo "<td>" . htmlspecialchars((string)$row['pseudo']) . "</td>";
-        echo "<td>" . htmlspecialchars((string)$row['email']) . "</td>";
         echo "<td style='text-align:right; font-weight:600;'>" . number_format((float)$row['solde'], 2, ',', ' ') . "</td>";
         echo "</tr>";
     }
