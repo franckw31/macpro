@@ -44,7 +44,7 @@ function afficherMembres(mysqli $conn): void {
  * @param mysqli $conn La connexion mysqli.
  * @param int $memberId L'ID du membre à vérifier.
  */
-function afficherPortefuille(mysqli $conn, int $memberId): void {
+function afficherPortefeuille(mysqli $conn, int $memberId): void {
     echo "<h2>Portefeuille du Membre ID: " . htmlspecialchars($memberId) . "</h2>";
 
     // !!! IMPORTANT: ADAPTEZ CETTE QUERY !!!
