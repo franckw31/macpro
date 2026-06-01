@@ -24,6 +24,7 @@ function afficherMembres(mysqli $conn): void {
         return;
     }
 
+    
     echo "<table border='1' cellpadding='5' cellspacing='0'>";
     echo "<thead><tr><th>ID Membres</th><th>Nom</th><th>Email</th><th>...</th></tr></thead><tbody>";
 
