@@ -46,7 +46,7 @@ function afficherSoldeMembre($membreId, $conn) {
     echo "<h3>Solde de l'utilisateur ID: " . htmlspecialchars($membreId) . "</h3>";
     
     // Requête pour calculer le total des transactions (doit être adapté à votre schéma de transactions)
-    $sql = "SELECT SUM(montant) AS total_solde FROM portefeuille WHERE id_membre = ? ";
+    $sql = "SELECT SUM(montant) AS montant FROM portefeuille WHERE id_membre = ? ";
     
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("i", $membreId);
