@@ -67,27 +67,27 @@ function afficherSoldeMembre(int $membreId, mysqli $conn): void {
 }
 
 /**
- * Affiche un tableau des soldes de mouvements par membre.
+ * Affiche tous les mouvements détaillés avec un récapitulatif pour le solde de chaque membre.
  */
-function afficherTableauSoldesMouvements(mysqli $conn): void {
-    echo "<h2 style='color: #1d4ed8;'>Tableau des soldes de mouvements</h2>";
+function afficherMouvementsEtSoldes(mysqli $conn): void {
+    echo "<h2 style='color: #1d4ed8;'>Détail des mouvements et Soldes par Membre</h2>";
 
     $sql = "
         SELECT
             COALESCE(m.id_membre, m.`id-membre`) AS id_membre,
             m.pseudo,
-            COALESCE(SUM(p.montant), 0) AS solde
+            p.id_mvt,
+            p.date_mvt,
+            p.montant
         FROM membres m
         INNER JOIN portefeuille p
             ON p.id_mvt_membre = COALESCE(m.id_membre, m.`id-membre`)
-        GROUP BY COALESCE(m.id_membre, m.`id-membre`), m.pseudo
-        HAVING COALESCE(SUM(p.montant), 0) > 0
-        ORDER BY solde DESC, m.pseudo ASC
+        ORDER BY m.pseudo ASC, p.date_mvt DESC
     ";
 
     $result = $conn->query($sql);
     if ($result === false) {
-        echo "<p style='color: red;'>Erreur SQL (tableau soldes): " . htmlspecialchars($conn->error) . "</p>";
+        echo "<p style='color: red;'>Erreur SQL (mouvements): " . htmlspecialchars($conn->error) . "</p>";
         return;
     }
 
@@ -96,25 +96,50 @@ function afficherTableauSoldesMouvements(mysqli $conn): void {
         return;
     }
 
-    echo "<table border='1' cellpadding='6' cellspacing='0' style='width: 100%; border-collapse: collapse;'>";
-    echo "<thead><tr style='background:#f3f4f6;'><th>ID</th><th>Pseudo</th><th>Solde mouvements (€)</th></tr></thead><tbody>";
-
+    $currentMembre = null;
+    $soldeTotal = 0.0;
+    
     while ($row = $result->fetch_assoc()) {
+        if ($currentMembre !== $row['id_membre']) {
+            // Fermer le tableau du membre précédent s'il y en a un
+            if ($currentMembre !== null) {
+                echo "<tr><td colspan='2' style='text-align:right; font-weight:bold; background:#e5e7eb;'>SOLDE TOTAL :</td>";
+                echo "<td style='text-align:right; font-weight:bold; background:#e5e7eb;'>" . number_format($soldeTotal, 2, ',', ' ') . " €</td></tr>";
+                echo "</tbody></table><br/>";
+            }
+            
+            // Initialiser un nouveau membre
+            $currentMembre = $row['id_membre'];
+            $soldeTotal = 0.0;
+            
+            echo "<h3 style='margin-bottom: 8px; color: #374151;'>👤 " . htmlspecialchars((string)$row['pseudo']) . " (ID: " . htmlspecialchars((string)$row['id_membre']) . ")</h3>";
+            echo "<table border='1' cellpadding='6' cellspacing='0' style='width: 100%; border-collapse: collapse;'>";
+            echo "<thead><tr style='background:#f3f4f6;'><th>Date du mouvement</th><th>N° Transaction</th><th>Montant (€)</th></tr></thead><tbody>";
+        }
+        
+        $montant = (float)$row['montant'];
+        $soldeTotal += $montant;
+        
         echo "<tr>";
-        echo "<td>" . htmlspecialchars((string)$row['id_membre']) . "</td>";
-        echo "<td>" . htmlspecialchars((string)$row['pseudo']) . "</td>";
-        echo "<td style='text-align:right; font-weight:600;'>" . number_format((float)$row['solde'], 2, ',', ' ') . "</td>";
+        echo "<td>" . htmlspecialchars((string)$row['date_mvt']) . "</td>";
+        echo "<td>" . htmlspecialchars((string)$row['id_mvt']) . "</td>";
+        echo "<td style='text-align:right;;'>" . number_format($montant, 2, ',', ' ') . "</td>";
         echo "</tr>";
     }
 
-    echo "</tbody></table>";
+    // Fermer le dernier tableau
+    if ($currentMembre !== null) {
+        echo "<tr><td colspan='2' style='text-align:right; font-weight:bold; background:#e5e7eb;'>SOLDE TOTAL :</td>";
+        echo "<td style='text-align:right; font-weight:bold; background:#e5e7eb;'>" . number_format($soldeTotal, 2, ',', ' ') . " €</td></tr>";
+        echo "</tbody></table>";
+    }
 }
 
 
 // --- EXÉCUTION ---
 // ATTENTION: Ce bloc nécessite une connexion de base de données fonctionnelle.
 echo "<div style='font-family: Arial, sans-serif; padding: 16px;'>";
-afficherTableauSoldesMouvements($conn);
+afficherMouvementsEtSoldes($conn);
 
 if (isset($_GET['id_membre']) && ctype_digit((string)$_GET['id_membre'])) {
     $idMembre = (int)$_GET['id_membre'];
