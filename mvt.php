@@ -49,7 +49,7 @@ function afficherPortefeuille(mysqli $conn, int $memberId): void {
 
     // !!! IMPORTANT: ADAPTEZ CETTE QUERY !!!
     // Ceci suppose que 'portefuille' a une colonne 'membre_id' et 'solde_total'.
-    $sql = "SELECT * FROM portefeuille WHERE id_mvt_membre = ? LIMIT 21";
+    $sql = "SELECT * FROM portefeuille WHERE id_mvt_membre = ? LIMIT 2";
     $stmt = $conn->prepare($sql);
 
     // Bind parameters
