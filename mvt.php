@@ -64,7 +64,7 @@ function afficherPortefeuille(mysqli $conn, int $memberId): void {
     }
 
     // ATTENTION : Ajustez les clés ($portefeuille['colonne']) ci-dessous !
-    echo "<p>Solde actuel : <strong >" . htmlspecialchars($portefeuille['solde_total'] ?? '0.00') . "</strong></p>";
+    echo "<p>Solde actuel : <strong >" . htmlspecialchars($portefeuille['montant'] ?? '0.00') . "</strong></p>";
     echo "<p>Dernière mise à jour : " . htmlspecialchars($portefeuille['date_maj'] ?? 'N/A') . "</p>";
 }
 
