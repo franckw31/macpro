@@ -79,11 +79,11 @@ function afficherTableauSoldesMouvements(mysqli $conn): void {
             m.email,
             COALESCE(SUM(p.montant), 0) AS solde
         FROM membres m
-        LEFT JOIN portefeuille p
+        INNER JOIN portefeuille p
             ON p.id_mvt_membre = COALESCE(m.id_membre, m.`id-membre`)
         GROUP BY COALESCE(m.id_membre, m.`id-membre`), m.pseudo, m.email
+        HAVING COALESCE(SUM(p.montant), 0) > 0
         ORDER BY solde DESC, m.pseudo ASC
-        LIMIT 100
     ";
 
     $result = $conn->query($sql);
