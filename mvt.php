@@ -53,7 +53,7 @@ function afficherSoldeMembre($membreId, $conn) {
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-        $solde = $row['total_solde'];
+        $solde = $row['montant'];
 
         if ($solde === null) {
             echo "<p style='color: gray;'>Aucune transaction trouvée pour ce membre.</p>";
