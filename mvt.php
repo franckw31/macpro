@@ -66,26 +66,62 @@ function afficherSoldeMembre(int $membreId, mysqli $conn): void {
     }
 }
 
+/**
+ * Affiche un tableau des soldes de mouvements par membre.
+ */
+function afficherTableauSoldesMouvements(mysqli $conn): void {
+    echo "<h2 style='color: #1d4ed8;'>Tableau des soldes de mouvements</h2>";
+
+    $sql = "
+        SELECT
+            COALESCE(m.id_membre, m.`id-membre`) AS id_membre,
+            m.pseudo,
+            m.email,
+            COALESCE(SUM(p.montant), 0) AS solde
+        FROM membres m
+        LEFT JOIN portefeuille p
+            ON p.id_mvt_membre = COALESCE(m.id_membre, m.`id-membre`)
+        GROUP BY COALESCE(m.id_membre, m.`id-membre`), m.pseudo, m.email
+        ORDER BY solde DESC, m.pseudo ASC
+        LIMIT 100
+    ";
+
+    $result = $conn->query($sql);
+    if ($result === false) {
+        echo "<p style='color: red;'>Erreur SQL (tableau soldes): " . htmlspecialchars($conn->error) . "</p>";
+        return;
+    }
+
+    if ($result->num_rows === 0) {
+        echo "<p style='color: gray;'>Aucune donnée de mouvement trouvée.</p>";
+        return;
+    }
+
+    echo "<table border='1' cellpadding='6' cellspacing='0' style='width: 100%; border-collapse: collapse;'>";
+    echo "<thead><tr style='background:#f3f4f6;'><th>ID</th><th>Pseudo</th><th>Email</th><th>Solde mouvements (€)</th></tr></thead><tbody>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars((string)$row['id_membre']) . "</td>";
+        echo "<td>" . htmlspecialchars((string)$row['pseudo']) . "</td>";
+        echo "<td>" . htmlspecialchars((string)$row['email']) . "</td>";
+        echo "<td style='text-align:right; font-weight:600;'>" . number_format((float)$row['solde'], 2, ',', ' ') . "</td>";
+        echo "</tr>";
+    }
+
+    echo "</tbody></table>";
+}
+
 
 // --- EXÉCUTION ---
 // ATTENTION: Ce bloc nécessite une connexion de base de données fonctionnelle.
-/*
-// 1. Établir la connexion (Adaptez les informations !)
-$servername = "localhost";
-$username = "user";
-$password = "password";
-$dbname = "database_name";
+echo "<div style='font-family: Arial, sans-serif; padding: 16px;'>";
+afficherTableauSoldesMouvements($conn);
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if (isset($_GET['id_membre']) && ctype_digit((string)$_GET['id_membre'])) {
+    $idMembre = (int)$_GET['id_membre'];
+    afficherSoldeMembre($idMembre, $conn);
 }
 
-// 2. Exemples d'utilisation :
-afficherSoldeMembre(1, $conn); // Vérifie le solde pour le membre avec ID 1
-afficherSoldeMembre(5, $conn); // Vérifie le solde pour le membre avec ID 5
-
-$conn->close();
-*/
+echo "</div>";
 ?>
