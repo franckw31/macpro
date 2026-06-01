@@ -1,9 +1,10 @@
 <?php
+// Inclusion of the database configuration
 require_once 'config.php';
 
 // Check if connection was successful before proceeding
 if (!isset($db_connection) || $db_connection === false) {
-    die("Cannot access the database connection. Check config.php.\n");
+    die("Cannot access the database connection. Check config.php.");
 }
 
 $conn = $db_connection;
@@ -13,73 +14,79 @@ $conn = $db_connection;
  * @param mysqli $conn La connexion mysqli.
  */
 function afficherMembres(mysqli $conn): void {
-    echo "<h2>Liste des Membres</h2>";
+    echo "<h2 style='color: blue;'>Liste des Membres</h2>";
     // IMPORTANT: Ajustez cette requête en fonction de la structure de votre table 'membres'
-    // Exemple de requête (ajustez les noms de colonnes : id_membre, nom, email)
-    $sql = "SELECT id_membre, nom, email FROM membres LIMIT 50";
+    // Exemples de colonnes attendues: id_membre, nom, email
+    $sql = "SELECT id_membre, nom, email FROM membres LIMIT 10"; 
     $result = $conn->query($sql);
 
     if ($result === false) {
-        echo "<p>Erreur lors de la récupération des membres : " . mysqli_error($conn) . "</p>";
+        echo "<p style='color: red;'>Erreur lors de la récupération des membres : " . mysqli_error($conn) . "</p>";
         return;
     }
 
-    echo "<table border='1' cellpadding='5' cellspacing='0'>";
-    echo "<thead><tr><th>ID Membres</th><th>Nom</th><th>Email</th><th>...</th></tr></thead><tbody>";
-
+    echo "<table border='1' cellpadding='5' cellspacing='0' style='width: 60%;'>\n";
+    echo "<thead><tr><th>ID Membre</th><th>Nom</th><th>Email</th><th>...</th></tr></thead><tbody>\n";
+    
     while ($membre = $result->fetch_assoc()) {
-        // ATTENTION : Assurez-vous que les clés correspondent aux colonnes réelles.
+        // ATTENTION : Assurez-vous que les clés correspondent aux colonnes de votre DB
         echo "<tr>";
-        echo "<td>" . htmlspecialchars($membre['id_membre'] ?? 'N/A') . "</td>";
-        echo "<td>" . htmlspecialchars($membre['pseudo'] ?? 'N/A') . "</td>";
-        echo "<td>" . htmlspecialchars($membre['email'] ?? 'N/A') . "</td>";
-        echo "<td>...</td>";
+        echo "<td>" . htmlspecialchars($membre['id']) . "</td>";
+        echo "<td>" . htmlspecialchars($membre['name']) . "</td>";
+        echo "<td>" . htmlspecialchars($membre['email']) . "</td>";
         echo "</tr>";
     }
-    echo "</tbody></table>";
+    echo "</tbody>";
 }
 
 /**
- * Récupère et affiche le solde de portefeuille pour un membre donné.
- * @param mysqli $conn La connexion mysqli.
- * @param int $memberId L'ID du membre à vérifier.
+ * Affiche le solde cumulé d'un membre spécifique.
  */
-function afficherPortefeuille(mysqli $conn, int $memberId): void {
-    echo "<h2>Portefeuille du Membre ID: " . htmlspecialchars($memberId) . "</h2>";
-
-    // !!! IMPORTANT: ADAPTEZ CETTE QUERY !!!
-    // Ceci suppose que 'portefuille' a une colonne 'membre_id' et 'solde_total'.
-    $sql = "SELECT * FROM portefeuille WHERE id_mvt_membre = ? LIMIT 2";
-    $stmt = $conn->prepare($sql);
-
-    // Bind parameters
-    $stmt->bind_param("i", $memberId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $portefeuille = $result->fetch_assoc();
-
-    if (!$portefeuille) {
-        echo "<p>Aucun enregistrement de portefeuille trouvé pour ce membre.</p>";
-        return;
-    }
-
-    // ATTENTION : Ajustez les clés ($portefeuille['colonne']) ci-dessous !
-    echo "<p>Solde actuel : <strong >" . htmlspecialchars($portefeuille['montant'] ?? '0.00') . "</strong></p>";
+function afficherSoldeMembre($membreId, $conn) {
+    echo "<h3>Solde de l'utilisateur ID: " . htmlspecialchars($membreId) . "</h3>";
     
+    // Requête pour calculer le total des transactions (doit être adapté à votre schéma de transactions)
+    $sql = "SELECT SUM(montant) AS total_solde FROM transactions WHERE membre_id = ? AND date_transaction <= CURDATE()";
+    
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("i", $membreId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $solde = $row['total_solde'];
+
+        if ($solde === null) {
+            echo "<p style='color: gray;'>Aucune transaction trouvée pour ce membre.</p>";
+        } else {
+            // Formatage monétaire
+            echo "<p style='font-size: 1.5em; font-weight: bold;'>Solde Total: " . number_format($solde, 2, ',') . " €</p>";
+        }
+        $stmt->close();
+    } else {
+        echo "<p style='color: red;'>Erreur lors de la préparation de la requête de solde.</p>";
+    }
 }
 
-// ======================================================================
-// LOGIQUE PRINCIPALE D'EXÉCUTION
-// ========================================================
 
-// 1. Afficher tous les membres
-afficherMembres($conn);
+// --- EXÉCUTION ---
+// ATTENTION: Ce bloc nécessite une connexion de base de données fonctionnelle.
+/*
+// 1. Établir la connexion (Adaptez les informations !)
+$servername = "localhost";
+$username = "user";
+$password = "password";
+$dbname = "database_name";
 
-echo "<hr>";
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-// 2. Exemple d'utilisation : Afficher le portefeuille d'un membre spécifique (remplacez 1 par un ID réel)
-$testMemberId = 2;
-afficherPortefeuille($conn, $testMemberId);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
+// 2. Exemples d'utilisation :
+afficherSoldeMembre(1, $conn); // Vérifie le solde pour le membre avec ID 1
+afficherSoldeMembre(5, $conn); // Vérifie le solde pour le membre avec ID 5
+
+$conn->close();
+*/
 ?>
-
