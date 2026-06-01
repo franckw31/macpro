@@ -6,7 +6,7 @@ include('include/config.php');
 if(strlen($_SESSION['id']==0)) {
  header('location:logout.php');
   } else{
-//Code for Update the Content
+// Code pour mettre à jour le contenu
 
   	if(isset($_POST['submit']))
   {
@@ -16,20 +16,20 @@ $pagedes=$con->real_escape_string($_POST['pagedes']);
      $query=mysqli_query($con,"update tblpage set PageTitle='$pagetitle',PageDescription='$pagedes' where  PageType='aboutus'");
     if ($query) {
  
-    echo '<script>alert("About Us has been updated.")</script>';
+    echo '<script>alert("La page \"À propos\" a été mise à jour.")</script>';
   }
   else
     {
-      echo '<script>alert("Something Went Wrong. Please try again.")</script>';
+      echo '<script>alert("Une erreur est survenue. Veuillez réessayer.")</script>';
     }
   
 }
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 	<head>
-		<title>Admin | About Us </title>
+		<title>Admin | À propos</title>
 		
 		<link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
@@ -55,33 +55,30 @@ $pagedes=$con->real_escape_string($_POST['pagedes']);
 				
 
 					<?php include('include/header.php');?>
-				<!-- end: TOP NAVBAR -->
+				<!-- fin : TOP NAVBAR -->
 				<div class="main-content" >
 					<div class="wrap-content container" id="container">
-						<!-- start: PAGE TITLE -->
+						<!-- début : PAGE TITLE -->
 						<section id="page-title">
 							<div class="row">
 								<div class="col-sm-8">
-									<h1 class="mainTitle">Admin  | Update the About us Content</h1>
-																	</div>
+									<h1 class="mainTitle">Admin | Mise à jour du contenu "À propos"</h1>
+								</div>
 								<ol class="breadcrumb">
 									<li>
-										<span>Admin </span>
+										<span>Admin</span>
 									</li>
 									<li class="active">
-										<span>Update the About us Content</span>
+										<span>Mise à jour du contenu "À propos"</span>
 									</li>
 								</ol>
 							</div>
 						</section>
-						<!-- end: PAGE TITLE -->
-						<!-- start: BASIC EXAMPLE -->
+						<!-- fin : PAGE TITLE -->
+						<!-- début : BASIC EXAMPLE -->
 						<div class="container-fluid container-fullw bg-white">
-						
-
-									<div class="row">
+							<div class="row">
 								<div class="col-md-12">
-									
 									
                   <form class="forms-sample" method="post">
                     <?php
@@ -92,45 +89,44 @@ while ($row=mysqli_fetch_array($ret)) {
 
 ?>
                     <div class="form-group">
-                       <label for="exampleInputUsername1">Page Title</label>
+                       <label for="exampleInputUsername1">Titre de la page</label>
                       <input id="pagetitle" name="pagetitle" type="text" class="form-control" required="true" value="<?php  echo $row['PageTitle'];?>">
                     </div>
                     <div class="form-group">
-                      <label for="exampleInputEmail1">Page Description</label>
+                      <label for="exampleInputEmail1">Description de la page</label>
                       <textarea class="form-control" name="pagedes" id="pagedes" rows="12"><?php  echo $row['PageDescription'];?></textarea>
                     </div>
                     
                     <?php } ?>
-                    <button type="submit" class="btn btn-primary mr-2" name="submit">Submit</button>
+                    <button type="submit" class="btn btn-primary mr-2" name="submit">Envoyer</button>
                   </form>
 								</div>
 							</div>
-								</div>
-						
-						<!-- end: BASIC EXAMPLE -->
-						<!-- end: SELECT BOXES -->
+						</div>
+						<!-- fin : BASIC EXAMPLE -->
+						<!-- fin : SELECT BOXES -->
 						
 					</div>
 				</div>
 			</div>
-			<!-- start: FOOTER -->
+			<!-- début : FOOTER -->
 	<?php include('include/footer.php');?>
-			<!-- end: FOOTER -->
+			<!-- fin : FOOTER -->
 		
-			<!-- start: SETTINGS -->
+			<!-- début : SETTINGS -->
 	<?php include('include/setting.php');?>
 			
-			<!-- end: SETTINGS -->
+			<!-- fin : SETTINGS -->
 		</div>
-		<!-- start: MAIN JAVASCRIPTS -->
+		<!-- début : MAIN JAVASCRIPTS -->
 		<script src="vendor/jquery/jquery.min.js"></script>
 		<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 		<script src="vendor/modernizr/modernizr.js"></script>
 		<script src="vendor/jquery-cookie/jquery.cookie.js"></script>
 		<script src="vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 		<script src="vendor/switchery/switchery.min.js"></script>
-		<!-- end: MAIN JAVASCRIPTS -->
-		<!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+		<!-- fin : MAIN JAVASCRIPTS -->
+		<!-- début : JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
 		<script src="vendor/maskedinput/jquery.maskedinput.min.js"></script>
 		<script src="vendor/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
 		<script src="vendor/autosize/autosize.min.js"></script>
@@ -139,10 +135,10 @@ while ($row=mysqli_fetch_array($ret)) {
 		<script src="vendor/select2/select2.min.js"></script>
 		<script src="vendor/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
 		<script src="vendor/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>
-		<!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
-		<!-- start: CLIP-TWO JAVASCRIPTS -->
+		<!-- fin : JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+		<!-- début : CLIP-TWO JAVASCRIPTS -->
 		<script src="assets/js/main.js"></script>
-		<!-- start: JavaScript Event Handlers for this page -->
+		<!-- début : JavaScript Event Handlers for this page -->
 		<script src="assets/js/form-elements.js"></script>
 		<script>
 			jQuery(document).ready(function() {
@@ -150,8 +146,8 @@ while ($row=mysqli_fetch_array($ret)) {
 				FormElements.init();
 			});
 		</script>
-		<!-- end: JavaScript Event Handlers for this page -->
-		<!-- end: CLIP-TWO JAVASCRIPTS -->
+		<!-- fin : JavaScript Event Handlers for this page -->
+		<!-- fin : CLIP-TWO JAVASCRIPTS -->
 	</body>
 </html>
 <?php } ?>
