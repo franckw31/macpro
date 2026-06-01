@@ -17,7 +17,7 @@ function afficherMembres(mysqli $conn): void {
     echo "<h2 style='color: blue;'>Liste des Membres</h2>";
     // IMPORTANT: Ajustez cette requête en fonction de la structure de votre table 'membres'
     // Exemples de colonnes attendues: id_membre, nom, email
-    $sql = "SELECT id_membre, nom, email FROM membres LIMIT 10"; 
+    $sql = "SELECT id_membre, pseudo, email FROM membres LIMIT 10"; 
     $result = $conn->query($sql);
 
     if ($result === false) {
@@ -31,8 +31,8 @@ function afficherMembres(mysqli $conn): void {
     while ($membre = $result->fetch_assoc()) {
         // ATTENTION : Assurez-vous que les clés correspondent aux colonnes de votre DB
         echo "<tr>";
-        echo "<td>" . htmlspecialchars($membre['id']) . "</td>";
-        echo "<td>" . htmlspecialchars($membre['name']) . "</td>";
+        echo "<td>" . htmlspecialchars($membre['id_membre']) . "</td>";
+        echo "<td>" . htmlspecialchars($membre['pseudo']) . "</td>";
         echo "<td>" . htmlspecialchars($membre['email']) . "</td>";
         echo "</tr>";
     }
@@ -46,7 +46,7 @@ function afficherSoldeMembre($membreId, $conn) {
     echo "<h3>Solde de l'utilisateur ID: " . htmlspecialchars($membreId) . "</h3>";
     
     // Requête pour calculer le total des transactions (doit être adapté à votre schéma de transactions)
-    $sql = "SELECT SUM(montant) AS total_solde FROM transactions WHERE membre_id = ? AND date_transaction <= CURDATE()";
+    $sql = "SELECT SUM(montant) AS total_solde FROM portefeuille WHERE membre_id = ? ";
     
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("i", $membreId);
