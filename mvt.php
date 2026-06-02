@@ -100,6 +100,7 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
 
     $currentMembre = null;
     $soldeTotal = 0.0;
+    $soldeGeneral = 0.0;
     
     while ($row = $result->fetch_assoc()) {
         if ($currentMembre !== $row['id_membre']) {
