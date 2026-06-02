@@ -152,7 +152,7 @@ function afficherSoldeMembre(int $membreId, mysqli $conn): void {
  * Affiche tous les mouvements détaillés avec un récapitulatif pour le solde de chaque membre.
  */
 function afficherMouvementsEtSoldes(mysqli $conn): void {
-    echo "<h2 style='color: #1d4ed8;'>Détail des mouvements et Soldes par Membre</h2>";
+    echo "<h2 class='v2-title'>Détail des mouvements et Soldes par Membre</h2>";
 
     $sql = "
         SELECT
