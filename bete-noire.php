@@ -112,7 +112,7 @@ try {
         <div class="text-center mb-12 py-8">
             <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
                 <span class="bg-gradient-to-r from-red-500 to-orange-500 text-gradient">
-                    <i class="fa-solid fa-skull-crossbones mr-3 text-red-500"></i><?= $mode === 'inverse' ? 'Bourreaux & Victimes' : 'Bêtes Noires' ?>
+                    <i class="fa-solid fa-skull-crossbones mr-3 text-red-500"></i><?= $mode === 'inverse' ? 'Bourreaux & Victimes' : 'Bêtes Noires' ?> <span class="text-2xl text-slate-500 opacity-70 align-middle inline-block -mt-1">(<?= $totalEliminations ?>)</span>
                 </span>
             </h1>
             <p class="text-lg text-slate-400 max-w-2xl mx-auto">
