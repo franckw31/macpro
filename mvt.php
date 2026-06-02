@@ -149,6 +149,13 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
         echo "<td style='text-align:right; font-weight:bold; background:#e5e7eb; color:" . $soldeColor . ";'>" . number_format($soldeTotal, 2, ',', ' ') . " €</td></tr>";
         echo "</tbody></table>";
     }
+
+    // Affichage du solde général
+    $soldeGeneralColor = $soldeGeneral >= 0 ? 'green' : 'red';
+    echo "<div style='margin-top: 24px; padding: 20px; background-color: #f3f4f6; border: 2px solid #d1d5db; text-align: center; border-radius: 8px;'>";
+    echo "<h2 style='margin: 0 0 10px 0; color: #1f2937;'>SOLDE GÉNÉRAL GLOBAL</h2>";
+    echo "<div style='font-size: 2.5em; font-weight: bold; color: " . $soldeGeneralColor . ";'>" . number_format($soldeGeneral, 2, ',', ' ') . " €</div>";
+    echo "</div>";
 }
 
 
