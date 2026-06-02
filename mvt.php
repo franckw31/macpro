@@ -127,9 +127,11 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
         // Déduction selon id_type_mvt: 1, 2, 3 = débit (sortie), autres = crédit (entrée)
         if (in_array($typeMvt, [1, 2, 3])) {
             $soldeTotal -= $montant;
+            $soldeGeneral -= $montant;
             $montantFormat = "<span style='color: red;'>- " . number_format($montant, 2, ',', ' ') . "</span>";
         } else {
             $soldeTotal += $montant;
+            $soldeGeneral += $montant;
             $montantFormat = "<span style='color: green;'>+ " . number_format($montant, 2, ',', ' ') . "</span>";
         }
         
