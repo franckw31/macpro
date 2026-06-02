@@ -138,9 +138,12 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
             $montantFormat = "<span style='color: green;'>+ " . number_format($montant, 2, ',', ' ') . "</span>";
         }
         
+        $typeLabel = isset($row['type_label']) && $row['type_label'] !== null ? $row['type_label'] : "Inconnu (Type $typeMvt)";
+
         echo "<tr>";
         echo "<td>" . htmlspecialchars(date('d/m/Y', strtotime((string)$row['date_mvt']))) . "</td>";
         echo "<td>" . htmlspecialchars((string)$row['id_mvt']) . "</td>";
+        echo "<td>" . htmlspecialchars($typeLabel) . "</td>";
         echo "<td style='text-align:right;'>" . $montantFormat . "</td>";
         echo "</tr>";
     }
