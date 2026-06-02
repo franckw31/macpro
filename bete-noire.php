@@ -139,7 +139,7 @@ try {
                             </a>
                         <?php else: ?>
                             <a href="?mode=inverse" class="text-xs text-blue-400 uppercase tracking-widest font-semibold mt-1 hover:text-blue-300 transition-colors inline-flex items-center gap-1 cursor-pointer" title="Voir ses victimes favorites">
-                                VICTIME <i class="fa-solid fa-right-left text-[10px]"></i>
+                                VICTIME DE <i class="fa-solid fa-right-left text-[10px]"></i>
                             </a>
                         <?php endif; ?>
                     </div>
