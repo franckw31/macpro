@@ -110,7 +110,7 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
             // Fermer le tableau du membre précédent s'il y en a un
             if ($currentMembre !== null) {
                 $soldeColor = $soldeTotal >= 0 ? 'green' : 'red';
-                echo "<tr><td colspan='2' style='text-align:right; font-weight:bold; background:#e5e7eb;'>SOLDE TOTAL :</td>";
+                echo "<tr><td colspan='3' style='text-align:right; font-weight:bold; background:#e5e7eb;'>SOLDE TOTAL :</td>";
                 echo "<td style='text-align:right; font-weight:bold; background:#e5e7eb; color:" . $soldeColor . ";'>" . number_format($soldeTotal, 2, ',', ' ') . " €</td></tr>";
                 echo "</tbody></table><br/>";
             }
@@ -121,7 +121,7 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
             
             echo "<h3 style='margin-bottom: 8px; color: #374151;'>👤 " . htmlspecialchars((string)$row['pseudo']) . " (ID: " . htmlspecialchars((string)$row['id_membre']) . ")</h3>";
             echo "<table border='1' cellpadding='6' cellspacing='0' style='width: 100%; border-collapse: collapse;'>";
-            echo "<thead><tr style='background:#f3f4f6;'><th>Date du mouvement</th><th>N° Transaction</th><th>Montant (€)</th></tr></thead><tbody>";
+            echo "<thead><tr style='background:#f3f4f6;'><th>Date du mouvement</th><th>N° Transaction</th><th>Type de transaction</th><th>Montant (€)</th></tr></thead><tbody>";
         }
         
         $montant = (float)$row['montant'];
