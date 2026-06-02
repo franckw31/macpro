@@ -92,6 +92,13 @@ try {
     $stmtCount = $pdo->query("SELECT COUNT(*) FROM eliminations");
     $totalEliminations = $stmtCount->fetchColumn();
 
+    // Query string for toggle
+    $qParams = $_GET;
+    $qParams['mode'] = 'normal';
+    $urlNormal = '?' . http_build_query($qParams);
+    $qParams['mode'] = 'inverse';
+    $urlInverse = '?' . http_build_query($qParams);
+
 } catch (Exception $e) {
     die("Erreur de connexion a la base de donnees. " . $e->getMessage());
 }
