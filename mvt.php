@@ -19,40 +19,22 @@ $conn = $db_connection;
 /* ─── RESET & BASE ─── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f2f2f7;
-  --card:#ffffff;
-  --border:rgba(0,0,0,0.1);
-  --green:#34c759;
+  --bg:#0a0d14;
+  --card:#111822;
+  --border:rgba(255,255,255,0.06);
+  --green:#30d158;
   --orange:#ff9f0a;
-  --blue:#007aff;
-  --cyan:#32ade6;
-  --muted:#8e8e93;
-  --text:#000000;
-  --text2:#3a3a3c;
-  --label:#8e8e93;
+  --blue:#0a84ff;
+  --cyan:#64d2ff;
+  --muted:#6b7a8f;
+  --text:#ffffff;
+  --text2:#c8d6e5;
+  --label:#8e9bae;
   --radius:16px;
   --radius-sm:12px;
-  --danger:#ff3b30;
-  --table-header:#e5e5ea;
-  --table-border:#c7c7cc;
-}
-@media (prefers-color-scheme: dark) {
-  :root{
-    --bg:#0a0d14;
-    --card:#111822;
-    --border:rgba(255,255,255,0.06);
-    --green:#30d158;
-    --orange:#ff9f0a;
-    --blue:#0a84ff;
-    --cyan:#64d2ff;
-    --muted:#6b7a8f;
-    --text:#ffffff;
-    --text2:#c8d6e5;
-    --label:#8e9bae;
-    --danger:#ff453a;
-    --table-header:#1c2533;
-    --table-border:#1c2533;
-  }
+  --danger:#ff453a;
+  --table-header:#1c2533;
+  --table-border:#1c2533;
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased;}
 .page{max-width:800px;margin:0 auto;padding:20px 20px 90px 20px;display:flex;flex-direction:column;gap:16px}
