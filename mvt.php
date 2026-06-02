@@ -151,7 +151,7 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
             ON p.id_mvt_membre = COALESCE(m.id_membre, m.`id-membre`)
         LEFT JOIN type_mvt t
             ON p.id_type_mvt = t.id_type_mvt
-        ORDER BY m.pseudo ASC, p.date_mvt DESC
+        ORDER BY m.pseudo ASC, p.date_mvt ASC
     ";
 
     $result = $conn->query($sql);
