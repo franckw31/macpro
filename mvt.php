@@ -58,7 +58,8 @@ function afficherSoldeMembre(int $membreId, mysqli $conn): void {
             echo "<p style='color: gray;'>Aucune transaction trouvée pour ce membre.</p>";
         } else {
             // Formatage monétaire
-            echo "<p style='font-size: 1.5em; font-weight: bold;'>Solde Total: " . number_format($solde, 2, ',') . " €</p>";
+            $soldeColor = $solde >= 0 ? 'green' : 'red';
+            echo "<p style='font-size: 1.5em; font-weight: bold; color: " . $soldeColor . ";'>Solde Total: " . number_format((float)$solde, 2, ',', ' ') . " €</p>";
         }
         $stmt->close();
     } else {
