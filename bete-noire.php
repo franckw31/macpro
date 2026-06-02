@@ -156,9 +156,23 @@ try {
                         </span>
                         <?php endforeach; ?>
                         
-                        <?php if (count($eliminators) > 4): ?>
-                            <span class="inline-flex items-center px-2 py-1 rounded-md text-[11px] font-medium text-slate-500 italic">
-                                +<?= count($eliminators) - 4 ?> autres ...
+                        <?php 
+                        $rest = array_slice($eliminators, 4);
+                        if (!empty($rest)): 
+                            $uid = md5($victim);
+                        ?>
+                            <button type="button" onclick="document.getElementById('m-<?= $uid ?>').style.display='contents'; this.style.display='none';" class="inline-flex items-center px-2 py-1 rounded-md text-[11px] font-medium text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 italic cursor-pointer transition-all">
+                                +<?= count($rest) ?> autres <i class="fa-solid fa-chevron-down ml-1 text-[9px]"></i>
+                            </button>
+                            <span id="m-<?= $uid ?>" style="display: none;">
+                                <?php foreach ($rest as $other): ?>
+                                <span class="inline-flex items-center gap-1.5 pl-2 pr-1 py-1 rounded-md text-[11px] font-medium bg-slate-700/50 text-slate-300 border border-slate-600/50 hover:bg-slate-700 transition-colors">
+                                    <?= htmlspecialchars($other['eliminator']) ?>
+                                    <span class="bg-indigo-500/20 text-indigo-300 min-w-[1.25rem] h-4 px-1 rounded block text-center flex items-center justify-center text-[10px] font-bold">
+                                        <?= $other['count'] ?>
+                                    </span>
+                                </span>
+                                <?php endforeach; ?>
                             </span>
                         <?php endif; ?>
                     </div>
