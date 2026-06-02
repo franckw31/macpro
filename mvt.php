@@ -190,19 +190,20 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
         if ($currentMembre !== $row['id_membre']) {
             // Fermer le tableau du membre précédent s'il y en a un
             if ($currentMembre !== null) {
-                $soldeColor = $soldeTotal >= 0 ? 'green' : 'red';
-                echo "<tr><td colspan='3' style='text-align:right; font-weight:bold; background:#e5e7eb;'>SOLDE TOTAL :</td>";
-                echo "<td style='text-align:right; font-weight:bold; background:#e5e7eb; color:" . $soldeColor . ";'>" . number_format($soldeTotal, 2, ',', ' ') . " €</td></tr>";
-                echo "</tbody></table><br/>";
+                $soldeColorClass = $soldeTotal >= 0 ? 'text-green' : 'text-red';
+                echo "<tr class='v2-total-row'><td colspan='3' style='text-align:right;'>SOLDE TOTAL :</td>";
+                echo "<td class='amount " . $soldeColorClass . "'>" . number_format($soldeTotal, 2, ',', ' ') . " €</td></tr>";
+                echo "</tbody></table></div></div>";
             }
             
             // Initialiser un nouveau membre
             $currentMembre = $row['id_membre'];
             $soldeTotal = 0.0;
             
-            echo "<h3 style='margin-bottom: 8px; color: #374151;'>👤 " . htmlspecialchars((string)$row['pseudo']) . " (ID: " . htmlspecialchars((string)$row['id_membre']) . ")</h3>";
-            echo "<table border='1' cellpadding='6' cellspacing='0' style='width: 100%; border-collapse: collapse;'>";
-            echo "<thead><tr style='background:#f3f4f6;'><th>Date du mouvement</th><th>N° Transaction</th><th>Type de transaction</th><th>Montant (€)</th></tr></thead><tbody>";
+            echo "<div class='v2-card'>";
+            echo "<h3 class='v2-subtitle'>👤 " . htmlspecialchars((string)$row['pseudo']) . " <span style='color:var(--muted);font-weight:400;font-size:12px;'>(ID: " . htmlspecialchars((string)$row['id_membre']) . ")</span></h3>";
+            echo "<div class='table-responsive'><table class='v2-table'>";
+            echo "<thead><tr><th>Date</th><th>N°</th><th>Type</th><th style='text-align:right;'>Montant</th></tr></thead><tbody>";
         }
         
         $montant = (float)$row['montant'];
@@ -212,11 +213,11 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
         if (in_array($typeMvt, [1, 2, 3])) {
             $soldeTotal -= $montant;
             $soldeGeneral -= $montant;
-            $montantFormat = "<span style='color: red;'>- " . number_format($montant, 2, ',', ' ') . "</span>";
+            $montantFormat = "<span class='text-red'>- " . number_format($montant, 2, ',', ' ') . "</span>";
         } else {
             $soldeTotal += $montant;
             $soldeGeneral += $montant;
-            $montantFormat = "<span style='color: green;'>+ " . number_format($montant, 2, ',', ' ') . "</span>";
+            $montantFormat = "<span class='text-green'>+ " . number_format($montant, 2, ',', ' ') . "</span>";
         }
         
         $typeLabel = isset($row['type_label']) && $row['type_label'] !== null ? $row['type_label'] : "Inconnu (Type $typeMvt)";
@@ -225,24 +226,24 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
         echo "<td>" . htmlspecialchars(date('d/m/Y', strtotime((string)$row['date_mvt']))) . "</td>";
         echo "<td>" . htmlspecialchars((string)$row['id_mvt']) . "</td>";
         echo "<td>" . htmlspecialchars($typeLabel) . "</td>";
-        echo "<td style='text-align:right;'>" . $montantFormat . "</td>";
+        echo "<td class='amount'>" . $montantFormat . "</td>";
         echo "</tr>";
     }
 
     // Fermer le dernier tableau
     if ($currentMembre !== null) {
-        $soldeColor = $soldeTotal >= 0 ? 'green' : 'red';
-        echo "<tr><td colspan='3' style='text-align:right; font-weight:bold; background:#e5e7eb;'>SOLDE TOTAL :</td>";
-        echo "<td style='text-align:right; font-weight:bold; background:#e5e7eb; color:" . $soldeColor . ";'>" . number_format($soldeTotal, 2, ',', ' ') . " €</td></tr>";
-        echo "</tbody></table>";
+        $soldeColorClass = $soldeTotal >= 0 ? 'text-green' : 'text-red';
+        echo "<tr class='v2-total-row'><td colspan='3' style='text-align:right;'>SOLDE TOTAL :</td>";
+        echo "<td class='amount " . $soldeColorClass . "'>" . number_format($soldeTotal, 2, ',', ' ') . " €</td></tr>";
+        echo "</tbody></table></div></div>";
     }
 
     // Affichage du solde général
     $soldeGeneral *= -1;
-    $soldeGeneralColor = $soldeGeneral >= 0 ? 'green' : 'red';
-    echo "<div style='margin-top: 24px; padding: 20px; background-color: #f3f4f6; border: 2px solid #d1d5db; text-align: center; border-radius: 8px;'>";
-    echo "<h2 style='margin: 0 0 10px 0; color: #1f2937;'>SOLDE GÉNÉRAL GLOBAL</h2>";
-    echo "<div style='font-size: 2.5em; font-weight: bold; color: " . $soldeGeneralColor . ";'>" . number_format($soldeGeneral, 2, ',', ' ') . " €</div>";
+    $soldeGeneralColorClass = $soldeGeneral >= 0 ? 'text-green' : 'text-red';
+    echo "<div class='v2-card v2-general-card'>";
+    echo "<div class='v2-general-title'>SOLDE GÉNÉRAL GLOBAL</div>";
+    echo "<div class='v2-general-amount " . $soldeGeneralColorClass . "'>" . number_format($soldeGeneral, 2, ',', ' ') . " €</div>";
     echo "</div>";
 }
 
