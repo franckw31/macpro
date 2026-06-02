@@ -251,7 +251,6 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
 
 // --- EXÉCUTION ---
 // ATTENTION: Ce bloc nécessite une connexion de base de données fonctionnelle.
-echo "<div style='font-family: Arial, sans-serif; padding: 16px;'>";
 afficherMouvementsEtSoldes($conn);
 
 if (isset($_GET['id_membre']) && ctype_digit((string)$_GET['id_membre'])) {
@@ -259,5 +258,7 @@ if (isset($_GET['id_membre']) && ctype_digit((string)$_GET['id_membre'])) {
     afficherSoldeMembre($idMembre, $conn);
 }
 
-echo "</div>";
 ?>
+</div>
+</body>
+</html>
