@@ -119,12 +119,21 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
         }
         
         $montant = (float)$row['montant'];
-        $soldeTotal += $montant;
+        $typeMvt = (int)$row['id_type_mvt'];
+        
+        // Déduction selon id_type_mvt: 1, 2, 3 = débit (sortie), autres = crédit (entrée)
+        if (in_array($typeMvt, [1, 2, 3])) {
+            $soldeTotal -= $montant;
+            $montantFormat = "<span style='color: red;'>- " . number_format($montant, 2, ',', ' ') . "</span>";
+        } else {
+            $soldeTotal += $montant;
+            $montantFormat = "<span style='color: green;'>+ " . number_format($montant, 2, ',', ' ') . "</span>";
+        }
         
         echo "<tr>";
         echo "<td>" . htmlspecialchars((string)$row['date_mvt']) . "</td>";
         echo "<td>" . htmlspecialchars((string)$row['id_mvt']) . "</td>";
-        echo "<td style='text-align:right;;'>" . number_format($montant, 2, ',', ' ') . "</td>";
+        echo "<td style='text-align:right;'>" . $montantFormat . "</td>";
         echo "</tr>";
     }
 
