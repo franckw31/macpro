@@ -223,9 +223,10 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
 
     // Affichage du solde général
     $soldeGeneral *= -1;
+    $dateActuelle = date('d/m/Y');
     $soldeGeneralColorClass = $soldeGeneral >= 0 ? 'text-green' : 'text-red';
     echo "<div class='v2-card v2-general-card'>";
-    echo "<div class='v2-general-title'>SOLDE GÉNÉRAL GLOBAL</div>";
+    echo "<div class='v2-general-title'>SOLDE GÉNÉRAL GLOBAL AU " . $dateActuelle . "</div>";
     echo "<div class='v2-general-amount " . $soldeGeneralColorClass . "'>" . number_format($soldeGeneral, 2, ',', ' ') . " €</div>";
     echo "</div>";
 }
