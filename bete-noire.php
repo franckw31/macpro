@@ -108,68 +108,77 @@ try {
         <div class="text-center mb-12 py-8">
             <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
                 <span class="bg-gradient-to-r from-red-500 to-orange-500 text-gradient">
-                    <i class="fa-solid fa-skull-crossbones mr-3 text-red-500"></i>Bêtes Noires
+                    <i class="fa-solid fa-skull-crossbones mr-3 text-red-500"></i><?= $mode === 'inverse' ? 'Bourreaux & Victimes' : 'Bêtes Noires' ?>
                 </span>
             </h1>
             <p class="text-lg text-slate-400 max-w-2xl mx-auto">
-                Tableau des pires cauchemars : qui a éliminé qui le plus grand nombre de fois ? 
-                Survivez à votre bête noire lors du prochain tournoi !
+                <?= $mode === 'inverse' 
+                    ? 'Tableau de chasse : Qui est le pire bourreau de qui ? Découvrez les victimes favorites de chaque joueur.' 
+                    : 'Tableau des pires cauchemars : qui a éliminé qui le plus grand nombre de fois ? Survivez à votre bête noire lors du prochain tournoi !' ?>
             </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <?php foreach ($data as $victim => $eliminators): 
-                // The first one is the "bête noire" since query is ordered by count desc
-                $beteNoire = $eliminators[0];
+            <?php foreach ($data as $main_person => $opponents): 
+                // The first one is the "bête noire" or "favorite victim" since query is ordered by count desc
+                $beteNoire = $opponents[0];
             ?>
             <div class="victim-card bg-slate-800 rounded-2xl overflow-hidden border border-slate-700 relative flex flex-col h-full">
-                <!-- Top Header for Victim -->
+                <!-- Top Header for Main Person -->
                 <div class="bg-slate-800 p-5 border-b border-slate-700 flex items-center gap-4">
                     <div class="w-12 h-12 rounded-full border-2 border-slate-500 flex items-center justify-center bg-slate-700 text-xl font-bold">
-                        <?= strtoupper(substr($victim, 0, 1)) ?>
+                        <?= strtoupper(substr($main_person, 0, 1)) ?>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h2 class="text-xl font-bold truncate" title="<?= htmlspecialchars($victim) ?>">
-                            <?= htmlspecialchars($victim) ?>
+                        <h2 class="text-xl font-bold truncate" title="<?= htmlspecialchars($main_person) ?>">
+                            <?= htmlspecialchars($main_person) ?>
                         </h2>
-                        <p class="text-xs text-slate-400 uppercase tracking-widest font-semibold mt-1">victime</p>
+                        <?php if ($mode === 'inverse'): ?>
+                            <a href="?mode=normal" class="text-xs text-red-400 uppercase tracking-widest font-semibold mt-1 hover:text-red-300 transition-colors inline-flex items-center gap-1 cursor-pointer" title="Voir ses bêtes noires">
+                                BOURREAU <i class="fa-solid fa-right-left text-[10px]"></i>
+                            </a>
+                        <?php else: ?>
+                            <a href="?mode=inverse" class="text-xs text-blue-400 uppercase tracking-widest font-semibold mt-1 hover:text-blue-300 transition-colors inline-flex items-center gap-1 cursor-pointer" title="Voir ses victimes favorites">
+                                VICTIME <i class="fa-solid fa-right-left text-[10px]"></i>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
 
-                <!-- Main Bête Noire -->
+                <!-- Main Opponent -->
                 <div class="p-5 bg-gradient-to-br from-slate-800 to-slate-900 relative overflow-hidden flex-1">
                     <div class="absolute right-[-20px] top-[10px] text-red-500/10 text-8xl transform -rotate-12 pointer-events-none">
                         <i class="fa-solid fa-ghost"></i>
                     </div>
                     <div class="relative z-10 h-full flex flex-col justify-center">
-                        <p class="text-[11px] font-bold text-red-400 mb-2 uppercase tracking-wide flex items-center gap-1.5">
-                            <i class="fa-solid fa-crosshairs"></i> Son Pire Cauchemar
+                        <p class="text-[11px] font-bold <?= $mode === 'inverse' ? 'text-orange-400' : 'text-red-400' ?> mb-2 uppercase tracking-wide flex items-center gap-1.5">
+                            <i class="fa-solid fa-crosshairs"></i> <?= $mode === 'inverse' ? 'Sa Victime Favorite' : 'Son Pire Cauchemar' ?>
                         </p>
                         <div class="flex items-end justify-between gap-3">
-                            <h3 class="text-2xl font-bold text-white truncate" title="<?= htmlspecialchars($beteNoire['eliminator']) ?>">
-                                <?= htmlspecialchars($beteNoire['eliminator']) ?>
+                            <h3 class="text-2xl font-bold text-white truncate" title="<?= htmlspecialchars($beteNoire['opponent']) ?>">
+                                <?= htmlspecialchars($beteNoire['opponent']) ?>
                             </h3>
-                            <div class="flex flex-col items-center shrink-0 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20">
-                                <span class="text-3xl font-black text-red-500 leading-none">
+                            <div class="flex flex-col items-center shrink-0 <?= $mode === 'inverse' ? 'bg-orange-500/10 border-orange-500/20 text-orange-500' : 'bg-red-500/10 border-red-500/20 text-red-500' ?> px-3 py-1.5 rounded-lg border">
+                                <span class="text-3xl font-black leading-none">
                                     <?= $beteNoire['count'] ?>
                                 </span>
-                                <span class="text-[9px] text-red-300 font-bold uppercase mt-1">Fois</span>
+                                <span class="text-[9px] <?= $mode === 'inverse' ? 'text-orange-300' : 'text-red-300' ?> font-bold uppercase mt-1">Fois</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Other Eliminators (if any) -->
-                <?php if (count($eliminators) > 1): ?>
+                <!-- Other Opponents (if any) -->
+                <?php if (count($opponents) > 1): ?>
                 <div class="px-5 py-4 bg-slate-800/80 flex flex-col gap-2.5 border-t border-slate-700">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Aussi éliminé(e) par :</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider"><?= $mode === 'inverse' ? 'A aussi éliminé :' : 'Aussi éliminé(e) par :' ?></p>
                     <div class="flex flex-wrap gap-2">
                         <?php 
-                        $others = array_slice($eliminators, 1, 3); // Take up to 3 others
+                        $others = array_slice($opponents, 1, 3); // Take up to 3 others
                         foreach ($others as $other): 
                         ?>
                         <span class="inline-flex items-center gap-1.5 pl-2 pr-1 py-1 rounded-md text-[11px] font-medium bg-slate-700/50 text-slate-300 border border-slate-600/50 hover:bg-slate-700 transition-colors">
-                            <?= htmlspecialchars($other['eliminator']) ?>
+                            <?= htmlspecialchars($other['opponent']) ?>
                             <span class="bg-indigo-500/20 text-indigo-300 min-w-[1.25rem] h-4 px-1 rounded block text-center flex items-center justify-center text-[10px] font-bold">
                                 <?= $other['count'] ?>
                             </span>
@@ -177,9 +186,9 @@ try {
                         <?php endforeach; ?>
                         
                         <?php 
-                        $rest = array_slice($eliminators, 4);
+                        $rest = array_slice($opponents, 4);
                         if (!empty($rest)): 
-                            $uid = md5($victim);
+                            $uid = md5($main_person . $mode);
                         ?>
                             <button type="button" onclick="document.getElementById('m-<?= $uid ?>').style.display='contents'; this.style.display='none';" class="inline-flex items-center px-2 py-1 rounded-md text-[11px] font-medium text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 italic cursor-pointer transition-all">
                                 +<?= count($rest) ?> autres <i class="fa-solid fa-chevron-down ml-1 text-[9px]"></i>
@@ -187,7 +196,7 @@ try {
                             <span id="m-<?= $uid ?>" style="display: none;">
                                 <?php foreach ($rest as $other): ?>
                                 <span class="inline-flex items-center gap-1.5 pl-2 pr-1 py-1 rounded-md text-[11px] font-medium bg-slate-700/50 text-slate-300 border border-slate-600/50 hover:bg-slate-700 transition-colors">
-                                    <?= htmlspecialchars($other['eliminator']) ?>
+                                    <?= htmlspecialchars($other['opponent']) ?>
                                     <span class="bg-indigo-500/20 text-indigo-300 min-w-[1.25rem] h-4 px-1 rounded block text-center flex items-center justify-center text-[10px] font-bold">
                                         <?= $other['count'] ?>
                                     </span>
@@ -198,8 +207,8 @@ try {
                     </div>
                 </div>
                 <?php else: ?>
-                <div class="px-5 p-4 flex items-center justify-start text-emerald-500/70 text-[11px] font-medium border-t border-slate-700/50 bg-slate-800/30 gap-2">
-                    <i class="fa-solid fa-shield-halved"></i> Aucun autre éliminateur.
+                <div class="px-5 p-4 flex items-center justify-start <?= $mode === 'inverse' ? 'text-orange-500/70' : 'text-emerald-500/70' ?> text-[11px] font-medium border-t border-slate-700/50 bg-slate-800/30 gap-2">
+                    <i class="fa-solid <?= $mode === 'inverse' ? 'fa-ghost' : 'fa-shield-halved' ?>"></i> <?= $mode === 'inverse' ? 'Aucune autre victime.' : 'Aucun autre éliminateur.' ?>
                 </div>
                 <?php endif; ?>
             </div>
