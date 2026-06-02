@@ -13,6 +13,23 @@ try {
     // Get everyone's bêtes noires
     // A bête noire is the person who eliminated them the most.
     $mode = $_GET['mode'] ?? 'normal';
+    
+    // Filtrage par membre
+    $filter_pseudo = null;
+    if (!empty($_GET['uid'])) {
+        $stmt_user = $pdo->prepare("SELECT pseudo FROM membres WHERE `id-membre` = ?");
+        $stmt_user->execute([(int)$_GET['uid']]);
+        $filter_pseudo = $stmt_user->fetchColumn();
+    } elseif (!empty($_GET['pseudo'])) {
+        $filter_pseudo = $_GET['pseudo'];
+    }
+
+    $whereExtra = "";
+    $params = [];
+    if ($filter_pseudo) {
+        $whereExtra = $mode === 'inverse' ? " AND e.nom_membre = :filter_pseudo " : " AND p.`nom-membre` = :filter_pseudo ";
+        $params[':filter_pseudo'] = $filter_pseudo;
+    }
 
     if ($mode === 'inverse') {
         // Mode inverse : On affiche qui le joueur a éliminé le plus
@@ -26,6 +43,7 @@ try {
             WHERE e.nom_membre IS NOT NULL AND e.nom_membre != '' 
               AND p.`nom-membre` IS NOT NULL AND p.`nom-membre` != ''
               AND e.nom_membre != p.`nom-membre` 
+              $whereExtra
             GROUP BY e.nom_membre, p.`nom-membre`
             ORDER BY e.nom_membre ASC, elim_count DESC
         ";
@@ -41,13 +59,14 @@ try {
             WHERE e.nom_membre IS NOT NULL AND e.nom_membre != '' 
               AND p.`nom-membre` IS NOT NULL AND p.`nom-membre` != ''
               AND e.nom_membre != p.`nom-membre` 
+              $whereExtra
             GROUP BY p.`nom-membre`, e.nom_membre
             ORDER BY p.`nom-membre` ASC, elim_count DESC
         ";
     }
 
     $stmt = $pdo->prepare($query);
-    $stmt->execute();
+    $stmt->execute($params);
     $results = $stmt->fetchAll();
 
     $data = [];
