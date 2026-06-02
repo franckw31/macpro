@@ -78,7 +78,8 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
             m.pseudo,
             p.id_mvt,
             p.date_mvt,
-            p.montant
+            p.montant,
+            p.id_type_mvt
         FROM membres m
         INNER JOIN portefeuille p
             ON p.id_mvt_membre = COALESCE(m.id_membre, m.`id-membre`)
