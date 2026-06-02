@@ -595,7 +595,7 @@ function fmt_money($n){ return number_format($n,0,',',' ') . ' €'; }
                     echo '<span style="color:#888">—</span>';
                 }
             ?> <a id="link-sergio" href="/panel/sergio.php?mid=<?php echo intval($uid_int); ?>" style="margin-left:8px;color:#ff4d4d;font-weight:700">Vos Stats</a></div></div>
-            <div class="card-row"><div class="label">Mes Bourreaux</div><div class="value"><a href="/panel/bete-noire.php?uid=<?php echo intval($uid); ?>" style="color:#08b0ff;font-weight:700">Consulter</a></div></div>
+            <div class="card-row"><div class="label">Mes Bourreaux / Victimes</div><div class="value"><a href="/panel/bete-noire.php?uid=<?php echo intval($uid); ?>" style="color:#08b0ff;font-weight:700">Consulter</a></div></div>
         </div>
 
         <div class="card">
