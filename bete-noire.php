@@ -68,6 +68,10 @@ try {
     // Sort by most total eliminations received or just alphabetically?
     // Alphabetically is easier to find yourself, let's keep it sorted by name
     ksort($data);
+    
+    // Get total eliminations
+    $stmtCount = $pdo->query("SELECT COUNT(*) FROM eliminations");
+    $totalEliminations = $stmtCount->fetchColumn();
 
 } catch (Exception $e) {
     die("Erreur de connexion a la base de donnees. " . $e->getMessage());
