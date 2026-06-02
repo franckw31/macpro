@@ -123,9 +123,6 @@ function afficherMembres(mysqli $conn): void {
  * Affiche le solde cumulé d'un membre spécifique.
  */
 function afficherSoldeMembre(int $membreId, mysqli $conn): void {
-    echo "<h3>Solde de l'utilisateur ID: " . htmlspecialchars($membreId) . "</h3>";
-    
-    // Selon le dump SQL: la clé membre dans `portefeuille` est `id_mvt_membre`
     $sql = "SELECT SUM(CASE WHEN id_type_mvt IN (1, 2, 3) THEN -montant ELSE montant END) AS montant FROM portefeuille WHERE id_mvt_membre = ?";
     
     if ($stmt = $conn->prepare($sql)) {
@@ -135,16 +132,20 @@ function afficherSoldeMembre(int $membreId, mysqli $conn): void {
         $row = $result->fetch_assoc();
         $solde = $row['montant'];
 
+        echo "<div class='v2-card v2-general-card'>";
+        echo "<div class='v2-general-title'>Solde Utilisateur ID: " . htmlspecialchars((string)$membreId) . "</div>";
+
         if ($solde === null) {
-            echo "<p style='color: gray;'>Aucune transaction trouvée pour ce membre.</p>";
+            echo "<p style='color:var(--muted);'>Aucune transaction trouvée pour ce membre.</p>";
         } else {
             // Formatage monétaire
-            $soldeColor = $solde >= 0 ? 'green' : 'red';
-            echo "<p style='font-size: 1.5em; font-weight: bold; color: " . $soldeColor . ";'>Solde Total: " . number_format((float)$solde, 2, ',', ' ') . " €</p>";
+            $soldeColorClass = $solde >= 0 ? 'text-green' : 'text-red';
+            echo "<div class='v2-general-amount " . $soldeColorClass . "'>" . number_format((float)$solde, 2, ',', ' ') . " €</div>";
         }
+        echo "</div>";
         $stmt->close();
     } else {
-        echo "<p style='color: red;'>Erreur lors de la préparation de la requête de solde.</p>";
+        echo "<div class='v2-card text-red'>Erreur lors de la préparation de la requête de solde.</div>";
     }
 }
 
