@@ -12,19 +12,39 @@ try {
 
     // Get everyone's bêtes noires
     // A bête noire is the person who eliminated them the most.
-    $query = "
-        SELECT 
-            p.`nom-membre` AS victim, 
-            e.nom_membre AS eliminator, 
-            COUNT(*) as elim_count 
-        FROM eliminations e
-        JOIN participation p ON e.id_participation = p.`id-participation`
-        WHERE e.nom_membre IS NOT NULL AND e.nom_membre != '' 
-          AND p.`nom-membre` IS NOT NULL AND p.`nom-membre` != ''
-          AND e.nom_membre != p.`nom-membre` 
-        GROUP BY p.`nom-membre`, e.nom_membre
-        ORDER BY p.`nom-membre` ASC, elim_count DESC
-    ";
+    $mode = $_GET['mode'] ?? 'normal';
+
+    if ($mode === 'inverse') {
+        // Mode inverse : On affiche qui le joueur a éliminé le plus
+        $query = "
+            SELECT 
+                e.nom_membre AS main_person, 
+                p.`nom-membre` AS opponent, 
+                COUNT(*) as elim_count 
+            FROM eliminations e
+            JOIN participation p ON e.id_participation = p.`id-participation`
+            WHERE e.nom_membre IS NOT NULL AND e.nom_membre != '' 
+              AND p.`nom-membre` IS NOT NULL AND p.`nom-membre` != ''
+              AND e.nom_membre != p.`nom-membre` 
+            GROUP BY e.nom_membre, p.`nom-membre`
+            ORDER BY e.nom_membre ASC, elim_count DESC
+        ";
+    } else {
+        // Mode normal : On affiche par qui le joueur a été éliminé le plus
+        $query = "
+            SELECT 
+                p.`nom-membre` AS main_person, 
+                e.nom_membre AS opponent, 
+                COUNT(*) as elim_count 
+            FROM eliminations e
+            JOIN participation p ON e.id_participation = p.`id-participation`
+            WHERE e.nom_membre IS NOT NULL AND e.nom_membre != '' 
+              AND p.`nom-membre` IS NOT NULL AND p.`nom-membre` != ''
+              AND e.nom_membre != p.`nom-membre` 
+            GROUP BY p.`nom-membre`, e.nom_membre
+            ORDER BY p.`nom-membre` ASC, elim_count DESC
+        ";
+    }
 
     $stmt = $pdo->prepare($query);
     $stmt->execute();
@@ -32,15 +52,15 @@ try {
 
     $data = [];
     foreach ($results as $row) {
-        $victim = ucfirst(strtolower($row['victim']));
-        $eliminator = ucfirst(strtolower($row['eliminator']));
+        $main_person = ucfirst(strtolower($row['main_person']));
+        $opponent = ucfirst(strtolower($row['opponent']));
         $count = (int)$row['elim_count'];
 
-        if (!isset($data[$victim])) {
-            $data[$victim] = [];
+        if (!isset($data[$main_person])) {
+            $data[$main_person] = [];
         }
-        $data[$victim][] = [
-            'eliminator' => $eliminator,
+        $data[$main_person][] = [
+            'opponent' => $opponent,
             'count' => $count
         ];
     }
