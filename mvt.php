@@ -131,7 +131,7 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
         }
         
         echo "<tr>";
-        echo "<td>" . htmlspecialchars((string)$row['date_mvt']) . "</td>";
+        echo "<td>" . htmlspecialchars(date('d/m/Y', strtotime((string)$row['date_mvt']))) . "</td>";
         echo "<td>" . htmlspecialchars((string)$row['id_mvt']) . "</td>";
         echo "<td style='text-align:right;'>" . $montantFormat . "</td>";
         echo "</tr>";
