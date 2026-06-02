@@ -80,10 +80,13 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
             p.id_mvt,
             p.date_mvt,
             p.montant,
-            p.id_type_mvt
+            p.id_type_mvt,
+            t.label AS type_label
         FROM membres m
         INNER JOIN portefeuille p
             ON p.id_mvt_membre = COALESCE(m.id_membre, m.`id-membre`)
+        LEFT JOIN type_mvt t
+            ON p.id_type_mvt = t.id_type_mvt
         ORDER BY m.pseudo ASC, p.date_mvt DESC
     ";
 
