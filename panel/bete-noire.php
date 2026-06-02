@@ -259,7 +259,7 @@ try {
         </div>
         
         <div class="mt-12 text-center pb-8">
-            <a href="index.php" class="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-600 rounded-xl text-sm font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white transition duration-200">
+            <a href="/panel/profile.php" class="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-600 rounded-xl text-sm font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white transition duration-200">
                 <i class="fa-solid fa-arrow-left"></i> Retour à l'accueil
             </a>
         </div>
