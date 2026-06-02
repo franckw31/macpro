@@ -45,7 +45,7 @@ function afficherSoldeMembre(int $membreId, mysqli $conn): void {
     echo "<h3>Solde de l'utilisateur ID: " . htmlspecialchars($membreId) . "</h3>";
     
     // Selon le dump SQL: la clé membre dans `portefeuille` est `id_mvt_membre`
-    $sql = "SELECT SUM(montant) AS montant FROM portefeuille WHERE id_mvt_membre = ?";
+    $sql = "SELECT SUM(CASE WHEN id_type_mvt IN (1, 2, 3) THEN -montant ELSE montant END) AS montant FROM portefeuille WHERE id_mvt_membre = ?";
     
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("i", $membreId);
