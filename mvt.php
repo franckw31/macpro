@@ -8,6 +8,87 @@ if (!isset($db_connection) || $db_connection === false) {
 }
 
 $conn = $db_connection;
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mouvements et Soldes</title>
+<style>
+/* ─── RESET & BASE ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f2f2f7;
+  --card:#ffffff;
+  --border:rgba(0,0,0,0.1);
+  --green:#34c759;
+  --orange:#ff9f0a;
+  --blue:#007aff;
+  --cyan:#32ade6;
+  --muted:#8e8e93;
+  --text:#000000;
+  --text2:#3a3a3c;
+  --label:#8e8e93;
+  --radius:16px;
+  --radius-sm:12px;
+  --danger:#ff3b30;
+  --table-header:#e5e5ea;
+  --table-border:#c7c7cc;
+}
+@media (prefers-color-scheme: dark) {
+  :root{
+    --bg:#0a0d14;
+    --card:#111822;
+    --border:rgba(255,255,255,0.06);
+    --green:#30d158;
+    --orange:#ff9f0a;
+    --blue:#0a84ff;
+    --cyan:#64d2ff;
+    --muted:#6b7a8f;
+    --text:#ffffff;
+    --text2:#c8d6e5;
+    --label:#8e9bae;
+    --danger:#ff453a;
+    --table-header:#1c2533;
+    --table-border:#1c2533;
+  }
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+.page{max-width:800px;margin:0 auto;padding:20px 20px 90px 20px;display:flex;flex-direction:column;gap:16px}
+
+/* ─── CARD BASE ─── */
+.v2-card{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:0 2px 10px rgba(0,0,0,0.02);border:1px solid var(--border);margin-bottom:16px;}
+.v2-title{font-size:22px;font-weight:700;margin-bottom:16px;color:var(--text);text-align:center;}
+.v2-subtitle{font-size:16px;font-weight:600;margin-bottom:12px;color:var(--blue);display:flex;align-items:center;gap:6px;}
+
+/* ─── TABLE ─── */
+.v2-table{width:100%;border-collapse:collapse;margin-bottom:8px;font-size:14px;}
+.v2-table th, .v2-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--table-border);}
+.v2-table th{background:var(--table-header);color:var(--text);font-weight:600;}
+.v2-table td{color:var(--text2);}
+.v2-table tr:last-child td{border-bottom:none;}
+.v2-table td.amount{text-align:right;font-weight:600;white-space:nowrap;}
+.text-green{color:var(--green) !important;}
+.text-red{color:var(--danger) !important;}
+
+/* ─── SUMMARY ─── */
+.v2-total-row th, .v2-total-row td{background:var(--table-header);font-weight:700;}
+.v2-general-card{text-align:center;padding:24px;border:2px solid var(--border);}
+.v2-general-title{font-size:18px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px;}
+.v2-general-amount{font-size:36px;font-weight:800;}
+
+/* RESPONSIVE */
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+@media (max-width:600px) {
+  .page { padding: 10px; }
+  .v2-card { padding: 14px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+<?php
 
 /**
  * Récupère et affiche les informations générales des membres.
