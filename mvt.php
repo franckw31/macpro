@@ -173,12 +173,12 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
 
     $result = $conn->query($sql);
     if ($result === false) {
-        echo "<p style='color: red;'>Erreur SQL (mouvements): " . htmlspecialchars($conn->error) . "</p>";
+        echo "<div class='v2-card text-red'>Erreur SQL (mouvements): " . htmlspecialchars($conn->error) . "</div>";
         return;
     }
 
     if ($result->num_rows === 0) {
-        echo "<p style='color: gray;'>Aucune donnée de mouvement trouvée.</p>";
+        echo "<div class='v2-card' style='color:var(--muted);'>Aucune donnée de mouvement trouvée.</div>";
         return;
     }
 
