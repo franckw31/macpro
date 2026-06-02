@@ -135,7 +135,7 @@ try {
                         </h2>
                         <?php if ($mode === 'inverse'): ?>
                             <a href="?mode=normal" class="text-xs text-red-400 uppercase tracking-widest font-semibold mt-1 hover:text-red-300 transition-colors inline-flex items-center gap-1 cursor-pointer" title="Voir ses bêtes noires">
-                                BOURREAU <i class="fa-solid fa-right-left text-[10px]"></i>
+                                BOURREAU DE <i class="fa-solid fa-right-left text-[10px]"></i>
                             </a>
                         <?php else: ?>
                             <a href="?mode=inverse" class="text-xs text-blue-400 uppercase tracking-widest font-semibold mt-1 hover:text-blue-300 transition-colors inline-flex items-center gap-1 cursor-pointer" title="Voir ses victimes favorites">
