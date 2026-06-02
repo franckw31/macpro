@@ -105,8 +105,9 @@ function afficherMouvementsEtSoldes(mysqli $conn): void {
         if ($currentMembre !== $row['id_membre']) {
             // Fermer le tableau du membre précédent s'il y en a un
             if ($currentMembre !== null) {
+                $soldeColor = $soldeTotal >= 0 ? 'green' : 'red';
                 echo "<tr><td colspan='2' style='text-align:right; font-weight:bold; background:#e5e7eb;'>SOLDE TOTAL :</td>";
-                echo "<td style='text-align:right; font-weight:bold; background:#e5e7eb;'>" . number_format($soldeTotal, 2, ',', ' ') . " €</td></tr>";
+                echo "<td style='text-align:right; font-weight:bold; background:#e5e7eb; color:" . $soldeColor . ";'>" . number_format($soldeTotal, 2, ',', ' ') . " €</td></tr>";
                 echo "</tbody></table><br/>";
             }
             
