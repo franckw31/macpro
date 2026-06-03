@@ -809,6 +809,17 @@ function v2NavActivity(dir){
           <div class="v2-fin-val" style="color:var(--orange)"><?php echo isset($serverActivity['buyin']) ? htmlspecialchars($serverActivity['buyin']).'' : '—'; ?></div>
         </div>
       </div>
+      <?php if (!empty($serverActivity['bounty']) && floatval($serverActivity['bounty']) > 0): ?>
+      <div class="v2-fin-item">
+        <div class="v2-fin-ico green" style="background:rgba(52,199,89,0.12)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
+        </div>
+        <div>
+          <div class="v2-fin-lbl">Bounty</div>
+          <div class="v2-fin-val" style="color:#34c759"><?php echo htmlspecialchars($serverActivity['bounty']); ?></div>
+        </div>
+      </div>
+      <?php endif; ?>
       <div class="v2-fin-item">
         <div class="v2-fin-ico orange">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff453a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 6v6"/><path d="M10.5 6v6"/><path d="M15 5l-1.5 12"/></svg>
