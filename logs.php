@@ -304,7 +304,7 @@ td { color: var(--text); }
     <a href="index.php" class="back" style="margin-bottom:0">&larr; Retour</a>
     <button onclick="location.reload()" style="padding:7px 16px;border-radius:6px;border:1px solid #ccc;background:#fff;cursor:pointer;font-size:13px;font-weight:bold">&#x21bb; Actualiser</button>
 </div>
-<h1>Logs d'activite</h1>
+<h1>Logs d'activite <span style="font-size:14px;color:var(--muted);font-weight:normal;margin-left:10px">(<?php echo count(array_unique(array_column($sessions, 'pseudo'))); ?> utilisateurs uniques logés)</span></h1>
 
 <div class="tabs">
     <a href="?tab=all"   class="<?php echo ($tab==='all'   ? 'active' : ''); ?>">Tous</a>
