@@ -1252,26 +1252,32 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
     <!-- ══════ /MINI MESSAGERIE ══════ -->
 
     <?php if (!empty($_SESSION['id']) && in_array((int) $_SESSION['id'], [2, 265], true)): ?>
-    <a class="v2-list-item tile-cyan" href="/qrcode/affectation_collection_activite.php" style="text-decoration:none;color:inherit">
-      <div class="v2-list-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M21 15v4a2 2 0 0 1-2 2h-4"/><path d="M3 15v4a2 2 0 0 0 2 2h4"/><path d="M8 8h2v2H8z"/><path d="M14 8h2v2h-2z"/><path d="M8 14h2v2H8z"/><path d="M14 14h2v2h-2z"/></svg>
-      </div>
-      <div class="v2-list-body">
-        <div class="v2-list-name">Qrcode / Tombolas</div>
-        <div class="v2-list-sub">Affectation collections et tombolas</div>
-      </div>
-      <div class="v2-list-chev">›</div>
-    </a>
-    <a class="v2-list-item tile-cyan" href="/qrcode/verify_qrcode.php" style="text-decoration:none;color:inherit">
-      <div class="v2-list-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
-      </div>
-      <div class="v2-list-body">
-        <div class="v2-list-name">Verif Tirage</div>
-        <div class="v2-list-sub">Vérification des tickets éligibles</div>
-      </div>
-      <div class="v2-list-chev">›</div>
-    </a>
+    <div style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px;">
+      <a class="v2-list-item tile-cyan" href="/qrcode/affectation_collection_activite.php" style="text-decoration:none;color:inherit">
+        <div class="v2-list-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M21 15v4a2 2 0 0 1-2 2h-4"/><path d="M3 15v4a2 2 0 0 0 2 2h4"/><path d="M8 8h2v2H8z"/><path d="M14 8h2v2h-2z"/><path d="M8 14h2v2H8z"/><path d="M14 14h2v2h-2z"/></svg>
+        </div>
+        <div class="v2-list-body">
+          <div class="v2-list-name" style="font-size:12px; line-height: 1.1;">Qrcode / Tombolas</div>
+        </div>
+      </a>
+      <a class="v2-list-item tile-cyan" href="/qrcode/verify_qrcode.php" style="text-decoration:none;color:inherit">
+        <div class="v2-list-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+        </div>
+        <div class="v2-list-body">
+          <div class="v2-list-name" style="font-size:12px; line-height: 1.1;">Verif Tirage</div>
+        </div>
+      </a>
+      <a class="v2-list-item tile-cyan" href="/logs.php" style="text-decoration:none;color:inherit">
+        <div class="v2-list-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </div>
+        <div class="v2-list-body">
+          <div class="v2-list-name" style="font-size:12px; line-height: 1.1;">Logs</div>
+        </div>
+      </a>
+    </div>
     <?php endif; ?>
 
   </div><!-- /v2-list -->
