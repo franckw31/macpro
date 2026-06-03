@@ -176,6 +176,7 @@ if ($tab === 'ios') {
 }
 
 $total_rows = (int)mysqli_fetch_row(mysqli_query($conx, "SELECT COUNT(*) FROM activity_logs WHERE $where"))[0];
+$unique_logged_users = (int)mysqli_fetch_row(mysqli_query($conx, "SELECT COUNT(DISTINCT user_id) FROM activity_logs WHERE $where AND user_id > 0"))[0];
 $total_pages = max(1, ceil($total_rows / $per_page));
 $page = min($page, $total_pages);
 $offset = ($page - 1) * $per_page;
