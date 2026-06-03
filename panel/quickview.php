@@ -58,11 +58,28 @@ try {
 		if ($q_auth && ($r_auth = mysqli_fetch_array($q_auth))) {
 			$_SESSION['login'] = $r_auth['pseudo'];
 			$_SESSION['id']    = $r_auth['id-membre'];
+                        $_SESSION['login_source'] = 'Quickview/QR';
+                        if (function_exists('log_activity')) log_activity($con, "Auto-Login Quickview", "User: $pseudo_get via URL");
 			// ── Mémoriser les identifiants 30 jours ──────────────────────
 			$_cookie_expire = time() + (30 * 24 * 3600);
 			setcookie('qv_pseudo', $r_auth['pseudo'], $_cookie_expire, '/', '', false, true);
 			setcookie('qv_passwd', $pass_get,         $_cookie_expire, '/', '', false, true);
 			setcookie('uname',     $r_auth['pseudo'], $_cookie_expire, '/');
+		}
+	}
+
+	// Traceur connexion / ouverture de l'app si déjà logué
+	if (!empty($_SESSION['login'])) {
+		if (!function_exists('log_activity') && file_exists(__DIR__ . '/../include/functions_logs.php')) {
+			@include_once __DIR__ . '/../include/functions_logs.php';
+		}
+		// Anti-spam pour ne pas logger chaque rafraichissement (1 log / 5 min max par ouverture)
+		if (empty($_SESSION['last_qv_log']) || (time() - $_SESSION['last_qv_log']) > 300) {
+			if (function_exists('log_activity') && isset($con) && !empty($con)) {
+				log_activity($con, "Quickview Access", "Visite sur Quickview");
+				$_SESSION['last_qv_log'] = time();
+				$_SESSION['login_source'] = 'Quickview/QR'; // Maintenir la source
+			}
 		}
 	}
 
