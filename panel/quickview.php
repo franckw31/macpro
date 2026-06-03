@@ -838,6 +838,7 @@ function v2NavActivity(dir){
           <div class="v2-fin-val" style="color:var(--cyan)"><?php echo isset($serverActivity['recave']).'EB' ? htmlspecialchars($serverActivity['recave']) . '+EB' : '—'; ?></div>
         </div>
       </div>
+      <?php if (empty($serverActivity['bounty']) || floatval($serverActivity['bounty']) <= 0): ?>
       <div class="v2-fin-item">
         <div class="v2-fin-ico blue" style="background:rgba(10,132,255,0.12)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="7" height="7" rx="1.5"/><rect x="3" y="13" width="7" height="7" rx="1.5"/><rect x="14" y="13" width="7" height="7" rx="1.5"/></svg>
@@ -847,6 +848,7 @@ function v2NavActivity(dir){
           <div class="v2-fin-val" style="color:var(--blue)"><?php echo isset($serverActivity['tables']) ? htmlspecialchars($serverActivity['tables']) : '—'; ?></div>
         </div>
       </div>
+      <?php endif; ?>
     </div>
 
     <!-- Buttons -->
