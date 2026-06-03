@@ -2,6 +2,18 @@
 // bete-noire.php
 // Liste des joueurs et leurs pires cauchemars (bêtes noires) via Tailwind CSS.
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (!function_exists('log_activity') && file_exists(__DIR__ . '/../include/functions_logs.php')) {
+    include_once __DIR__ . '/include/config.php';
+    include_once __DIR__ . '/../include/functions_logs.php';
+    if (isset($con)) {
+        $log_target = $_GET['uid'] ?? ($_GET['pseudo'] ?? 'Globale');
+        $log_mode = $_GET['mode'] ?? 'normal';
+        log_activity($con, "Consultation Bourreaux / Victimes", "Cible: $log_target, Mode: $log_mode");
+    }
+}
 
 try {
     $pdo = new PDO(
