@@ -927,10 +927,9 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
 $_pct = 0;
 $_max_p = !empty($serverActivity['max_participants']) ? intval($serverActivity['max_participants']) : 0;
 $_cur_p = isset($serverActivity['participants_count']) ? intval($serverActivity['participants_count']) : 0;
-if ($_max_p > 0) {
+if ($_max_p > 0):
     $_pct = min(100, round(($_cur_p / $_max_p) * 100));
-}
-$_color = $_pct >= 100 ? '#ff453a' : ($_pct >= 80 ? '#ff9f0a' : 'var(--green)');
+    $_color = $_pct >= 100 ? '#ff453a' : ($_pct >= 80 ? '#ff9f0a' : 'var(--green)');
 ?>
     <!-- Barre de remplissage -->
     <div style="margin-top: 5px; margin-bottom: 5px;">
@@ -942,6 +941,7 @@ $_color = $_pct >= 100 ? '#ff453a' : ($_pct >= 80 ? '#ff9f0a' : 'var(--green)');
         <div style="height: 100%; width: <?php echo $_pct; ?>%; background: <?php echo $_color; ?>; border-radius: 4px; transition: width 0.5s ease-out;"></div>
       </div>
     </div>
+<?php endif; ?>
 
   </div><!-- /v2-card -->
 
