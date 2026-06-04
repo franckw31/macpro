@@ -868,6 +868,26 @@ function v2NavActivity(dir){
       <?php endif; ?>
     </div>
 
+<?php
+$_pct = 0;
+$_max_p = !empty($serverActivity['max_participants']) ? intval($serverActivity['max_participants']) : 0;
+$_cur_p = isset($serverActivity['participants_count']) ? intval($serverActivity['participants_count']) : 0;
+if ($_max_p > 0):
+    $_pct = min(100, round(($_cur_p / $_max_p) * 100));
+    $_color = $_pct >= 100 ? '#ff453a' : ($_pct >= 80 ? '#ff9f0a' : 'var(--green)');
+?>
+    <!-- Barre de remplissage -->
+    <div style="margin-top: 5px; margin-bottom: 12px;">
+      <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); font-weight:700; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;">
+        <span>Remplissage</span>
+        <span><?php echo $_pct; ?>%</span>
+      </div>
+      <div style="width: 100%; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden;">
+        <div style="height: 100%; width: <?php echo $_pct; ?>%; background: <?php echo $_color; ?>; border-radius: 4px; transition: width 0.5s ease-out;"></div>
+      </div>
+    </div>
+<?php endif; ?>
+
     <!-- Buttons -->
     <div class="v2-actions">
       <button class="v2-btn filled" id="v2-details-btn" style="background:#1a7a3a;color:#fff;flex-direction:column;align-items:center;gap:2px">
