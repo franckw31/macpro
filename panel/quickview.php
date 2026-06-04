@@ -868,30 +868,6 @@ function v2NavActivity(dir){
       <?php endif; ?>
     </div>
 
-<?php
-$_pct = 0;
-$_max_p = !empty($serverActivity['max_participants']) ? intval($serverActivity['max_participants']) : 0;
-$_cur_p = isset($serverActivity['participants_count']) ? intval($serverActivity['participants_count']) : 0;
-if ($_max_p > 0):
-    $_pct = min(100, round(($_cur_p / $_max_p) * 100));
-    $_color = $_pct >= 100 ? '#ff453a' : ($_pct >= 80 ? '#ff9f0a' : '#34c759');
-    $_bg = $_pct >= 100 ? 'rgba(255,69,58,0.1)' : ($_pct >= 80 ? 'rgba(255,159,10,0.1)' : 'rgba(52,199,89,0.1)');
-?>
-    <!-- Barre de remplissage -->
-    <div style="background: <?php echo $_bg; ?>; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.04);">
-      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:8px;">
-        <span style="font-size:11px; font-weight:800; color:<?php echo $_color; ?>; text-transform:uppercase; letter-spacing:0.8px; display:flex; align-items:center; gap:6px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          Places : <?php echo $_cur_p; ?> / <?php echo $_max_p; ?>
-        </span>
-        <span style="font-size:14px; font-weight:900; color:<?php echo $_color; ?>; line-height: 1;"><?php echo $_pct; ?>%</span>
-      </div>
-      <div style="width: 100%; height: 6px; background: rgba(0,0,0,0.4); border-radius: 6px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);">
-        <div style="height: 100%; width: <?php echo $_pct; ?>%; background: <?php echo $_color; ?>; border-radius: 6px;"></div>
-      </div>
-    </div>
-<?php endif; ?>
-
     <!-- Buttons -->
     <div class="v2-actions">
       <button class="v2-btn filled" id="v2-details-btn" style="background:#1a7a3a;color:#fff;flex-direction:column;align-items:center;gap:2px">
@@ -947,8 +923,27 @@ $_resume_url  = '/panel/resume.php' . $uid_q;
       </a>
     </div>
 
-    <!-- Buttons -->
-    <div class="v2-actions">
+<?php
+$_pct = 0;
+$_max_p = !empty($serverActivity['max_participants']) ? intval($serverActivity['max_participants']) : 0;
+$_cur_p = isset($serverActivity['participants_count']) ? intval($serverActivity['participants_count']) : 0;
+if ($_max_p > 0):
+    $_pct = min(100, round(($_cur_p / $_max_p) * 100));
+    $_color = $_pct >= 100 ? '#ff453a' : ($_pct >= 80 ? '#ff9f0a' : 'var(--green)');
+?>
+    <!-- Barre de remplissage -->
+    <div style="margin-top: 5px; margin-bottom: 5px;">
+      <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); font-weight:700; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;">
+        <span>Remplissage</span>
+        <span><?php echo $_pct; ?>%</span>
+      </div>
+      <div style="width: 100%; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden;">
+        <div style="height: 100%; width: <?php echo $_pct; ?>%; background: <?php echo $_color; ?>; border-radius: 4px; transition: width 0.5s ease-out;"></div>
+      </div>
+    </div>
+<?php endif; ?>
+
+  </div><!-- /v2-card -->
 
   <!-- ══════════ ACTIONS RAPIDES ══════════ -->
   <div class="v2-list">
