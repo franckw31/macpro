@@ -1903,7 +1903,7 @@ function escTrak(s) {
         var actHtml = '<div style="display:flex; gap:8px; margin-left:12px;" class="v2-cal-ev-actions">';
         actHtml += '<button title="Dupliquer" onclick="event.stopPropagation(); window.location.href=\'/panel/ajout-activite.php?duplicate='+a.id+'\'" style="font-size:13px; opacity:0.8;">📋</button>';
         if (isOrga) {
-            actHtml += '<button title="Modifier" onclick="event.stopPropagation(); window.location.href=\'/panel/edit_partie.php?uid='+a.id+'\'" style="font-size:13px; opacity:0.8;">✏️</button>';
+            actHtml += '<button title="Modifier" onclick="event.stopPropagation(); window.location.href=\'/panel/edit_partie.php?id='+a.id+'\'" style="font-size:13px; opacity:0.8;">✏️</button>';
             actHtml += '<button title="Supprimer" onclick="event.stopPropagation(); if(confirm(\'Confirmer la suppression de cette partie ?\')) window.location.href=\'/panel/liste-activites.php?del=1&uid='+a.id+'\'" style="font-size:13px; opacity:0.8;">🗑️</button>';
         }
         actHtml += '</div>';
