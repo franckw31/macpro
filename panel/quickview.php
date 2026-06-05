@@ -266,6 +266,12 @@ try {
 					'ts'    => (int)$_da->getTimestamp(),
 					'titre' => $_titre,
 					'buyin' => $_buyin,
+					'rake'  => isset($ra['rake']) ? (int)$ra['rake'] : 0,
+					'bounty' => isset($ra['bounty']) ? (int)$ra['bounty'] : 0,
+					'recave' => isset($ra['recave']) ? (int)$ra['recave'] : 0,
+					'jetons' => isset($ra['jetons']) ? (int)$ra['jetons'] : (isset($ra['jetons_depart']) ? (int)$ra['jetons_depart'] : 0),
+					'ville' => isset($ra['ville']) ? $ra['ville'] : (isset($ra['lieu']) ? $ra['lieu'] : ''),
+					'places' => isset($ra['max_participants']) ? (int)$ra['max_participants'] : (isset($ra['places']) ? (int)$ra['places'] : 0),
 					'past'  => ($_dp < date('Y-m-d H:i:s')),
 				];
 			}
