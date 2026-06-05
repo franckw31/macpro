@@ -251,8 +251,13 @@ try {
 				foreach (['buyin','buy_in','buy-in'] as $_bc) {
 					if (isset($ra[$_bc]) && $ra[$_bc] !== '') { $_buyin = (int)$ra[$_bc]; break; }
 				}
+				$_id_orga = null;
+				foreach (['id-membre','id_membre'] as $_oc) {
+					if (isset($ra[$_oc]) && $ra[$_oc] !== '') { $_id_orga = (int)$ra[$_oc]; break; }
+				}
 				$allActivities[] = [
 					'id'    => (int)$ra['id-activite'],
+					'id_orga'=> $_id_orga,
 					'date'  => $_dp,
 					'label' => $_jours_all[$_da->format('l')] . ' ' . $_da->format('j') . ' ' . $_mois_all[$_da->format('F')] . ' – ' . $_da->format('H:i'),
 					'day'   => (int)$_da->format('j'),
