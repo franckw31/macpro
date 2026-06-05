@@ -717,6 +717,7 @@ a{color:inherit;text-decoration:none}
 window.SERVER_ACTIVITY = <?php echo json_encode($serverActivity, JSON_UNESCAPED_UNICODE); ?>;
 window.SERVER_PARTICIPATION = <?php echo json_encode($serverParticipation ?? null, JSON_UNESCAPED_UNICODE); ?>;
 window.ALL_ACTIVITIES = <?php echo json_encode($allActivities, JSON_UNESCAPED_UNICODE); ?>;
+window.MY_USER_ID = <?php echo intval($_SESSION['id'] ?? 0); ?>;
 try{ localStorage.setItem('lastActivity', JSON.stringify(window.SERVER_ACTIVITY)); }catch(e){}
 </script>
 <script>
