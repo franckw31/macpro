@@ -1892,7 +1892,21 @@ function escTrak(s) {
         listHtml += '<div class="v2-cal-ev-left"><div class="v2-cal-ev-dot '+dotCls+'"></div><div>';
         listHtml += '<div class="v2-cal-ev-label">'+escHtml(a.label)+tag+'</div>';
         listHtml += '</div></div>';
-        listHtml += '<div class="v2-cal-ev-right">'+(a.buyin ? a.buyin+'' : '')+'</div>';
+        
+        var isOrga = (window.MY_USER_ID === 2 || window.MY_USER_ID === a.id_orga);
+        var actHtml = '<div style="display:flex; gap:8px; margin-left:12px;" class="v2-cal-ev-actions">';
+        actHtml += '<button title="Dupliquer" onclick="event.stopPropagation(); window.location.href=\'/panel/ajout-activite.php?duplicate='+a.id+'\'" style="font-size:13px; opacity:0.8;">📋</button>';
+        if (isOrga) {
+            actHtml += '<button title="Modifier" onclick="event.stopPropagation(); window.location.href=\'/panel/voir-activite.php?uid='+a.id+'\'" style="font-size:13px; opacity:0.8;">✏️</button>';
+            actHtml += '<button title="Supprimer" onclick="event.stopPropagation(); if(confirm(\'Confirmer la suppression de cette partie ?\')) window.location.href=\'/panel/liste-activites.php?del=1&uid='+a.id+'\'" style="font-size:13px; opacity:0.8;">🗑️</button>';
+        }
+        actHtml += '</div>';
+
+        listHtml += '<div class="v2-cal-ev-right" style="display:flex; align-items:center;">';
+        listHtml += '<div style="min-width: 25px; text-align:right;">' + (a.buyin ? a.buyin+'' : '') + '</div>';
+        listHtml += actHtml;
+        listHtml += '</div>';
+        
         listHtml += '</div>';
       });
     }
