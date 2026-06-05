@@ -21,7 +21,7 @@ if (empty($_SESSION['id'])) {
         $ante = mysqli_real_escape_string($con, $_POST['ante']);
         $longitude = (double)$_POST['longitude'];
         $latitude = (float)$_POST['latitude'];
-        $idstructure = (int)$_POST['id-structure'];
+        $idstructure = (int)$_POST['id_structure'];
         $jetons = (int)$_POST['jetons'];
         $bonus = (int)$_POST['bonus'];
         $addon = (int)$_POST['addon'];
@@ -36,7 +36,7 @@ if (empty($_SESSION['id'])) {
         // Utiliser id_challenge = 4 par défaut (comme dans vos données)
         $id_challenge = 4;
         
-        $stmt = mysqli_prepare($con, "INSERT INTO `activite` (`id_challenge`, `id-structure`, `id-membre`, `titre-activite`, `date_depart`, `ville`, `lng`, `lat`, `places`, `buyin`, `rake`, `bounty`, `jetons`, `recave`, `addon`, `ante`, `bonus`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = mysqli_prepare($con, "INSERT INTO `activite` (`id_challenge`, `id_structure`, `id-membre`, `titre-activite`, `date_depart`, `ville`, `lng`, `lat`, `places`, `buyin`, `rake`, `bounty`, `jetons`, `recave`, `addon`, `ante`, `bonus`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         
         if (!$stmt) {
             die("Erreur de préparation : " . mysqli_error($con));
@@ -273,8 +273,8 @@ if (empty($_SESSION['id'])) {
                                                             </tr>
                                                             <tr>
                                                                 <th>Structure</th>
-                                                                <td><input class="form-control" id="id-structure"
-                                                                        name="id-structure" type="text"
+                                                                <td><input class="form-control" id="id_structure"
+                                                                        name="id_structure" type="text"
                                                                         value="<?php echo htmlspecialchars($result['defstr']); ?>"
                                                                         required />
                                                                 </td>
