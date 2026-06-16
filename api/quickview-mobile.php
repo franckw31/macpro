@@ -206,7 +206,7 @@ try {
 
     $avatarUrl = $avatarFile !== ''
         ? 'https://viendez.com/images/faces/' . ltrim($avatarFile, '/')
-        : 'https://viendez.com/panel/images/noprofil.jpg';
+        : 'https://viendez.com/images/faces/noprofil.jpg';
 
     echo json_encode([
         'success' => true,
