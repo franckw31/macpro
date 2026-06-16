@@ -205,7 +205,7 @@ try {
     $avatarFile = trim((string)$avatarStmt->fetchColumn());
 
     $avatarUrl = $avatarFile !== ''
-        ? 'https://viendez.com/panel/images/' . ltrim($avatarFile, '/')
+        ? 'https://viendez.com/images/faces/' . ltrim($avatarFile, '/')
         : 'https://viendez.com/panel/images/noprofil.jpg';
 
     echo json_encode([
