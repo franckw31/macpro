@@ -250,6 +250,53 @@ function try_query($db, $sql, $params, &$errors)
     }
 }
 
+function quote_identifier($name)
+{
+    if (!preg_match('/^[A-Za-z0-9_]+$/', $name)) {
+        throw new RuntimeException('Identifiant SQL invalide: ' . $name);
+    }
+    return '`' . $name . '`';
+}
+
+function table_columns($db, $table, &$errors)
+{
+    $rows = try_query($db, 'SHOW COLUMNS FROM ' . quote_identifier($table), [], $errors);
+    if ($rows === null || empty($rows)) {
+        return [];
+    }
+
+    $columns = [];
+    foreach ($rows as $row) {
+        $field = $row['Field'] ?? $row['field'] ?? null;
+        if ($field !== null && $field !== '') {
+            $columns[strtolower($field)] = $field;
+        }
+    }
+    return $columns;
+}
+
+function first_existing_column($columns, $candidates)
+{
+    foreach ($candidates as $candidate) {
+        $key = strtolower($candidate);
+        if (isset($columns[$key])) {
+            return $columns[$key];
+        }
+    }
+    return null;
+}
+
+function first_existing_table($db, $candidates, &$errors)
+{
+    foreach ($candidates as $table) {
+        $columns = table_columns($db, $table, $errors);
+        if (!empty($columns)) {
+            return [$table, $columns];
+        }
+    }
+    return [null, []];
+}
+
 try {
     $pdo = cardevent_get_db();
     $authErrors = [];
@@ -309,55 +356,99 @@ try {
     }
 
     $errors = [];
-    $queries = [];
-    foreach (['membre_id', 'id_membre', 'user_id', 'joueur_id'] as $memberCol) {
-        foreach (['activite_id', 'id_activite', 'activity_id'] as $activityCol) {
-            foreach (['activite', 'activites'] as $activityTable) {
-                foreach (['date_depart', 'date'] as $dateCol) {
-                    $sql = "
-                        SELECT
-                            m.pseudo,
-                            ROUND(AVG(CAST(REPLACE(p.sergio_score, ',', '.') AS DECIMAL(10,2))), 1) AS sergio_score_moyen
-                        FROM participation p
-                        INNER JOIN membres m ON m.id = p.$memberCol
-                        INNER JOIN $activityTable a ON a.id = p.$activityCol
-                        WHERE p.sergio_score IS NOT NULL
-                          AND TRIM(p.sergio_score) <> ''
-                          AND REPLACE(p.sergio_score, ',', '.') REGEXP '^-?[0-9]+([.][0-9]+)?$'
-                    ";
-                    $params = [];
-                    if ($beforeDate !== null) {
-                        $sql .= " AND a.$dateCol < ? ";
-                        $params[] = $beforeDate;
-                    }
-                    $sql .= " GROUP BY m.id, m.pseudo ORDER BY m.pseudo ASC";
-                    $queries[] = [$sql, $params];
-                }
-            }
-        }
+    list($participationTable, $participationColumns) = first_existing_table($pdo, ['participation', 'participations'], $errors);
+    list($memberTable, $memberColumns) = first_existing_table($pdo, ['membres', 'membre', 'users', 'utilisateurs'], $errors);
+    list($activityTable, $activityColumns) = first_existing_table($pdo, ['activite', 'activites', 'activity', 'activities'], $errors);
+
+    $scoreCol = first_existing_column($participationColumns, ['sergio_score', 'sergioscore', 'score_sergio', 'sergio', 'note_sergio', 'note']);
+    $memberCol = first_existing_column($participationColumns, ['membre_id', 'id_membre', 'member_id', 'id_member', 'joueur_id', 'id_joueur', 'user_id', 'id_user', 'idmembre', 'idjoueur']);
+    $activityCol = first_existing_column($participationColumns, ['activite_id', 'id_activite', 'activity_id', 'id_activity', 'partie_id', 'id_partie', 'event_id', 'id_event']);
+    $memberIdCol = first_existing_column($memberColumns, ['id', 'membre_id', 'id_membre', 'user_id', 'id_user']);
+    $pseudoCol = first_existing_column($memberColumns, ['pseudo', 'username', 'login', 'nom', 'name']);
+    $activityIdCol = first_existing_column($activityColumns, ['id', 'activite_id', 'id_activite', 'activity_id', 'id_activity']);
+    $dateCol = first_existing_column($activityColumns, ['date_depart', 'date', 'start_date', 'date_start', 'debut', 'datetime']);
+
+    $schemaDebug = [
+        'participation_table' => $participationTable,
+        'participation_columns' => array_values($participationColumns),
+        'member_table' => $memberTable,
+        'member_columns' => array_values($memberColumns),
+        'activity_table' => $activityTable,
+        'activity_columns' => array_values($activityColumns),
+        'chosen' => [
+            'score' => $scoreCol,
+            'member_fk' => $memberCol,
+            'activity_fk' => $activityCol,
+            'member_id' => $memberIdCol,
+            'pseudo' => $pseudoCol,
+            'activity_id' => $activityIdCol,
+            'activity_date' => $dateCol,
+        ],
+    ];
+
+    if (!$participationTable || !$memberTable || !$scoreCol || !$memberCol || !$memberIdCol || !$pseudoCol) {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Colonnes indispensables introuvables pour sergio_score',
+            'schema' => $schemaDebug,
+            'debug' => array_slice(array_values(array_unique($errors)), 0, 8),
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
     }
 
-    foreach ($queries as $query) {
-        $sql = $query[0];
-        $params = $query[1];
-        $rows = try_query($pdo, $sql, $params, $errors);
-        if ($rows !== null) {
-            echo json_encode([
-                'success' => true,
-                'scores' => $rows,
-                'count' => count($rows),
-                'before_date' => $beforeDate,
-                'auth_warning' => $authWarning,
-            ], JSON_UNESCAPED_UNICODE);
-            exit;
-        }
+    $sql = "
+        SELECT
+            m." . quote_identifier($pseudoCol) . " AS pseudo,
+            ROUND(AVG(CAST(REPLACE(p." . quote_identifier($scoreCol) . ", ',', '.') AS DECIMAL(10,2))), 1) AS sergio_score_moyen
+        FROM " . quote_identifier($participationTable) . " p
+        INNER JOIN " . quote_identifier($memberTable) . " m
+            ON m." . quote_identifier($memberIdCol) . " = p." . quote_identifier($memberCol) . "
+    ";
+    $params = [];
+
+    if ($beforeDate !== null && $activityTable && $activityCol && $activityIdCol && $dateCol) {
+        $sql .= "
+            INNER JOIN " . quote_identifier($activityTable) . " a
+                ON a." . quote_identifier($activityIdCol) . " = p." . quote_identifier($activityCol) . "
+        ";
     }
 
-    http_response_code(500);
+    $sql .= "
+        WHERE p." . quote_identifier($scoreCol) . " IS NOT NULL
+          AND TRIM(p." . quote_identifier($scoreCol) . ") <> ''
+          AND REPLACE(p." . quote_identifier($scoreCol) . ", ',', '.') REGEXP '^-?[0-9]+([.][0-9]+)?$'
+    ";
+
+    if ($beforeDate !== null && $activityTable && $activityCol && $activityIdCol && $dateCol) {
+        $sql .= " AND a." . quote_identifier($dateCol) . " < ? ";
+        $params[] = $beforeDate;
+    }
+
+    $sql .= "
+        GROUP BY m." . quote_identifier($memberIdCol) . ", m." . quote_identifier($pseudoCol) . "
+        ORDER BY m." . quote_identifier($pseudoCol) . " ASC
+    ";
+
+    $rows = try_query($pdo, $sql, $params, $errors);
+    if ($rows === null) {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Requête moyenne sergio_score impossible',
+            'schema' => $schemaDebug,
+            'debug' => array_slice(array_values(array_unique($errors)), 0, 8),
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     echo json_encode([
-        'success' => false,
-        'error' => 'Aucune requête sergio_score compatible',
-        'debug' => array_slice(array_values(array_unique($errors)), 0, 8),
+        'success' => true,
+        'scores' => $rows,
+        'count' => count($rows),
+        'before_date' => $beforeDate,
+        'schema' => $schemaDebug['chosen'],
+        'auth_warning' => $authWarning,
     ], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
     http_response_code(500);
