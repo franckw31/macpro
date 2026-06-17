@@ -29,32 +29,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-function load_cardevent_config()
-{
-    $candidates = [
-        __DIR__ . '/config.php',
-        __DIR__ . '/../config.php',
-        __DIR__ . '/../panel/config.php',
-        __DIR__ . '/../../panel/config.php',
-    ];
+$cardeventConfigCandidates = [
+    __DIR__ . '/config.php',
+    __DIR__ . '/../config.php',
+    __DIR__ . '/../panel/config.php',
+    __DIR__ . '/../../panel/config.php',
+];
+$cardeventConfigLoaded = null;
 
-    foreach ($candidates as $file) {
-        if (is_file($file)) {
-            require_once $file;
-            return $file;
-        }
+foreach ($cardeventConfigCandidates as $file) {
+    if (is_file($file)) {
+        require_once $file;
+        $cardeventConfigLoaded = $file;
+        break;
     }
+}
 
+if ($cardeventConfigLoaded === null) {
     http_response_code(500);
     echo json_encode([
         'success' => false,
         'error' => 'config.php introuvable',
-        'tested' => $candidates,
+        'tested' => $cardeventConfigCandidates,
     ], JSON_UNESCAPED_UNICODE);
     exit;
 }
-
-load_cardevent_config();
 
 $token = trim($_GET['token'] ?? '');
 $activityId = (int)($_GET['activity_id'] ?? 0);
@@ -65,7 +64,27 @@ if ($token === '') {
     exit;
 }
 
-function cardevent_get_pdo()
+function cardevent_first_defined_constant($names)
+{
+    foreach ($names as $name) {
+        if (defined($name)) {
+            return constant($name);
+        }
+    }
+    return null;
+}
+
+function cardevent_first_global($names)
+{
+    foreach ($names as $name) {
+        if (isset($GLOBALS[$name]) && $GLOBALS[$name] !== '') {
+            return $GLOBALS[$name];
+        }
+    }
+    return null;
+}
+
+function cardevent_get_db()
 {
     if (function_exists('get_pdo')) {
         return get_pdo();
@@ -79,22 +98,94 @@ function cardevent_get_pdo()
         return $GLOBALS['db'];
     }
 
-    throw new RuntimeException('Connexion PDO introuvable dans config.php');
+    foreach (['conn', 'mysqli', 'link', 'db'] as $name) {
+        if (isset($GLOBALS[$name]) && class_exists('mysqli') && $GLOBALS[$name] instanceof mysqli) {
+            return $GLOBALS[$name];
+        }
+    }
+
+    $host = cardevent_first_defined_constant(['DB_HOST', 'DATABASE_HOST', 'MYSQL_HOST', 'HOST'])
+        ?: cardevent_first_global(['db_host', 'host', 'hostname', 'servername', 'server']);
+    $database = cardevent_first_defined_constant(['DB_NAME', 'DATABASE_NAME', 'MYSQL_DATABASE', 'DB_DATABASE'])
+        ?: cardevent_first_global(['db_name', 'dbname', 'database', 'bdd', 'dbase']);
+    $user = cardevent_first_defined_constant(['DB_USER', 'DATABASE_USER', 'MYSQL_USER', 'DB_USERNAME'])
+        ?: cardevent_first_global(['db_user', 'user', 'username', 'login']);
+    $password = cardevent_first_defined_constant(['DB_PASS', 'DB_PASSWORD', 'DATABASE_PASSWORD', 'MYSQL_PASSWORD'])
+        ?: cardevent_first_global(['db_pass', 'db_password', 'password', 'pass', 'pwd']);
+
+    if ($host && $database && $user !== null) {
+        return new PDO(
+            "mysql:host=$host;dbname=$database;charset=utf8mb4",
+            $user,
+            $password ?: '',
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]
+        );
+    }
+
+    throw new RuntimeException('Connexion DB introuvable dans config.php');
 }
 
-function fetch_scalar($pdo, $sql, $params = [])
+function mysqli_bind_params($stmt, $params)
 {
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    return $stmt->fetchColumn();
+    if (empty($params)) {
+        return;
+    }
+    $types = str_repeat('s', count($params));
+    $refs = [];
+    foreach ($params as $key => $value) {
+        $refs[$key] = &$params[$key];
+    }
+    array_unshift($refs, $types);
+    call_user_func_array([$stmt, 'bind_param'], $refs);
 }
 
-function try_query($pdo, $sql, $params, &$errors)
+function fetch_scalar($db, $sql, $params = [])
+{
+    if ($db instanceof PDO) {
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchColumn();
+    }
+
+    $stmt = $db->prepare($sql);
+    if (!$stmt) {
+        throw new RuntimeException($db->error);
+    }
+    mysqli_bind_params($stmt, $params);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result ? $result->fetch_row() : null;
+    $stmt->close();
+    return $row ? $row[0] : false;
+}
+
+function try_query($db, $sql, $params, &$errors)
 {
     try {
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($db instanceof PDO) {
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        $stmt = $db->prepare($sql);
+        if (!$stmt) {
+            throw new RuntimeException($db->error);
+        }
+        mysqli_bind_params($stmt, $params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $rows = [];
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+        $stmt->close();
+        return $rows;
     } catch (Throwable $e) {
         $errors[] = $e->getMessage();
         return null;
@@ -102,7 +193,7 @@ function try_query($pdo, $sql, $params, &$errors)
 }
 
 try {
-    $pdo = cardevent_get_pdo();
+    $pdo = cardevent_get_db();
     $authErrors = [];
     $authenticated = false;
 
