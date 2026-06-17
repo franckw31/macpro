@@ -40,62 +40,61 @@ if ($token === '') {
     exit;
 }
 
+function fetch_scalar(PDO $pdo, string $sql, array $params = [])
+{
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchColumn();
+}
+
+function try_query(PDO $pdo, string $sql, array $params, array &$errors): ?array
+{
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Throwable $e) {
+        $errors[] = $e->getMessage();
+        return null;
+    }
+}
+
 try {
     $pdo = get_pdo();
+    $authErrors = [];
+    $authenticated = false;
 
-    $stmt = $pdo->prepare('SELECT membre_id FROM sessions WHERE token = ? AND expires_at > NOW() LIMIT 1');
-    $stmt->execute([$token]);
-    if (!$stmt->fetchColumn()) {
+    foreach ([
+        'SELECT membre_id FROM sessions WHERE token = ? AND expires_at > NOW() LIMIT 1',
+        'SELECT user_id FROM sessions WHERE token = ? AND expires_at > NOW() LIMIT 1',
+        'SELECT id_membre FROM sessions WHERE token = ? AND expires_at > NOW() LIMIT 1',
+        'SELECT membre_id FROM sessions WHERE token = ? LIMIT 1',
+        'SELECT user_id FROM sessions WHERE token = ? LIMIT 1',
+        'SELECT id_membre FROM sessions WHERE token = ? LIMIT 1',
+        'SELECT membre_id FROM api_sessions WHERE token = ? LIMIT 1',
+        'SELECT user_id FROM api_sessions WHERE token = ? LIMIT 1',
+    ] as $authSql) {
+        try {
+            if (fetch_scalar($pdo, $authSql, [$token])) {
+                $authenticated = true;
+                break;
+            }
+        } catch (Throwable $e) {
+            $authErrors[] = $e->getMessage();
+        }
+    }
+
+    if (!$authenticated) {
         http_response_code(401);
-        echo json_encode(['success' => false, 'error' => 'Session invalide']);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Session invalide',
+            'debug' => array_slice(array_values(array_unique($authErrors)), 0, 3),
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     $beforeDate = null;
     if ($activityId > 0) {
-        $stmt = $pdo->prepare('SELECT date_depart FROM activite WHERE id = ? LIMIT 1');
-        $stmt->execute([$activityId]);
-        $beforeDate = $stmt->fetchColumn() ?: null;
-    }
-
-    $sql = "
-        SELECT
-            m.pseudo,
-            ROUND(AVG(CAST(REPLACE(p.sergio_score, ',', '.') AS DECIMAL(10,2))), 1) AS sergio_score_moyen
-        FROM participation p
-        INNER JOIN membres m ON m.id = p.membre_id
-        INNER JOIN activite a ON a.id = p.activite_id
-        WHERE p.sergio_score IS NOT NULL
-          AND p.sergio_score <> ''
-          AND p.sergio_score REGEXP '^-?[0-9]+([,.][0-9]+)?$'
-    ";
-    $params = [];
-
-    if ($beforeDate !== null) {
-        $sql .= " AND a.date_depart < ? ";
-        $params[] = $beforeDate;
-    }
-
-    $sql .= " GROUP BY m.id, m.pseudo ORDER BY m.pseudo ASC";
-
-    try {
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-    } catch (Throwable $e) {
-        $sql = str_replace('p.membre_id', 'p.id_membre', $sql);
-        $sql = str_replace('p.activite_id', 'p.id_activite', $sql);
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-    }
-
-    echo json_encode([
-        'success' => true,
-        'scores' => $stmt->fetchAll(PDO::FETCH_ASSOC),
-    ], JSON_UNESCAPED_UNICODE);
-} catch (Throwable $e) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => $e->getMessage(),
-    ], JSON_UNESCAPED_UNICODE);
-}
+        foreach ([
+            'SELECT date_depart FROM activite WHERE id = ? LIMIT 1',
