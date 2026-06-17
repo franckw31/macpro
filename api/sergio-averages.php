@@ -4,6 +4,27 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
+register_shutdown_function(function () {
+    $error = error_get_last();
+    if ($error === null) {
+        return;
+    }
+    $fatalTypes = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR];
+    if (!in_array($error['type'], $fatalTypes, true)) {
+        return;
+    }
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: application/json; charset=utf-8');
+    }
+    echo json_encode([
+        'success' => false,
+        'error' => 'Erreur PHP: ' . $error['message'],
+        'file' => basename($error['file'] ?? ''),
+        'line' => $error['line'] ?? null,
+    ], JSON_UNESCAPED_UNICODE);
+});
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
@@ -40,12 +61,13 @@ try {
     $sql = "
         SELECT
             m.pseudo,
-            ROUND(AVG(CAST(p.sergio_score AS DECIMAL(10,2))), 1) AS sergio_score_moyen
+            ROUND(AVG(CAST(REPLACE(p.sergio_score, ',', '.') AS DECIMAL(10,2))), 1) AS sergio_score_moyen
         FROM participation p
         INNER JOIN membres m ON m.id = p.membre_id
         INNER JOIN activite a ON a.id = p.activite_id
         WHERE p.sergio_score IS NOT NULL
           AND p.sergio_score <> ''
+          AND p.sergio_score REGEXP '^-?[0-9]+([,.][0-9]+)?$'
     ";
     $params = [];
 
@@ -56,8 +78,15 @@ try {
 
     $sql .= " GROUP BY m.id, m.pseudo ORDER BY m.pseudo ASC";
 
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+    } catch (Throwable $e) {
+        $sql = str_replace('p.membre_id', 'p.id_membre', $sql);
+        $sql = str_replace('p.activite_id', 'p.id_activite', $sql);
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+    }
 
     echo json_encode([
         'success' => true,
