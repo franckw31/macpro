@@ -29,7 +29,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require_once __DIR__ . '/config.php';
+function load_cardevent_config()
+{
+    $candidates = [
+        __DIR__ . '/config.php',
+        __DIR__ . '/../config.php',
+        __DIR__ . '/../panel/config.php',
+        __DIR__ . '/../../panel/config.php',
+    ];
+
+    foreach ($candidates as $file) {
+        if (is_file($file)) {
+            require_once $file;
+            return $file;
+        }
+    }
+
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => 'config.php introuvable',
+        'tested' => $candidates,
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+load_cardevent_config();
 
 $token = trim($_GET['token'] ?? '');
 $activityId = (int)($_GET['activity_id'] ?? 0);
