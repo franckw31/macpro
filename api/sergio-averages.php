@@ -84,34 +84,92 @@ function cardevent_first_global($names)
     return null;
 }
 
-function cardevent_get_db()
+function cardevent_find_in_arrays($keys)
 {
-    if (function_exists('get_pdo')) {
-        return get_pdo();
+    foreach ($GLOBALS as $value) {
+        if (!is_array($value)) {
+            continue;
+        }
+        foreach ($keys as $key) {
+            if (isset($value[$key]) && $value[$key] !== '') {
+                return $value[$key];
+            }
+        }
     }
+    return null;
+}
 
-    if (isset($GLOBALS['pdo']) && $GLOBALS['pdo'] instanceof PDO) {
-        return $GLOBALS['pdo'];
-    }
-
-    if (isset($GLOBALS['db']) && $GLOBALS['db'] instanceof PDO) {
-        return $GLOBALS['db'];
-    }
-
-    foreach (['conn', 'mysqli', 'link', 'db'] as $name) {
-        if (isset($GLOBALS[$name]) && class_exists('mysqli') && $GLOBALS[$name] instanceof mysqli) {
-            return $GLOBALS[$name];
+function cardevent_config_debug()
+{
+    $globals = [];
+    foreach ($GLOBALS as $name => $value) {
+        if (in_array($name, ['GLOBALS', '_GET', '_POST', '_SERVER', '_COOKIE', '_FILES', '_ENV', '_REQUEST'], true)) {
+            continue;
+        }
+        if (stripos($name, 'pass') !== false || stripos($name, 'pwd') !== false) {
+            continue;
+        }
+        if (is_scalar($value) || $value === null) {
+            $globals[] = $name;
+        } elseif (is_object($value)) {
+            $globals[] = $name . ':' . get_class($value);
+        } elseif (is_array($value)) {
+            $globals[] = $name . ':array(' . implode(',', array_slice(array_keys($value), 0, 8)) . ')';
         }
     }
 
-    $host = cardevent_first_defined_constant(['DB_HOST', 'DATABASE_HOST', 'MYSQL_HOST', 'HOST'])
-        ?: cardevent_first_global(['db_host', 'host', 'hostname', 'servername', 'server']);
-    $database = cardevent_first_defined_constant(['DB_NAME', 'DATABASE_NAME', 'MYSQL_DATABASE', 'DB_DATABASE'])
-        ?: cardevent_first_global(['db_name', 'dbname', 'database', 'bdd', 'dbase']);
-    $user = cardevent_first_defined_constant(['DB_USER', 'DATABASE_USER', 'MYSQL_USER', 'DB_USERNAME'])
-        ?: cardevent_first_global(['db_user', 'user', 'username', 'login']);
-    $password = cardevent_first_defined_constant(['DB_PASS', 'DB_PASSWORD', 'DATABASE_PASSWORD', 'MYSQL_PASSWORD'])
-        ?: cardevent_first_global(['db_pass', 'db_password', 'password', 'pass', 'pwd']);
+    $constants = [];
+    foreach (array_keys(get_defined_constants(true)['user'] ?? []) as $name) {
+        if (stripos($name, 'pass') !== false || stripos($name, 'pwd') !== false) {
+            continue;
+        }
+        $constants[] = $name;
+    }
+
+    return [
+        'config' => $GLOBALS['cardeventConfigLoaded'] ?? null,
+        'globals' => array_slice($globals, 0, 30),
+        'constants' => array_slice($constants, 0, 30),
+    ];
+}
+
+function cardevent_get_db()
+{
+    foreach (['get_pdo', 'getPDO', 'pdo', 'db', 'database', 'connect_db', 'connectDB', 'connexion', 'getConnection'] as $functionName) {
+        if (function_exists($functionName)) {
+            $result = $functionName();
+            if ($result instanceof PDO || (class_exists('mysqli') && $result instanceof mysqli)) {
+                return $result;
+            }
+        }
+    }
+
+    foreach ($GLOBALS as $value) {
+        if ($value instanceof PDO) {
+            return $value;
+        }
+    }
+
+    if (class_exists('mysqli')) {
+        foreach ($GLOBALS as $value) {
+            if ($value instanceof mysqli) {
+                return $value;
+            }
+        }
+    }
+
+    $host = cardevent_first_defined_constant(['DB_HOST', 'DATABASE_HOST', 'MYSQL_HOST', 'HOST', 'DB_SERVER', 'SERVER'])
+        ?: cardevent_first_global(['db_host', 'dbhost', 'host', 'hostname', 'servername', 'server', 'serveur', 'mysql_host'])
+        ?: cardevent_find_in_arrays(['host', 'hostname', 'server', 'serveur', 'db_host', 'dbhost']);
+    $database = cardevent_first_defined_constant(['DB_NAME', 'DATABASE_NAME', 'MYSQL_DATABASE', 'DB_DATABASE', 'DATABASE', 'BDD'])
+        ?: cardevent_first_global(['db_name', 'dbname', 'database', 'bdd', 'dbase', 'mysql_database', 'mysql_db'])
+        ?: cardevent_find_in_arrays(['database', 'dbname', 'db_name', 'name', 'bdd']);
+    $user = cardevent_first_defined_constant(['DB_USER', 'DATABASE_USER', 'MYSQL_USER', 'DB_USERNAME', 'USER', 'USERNAME'])
+        ?: cardevent_first_global(['db_user', 'dbuser', 'user', 'username', 'login', 'utilisateur', 'mysql_user'])
+        ?: cardevent_find_in_arrays(['user', 'username', 'login', 'db_user', 'dbuser']);
+    $password = cardevent_first_defined_constant(['DB_PASS', 'DB_PASSWORD', 'DATABASE_PASSWORD', 'MYSQL_PASSWORD', 'PASSWORD', 'PASS'])
+        ?: cardevent_first_global(['db_pass', 'dbpass', 'db_password', 'password', 'pass', 'pwd', 'motdepasse', 'mysql_password'])
+        ?: cardevent_find_in_arrays(['password', 'pass', 'pwd', 'db_pass', 'dbpass']);
 
     if ($host && $database && $user !== null) {
         return new PDO(
@@ -125,7 +183,7 @@ function cardevent_get_db()
         );
     }
 
-    throw new RuntimeException('Connexion DB introuvable dans config.php');
+    throw new RuntimeException('Connexion DB introuvable dans config.php | debug=' . json_encode(cardevent_config_debug(), JSON_UNESCAPED_UNICODE));
 }
 
 function mysqli_bind_params($stmt, $params)
