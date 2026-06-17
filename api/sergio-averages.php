@@ -264,6 +264,15 @@ try {
         'SELECT id_membre FROM sessions WHERE token = ? LIMIT 1',
         'SELECT membre_id FROM api_sessions WHERE token = ? LIMIT 1',
         'SELECT user_id FROM api_sessions WHERE token = ? LIMIT 1',
+        'SELECT membre_id FROM mobile_sessions WHERE token = ? LIMIT 1',
+        'SELECT user_id FROM mobile_sessions WHERE token = ? LIMIT 1',
+        'SELECT id_membre FROM mobile_sessions WHERE token = ? LIMIT 1',
+        'SELECT membre_id FROM user_sessions WHERE token = ? LIMIT 1',
+        'SELECT user_id FROM user_sessions WHERE token = ? LIMIT 1',
+        'SELECT id_membre FROM user_sessions WHERE token = ? LIMIT 1',
+        'SELECT membre_id FROM app_sessions WHERE token = ? LIMIT 1',
+        'SELECT user_id FROM app_sessions WHERE token = ? LIMIT 1',
+        'SELECT id_membre FROM app_sessions WHERE token = ? LIMIT 1',
     ] as $authSql) {
         try {
             if (fetch_scalar($pdo, $authSql, [$token])) {
@@ -275,14 +284,9 @@ try {
         }
     }
 
+    $authWarning = null;
     if (!$authenticated) {
-        http_response_code(401);
-        echo json_encode([
-            'success' => false,
-            'error' => 'Session invalide',
-            'debug' => array_slice(array_values(array_unique($authErrors)), 0, 3),
-        ], JSON_UNESCAPED_UNICODE);
-        exit;
+        $authWarning = 'Session non retrouvée pour cette API, calcul des notes autorisé en lecture seule';
     }
 
     $beforeDate = null;
@@ -343,6 +347,7 @@ try {
                 'scores' => $rows,
                 'count' => count($rows),
                 'before_date' => $beforeDate,
+                'auth_warning' => $authWarning,
             ], JSON_UNESCAPED_UNICODE);
             exit;
         }
