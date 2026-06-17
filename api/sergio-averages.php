@@ -252,7 +252,7 @@ function try_query($db, $sql, $params, &$errors)
 
 function quote_identifier($name)
 {
-    if (!preg_match('/^[A-Za-z0-9_]+$/', $name)) {
+    if (!preg_match('/^[A-Za-z0-9_-]+$/', $name)) {
         throw new RuntimeException('Identifiant SQL invalide: ' . $name);
     }
     return '`' . $name . '`';
@@ -339,9 +339,13 @@ try {
     $beforeDate = null;
     if ($activityId > 0) {
         foreach ([
+            'SELECT date_depart FROM activite WHERE `id-activite` = ? LIMIT 1',
             'SELECT date_depart FROM activite WHERE id = ? LIMIT 1',
+            'SELECT date FROM activite WHERE `id-activite` = ? LIMIT 1',
             'SELECT date FROM activite WHERE id = ? LIMIT 1',
+            'SELECT date_depart FROM activites WHERE `id-activite` = ? LIMIT 1',
             'SELECT date_depart FROM activites WHERE id = ? LIMIT 1',
+            'SELECT date FROM activites WHERE `id-activite` = ? LIMIT 1',
             'SELECT date FROM activites WHERE id = ? LIMIT 1',
         ] as $dateSql) {
             try {
@@ -361,11 +365,11 @@ try {
     list($activityTable, $activityColumns) = first_existing_table($pdo, ['activite', 'activites', 'activity', 'activities'], $errors);
 
     $scoreCol = first_existing_column($participationColumns, ['sergio_score', 'sergioscore', 'score_sergio', 'sergio', 'note_sergio', 'note']);
-    $memberCol = first_existing_column($participationColumns, ['membre_id', 'id_membre', 'member_id', 'id_member', 'joueur_id', 'id_joueur', 'user_id', 'id_user', 'idmembre', 'idjoueur']);
-    $activityCol = first_existing_column($participationColumns, ['activite_id', 'id_activite', 'activity_id', 'id_activity', 'partie_id', 'id_partie', 'event_id', 'id_event']);
-    $memberIdCol = first_existing_column($memberColumns, ['id', 'membre_id', 'id_membre', 'user_id', 'id_user']);
+    $memberCol = first_existing_column($participationColumns, ['id-membre', 'membre_id', 'id_membre', 'member_id', 'id_member', 'joueur_id', 'id_joueur', 'user_id', 'id_user', 'idmembre', 'idjoueur']);
+    $activityCol = first_existing_column($participationColumns, ['id-activite', 'activite_id', 'id_activite', 'activity_id', 'id_activity', 'partie_id', 'id_partie', 'event_id', 'id_event']);
+    $memberIdCol = first_existing_column($memberColumns, ['id-membre', 'id', 'membre_id', 'id_membre', 'user_id', 'id_user']);
     $pseudoCol = first_existing_column($memberColumns, ['pseudo', 'username', 'login', 'nom', 'name']);
-    $activityIdCol = first_existing_column($activityColumns, ['id', 'activite_id', 'id_activite', 'activity_id', 'id_activity']);
+    $activityIdCol = first_existing_column($activityColumns, ['id-activite', 'id', 'activite_id', 'id_activite', 'activity_id', 'id_activity']);
     $dateCol = first_existing_column($activityColumns, ['date_depart', 'date', 'start_date', 'date_start', 'debut', 'datetime']);
 
     $schemaDebug = [
