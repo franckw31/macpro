@@ -270,6 +270,16 @@ try {
         'SELECT COUNT(*) FROM participation WHERE `id-membre` = ? AND COALESCE(`gain`, 0) > 0',
         [$memberId]
     );
+    $victoriesCount = fetch_scalar(
+        $db,
+        'SELECT COUNT(*) FROM participation WHERE `id-membre` = ? AND COALESCE(`classement`, 0) = 1 AND COALESCE(`gain`, 0) > 0',
+        [$memberId]
+    );
+    $itmCount = fetch_scalar(
+        $db,
+        'SELECT COUNT(*) FROM participation WHERE `id-membre` = ? AND COALESCE(`classement`, 0) < 10 AND COALESCE(`classement`, 0) <> 0',
+        [$memberId]
+    );
 
     echo json_encode([
         'success' => true,
@@ -281,6 +291,8 @@ try {
         'rake_total' => (float)$rakeTotal,
         'parties_count' => (int)$partiesCount,
         'gains_count' => (int)$gainsCount,
+        'victories_count' => (int)$victoriesCount,
+        'itm_count' => (int)$itmCount,
     ], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
     http_response_code(500);
