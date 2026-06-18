@@ -245,9 +245,19 @@ try {
         'SELECT COALESCE(SUM(COALESCE(`cout_in`, 0)), 0) FROM participation WHERE `id-membre` = ?',
         [$memberId]
     );
+    $gainTotal = fetch_scalar(
+        $db,
+        'SELECT COALESCE(SUM(COALESCE(`gain`, 0)), 0) FROM participation WHERE `id-membre` = ?',
+        [$memberId]
+    );
     $partiesCount = fetch_scalar(
         $db,
         'SELECT COUNT(*) FROM participation WHERE `id-membre` = ?',
+        [$memberId]
+    );
+    $gainsCount = fetch_scalar(
+        $db,
+        'SELECT COUNT(*) FROM participation WHERE `id-membre` = ? AND COALESCE(`gain`, 0) > 0',
         [$memberId]
     );
 
@@ -256,7 +266,9 @@ try {
         'member_id' => $memberId,
         'source' => $memberSource,
         'cout_in_total' => (float)$coutInTotal,
+        'gain_total' => (float)$gainTotal,
         'parties_count' => (int)$partiesCount,
+        'gains_count' => (int)$gainsCount,
     ], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
     http_response_code(500);
