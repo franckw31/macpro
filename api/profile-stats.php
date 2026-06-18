@@ -255,6 +255,11 @@ try {
         'SELECT COALESCE(MAX(COALESCE(`gain`, 0)), 0) FROM participation WHERE `id-membre` = ?',
         [$memberId]
     );
+    $rakeTotal = fetch_scalar(
+        $db,
+        'SELECT COALESCE(SUM(COALESCE(`rake`, 0)), 0) FROM participation WHERE `id-membre` = ?',
+        [$memberId]
+    );
     $partiesCount = fetch_scalar(
         $db,
         'SELECT COUNT(*) FROM participation WHERE `id-membre` = ?',
@@ -273,6 +278,7 @@ try {
         'cout_in_total' => (float)$coutInTotal,
         'gain_total' => (float)$gainTotal,
         'max_gain' => (float)$maxGain,
+        'rake_total' => (float)$rakeTotal,
         'parties_count' => (int)$partiesCount,
         'gains_count' => (int)$gainsCount,
     ], JSON_UNESCAPED_UNICODE);
