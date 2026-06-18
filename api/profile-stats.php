@@ -56,6 +56,7 @@ if ($configLoaded === null) {
 }
 
 $token = trim($_GET['token'] ?? '');
+$requestedUserId = (int)($_GET['user_id'] ?? 0);
 if ($token === '') {
     http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Token manquant'], JSON_UNESCAPED_UNICODE);
@@ -187,6 +188,7 @@ function fetch_scalar($db, $sql, $params = [])
 try {
     $db = cardevent_get_db();
     $memberId = null;
+    $memberSource = null;
     $authErrors = [];
 
     foreach ([
@@ -215,11 +217,17 @@ try {
             $value = fetch_scalar($db, $authSql, [$token]);
             if ($value !== false && $value !== null && (int)$value > 0) {
                 $memberId = (int)$value;
+                $memberSource = 'session';
                 break;
             }
         } catch (Throwable $e) {
             $authErrors[] = $e->getMessage();
         }
+    }
+
+    if (!$memberId && $requestedUserId > 0) {
+        $memberId = $requestedUserId;
+        $memberSource = 'user_id';
     }
 
     if (!$memberId) {
@@ -246,6 +254,7 @@ try {
     echo json_encode([
         'success' => true,
         'member_id' => $memberId,
+        'source' => $memberSource,
         'cout_in_total' => (float)$coutInTotal,
         'parties_count' => (int)$partiesCount,
     ], JSON_UNESCAPED_UNICODE);
