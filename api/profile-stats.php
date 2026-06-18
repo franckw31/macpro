@@ -277,7 +277,12 @@ try {
     );
     $itmCount = fetch_scalar(
         $db,
-        'SELECT COUNT(*) FROM participation WHERE `id-membre` = ? AND COALESCE(`classement`, 0) < 10 AND COALESCE(`classement`, 0) <> 0',
+        'SELECT COUNT(*) FROM participation WHERE `id-membre` = ? AND COALESCE(`gain`, 0) > 0',
+        [$memberId]
+    );
+    $recavesTotal = fetch_scalar(
+        $db,
+        'SELECT COALESCE(SUM(COALESCE(`recave`, 0)), 0) FROM participation WHERE `id-membre` = ?',
         [$memberId]
     );
 
@@ -293,6 +298,7 @@ try {
         'gains_count' => (int)$gainsCount,
         'victories_count' => (int)$victoriesCount,
         'itm_count' => (int)$itmCount,
+        'recaves_total' => (int)$recavesTotal,
     ], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
     http_response_code(500);
