@@ -285,7 +285,7 @@ try {
         'SELECT COALESCE(SUM(COALESCE(`recave`, 0)), 0) FROM participation WHERE `id-membre` = ?',
         [$memberId]
     );
-    $brutTotal = (float)$gainTotal - (float)$coutInTotal 
+    $brutTotal = (float)$gainTotal - (float)$coutInTotal ;
 
     echo json_encode([
         'success' => true,
