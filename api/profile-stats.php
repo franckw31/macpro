@@ -293,6 +293,14 @@ try {
         'SELECT COALESCE(SUM(COALESCE(`recave`, 0)), 0) FROM participation WHERE `id-membre` = ?',
         [$memberId]
     );
+    $recavesAmountTotal = fetch_scalar(
+        $db,
+        'SELECT COALESCE(SUM(COALESCE(p.`recave`, 0) * COALESCE(a.`recave_montant`, 0)), 0)
+         FROM participation p
+         INNER JOIN activite a ON a.`id-activite` = p.`id-activite`
+         WHERE p.`id-membre` = ?',
+        [$memberId]
+    );
     $brutTotal = (float)$gainTotal - (float)$coutInTotal - (float)$rakeTotal;
 
     echo json_encode([
@@ -310,6 +318,7 @@ try {
         'victories_count' => (int)$victoriesCount,
         'itm_count' => (int)$itmCount,
         'recaves_total' => (int)$recavesTotal,
+        'recaves_amount_total' => (float)$recavesAmountTotal,
     ], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
     http_response_code(500);
