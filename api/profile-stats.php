@@ -247,7 +247,7 @@ try {
     );
     $coutInTotal = fetch_scalar(
         $db,
-        'SELECT COALESCE(SUM(COALESCE(a.`buyin`, 0) * (1 + COALESCE(p.`recave`, 0))), 0)
+        'SELECT COALESCE(SUM(COALESCE(a.`buyin`, 0) 
          FROM participation p
          INNER JOIN activite a ON a.`id-activite` = p.`id-activite`
          WHERE p.`id-membre` = ?',
