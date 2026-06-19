@@ -247,7 +247,7 @@ try {
     );
     $coutInTotal = fetch_scalar(
         $db,
-        'SELECT COALESCE(SUM(COALESCE(a.`buyin`, 0) ), 0)
+        'SELECT COALESCE(SUM(COALESCE(a.`buyin`, 0) * (1 + COALESCE(p.`recave`, 0))), 0)
          FROM participation p
          INNER JOIN activite a ON a.`id-activite` = p.`id-activite`
          WHERE p.`id-membre` = ?',
@@ -288,6 +288,11 @@ try {
         'SELECT COUNT(*) FROM participation WHERE `id-membre` = ? AND COALESCE(`gain`, 0) > 0',
         [$memberId]
     );
+    $finalTablesCount = fetch_scalar(
+        $db,
+        'SELECT COUNT(*) FROM participation WHERE `id-membre` = ? AND COALESCE(`classement`, 0) > 0 AND COALESCE(`classement`, 0) < 10',
+        [$memberId]
+    );
     $recavesTotal = fetch_scalar(
         $db,
         'SELECT COALESCE(SUM(COALESCE(`recave`, 0)), 0) FROM participation WHERE `id-membre` = ?',
@@ -317,6 +322,7 @@ try {
         'gains_count' => (int)$gainsCount,
         'victories_count' => (int)$victoriesCount,
         'itm_count' => (int)$itmCount,
+        'final_tables_count' => (int)$finalTablesCount,
         'recaves_total' => (int)$recavesTotal,
         'recaves_amount_total' => (float)$recavesAmountTotal,
     ], JSON_UNESCAPED_UNICODE);
