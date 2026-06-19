@@ -306,8 +306,8 @@ try {
          WHERE p.`id-membre` = ?',
         [$memberId]
     );
-    $brutTotal = (float)$gainTotal - (float)$coutInTotal - (float)$rakeTotal;
-    $netTotal = (float)$gainTotal - (float)$coutInTotal ;
+    $brutTotal = (float)$gainTotal - (float)$legacyCoutInTotal - (float)$rakeTotal;
+    $netTotal = (float)$gainTotal - (float)$legacyCoutInTotal ;
     echo json_encode([
         'success' => true,
         'member_id' => $memberId,
