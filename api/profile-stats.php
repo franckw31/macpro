@@ -240,9 +240,17 @@ try {
         exit;
     }
 
-    $coutInTotal = fetch_scalar(
+    $legacyCoutInTotal = fetch_scalar(
         $db,
         'SELECT COALESCE(SUM(COALESCE(`cout_in`, 0)), 0) FROM participation WHERE `id-membre` = ?',
+        [$memberId]
+    );
+    $coutInTotal = fetch_scalar(
+        $db,
+        'SELECT COALESCE(SUM(COALESCE(a.`buyin`, 0) * (1 + COALESCE(p.`recave`, 0))), 0)
+         FROM participation p
+         INNER JOIN activite a ON a.`id-activite` = p.`id-activite`
+         WHERE p.`id-membre` = ?',
         [$memberId]
     );
     $gainTotal = fetch_scalar(
@@ -285,13 +293,14 @@ try {
         'SELECT COALESCE(SUM(COALESCE(`recave`, 0)), 0) FROM participation WHERE `id-membre` = ?',
         [$memberId]
     );
-    $brutTotal = (float)$gainTotal - (float)$coutInTotal ;
+    $brutTotal = (float)$gainTotal - (float)$coutInTotal - (float)$rakeTotal;
 
     echo json_encode([
         'success' => true,
         'member_id' => $memberId,
         'source' => $memberSource,
         'cout_in_total' => (float)$coutInTotal,
+        'legacy_cout_in_total' => (float)$legacyCoutInTotal,
         'gain_total' => (float)$gainTotal,
         'max_gain' => (float)$maxGain,
         'rake_total' => (float)$rakeTotal,
