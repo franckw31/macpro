@@ -307,7 +307,7 @@ try {
         [$memberId]
     );
     $brutTotal = (float)$gainTotal - (float)$coutInTotal - (float)$rakeTotal;
-
+    $netTotal = (float)$gainTotal - (float)$coutInTotal ;
     echo json_encode([
         'success' => true,
         'member_id' => $memberId,
@@ -318,6 +318,7 @@ try {
         'max_gain' => (float)$maxGain,
         'rake_total' => (float)$rakeTotal,
         'brut_total' => $brutTotal,
+        'net_total' => $netTotal,
         'parties_count' => (int)$partiesCount,
         'gains_count' => (int)$gainsCount,
         'victories_count' => (int)$victoriesCount,
